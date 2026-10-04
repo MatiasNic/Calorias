@@ -2,12 +2,13 @@ import { suggestMealType } from '@plato/shared';
 import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Linking, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, Button, Card, EmptyState, Icon, IconButton, toast } from '@/components';
+import { env } from '@/config/env';
 import { useCustomFoodPrefill } from '@/features/foods/customFoodPrefill';
 import { usePickerStore } from '@/features/foods/pickerStore';
 import { lookupBarcode } from '@/features/foods/remote';
@@ -28,7 +29,7 @@ const BARCODE_TYPES = ['ean13', 'ean8', 'upc_a', 'upc_e'] as const;
 export default function Scan() {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const params = useLocalSearchParams<{ mode?: Mode }>();
+  const params = useLocalSearchParams<{ mode?: Mode; code?: string }>();
   const [mode, setMode] = useState<Mode>(params.mode ?? 'photo');
   const [permission, requestPermission] = useCameraPermissions();
   const [torch, setTorch] = useState(false);
@@ -132,6 +133,16 @@ export default function Scan() {
       setBusy(null);
     }
   };
+
+  // Test hook (demo builds only): plato://scan?mode=barcode&code=… simulates a scanned barcode
+  // so E2E tests can cover the barcode flow without a physical camera.
+  useEffect(() => {
+    const code = params.code;
+    if (!env.useMocks || !code || !/^\d{6,14}$/.test(code)) return;
+    const id = setTimeout(() => onBarcode({ data: code } as BarcodeScanningResult), 500);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.code]);
 
   if (mode === 'text') return <Redirect href="/text-log" />;
 

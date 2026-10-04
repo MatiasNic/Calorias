@@ -1,0 +1,7 @@
+# Maestro E2E suite. Run against a demo build (EXPO_PUBLIC_USE_MOCKS=true):
+#   maestro test .maestro/
+flows:
+  - '*.yaml'
+excludeFlows:
+  - config.yaml
+  - _*.yaml

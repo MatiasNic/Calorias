@@ -1,0 +1,27 @@
+# Borrado de cuenta dentro de la app (requisito de Apple/Google).
+appId: ${APP_ID}
+env:
+  APP_ID: com.platoapp.plato
+---
+- runFlow: _onboarding.yaml
+- tapOn:
+    id: tab-profile
+- scrollUntilVisible:
+    element:
+      id: profile-privacy
+- tapOn:
+    id: profile-privacy
+- scrollUntilVisible:
+    element:
+      id: delete-account
+- tapOn:
+    id: delete-account
+- tapOn:
+    id: delete-confirm-input
+- inputText: 'ELIMINAR'
+- hideKeyboard
+- tapOn:
+    id: delete-confirm
+- tapOn: 'Eliminar'
+- assertVisible:
+    id: welcome-guest

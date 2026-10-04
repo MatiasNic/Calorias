@@ -1,0 +1,25 @@
+# Paywall (compras sandbox/simuladas): comprar anual con prueba, ver plan, restaurar.
+appId: ${APP_ID}
+env:
+  APP_ID: com.platoapp.plato
+---
+- runFlow: _onboarding.yaml
+- tapOn:
+    id: tab-profile
+- tapOn:
+    id: profile-upgrade
+- assertVisible:
+    id: paywall-restore
+- assertVisible: '.*7 días gratis.*'
+- tapOn:
+    id: paywall-package-annual
+- tapOn:
+    id: paywall-buy
+- assertVisible: 'Gestionar suscripción'
+- tapOn:
+    id: profile-upgrade
+    optional: true
+- tapOn:
+    id: tab-progress
+- tapOn: '30 días'
+- assertNotVisible: 'Desbloqueá todo Plato'

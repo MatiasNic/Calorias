@@ -1,0 +1,67 @@
+# Reusable: fresh install → demo mode → full onboarding → Today.
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: welcome-guest
+- tapOn:
+    id: goal-lose
+- tapOn:
+    id: onboarding-continue
+- tapOn:
+    id: sex-female
+- tapOn:
+    id: onboarding-continue
+- tapOn:
+    id: birth-day
+- inputText: '15'
+- tapOn:
+    id: birth-month
+- inputText: '6'
+- tapOn:
+    id: birth-year
+- inputText: '1992'
+- hideKeyboard
+- tapOn:
+    id: onboarding-continue
+- tapOn:
+    id: height-input
+- inputText: '165'
+- hideKeyboard
+- tapOn:
+    id: onboarding-continue
+- tapOn:
+    id: weight-input
+- inputText: '72'
+- hideKeyboard
+- tapOn:
+    id: onboarding-continue
+- tapOn:
+    id: target-input
+- inputText: '64'
+- hideKeyboard
+- tapOn:
+    id: onboarding-continue
+- tapOn:
+    id: activity-light
+- tapOn:
+    id: onboarding-continue
+- tapOn:
+    id: rate-0.5
+- tapOn:
+    id: onboarding-continue
+- tapOn:
+    id: onboarding-continue
+- assertVisible:
+    id: result-kcal
+- tapOn:
+    id: onboarding-continue
+- tapOn:
+    id: onboarding-continue
+- assertVisible:
+    id: paywall-continue-free
+- tapOn:
+    id: paywall-continue-free
+- assertVisible:
+    id: today-screen

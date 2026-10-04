@@ -1,0 +1,32 @@
+# Escanear (IA simulada) → revisar → ajustar porción → guardar.
+appId: ${APP_ID}
+env:
+  APP_ID: com.platoapp.plato
+---
+- runFlow: _onboarding.yaml
+# Photo path: grant camera, capture (demo fixtures return a plate).
+- tapOn:
+    id: tab-scan
+- runFlow:
+    when:
+      visible: 'Permitir cámara'
+    commands:
+      - tapOn: 'Permitir cámara'
+      - tapOn:
+          text: '(While using the app|Mientras la app está en uso|Only this time|Solo esta vez)'
+          optional: true
+- tapOn:
+    id: scan-capture
+- extendedWaitUntil:
+    visible:
+      id: review-save
+    timeout: 15000
+- assertVisible: 'Confianza.*'
+- tapOn:
+    id: draft-item-0
+- tapOn: '1,5×'
+- tapOn:
+    id: review-save
+- assertVisible:
+    id: today-screen
+- assertNotVisible: 'Sin registros'

@@ -1,0 +1,34 @@
+# Plan gratis: 3 fotos por día; la cuarta abre el paywall contextual.
+appId: ${APP_ID}
+env:
+  APP_ID: com.platoapp.plato
+---
+- runFlow: _onboarding.yaml
+- repeat:
+    times: 3
+    commands:
+      - tapOn:
+          id: tab-scan
+      - runFlow:
+          when:
+            visible: 'Permitir cámara'
+          commands:
+            - tapOn: 'Permitir cámara'
+            - tapOn:
+                text: '(While using the app|Mientras la app está en uso|Only this time|Solo esta vez)'
+                optional: true
+      - tapOn:
+          id: scan-capture
+      - extendedWaitUntil:
+          visible:
+            id: review-save
+          timeout: 15000
+      - tapOn:
+          id: review-save
+- tapOn:
+    id: tab-scan
+- tapOn:
+    id: scan-capture
+- extendedWaitUntil:
+    visible: 'Seguí escaneando sin límites'
+    timeout: 15000

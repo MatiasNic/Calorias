@@ -24,8 +24,33 @@ export async function searchRemoteFoods(query: string): Promise<FoodOption[]> {
 }
 
 /** Barcode → product. Server function caches Open Food Facts; mock mode calls OFF directly. */
+/** Deterministic demo products (E2E tests and store reviewers without network). */
+export const DEMO_BARCODES: Record<string, FoodOption> = {
+  '7790000000017': {
+    key: 'off:7790000000017',
+    id: '7790000000017',
+    source: 'off',
+    name: 'Alfajor de chocolate (demo)',
+    brand: 'Demo',
+    barcode: '7790000000017',
+    per100g: {
+      kcal: 430,
+      protein_g: 5.5,
+      carbs_g: 62,
+      fat_g: 18,
+      fiber_g: 2,
+      sugar_g: 40,
+      sodium_mg: 180,
+      sat_fat_g: 10,
+    },
+    servings: [{ unit: 'unit', grams: 50 }],
+    attribution: 'Open Food Facts (ODbL)',
+  },
+};
+
 export async function lookupBarcode(barcode: string): Promise<FoodOption | null> {
-  if (env.useMocks) return lookupBarcodeOffDirect(barcode);
+  if (env.useMocks)
+    return DEMO_BARCODES[barcode] ?? lookupBarcodeOffDirect(barcode).catch(() => null);
   const res = await invokeFunction(
     'barcode-lookup',
     { barcode },

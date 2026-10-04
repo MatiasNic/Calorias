@@ -1,0 +1,23 @@
+# Registro por texto (IA simulada) → revisión → guardar.
+appId: ${APP_ID}
+env:
+  APP_ID: com.platoapp.plato
+---
+- runFlow: _onboarding.yaml
+- tapOn:
+    id: quick-text
+- tapOn:
+    id: text-log-input
+- inputText: 'dos empanadas y una coca zero'
+- hideKeyboard
+- tapOn:
+    id: text-log-analyze
+- extendedWaitUntil:
+    visible:
+      id: review-save
+    timeout: 10000
+- assertVisible: 'Empanada.*'
+- tapOn:
+    id: review-save
+- assertVisible:
+    id: today-screen

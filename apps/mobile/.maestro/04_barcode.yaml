@@ -1,0 +1,23 @@
+# Código de barras: el deep link de prueba simula el escaneo (solo builds demo).
+appId: ${APP_ID}
+env:
+  APP_ID: com.platoapp.plato
+---
+- runFlow: _onboarding.yaml
+- openLink: 'plato://scan?mode=barcode&code=7790000000017'
+- runFlow:
+    when:
+      visible: 'Permitir cámara'
+    commands:
+      - tapOn: 'Permitir cámara'
+      - tapOn:
+          text: '(While using the app|Mientras la app está en uso|Only this time|Solo esta vez)'
+          optional: true
+- extendedWaitUntil:
+    visible: 'Alfajor de chocolate \(demo\)'
+    timeout: 10000
+- tapOn: '.*1 unidad.*'
+- tapOn:
+    id: food-detail-add
+- assertVisible:
+    id: today-screen

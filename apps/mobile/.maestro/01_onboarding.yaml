@@ -1,0 +1,10 @@
+# Onboarding completo: objetivos calculados (Mifflin-St Jeor) y llegada a Hoy.
+appId: ${APP_ID}
+env:
+  APP_ID: com.platoapp.plato
+---
+- runFlow: _onboarding.yaml
+- assertVisible: 'Hoy'
+- assertVisible:
+    id: today-remaining
+- assertVisible: '1.400'
