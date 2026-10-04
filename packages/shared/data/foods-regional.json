@@ -1,0 +1,5353 @@
+[
+  {
+    "id": "asado_tira",
+    "name_es": "Asado de tira",
+    "name_en": "Grilled beef short ribs",
+    "name_pt": "Costela bovina assada",
+    "aliases": ["asado", "costilla"],
+    "category": "carnes",
+    "kcal": 290,
+    "protein_g": 24,
+    "carbs_g": 0,
+    "fat_g": 21.5,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 65,
+    "sat_fat_g": 9,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 250
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "vacio_asado",
+    "name_es": "Vacío asado",
+    "name_en": "Grilled flank (vacío)",
+    "name_pt": "Vazio assado",
+    "aliases": ["vacio"],
+    "category": "carnes",
+    "kcal": 265,
+    "protein_g": 26,
+    "carbs_g": 0,
+    "fat_g": 17.5,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 60,
+    "sat_fat_g": 7.2,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 250
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "bife_chorizo",
+    "name_es": "Bife de chorizo",
+    "name_en": "Grilled sirloin strip steak",
+    "name_pt": "Contrafilé grelhado",
+    "aliases": ["bife", "entrecot"],
+    "category": "carnes",
+    "kcal": 245,
+    "protein_g": 27,
+    "carbs_g": 0,
+    "fat_g": 15,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 60,
+    "sat_fat_g": 6,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 300
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "lomo_grill",
+    "name_es": "Lomo a la parrilla",
+    "name_en": "Grilled beef tenderloin",
+    "name_pt": "Filé mignon grelhado",
+    "aliases": ["lomo"],
+    "category": "carnes",
+    "kcal": 190,
+    "protein_g": 29,
+    "carbs_g": 0,
+    "fat_g": 8,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 55,
+    "sat_fat_g": 3.2,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 200
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "matambre_asado",
+    "name_es": "Matambre a la parrilla",
+    "name_en": "Grilled matambre (flank skirt)",
+    "name_pt": "Matambre grelhado",
+    "aliases": ["matambre"],
+    "category": "carnes",
+    "kcal": 260,
+    "protein_g": 25,
+    "carbs_g": 0,
+    "fat_g": 17.5,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 60,
+    "sat_fat_g": 7,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 150
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "entrana",
+    "name_es": "Entraña asada",
+    "name_en": "Grilled skirt steak",
+    "name_pt": "Fraldinha grelhada",
+    "aliases": ["entraña"],
+    "category": "carnes",
+    "kcal": 250,
+    "protein_g": 23,
+    "carbs_g": 0,
+    "fat_g": 17.5,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 70,
+    "sat_fat_g": 7,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 200
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "chorizo_parrilla",
+    "name_es": "Chorizo parrillero asado",
+    "name_en": "Grilled Argentine pork sausage",
+    "name_pt": "Linguiça grelhada",
+    "aliases": ["chori", "chorizo"],
+    "category": "carnes",
+    "kcal": 330,
+    "protein_g": 15,
+    "carbs_g": 2,
+    "fat_g": 29,
+    "fiber_g": 0,
+    "sugar_g": 0.5,
+    "sodium_mg": 900,
+    "sat_fat_g": 10.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 80
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "morcilla",
+    "name_es": "Morcilla asada",
+    "name_en": "Grilled blood sausage",
+    "name_pt": "Morcela grelhada",
+    "aliases": [],
+    "category": "carnes",
+    "kcal": 330,
+    "protein_g": 14.6,
+    "carbs_g": 13,
+    "fat_g": 25,
+    "fiber_g": 0.5,
+    "sugar_g": 0,
+    "sodium_mg": 700,
+    "sat_fat_g": 9.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 80
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "molleja",
+    "name_es": "Molleja asada",
+    "name_en": "Grilled sweetbreads",
+    "name_pt": "Molejas grelhadas",
+    "aliases": ["mollejas"],
+    "category": "carnes",
+    "kcal": 280,
+    "protein_g": 15,
+    "carbs_g": 0,
+    "fat_g": 24,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 80,
+    "sat_fat_g": 9,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "chinchulines",
+    "name_es": "Chinchulines asados",
+    "name_en": "Grilled chitterlings",
+    "name_pt": "Tripa grelhada",
+    "aliases": ["chinchulin"],
+    "category": "carnes",
+    "kcal": 280,
+    "protein_g": 13,
+    "carbs_g": 0,
+    "fat_g": 25,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 70,
+    "sat_fat_g": 10,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 100
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "provoleta",
+    "name_es": "Provoleta a la parrilla",
+    "name_en": "Grilled provolone",
+    "name_pt": "Provolone na brasa",
+    "aliases": ["provolone"],
+    "category": "carnes",
+    "kcal": 350,
+    "protein_g": 24,
+    "carbs_g": 2,
+    "fat_g": 27.5,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 800,
+    "sat_fat_g": 16.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "pollo_asado_piel",
+    "name_es": "Pollo asado con piel",
+    "name_en": "Roast chicken with skin",
+    "name_pt": "Frango assado com pele",
+    "aliases": ["pollo", "cuarto de pollo"],
+    "category": "carnes",
+    "kcal": 215,
+    "protein_g": 25,
+    "carbs_g": 0,
+    "fat_g": 12.5,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 80,
+    "sat_fat_g": 3.5,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 250
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "pechuga_grill",
+    "name_es": "Pechuga de pollo a la plancha",
+    "name_en": "Grilled chicken breast",
+    "name_pt": "Peito de frango grelhado",
+    "aliases": ["pechuga", "pollo a la plancha"],
+    "category": "carnes",
+    "kcal": 165,
+    "protein_g": 31,
+    "carbs_g": 0,
+    "fat_g": 3.6,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 74,
+    "sat_fat_g": 1,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 180
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "carne_picada_cocida",
+    "name_es": "Carne picada común cocida",
+    "name_en": "Cooked ground beef",
+    "name_pt": "Carne moída cozida",
+    "aliases": ["picada"],
+    "category": "carnes",
+    "kcal": 270,
+    "protein_g": 25,
+    "carbs_g": 0,
+    "fat_g": 18.5,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 70,
+    "sat_fat_g": 7.5,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 120
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "hamburguesa_casera",
+    "name_es": "Hamburguesa casera de carne",
+    "name_en": "Homemade beef patty",
+    "name_pt": "Hambúrguer caseiro",
+    "aliases": ["hamburguesa"],
+    "category": "carnes",
+    "kcal": 250,
+    "protein_g": 20,
+    "carbs_g": 2,
+    "fat_g": 18,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 350,
+    "sat_fat_g": 7,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 110
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "hamburguesa_congelada",
+    "name_es": "Hamburguesa congelada (tipo comercial)",
+    "name_en": "Frozen beef patty",
+    "name_pt": "Hambúrguer congelado",
+    "aliases": ["paty"],
+    "category": "carnes",
+    "kcal": 270,
+    "protein_g": 15,
+    "carbs_g": 3,
+    "fat_g": 22,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 600,
+    "sat_fat_g": 9.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 80
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "bondiola_cerdo",
+    "name_es": "Bondiola de cerdo asada",
+    "name_en": "Roast pork shoulder (bondiola)",
+    "name_pt": "Copa lombo assada",
+    "aliases": ["bondiola"],
+    "category": "carnes",
+    "kcal": 250,
+    "protein_g": 24,
+    "carbs_g": 0,
+    "fat_g": 17,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 70,
+    "sat_fat_g": 6,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 200
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "matambre_cerdo",
+    "name_es": "Matambre de cerdo a la pizza",
+    "name_en": "Pork matambre with pizza topping",
+    "name_pt": "Matambre suíno à pizzaiolo",
+    "aliases": ["matambrito"],
+    "category": "carnes",
+    "kcal": 250,
+    "protein_g": 22,
+    "carbs_g": 3,
+    "fat_g": 16.5,
+    "fiber_g": 0.3,
+    "sugar_g": 2,
+    "sodium_mg": 450,
+    "sat_fat_g": 7,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 200
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "salchicha_viena",
+    "name_es": "Salchicha tipo viena",
+    "name_en": "Frankfurter (viena)",
+    "name_pt": "Salsicha tipo viena",
+    "aliases": ["salchicha", "pancho"],
+    "category": "carnes",
+    "kcal": 280,
+    "protein_g": 11,
+    "carbs_g": 4,
+    "fat_g": 24.5,
+    "fiber_g": 0,
+    "sugar_g": 1,
+    "sodium_mg": 900,
+    "sat_fat_g": 9,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 45
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "jamon_cocido",
+    "name_es": "Jamón cocido",
+    "name_en": "Cooked ham",
+    "name_pt": "Presunto cozido",
+    "aliases": ["jamon"],
+    "category": "carnes",
+    "kcal": 115,
+    "protein_g": 17,
+    "carbs_g": 2,
+    "fat_g": 4,
+    "fiber_g": 0,
+    "sugar_g": 1,
+    "sodium_mg": 1100,
+    "sat_fat_g": 1.3,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 20
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "jamon_crudo",
+    "name_es": "Jamón crudo",
+    "name_en": "Cured ham",
+    "name_pt": "Presunto cru",
+    "aliases": ["serrano"],
+    "category": "carnes",
+    "kcal": 250,
+    "protein_g": 27,
+    "carbs_g": 0,
+    "fat_g": 16,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 2200,
+    "sat_fat_g": 5.5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 15
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "salame",
+    "name_es": "Salame",
+    "name_en": "Salami",
+    "name_pt": "Salame",
+    "aliases": ["salamin"],
+    "category": "carnes",
+    "kcal": 400,
+    "protein_g": 22,
+    "carbs_g": 2,
+    "fat_g": 34,
+    "fiber_g": 0,
+    "sugar_g": 1,
+    "sodium_mg": 1800,
+    "sat_fat_g": 12.5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 8
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "mortadela",
+    "name_es": "Mortadela",
+    "name_en": "Mortadella",
+    "name_pt": "Mortadela",
+    "aliases": [],
+    "category": "carnes",
+    "kcal": 310,
+    "protein_g": 13,
+    "carbs_g": 3,
+    "fat_g": 27,
+    "fiber_g": 0,
+    "sugar_g": 1,
+    "sodium_mg": 1100,
+    "sat_fat_g": 9.5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 15
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "lengua_vinagreta",
+    "name_es": "Lengua a la vinagreta",
+    "name_en": "Beef tongue vinaigrette",
+    "name_pt": "Língua ao vinagrete",
+    "aliases": ["lengua"],
+    "category": "carnes",
+    "kcal": 220,
+    "protein_g": 15,
+    "carbs_g": 3,
+    "fat_g": 16.5,
+    "fiber_g": 0.5,
+    "sugar_g": 1,
+    "sodium_mg": 350,
+    "sat_fat_g": 4.5,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "matambre_arrollado",
+    "name_es": "Matambre arrollado",
+    "name_en": "Rolled stuffed flank (matambre)",
+    "name_pt": "Matambre recheado",
+    "aliases": [],
+    "category": "carnes",
+    "kcal": 220,
+    "protein_g": 20,
+    "carbs_g": 2,
+    "fat_g": 14.5,
+    "fiber_g": 0.3,
+    "sugar_g": 1,
+    "sodium_mg": 600,
+    "sat_fat_g": 5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 60
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "vitel_tone",
+    "name_es": "Vitel toné",
+    "name_en": "Vitello tonnato",
+    "name_pt": "Vitello tonnato",
+    "aliases": ["vitel tonne"],
+    "category": "carnes",
+    "kcal": 230,
+    "protein_g": 17,
+    "carbs_g": 2,
+    "fat_g": 17,
+    "fiber_g": 0,
+    "sugar_g": 1,
+    "sodium_mg": 450,
+    "sat_fat_g": 3,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 120
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "huevo_duro",
+    "name_es": "Huevo duro",
+    "name_en": "Hard-boiled egg",
+    "name_pt": "Ovo cozido",
+    "aliases": ["huevo"],
+    "category": "huevos",
+    "kcal": 155,
+    "protein_g": 12.6,
+    "carbs_g": 1.1,
+    "fat_g": 10.6,
+    "fiber_g": 0,
+    "sugar_g": 1.1,
+    "sodium_mg": 124,
+    "sat_fat_g": 3.3,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 50
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "huevo_frito",
+    "name_es": "Huevo frito",
+    "name_en": "Fried egg",
+    "name_pt": "Ovo frito",
+    "aliases": [],
+    "category": "huevos",
+    "kcal": 196,
+    "protein_g": 13.6,
+    "carbs_g": 0.8,
+    "fat_g": 15,
+    "fiber_g": 0,
+    "sugar_g": 0.4,
+    "sodium_mg": 207,
+    "sat_fat_g": 4.3,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 46
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "huevos_revueltos",
+    "name_es": "Huevos revueltos",
+    "name_en": "Scrambled eggs",
+    "name_pt": "Ovos mexidos",
+    "aliases": ["revuelto"],
+    "category": "huevos",
+    "kcal": 150,
+    "protein_g": 10,
+    "carbs_g": 1.6,
+    "fat_g": 11,
+    "fiber_g": 0,
+    "sugar_g": 1.4,
+    "sodium_mg": 145,
+    "sat_fat_g": 3.3,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 100
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "milanesa_carne_frita",
+    "name_es": "Milanesa de carne frita",
+    "name_en": "Breaded fried beef cutlet",
+    "name_pt": "Bife à milanesa frito",
+    "aliases": ["milanesa", "mila"],
+    "category": "milanesas",
+    "kcal": 270,
+    "protein_g": 18,
+    "carbs_g": 14,
+    "fat_g": 16,
+    "fiber_g": 0.8,
+    "sugar_g": 1,
+    "sodium_mg": 380,
+    "sat_fat_g": 3.5,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 150
+      },
+      {
+        "unit": "large_unit",
+        "grams": 200
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "milanesa_carne_horno",
+    "name_es": "Milanesa de carne al horno",
+    "name_en": "Baked breaded beef cutlet",
+    "name_pt": "Bife à milanesa assado",
+    "aliases": ["milanesa al horno"],
+    "category": "milanesas",
+    "kcal": 220,
+    "protein_g": 20,
+    "carbs_g": 15,
+    "fat_g": 9,
+    "fiber_g": 0.8,
+    "sugar_g": 1,
+    "sodium_mg": 380,
+    "sat_fat_g": 2.5,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 150
+      },
+      {
+        "unit": "large_unit",
+        "grams": 200
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "milanesa_pollo_frita",
+    "name_es": "Milanesa de pollo frita",
+    "name_en": "Breaded fried chicken cutlet",
+    "name_pt": "Frango à milanesa frito",
+    "aliases": ["suprema"],
+    "category": "milanesas",
+    "kcal": 260,
+    "protein_g": 19,
+    "carbs_g": 14,
+    "fat_g": 14,
+    "fiber_g": 0.8,
+    "sugar_g": 1,
+    "sodium_mg": 400,
+    "sat_fat_g": 2.5,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "milanesa_pollo_horno",
+    "name_es": "Milanesa de pollo al horno",
+    "name_en": "Baked breaded chicken cutlet",
+    "name_pt": "Frango à milanesa assado",
+    "aliases": ["suprema al horno"],
+    "category": "milanesas",
+    "kcal": 205,
+    "protein_g": 21,
+    "carbs_g": 15,
+    "fat_g": 7,
+    "fiber_g": 0.8,
+    "sugar_g": 1,
+    "sodium_mg": 400,
+    "sat_fat_g": 1.5,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "milanesa_napolitana",
+    "name_es": "Milanesa a la napolitana",
+    "name_en": "Breaded cutlet with ham, cheese and tomato",
+    "name_pt": "Milanesa à napolitana",
+    "aliases": ["napo"],
+    "category": "milanesas",
+    "kcal": 250,
+    "protein_g": 18,
+    "carbs_g": 11,
+    "fat_g": 15,
+    "fiber_g": 0.8,
+    "sugar_g": 2,
+    "sodium_mg": 520,
+    "sat_fat_g": 5.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 250
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "milanesa_soja",
+    "name_es": "Milanesa de soja",
+    "name_en": "Soy cutlet",
+    "name_pt": "Milanesa de soja",
+    "aliases": [],
+    "category": "milanesas",
+    "kcal": 230,
+    "protein_g": 14,
+    "carbs_g": 22,
+    "fat_g": 10,
+    "fiber_g": 4,
+    "sugar_g": 2,
+    "sodium_mg": 420,
+    "sat_fat_g": 1.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 100
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "guiso_lentejas",
+    "name_es": "Guiso de lentejas",
+    "name_en": "Lentil stew",
+    "name_pt": "Ensopado de lentilha",
+    "aliases": ["lentejas"],
+    "category": "platos",
+    "kcal": 120,
+    "protein_g": 6.5,
+    "carbs_g": 14,
+    "fat_g": 4.5,
+    "fiber_g": 3.5,
+    "sugar_g": 2,
+    "sodium_mg": 320,
+    "sat_fat_g": 1.4,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 350
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "locro",
+    "name_es": "Locro",
+    "name_en": "Locro (corn and squash stew)",
+    "name_pt": "Locro",
+    "aliases": [],
+    "category": "platos",
+    "kcal": 130,
+    "protein_g": 6,
+    "carbs_g": 12,
+    "fat_g": 6.5,
+    "fiber_g": 2.5,
+    "sugar_g": 2,
+    "sodium_mg": 330,
+    "sat_fat_g": 2.5,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 400
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "carbonada",
+    "name_es": "Carbonada",
+    "name_en": "Carbonada (beef and fruit stew)",
+    "name_pt": "Carbonada",
+    "aliases": [],
+    "category": "platos",
+    "kcal": 95,
+    "protein_g": 4,
+    "carbs_g": 15,
+    "fat_g": 2.5,
+    "fiber_g": 2,
+    "sugar_g": 6,
+    "sodium_mg": 250,
+    "sat_fat_g": 0.9,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 350
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "puchero",
+    "name_es": "Puchero",
+    "name_en": "Puchero (boiled beef and vegetables)",
+    "name_pt": "Cozido",
+    "aliases": [],
+    "category": "platos",
+    "kcal": 85,
+    "protein_g": 7,
+    "carbs_g": 7,
+    "fat_g": 3,
+    "fiber_g": 1.5,
+    "sugar_g": 2,
+    "sodium_mg": 250,
+    "sat_fat_g": 1,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 450
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "estofado_carne",
+    "name_es": "Estofado de carne",
+    "name_en": "Beef stew",
+    "name_pt": "Ensopado de carne",
+    "aliases": ["estofado"],
+    "category": "platos",
+    "kcal": 140,
+    "protein_g": 12,
+    "carbs_g": 6,
+    "fat_g": 7.5,
+    "fiber_g": 1,
+    "sugar_g": 2,
+    "sodium_mg": 330,
+    "sat_fat_g": 2.5,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 250
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "pastel_papa",
+    "name_es": "Pastel de papa",
+    "name_en": "Shepherd's pie (pastel de papa)",
+    "name_pt": "Escondidinho de carne",
+    "aliases": [],
+    "category": "platos",
+    "kcal": 140,
+    "protein_g": 7.5,
+    "carbs_g": 12,
+    "fat_g": 7,
+    "fiber_g": 1.2,
+    "sugar_g": 1.5,
+    "sodium_mg": 300,
+    "sat_fat_g": 3,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "guiso_arroz",
+    "name_es": "Guiso de arroz",
+    "name_en": "Rice stew",
+    "name_pt": "Arroz ensopado",
+    "aliases": [],
+    "category": "platos",
+    "kcal": 125,
+    "protein_g": 6,
+    "carbs_g": 16,
+    "fat_g": 4,
+    "fiber_g": 1,
+    "sugar_g": 1.5,
+    "sodium_mg": 300,
+    "sat_fat_g": 1.3,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 350
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "humita_olla",
+    "name_es": "Humita en olla",
+    "name_en": "Creamed corn stew (humita)",
+    "name_pt": "Pamonha de panela",
+    "aliases": ["humita"],
+    "category": "platos",
+    "kcal": 120,
+    "protein_g": 3,
+    "carbs_g": 18,
+    "fat_g": 4.5,
+    "fiber_g": 2,
+    "sugar_g": 5,
+    "sodium_mg": 220,
+    "sat_fat_g": 2,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "tamal",
+    "name_es": "Tamal",
+    "name_en": "Tamale",
+    "name_pt": "Tamale",
+    "aliases": [],
+    "category": "platos",
+    "kcal": 190,
+    "protein_g": 6,
+    "carbs_g": 22,
+    "fat_g": 8.5,
+    "fiber_g": 2.5,
+    "sugar_g": 2,
+    "sodium_mg": 350,
+    "sat_fat_g": 3,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "tortilla_papa",
+    "name_es": "Tortilla de papa",
+    "name_en": "Spanish potato omelette",
+    "name_pt": "Tortilha de batata",
+    "aliases": ["tortilla española"],
+    "category": "platos",
+    "kcal": 160,
+    "protein_g": 6,
+    "carbs_g": 13,
+    "fat_g": 9.5,
+    "fiber_g": 1.3,
+    "sugar_g": 1,
+    "sodium_mg": 300,
+    "sat_fat_g": 2,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "revuelto_gramajo",
+    "name_es": "Revuelto gramajo",
+    "name_en": "Revuelto gramajo (eggs, ham, fries)",
+    "name_pt": "Revuelto gramajo",
+    "aliases": [],
+    "category": "platos",
+    "kcal": 230,
+    "protein_g": 8,
+    "carbs_g": 14,
+    "fat_g": 16,
+    "fiber_g": 1.5,
+    "sugar_g": 1.5,
+    "sodium_mg": 400,
+    "sat_fat_g": 3.5,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "pastel_choclo",
+    "name_es": "Pastel de choclo",
+    "name_en": "Corn and meat pie (pastel de choclo)",
+    "name_pt": "Torta de milho com carne",
+    "aliases": [],
+    "category": "platos",
+    "kcal": 140,
+    "protein_g": 7,
+    "carbs_g": 15,
+    "fat_g": 6,
+    "fiber_g": 2,
+    "sugar_g": 4,
+    "sodium_mg": 300,
+    "sat_fat_g": 2.5,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 350
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "feijoada",
+    "name_es": "Feijoada",
+    "name_en": "Feijoada",
+    "name_pt": "Feijoada",
+    "aliases": [],
+    "category": "platos",
+    "kcal": 150,
+    "protein_g": 9,
+    "carbs_g": 9,
+    "fat_g": 8.5,
+    "fiber_g": 4,
+    "sugar_g": 0.5,
+    "sodium_mg": 450,
+    "sat_fat_g": 3,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 350
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "sopa_verduras",
+    "name_es": "Sopa de verduras",
+    "name_en": "Vegetable soup",
+    "name_pt": "Sopa de legumes",
+    "aliases": ["sopa"],
+    "category": "platos",
+    "kcal": 35,
+    "protein_g": 1.5,
+    "carbs_g": 6,
+    "fat_g": 0.6,
+    "fiber_g": 1.2,
+    "sugar_g": 1.5,
+    "sodium_mg": 300,
+    "sat_fat_g": 0.1,
+    "servings": [
+      {
+        "unit": "bowl",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "tarta_jamon_queso",
+    "name_es": "Tarta de jamón y queso",
+    "name_en": "Ham and cheese tart",
+    "name_pt": "Torta de presunto e queijo",
+    "aliases": ["tarta"],
+    "category": "tartas",
+    "kcal": 270,
+    "protein_g": 11,
+    "carbs_g": 21,
+    "fat_g": 16,
+    "fiber_g": 0.8,
+    "sugar_g": 1.5,
+    "sodium_mg": 550,
+    "sat_fat_g": 7.5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "tarta_verdura",
+    "name_es": "Tarta de verdura (acelga)",
+    "name_en": "Swiss chard tart",
+    "name_pt": "Torta de acelga",
+    "aliases": [],
+    "category": "tartas",
+    "kcal": 210,
+    "protein_g": 8,
+    "carbs_g": 18,
+    "fat_g": 12,
+    "fiber_g": 1.8,
+    "sugar_g": 1.5,
+    "sodium_mg": 380,
+    "sat_fat_g": 5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "tarta_zapallitos",
+    "name_es": "Tarta de zapallitos",
+    "name_en": "Zucchini tart",
+    "name_pt": "Torta de abobrinha",
+    "aliases": [],
+    "category": "tartas",
+    "kcal": 200,
+    "protein_g": 7,
+    "carbs_g": 17,
+    "fat_g": 11.5,
+    "fiber_g": 1.5,
+    "sugar_g": 2,
+    "sodium_mg": 350,
+    "sat_fat_g": 5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "pascualina",
+    "name_es": "Pascualina",
+    "name_en": "Torta pascualina (chard and egg pie)",
+    "name_pt": "Torta pascualina",
+    "aliases": [],
+    "category": "tartas",
+    "kcal": 215,
+    "protein_g": 8,
+    "carbs_g": 18,
+    "fat_g": 12.5,
+    "fiber_g": 1.8,
+    "sugar_g": 1.5,
+    "sodium_mg": 380,
+    "sat_fat_g": 5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "empanada_carne_horno",
+    "name_es": "Empanada de carne al horno",
+    "name_en": "Baked beef empanada",
+    "name_pt": "Empanada de carne assada",
+    "aliases": ["empanada"],
+    "category": "empanadas",
+    "kcal": 255,
+    "protein_g": 10,
+    "carbs_g": 25,
+    "fat_g": 12.5,
+    "fiber_g": 1.5,
+    "sugar_g": 2,
+    "sodium_mg": 450,
+    "sat_fat_g": 4.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "empanada_carne_frita",
+    "name_es": "Empanada de carne frita",
+    "name_en": "Fried beef empanada",
+    "name_pt": "Empanada de carne frita",
+    "aliases": ["empanada frita"],
+    "category": "empanadas",
+    "kcal": 300,
+    "protein_g": 10,
+    "carbs_g": 25,
+    "fat_g": 18,
+    "fiber_g": 1.5,
+    "sugar_g": 2,
+    "sodium_mg": 450,
+    "sat_fat_g": 5.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "empanada_jyq",
+    "name_es": "Empanada de jamón y queso",
+    "name_en": "Ham and cheese empanada",
+    "name_pt": "Empanada de presunto e queijo",
+    "aliases": [],
+    "category": "empanadas",
+    "kcal": 270,
+    "protein_g": 11,
+    "carbs_g": 26,
+    "fat_g": 13.5,
+    "fiber_g": 1,
+    "sugar_g": 1.5,
+    "sodium_mg": 600,
+    "sat_fat_g": 6.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 110
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "empanada_pollo",
+    "name_es": "Empanada de pollo",
+    "name_en": "Chicken empanada",
+    "name_pt": "Empanada de frango",
+    "aliases": [],
+    "category": "empanadas",
+    "kcal": 240,
+    "protein_g": 11,
+    "carbs_g": 25,
+    "fat_g": 10.5,
+    "fiber_g": 1.5,
+    "sugar_g": 1.5,
+    "sodium_mg": 420,
+    "sat_fat_g": 3.2,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 120
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "empanada_humita",
+    "name_es": "Empanada de humita",
+    "name_en": "Creamed corn empanada",
+    "name_pt": "Empanada de milho",
+    "aliases": [],
+    "category": "empanadas",
+    "kcal": 240,
+    "protein_g": 6.5,
+    "carbs_g": 30,
+    "fat_g": 10.5,
+    "fiber_g": 2,
+    "sugar_g": 4,
+    "sodium_mg": 400,
+    "sat_fat_g": 4.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 110
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "empanada_verdura",
+    "name_es": "Empanada de verdura",
+    "name_en": "Spinach/chard empanada",
+    "name_pt": "Empanada de verdura",
+    "aliases": [],
+    "category": "empanadas",
+    "kcal": 230,
+    "protein_g": 7.5,
+    "carbs_g": 26,
+    "fat_g": 10.5,
+    "fiber_g": 2,
+    "sugar_g": 1.5,
+    "sodium_mg": 420,
+    "sat_fat_g": 4.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 110
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "empanada_caprese",
+    "name_es": "Empanada caprese",
+    "name_en": "Caprese empanada",
+    "name_pt": "Empanada caprese",
+    "aliases": [],
+    "category": "empanadas",
+    "kcal": 265,
+    "protein_g": 10,
+    "carbs_g": 26,
+    "fat_g": 13.5,
+    "fiber_g": 1.2,
+    "sugar_g": 2,
+    "sodium_mg": 480,
+    "sat_fat_g": 6.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 110
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "pizza_muzzarella",
+    "name_es": "Pizza de muzzarella",
+    "name_en": "Mozzarella pizza",
+    "name_pt": "Pizza de muçarela",
+    "aliases": ["pizza", "muzza"],
+    "category": "pizzas",
+    "kcal": 265,
+    "protein_g": 11,
+    "carbs_g": 30,
+    "fat_g": 11,
+    "fiber_g": 1.8,
+    "sugar_g": 3,
+    "sodium_mg": 600,
+    "sat_fat_g": 5.5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 120
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "pizza_napolitana",
+    "name_es": "Pizza napolitana",
+    "name_en": "Neapolitan pizza (tomato, garlic)",
+    "name_pt": "Pizza napolitana",
+    "aliases": [],
+    "category": "pizzas",
+    "kcal": 250,
+    "protein_g": 11,
+    "carbs_g": 28,
+    "fat_g": 10.5,
+    "fiber_g": 2,
+    "sugar_g": 3.5,
+    "sodium_mg": 580,
+    "sat_fat_g": 5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 125
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "fugazzeta",
+    "name_es": "Fugazzeta",
+    "name_en": "Fugazzeta (onion and cheese pizza)",
+    "name_pt": "Fugazzeta",
+    "aliases": ["fugazza"],
+    "category": "pizzas",
+    "kcal": 290,
+    "protein_g": 12,
+    "carbs_g": 28,
+    "fat_g": 14.5,
+    "fiber_g": 1.8,
+    "sugar_g": 3,
+    "sodium_mg": 600,
+    "sat_fat_g": 7,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 140
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "faina",
+    "name_es": "Fainá",
+    "name_en": "Fainá (chickpea flatbread)",
+    "name_pt": "Farinata",
+    "aliases": [],
+    "category": "pizzas",
+    "kcal": 240,
+    "protein_g": 8,
+    "carbs_g": 30,
+    "fat_g": 10,
+    "fiber_g": 5,
+    "sugar_g": 1,
+    "sodium_mg": 400,
+    "sat_fat_g": 1.4,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 80
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "choripan",
+    "name_es": "Choripán",
+    "name_en": "Choripán (sausage sandwich)",
+    "name_pt": "Choripán",
+    "aliases": ["chori"],
+    "category": "sandwiches",
+    "kcal": 290,
+    "protein_g": 11.5,
+    "carbs_g": 25,
+    "fat_g": 16,
+    "fiber_g": 1.2,
+    "sugar_g": 2,
+    "sodium_mg": 720,
+    "sat_fat_g": 5.8,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 200
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "bondipan",
+    "name_es": "Sándwich de bondiola",
+    "name_en": "Pork shoulder sandwich",
+    "name_pt": "Sanduíche de copa lombo",
+    "aliases": ["bondipan"],
+    "category": "sandwiches",
+    "kcal": 260,
+    "protein_g": 15,
+    "carbs_g": 24,
+    "fat_g": 11.5,
+    "fiber_g": 1.2,
+    "sugar_g": 2,
+    "sodium_mg": 500,
+    "sat_fat_g": 3.8,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 250
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "sandwich_miga",
+    "name_es": "Sándwich de miga de jamón y queso",
+    "name_en": "Ham and cheese crustless sandwich",
+    "name_pt": "Sanduíche de pão de forma",
+    "aliases": ["miga", "sanguchito"],
+    "category": "sandwiches",
+    "kcal": 260,
+    "protein_g": 10,
+    "carbs_g": 26,
+    "fat_g": 13,
+    "fiber_g": 1,
+    "sugar_g": 3,
+    "sodium_mg": 600,
+    "sat_fat_g": 5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 35
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "lomito_completo",
+    "name_es": "Lomito completo",
+    "name_en": "Steak sandwich (lomito completo)",
+    "name_pt": "Lomito completo",
+    "aliases": ["lomito"],
+    "category": "sandwiches",
+    "kcal": 230,
+    "protein_g": 13,
+    "carbs_g": 18,
+    "fat_g": 12,
+    "fiber_g": 1,
+    "sugar_g": 2,
+    "sodium_mg": 520,
+    "sat_fat_g": 4,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 400
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "tostado_jyq",
+    "name_es": "Tostado de jamón y queso",
+    "name_en": "Toasted ham and cheese sandwich",
+    "name_pt": "Misto quente",
+    "aliases": ["tostado", "misto"],
+    "category": "sandwiches",
+    "kcal": 270,
+    "protein_g": 13,
+    "carbs_g": 27,
+    "fat_g": 12,
+    "fiber_g": 1.5,
+    "sugar_g": 3,
+    "sodium_mg": 750,
+    "sat_fat_g": 6,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 140
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "chivito",
+    "name_es": "Chivito",
+    "name_en": "Chivito (Uruguayan steak sandwich)",
+    "name_pt": "Chivito",
+    "aliases": [],
+    "category": "sandwiches",
+    "kcal": 230,
+    "protein_g": 13,
+    "carbs_g": 15,
+    "fat_g": 13,
+    "fiber_g": 1,
+    "sugar_g": 2,
+    "sodium_mg": 500,
+    "sat_fat_g": 4.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 400
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "hamburguesa_completa",
+    "name_es": "Hamburguesa con pan y queso",
+    "name_en": "Cheeseburger",
+    "name_pt": "Cheeseburger",
+    "aliases": ["burger"],
+    "category": "rapida",
+    "kcal": 255,
+    "protein_g": 13,
+    "carbs_g": 25,
+    "fat_g": 11.5,
+    "fiber_g": 1.5,
+    "sugar_g": 5,
+    "sodium_mg": 500,
+    "sat_fat_g": 4.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 200
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "pancho",
+    "name_es": "Pancho (salchicha con pan)",
+    "name_en": "Hot dog",
+    "name_pt": "Cachorro-quente",
+    "aliases": ["hot dog"],
+    "category": "rapida",
+    "kcal": 265,
+    "protein_g": 9,
+    "carbs_g": 28,
+    "fat_g": 13,
+    "fiber_g": 1.2,
+    "sugar_g": 4,
+    "sodium_mg": 750,
+    "sat_fat_g": 4.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 110
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "completo",
+    "name_es": "Completo (hot dog chileno)",
+    "name_en": "Chilean completo hot dog",
+    "name_pt": "Completo chileno",
+    "aliases": [],
+    "category": "rapida",
+    "kcal": 230,
+    "protein_g": 7,
+    "carbs_g": 22,
+    "fat_g": 13,
+    "fiber_g": 2,
+    "sugar_g": 4,
+    "sodium_mg": 600,
+    "sat_fat_g": 3,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 250
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "nuggets",
+    "name_es": "Nuggets de pollo",
+    "name_en": "Chicken nuggets",
+    "name_pt": "Nuggets de frango",
+    "aliases": ["patitas"],
+    "category": "rapida",
+    "kcal": 296,
+    "protein_g": 15,
+    "carbs_g": 16,
+    "fat_g": 19,
+    "fiber_g": 1,
+    "sugar_g": 0.5,
+    "sodium_mg": 600,
+    "sat_fat_g": 3.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 18
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "sushi_roll",
+    "name_es": "Sushi roll (salmón y queso)",
+    "name_en": "Salmon and cream cheese sushi roll",
+    "name_pt": "Sushi uramaki de salmão",
+    "aliases": ["sushi", "philadelphia"],
+    "category": "rapida",
+    "kcal": 180,
+    "protein_g": 6,
+    "carbs_g": 26,
+    "fat_g": 5.5,
+    "fiber_g": 0.5,
+    "sugar_g": 5,
+    "sodium_mg": 400,
+    "sat_fat_g": 2,
+    "servings": [
+      {
+        "unit": "piece",
+        "grams": 30
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "coxinha",
+    "name_es": "Coxinha",
+    "name_en": "Coxinha (chicken croquette)",
+    "name_pt": "Coxinha",
+    "aliases": [],
+    "category": "rapida",
+    "kcal": 290,
+    "protein_g": 9,
+    "carbs_g": 30,
+    "fat_g": 15,
+    "fiber_g": 1.2,
+    "sugar_g": 1.5,
+    "sodium_mg": 450,
+    "sat_fat_g": 3.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 80
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "arepa",
+    "name_es": "Arepa",
+    "name_en": "Arepa",
+    "name_pt": "Arepa",
+    "aliases": [],
+    "category": "panificados",
+    "kcal": 210,
+    "protein_g": 4.5,
+    "carbs_g": 43,
+    "fat_g": 2.2,
+    "fiber_g": 3,
+    "sugar_g": 0.5,
+    "sodium_mg": 300,
+    "sat_fat_g": 0.4,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 100
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "ravioles_ricota",
+    "name_es": "Ravioles de ricota con salsa",
+    "name_en": "Ricotta ravioli with tomato sauce",
+    "name_pt": "Ravioli de ricota ao sugo",
+    "aliases": ["ravioles"],
+    "category": "pastas",
+    "kcal": 180,
+    "protein_g": 8,
+    "carbs_g": 25,
+    "fat_g": 5.5,
+    "fiber_g": 1.8,
+    "sugar_g": 3,
+    "sodium_mg": 400,
+    "sat_fat_g": 2.8,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "sorrentinos",
+    "name_es": "Sorrentinos de jamón y queso con salsa",
+    "name_en": "Ham and cheese sorrentinos with sauce",
+    "name_pt": "Sorrentinos de presunto e queijo",
+    "aliases": [],
+    "category": "pastas",
+    "kcal": 200,
+    "protein_g": 9,
+    "carbs_g": 26,
+    "fat_g": 7,
+    "fiber_g": 1.5,
+    "sugar_g": 3,
+    "sodium_mg": 450,
+    "sat_fat_g": 3.5,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "noquis",
+    "name_es": "Ñoquis de papa con salsa",
+    "name_en": "Potato gnocchi with tomato sauce",
+    "name_pt": "Nhoque de batata ao sugo",
+    "aliases": ["ñoquis", "nioquis"],
+    "category": "pastas",
+    "kcal": 150,
+    "protein_g": 4,
+    "carbs_g": 26,
+    "fat_g": 3.5,
+    "fiber_g": 1.8,
+    "sugar_g": 3,
+    "sodium_mg": 380,
+    "sat_fat_g": 1,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "tallarines_tuco",
+    "name_es": "Tallarines con tuco",
+    "name_en": "Spaghetti with meat tomato sauce",
+    "name_pt": "Talharim ao molho",
+    "aliases": ["fideos con tuco"],
+    "category": "pastas",
+    "kcal": 140,
+    "protein_g": 5,
+    "carbs_g": 24,
+    "fat_g": 2.5,
+    "fiber_g": 1.8,
+    "sugar_g": 4,
+    "sodium_mg": 300,
+    "sat_fat_g": 0.5,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "fideos_manteca",
+    "name_es": "Fideos con manteca y queso",
+    "name_en": "Buttered noodles with cheese",
+    "name_pt": "Macarrão na manteiga",
+    "aliases": [],
+    "category": "pastas",
+    "kcal": 200,
+    "protein_g": 6,
+    "carbs_g": 30,
+    "fat_g": 6,
+    "fiber_g": 1.6,
+    "sugar_g": 1,
+    "sodium_mg": 150,
+    "sat_fat_g": 3.5,
+    "servings": [
+      {
+        "unit": "plate",
+        "grams": 250
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "fideos_cocidos",
+    "name_es": "Fideos cocidos (sin salsa)",
+    "name_en": "Cooked pasta (plain)",
+    "name_pt": "Macarrão cozido",
+    "aliases": ["pasta", "fideos"],
+    "category": "pastas",
+    "kcal": 158,
+    "protein_g": 5.8,
+    "carbs_g": 31,
+    "fat_g": 0.9,
+    "fiber_g": 1.8,
+    "sugar_g": 0.6,
+    "sodium_mg": 1,
+    "sat_fat_g": 0.2,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 140
+      },
+      {
+        "unit": "plate",
+        "grams": 250
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "canelones",
+    "name_es": "Canelones de verdura con salsa",
+    "name_en": "Spinach cannelloni with sauce",
+    "name_pt": "Canelone de espinafre",
+    "aliases": [],
+    "category": "pastas",
+    "kcal": 150,
+    "protein_g": 7,
+    "carbs_g": 13,
+    "fat_g": 8,
+    "fiber_g": 1.5,
+    "sugar_g": 3,
+    "sodium_mg": 380,
+    "sat_fat_g": 4,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "lasagna",
+    "name_es": "Lasaña",
+    "name_en": "Lasagna",
+    "name_pt": "Lasanha",
+    "aliases": ["lasagna"],
+    "category": "pastas",
+    "kcal": 165,
+    "protein_g": 9,
+    "carbs_g": 14,
+    "fat_g": 8,
+    "fiber_g": 1.2,
+    "sugar_g": 3,
+    "sodium_mg": 400,
+    "sat_fat_g": 4,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "arroz_blanco",
+    "name_es": "Arroz blanco cocido",
+    "name_en": "Cooked white rice",
+    "name_pt": "Arroz branco cozido",
+    "aliases": ["arroz"],
+    "category": "cereales",
+    "kcal": 130,
+    "protein_g": 2.7,
+    "carbs_g": 28,
+    "fat_g": 0.3,
+    "fiber_g": 0.4,
+    "sugar_g": 0,
+    "sodium_mg": 1,
+    "sat_fat_g": 0.1,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 160
+      },
+      {
+        "unit": "plate",
+        "grams": 200
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "arroz_integral",
+    "name_es": "Arroz integral cocido",
+    "name_en": "Cooked brown rice",
+    "name_pt": "Arroz integral cozido",
+    "aliases": [],
+    "category": "cereales",
+    "kcal": 123,
+    "protein_g": 2.7,
+    "carbs_g": 25.6,
+    "fat_g": 1,
+    "fiber_g": 1.6,
+    "sugar_g": 0.2,
+    "sodium_mg": 4,
+    "sat_fat_g": 0.3,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 160
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "pure_papa",
+    "name_es": "Puré de papa",
+    "name_en": "Mashed potatoes",
+    "name_pt": "Purê de batata",
+    "aliases": ["pure"],
+    "category": "guarniciones",
+    "kcal": 105,
+    "protein_g": 2,
+    "carbs_g": 15,
+    "fat_g": 4,
+    "fiber_g": 1.4,
+    "sugar_g": 1.2,
+    "sodium_mg": 300,
+    "sat_fat_g": 2.5,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 200
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "papas_fritas",
+    "name_es": "Papas fritas",
+    "name_en": "French fries",
+    "name_pt": "Batata frita",
+    "aliases": ["fritas"],
+    "category": "guarniciones",
+    "kcal": 312,
+    "protein_g": 3.4,
+    "carbs_g": 41,
+    "fat_g": 15,
+    "fiber_g": 3.8,
+    "sugar_g": 0.3,
+    "sodium_mg": 210,
+    "sat_fat_g": 2.3,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "papa_hervida",
+    "name_es": "Papa hervida",
+    "name_en": "Boiled potato",
+    "name_pt": "Batata cozida",
+    "aliases": ["papa"],
+    "category": "guarniciones",
+    "kcal": 87,
+    "protein_g": 1.9,
+    "carbs_g": 20,
+    "fat_g": 0.1,
+    "fiber_g": 1.8,
+    "sugar_g": 0.9,
+    "sodium_mg": 5,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "batata_horno",
+    "name_es": "Batata al horno",
+    "name_en": "Baked sweet potato",
+    "name_pt": "Batata-doce assada",
+    "aliases": ["boniato"],
+    "category": "guarniciones",
+    "kcal": 90,
+    "protein_g": 2,
+    "carbs_g": 20.7,
+    "fat_g": 0.2,
+    "fiber_g": 3.3,
+    "sugar_g": 6.5,
+    "sodium_mg": 36,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "calabaza_horno",
+    "name_es": "Calabaza al horno",
+    "name_en": "Roasted squash",
+    "name_pt": "Abóbora assada",
+    "aliases": ["zapallo"],
+    "category": "guarniciones",
+    "kcal": 40,
+    "protein_g": 1,
+    "carbs_g": 10,
+    "fat_g": 0.1,
+    "fiber_g": 2,
+    "sugar_g": 4,
+    "sodium_mg": 2,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "ensalada_mixta",
+    "name_es": "Ensalada mixta (sin aderezo)",
+    "name_en": "Mixed salad (no dressing)",
+    "name_pt": "Salada mista",
+    "aliases": ["ensalada"],
+    "category": "guarniciones",
+    "kcal": 20,
+    "protein_g": 1,
+    "carbs_g": 4,
+    "fat_g": 0.2,
+    "fiber_g": 1.5,
+    "sugar_g": 2.5,
+    "sodium_mg": 8,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "bowl",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "ensalada_rusa",
+    "name_es": "Ensalada rusa",
+    "name_en": "Olivier salad",
+    "name_pt": "Salada russa",
+    "aliases": [],
+    "category": "guarniciones",
+    "kcal": 160,
+    "protein_g": 2,
+    "carbs_g": 12,
+    "fat_g": 11.5,
+    "fiber_g": 2,
+    "sugar_g": 2,
+    "sodium_mg": 250,
+    "sat_fat_g": 1.8,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "polenta",
+    "name_es": "Polenta cocida",
+    "name_en": "Cooked polenta",
+    "name_pt": "Polenta cozida",
+    "aliases": [],
+    "category": "cereales",
+    "kcal": 70,
+    "protein_g": 1.6,
+    "carbs_g": 15,
+    "fat_g": 0.3,
+    "fiber_g": 0.5,
+    "sugar_g": 0,
+    "sodium_mg": 150,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 250
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "farofa",
+    "name_es": "Farofa",
+    "name_en": "Farofa (toasted cassava flour)",
+    "name_pt": "Farofa",
+    "aliases": [],
+    "category": "guarniciones",
+    "kcal": 400,
+    "protein_g": 2,
+    "carbs_g": 60,
+    "fat_g": 16,
+    "fiber_g": 6,
+    "sugar_g": 1,
+    "sodium_mg": 500,
+    "sat_fat_g": 5,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 15
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "merluza_frita",
+    "name_es": "Merluza rebozada frita",
+    "name_en": "Fried breaded hake",
+    "name_pt": "Merluza empanada frita",
+    "aliases": ["filet de merluza"],
+    "category": "pescados",
+    "kcal": 220,
+    "protein_g": 15,
+    "carbs_g": 13,
+    "fat_g": 12,
+    "fiber_g": 0.5,
+    "sugar_g": 0.5,
+    "sodium_mg": 300,
+    "sat_fat_g": 2,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "merluza_horno",
+    "name_es": "Merluza al horno",
+    "name_en": "Baked hake",
+    "name_pt": "Merluza assada",
+    "aliases": ["merluza"],
+    "category": "pescados",
+    "kcal": 90,
+    "protein_g": 18,
+    "carbs_g": 0,
+    "fat_g": 1.5,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 90,
+    "sat_fat_g": 0.3,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "salmon_grill",
+    "name_es": "Salmón a la plancha",
+    "name_en": "Grilled salmon",
+    "name_pt": "Salmão grelhado",
+    "aliases": ["salmon"],
+    "category": "pescados",
+    "kcal": 206,
+    "protein_g": 22,
+    "carbs_g": 0,
+    "fat_g": 12.5,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 60,
+    "sat_fat_g": 2.5,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "atun_agua",
+    "name_es": "Atún al natural (escurrido)",
+    "name_en": "Canned tuna in water",
+    "name_pt": "Atum em água",
+    "aliases": ["atun"],
+    "category": "pescados",
+    "kcal": 116,
+    "protein_g": 25.5,
+    "carbs_g": 0,
+    "fat_g": 0.8,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 340,
+    "sat_fat_g": 0.2,
+    "servings": [
+      {
+        "unit": "can",
+        "grams": 120
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "atun_aceite",
+    "name_es": "Atún en aceite (escurrido)",
+    "name_en": "Canned tuna in oil",
+    "name_pt": "Atum em óleo",
+    "aliases": [],
+    "category": "pescados",
+    "kcal": 198,
+    "protein_g": 29,
+    "carbs_g": 0,
+    "fat_g": 8.2,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 350,
+    "sat_fat_g": 1.5,
+    "servings": [
+      {
+        "unit": "can",
+        "grams": 120
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "rabas",
+    "name_es": "Rabas",
+    "name_en": "Fried calamari rings",
+    "name_pt": "Lula à dorê",
+    "aliases": ["calamares fritos"],
+    "category": "pescados",
+    "kcal": 270,
+    "protein_g": 13,
+    "carbs_g": 16,
+    "fat_g": 17,
+    "fiber_g": 0.6,
+    "sugar_g": 0.5,
+    "sodium_mg": 400,
+    "sat_fat_g": 3,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 150
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "pan_frances",
+    "name_es": "Pan francés",
+    "name_en": "French bread roll",
+    "name_pt": "Pão francês",
+    "aliases": ["pan", "flautita", "mignon"],
+    "category": "panificados",
+    "kcal": 270,
+    "protein_g": 8.5,
+    "carbs_g": 56,
+    "fat_g": 1.2,
+    "fiber_g": 2.5,
+    "sugar_g": 2,
+    "sodium_mg": 520,
+    "sat_fat_g": 0.3,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 60
+      },
+      {
+        "unit": "slice",
+        "grams": 25
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "pan_lactal",
+    "name_es": "Pan lactal blanco",
+    "name_en": "White sandwich bread",
+    "name_pt": "Pão de forma branco",
+    "aliases": ["pan de molde"],
+    "category": "panificados",
+    "kcal": 265,
+    "protein_g": 8.5,
+    "carbs_g": 49,
+    "fat_g": 3.5,
+    "fiber_g": 2.7,
+    "sugar_g": 5,
+    "sodium_mg": 490,
+    "sat_fat_g": 0.8,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 25
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "pan_lactal_integral",
+    "name_es": "Pan lactal integral",
+    "name_en": "Whole wheat sandwich bread",
+    "name_pt": "Pão de forma integral",
+    "aliases": ["pan integral"],
+    "category": "panificados",
+    "kcal": 250,
+    "protein_g": 10,
+    "carbs_g": 43,
+    "fat_g": 3.6,
+    "fiber_g": 6.5,
+    "sugar_g": 4,
+    "sodium_mg": 450,
+    "sat_fat_g": 0.7,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 26
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "pan_hamburguesa",
+    "name_es": "Pan de hamburguesa",
+    "name_en": "Hamburger bun",
+    "name_pt": "Pão de hambúrguer",
+    "aliases": [],
+    "category": "panificados",
+    "kcal": 280,
+    "protein_g": 9,
+    "carbs_g": 50,
+    "fat_g": 4.5,
+    "fiber_g": 2,
+    "sugar_g": 5,
+    "sodium_mg": 480,
+    "sat_fat_g": 1,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 60
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "tortilla_trigo",
+    "name_es": "Tortilla de trigo (wrap)",
+    "name_en": "Flour tortilla (wrap)",
+    "name_pt": "Tortilha de trigo",
+    "aliases": ["rapiditas", "wrap"],
+    "category": "panificados",
+    "kcal": 300,
+    "protein_g": 8,
+    "carbs_g": 50,
+    "fat_g": 7.5,
+    "fiber_g": 2.5,
+    "sugar_g": 2,
+    "sodium_mg": 600,
+    "sat_fat_g": 2.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 40
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "bizcochitos_grasa",
+    "name_es": "Bizcochitos de grasa",
+    "name_en": "Argentine lard biscuits",
+    "name_pt": "Biscoitinhos de banha",
+    "aliases": ["bizcochitos", "don satur"],
+    "category": "panificados",
+    "kcal": 470,
+    "protein_g": 9,
+    "carbs_g": 58,
+    "fat_g": 22,
+    "fiber_g": 2,
+    "sugar_g": 2,
+    "sodium_mg": 650,
+    "sat_fat_g": 10,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 8
+      },
+      {
+        "unit": "handful",
+        "grams": 30
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "galletitas_agua",
+    "name_es": "Galletitas de agua",
+    "name_en": "Water crackers",
+    "name_pt": "Bolacha de água e sal",
+    "aliases": ["crackers"],
+    "category": "panificados",
+    "kcal": 420,
+    "protein_g": 10,
+    "carbs_g": 70,
+    "fat_g": 11,
+    "fiber_g": 2.5,
+    "sugar_g": 2,
+    "sodium_mg": 700,
+    "sat_fat_g": 4.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 7
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "galletitas_dulces",
+    "name_es": "Galletitas dulces simples",
+    "name_en": "Plain sweet cookies",
+    "name_pt": "Biscoito doce",
+    "aliases": ["galletitas"],
+    "category": "dulces",
+    "kcal": 470,
+    "protein_g": 6.5,
+    "carbs_g": 70,
+    "fat_g": 18,
+    "fiber_g": 2,
+    "sugar_g": 25,
+    "sodium_mg": 350,
+    "sat_fat_g": 8,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 8
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "galletitas_rellenas",
+    "name_es": "Galletitas rellenas de chocolate",
+    "name_en": "Chocolate sandwich cookies",
+    "name_pt": "Biscoito recheado de chocolate",
+    "aliases": ["oreo", "rellenas"],
+    "category": "dulces",
+    "kcal": 470,
+    "protein_g": 5,
+    "carbs_g": 70,
+    "fat_g": 19.5,
+    "fiber_g": 2.5,
+    "sugar_g": 38,
+    "sodium_mg": 380,
+    "sat_fat_g": 6,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 11
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "grisines",
+    "name_es": "Grisines",
+    "name_en": "Breadsticks",
+    "name_pt": "Grissini",
+    "aliases": [],
+    "category": "panificados",
+    "kcal": 410,
+    "protein_g": 12,
+    "carbs_g": 72,
+    "fat_g": 8,
+    "fiber_g": 3,
+    "sugar_g": 2,
+    "sodium_mg": 800,
+    "sat_fat_g": 2,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 8
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "tostadas_arroz",
+    "name_es": "Galletas de arroz",
+    "name_en": "Rice cakes",
+    "name_pt": "Biscoito de arroz",
+    "aliases": ["tostadas de arroz"],
+    "category": "panificados",
+    "kcal": 387,
+    "protein_g": 8,
+    "carbs_g": 81,
+    "fat_g": 3,
+    "fiber_g": 4,
+    "sugar_g": 0.9,
+    "sodium_mg": 50,
+    "sat_fat_g": 0.6,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 9
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "chipa",
+    "name_es": "Chipá",
+    "name_en": "Chipá (cheese bread)",
+    "name_pt": "Pão de queijo",
+    "aliases": ["pao de queijo", "chipa"],
+    "category": "panificados",
+    "kcal": 330,
+    "protein_g": 8,
+    "carbs_g": 38,
+    "fat_g": 16,
+    "fiber_g": 0.5,
+    "sugar_g": 1,
+    "sodium_mg": 650,
+    "sat_fat_g": 9,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 25
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "torta_frita",
+    "name_es": "Torta frita",
+    "name_en": "Fried dough (torta frita)",
+    "name_pt": "Torta frita",
+    "aliases": [],
+    "category": "panificados",
+    "kcal": 380,
+    "protein_g": 6.5,
+    "carbs_g": 45,
+    "fat_g": 19.5,
+    "fiber_g": 1.5,
+    "sugar_g": 1.5,
+    "sodium_mg": 500,
+    "sat_fat_g": 8,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 60
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "sopaipilla",
+    "name_es": "Sopaipilla",
+    "name_en": "Sopaipilla",
+    "name_pt": "Sopaipilla",
+    "aliases": [],
+    "category": "panificados",
+    "kcal": 350,
+    "protein_g": 6,
+    "carbs_g": 45,
+    "fat_g": 16,
+    "fiber_g": 2,
+    "sugar_g": 1,
+    "sodium_mg": 400,
+    "sat_fat_g": 6,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 50
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "tapioca",
+    "name_es": "Tapioca (crepe)",
+    "name_en": "Tapioca crepe",
+    "name_pt": "Tapioca",
+    "aliases": [],
+    "category": "panificados",
+    "kcal": 240,
+    "protein_g": 0.2,
+    "carbs_g": 60,
+    "fat_g": 0,
+    "fiber_g": 0.5,
+    "sugar_g": 0,
+    "sodium_mg": 2,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 70
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "medialuna_manteca",
+    "name_es": "Medialuna de manteca",
+    "name_en": "Butter croissant (medialuna)",
+    "name_pt": "Croissant de manteiga",
+    "aliases": ["medialuna", "medialunas"],
+    "category": "facturas",
+    "kcal": 410,
+    "protein_g": 7.5,
+    "carbs_g": 47,
+    "fat_g": 21,
+    "fiber_g": 1.5,
+    "sugar_g": 15,
+    "sodium_mg": 400,
+    "sat_fat_g": 11.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 40
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "medialuna_grasa",
+    "name_es": "Medialuna de grasa",
+    "name_en": "Lard croissant (medialuna de grasa)",
+    "name_pt": "Croissant de banha",
+    "aliases": [],
+    "category": "facturas",
+    "kcal": 400,
+    "protein_g": 7.5,
+    "carbs_g": 47,
+    "fat_g": 20,
+    "fiber_g": 1.5,
+    "sugar_g": 8,
+    "sodium_mg": 450,
+    "sat_fat_g": 9,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 40
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "vigilante",
+    "name_es": "Factura con membrillo (vigilante)",
+    "name_en": "Pastry with quince paste",
+    "name_pt": "Folhado com goiabada",
+    "aliases": ["factura", "facturas"],
+    "category": "facturas",
+    "kcal": 380,
+    "protein_g": 6,
+    "carbs_g": 52,
+    "fat_g": 16.5,
+    "fiber_g": 1.5,
+    "sugar_g": 22,
+    "sodium_mg": 300,
+    "sat_fat_g": 7,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 50
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "bola_fraile",
+    "name_es": "Bola de fraile",
+    "name_en": "Bola de fraile (filled doughnut)",
+    "name_pt": "Sonho",
+    "aliases": ["berlinesa", "sonho"],
+    "category": "facturas",
+    "kcal": 380,
+    "protein_g": 6.5,
+    "carbs_g": 47,
+    "fat_g": 18.5,
+    "fiber_g": 1.2,
+    "sugar_g": 18,
+    "sodium_mg": 300,
+    "sat_fat_g": 5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 60
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "churro",
+    "name_es": "Churro con dulce de leche",
+    "name_en": "Churro filled with dulce de leche",
+    "name_pt": "Churros com doce de leite",
+    "aliases": ["churros"],
+    "category": "facturas",
+    "kcal": 410,
+    "protein_g": 5.5,
+    "carbs_g": 50,
+    "fat_g": 21,
+    "fiber_g": 1.5,
+    "sugar_g": 25,
+    "sodium_mg": 250,
+    "sat_fat_g": 6,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 50
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "tortita_negra",
+    "name_es": "Tortita negra",
+    "name_en": "Tortita negra (sugar-topped pastry)",
+    "name_pt": "Tortita negra",
+    "aliases": [],
+    "category": "facturas",
+    "kcal": 410,
+    "protein_g": 6,
+    "carbs_g": 58,
+    "fat_g": 17,
+    "fiber_g": 1.5,
+    "sugar_g": 25,
+    "sodium_mg": 350,
+    "sat_fat_g": 7,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 50
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "pan_dulce",
+    "name_es": "Pan dulce",
+    "name_en": "Panettone (pan dulce)",
+    "name_pt": "Panetone",
+    "aliases": ["panettone"],
+    "category": "facturas",
+    "kcal": 360,
+    "protein_g": 6.5,
+    "carbs_g": 55,
+    "fat_g": 12.5,
+    "fiber_g": 2,
+    "sugar_g": 30,
+    "sodium_mg": 200,
+    "sat_fat_g": 5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 80
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "alfajor_chocolate",
+    "name_es": "Alfajor de chocolate con dulce de leche",
+    "name_en": "Chocolate-coated alfajor",
+    "name_pt": "Alfajor de chocolate",
+    "aliases": ["alfajor"],
+    "category": "dulces",
+    "kcal": 430,
+    "protein_g": 5.5,
+    "carbs_g": 62,
+    "fat_g": 18,
+    "fiber_g": 2,
+    "sugar_g": 40,
+    "sodium_mg": 180,
+    "sat_fat_g": 10,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 50
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "alfajor_maicena",
+    "name_es": "Alfajor de maicena",
+    "name_en": "Cornstarch alfajor",
+    "name_pt": "Alfajor de maisena",
+    "aliases": [],
+    "category": "dulces",
+    "kcal": 420,
+    "protein_g": 5,
+    "carbs_g": 62,
+    "fat_g": 17,
+    "fiber_g": 1,
+    "sugar_g": 32,
+    "sodium_mg": 200,
+    "sat_fat_g": 9,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 40
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "alfajor_glaseado",
+    "name_es": "Alfajor glaseado (blanco)",
+    "name_en": "Sugar-glazed alfajor",
+    "name_pt": "Alfajor glaceado",
+    "aliases": [],
+    "category": "dulces",
+    "kcal": 420,
+    "protein_g": 5,
+    "carbs_g": 66,
+    "fat_g": 15.5,
+    "fiber_g": 1,
+    "sugar_g": 42,
+    "sodium_mg": 180,
+    "sat_fat_g": 8,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 50
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "alfajor_triple",
+    "name_es": "Alfajor triple",
+    "name_en": "Triple-layer alfajor",
+    "name_pt": "Alfajor triplo",
+    "aliases": [],
+    "category": "dulces",
+    "kcal": 440,
+    "protein_g": 5.5,
+    "carbs_g": 63,
+    "fat_g": 19,
+    "fiber_g": 2,
+    "sugar_g": 40,
+    "sodium_mg": 180,
+    "sat_fat_g": 10.5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 70
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "dulce_leche",
+    "name_es": "Dulce de leche",
+    "name_en": "Dulce de leche",
+    "name_pt": "Doce de leite",
+    "aliases": ["ddl"],
+    "category": "dulces",
+    "kcal": 315,
+    "protein_g": 7,
+    "carbs_g": 55,
+    "fat_g": 7.5,
+    "fiber_g": 0,
+    "sugar_g": 50,
+    "sodium_mg": 130,
+    "sat_fat_g": 4.5,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 20
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "dulce_membrillo",
+    "name_es": "Dulce de membrillo",
+    "name_en": "Quince paste",
+    "name_pt": "Marmelada de marmelo",
+    "aliases": ["membrillo"],
+    "category": "dulces",
+    "kcal": 270,
+    "protein_g": 0.3,
+    "carbs_g": 67,
+    "fat_g": 0.1,
+    "fiber_g": 1.5,
+    "sugar_g": 60,
+    "sodium_mg": 10,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 40
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "dulce_batata",
+    "name_es": "Dulce de batata",
+    "name_en": "Sweet potato paste",
+    "name_pt": "Doce de batata-doce",
+    "aliases": [],
+    "category": "dulces",
+    "kcal": 280,
+    "protein_g": 0.6,
+    "carbs_g": 69,
+    "fat_g": 0.2,
+    "fiber_g": 1.5,
+    "sugar_g": 55,
+    "sodium_mg": 20,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 40
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "mermelada",
+    "name_es": "Mermelada",
+    "name_en": "Jam",
+    "name_pt": "Geleia",
+    "aliases": [],
+    "category": "dulces",
+    "kcal": 250,
+    "protein_g": 0.4,
+    "carbs_g": 62,
+    "fat_g": 0.1,
+    "fiber_g": 1,
+    "sugar_g": 55,
+    "sodium_mg": 20,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 20
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "miel",
+    "name_es": "Miel",
+    "name_en": "Honey",
+    "name_pt": "Mel",
+    "aliases": [],
+    "category": "dulces",
+    "kcal": 304,
+    "protein_g": 0.3,
+    "carbs_g": 82.4,
+    "fat_g": 0,
+    "fiber_g": 0.2,
+    "sugar_g": 82.1,
+    "sodium_mg": 4,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 21
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "azucar",
+    "name_es": "Azúcar",
+    "name_en": "Sugar",
+    "name_pt": "Açúcar",
+    "aliases": [],
+    "category": "dulces",
+    "kcal": 400,
+    "protein_g": 0,
+    "carbs_g": 100,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 100,
+    "sodium_mg": 0,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "tsp",
+        "grams": 5
+      },
+      {
+        "unit": "tbsp",
+        "grams": 12
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "helado_crema",
+    "name_es": "Helado de crema (dulce de leche)",
+    "name_en": "Ice cream (dulce de leche)",
+    "name_pt": "Sorvete de creme",
+    "aliases": ["helado"],
+    "category": "postres",
+    "kcal": 210,
+    "protein_g": 4,
+    "carbs_g": 27,
+    "fat_g": 10,
+    "fiber_g": 0.3,
+    "sugar_g": 24,
+    "sodium_mg": 80,
+    "sat_fat_g": 6,
+    "servings": [
+      {
+        "unit": "scoop",
+        "grams": 70
+      },
+      {
+        "unit": "portion",
+        "grams": 250
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "helado_agua",
+    "name_es": "Helado de agua (palito)",
+    "name_en": "Ice pop",
+    "name_pt": "Picolé de fruta",
+    "aliases": ["palito"],
+    "category": "postres",
+    "kcal": 80,
+    "protein_g": 0,
+    "carbs_g": 20,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 19,
+    "sodium_mg": 5,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 60
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "flan",
+    "name_es": "Flan casero",
+    "name_en": "Homemade flan",
+    "name_pt": "Pudim de leite",
+    "aliases": [],
+    "category": "postres",
+    "kcal": 145,
+    "protein_g": 4.5,
+    "carbs_g": 23,
+    "fat_g": 4,
+    "fiber_g": 0,
+    "sugar_g": 22,
+    "sodium_mg": 60,
+    "sat_fat_g": 1.8,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 120
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "chocotorta",
+    "name_es": "Chocotorta",
+    "name_en": "Chocotorta (chocolate cookie cake)",
+    "name_pt": "Chocotorta",
+    "aliases": [],
+    "category": "postres",
+    "kcal": 380,
+    "protein_g": 5.5,
+    "carbs_g": 38,
+    "fat_g": 23,
+    "fiber_g": 1.5,
+    "sugar_g": 25,
+    "sodium_mg": 250,
+    "sat_fat_g": 13,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 120
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "pastafrola",
+    "name_es": "Pastafrola",
+    "name_en": "Quince jam tart (pastafrola)",
+    "name_pt": "Pastafrola",
+    "aliases": [],
+    "category": "postres",
+    "kcal": 390,
+    "protein_g": 4.5,
+    "carbs_g": 60,
+    "fat_g": 15,
+    "fiber_g": 1.5,
+    "sugar_g": 32,
+    "sodium_mg": 200,
+    "sat_fat_g": 7,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 80
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "budin",
+    "name_es": "Budín de vainilla",
+    "name_en": "Vanilla pound cake",
+    "name_pt": "Bolo inglês",
+    "aliases": ["budin"],
+    "category": "postres",
+    "kcal": 380,
+    "protein_g": 5.5,
+    "carbs_g": 52,
+    "fat_g": 17,
+    "fiber_g": 1,
+    "sugar_g": 30,
+    "sodium_mg": 280,
+    "sat_fat_g": 4,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 50
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "bizcochuelo",
+    "name_es": "Bizcochuelo",
+    "name_en": "Sponge cake",
+    "name_pt": "Pão de ló",
+    "aliases": ["torta"],
+    "category": "postres",
+    "kcal": 300,
+    "protein_g": 7,
+    "carbs_g": 52,
+    "fat_g": 6.5,
+    "fiber_g": 0.8,
+    "sugar_g": 30,
+    "sodium_mg": 250,
+    "sat_fat_g": 2,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 60
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "arroz_con_leche",
+    "name_es": "Arroz con leche",
+    "name_en": "Rice pudding",
+    "name_pt": "Arroz-doce",
+    "aliases": [],
+    "category": "postres",
+    "kcal": 130,
+    "protein_g": 3.5,
+    "carbs_g": 23,
+    "fat_g": 2.8,
+    "fiber_g": 0.2,
+    "sugar_g": 14,
+    "sodium_mg": 50,
+    "sat_fat_g": 1.7,
+    "servings": [
+      {
+        "unit": "bowl",
+        "grams": 200
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "ensalada_frutas",
+    "name_es": "Ensalada de frutas",
+    "name_en": "Fruit salad",
+    "name_pt": "Salada de frutas",
+    "aliases": ["macedonia"],
+    "category": "postres",
+    "kcal": 60,
+    "protein_g": 0.6,
+    "carbs_g": 15,
+    "fat_g": 0.2,
+    "fiber_g": 1.6,
+    "sugar_g": 12.5,
+    "sodium_mg": 2,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "bowl",
+        "grams": 200
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "panqueque_ddl",
+    "name_es": "Panqueque con dulce de leche",
+    "name_en": "Crepe with dulce de leche",
+    "name_pt": "Panqueca com doce de leite",
+    "aliases": ["panqueque"],
+    "category": "postres",
+    "kcal": 280,
+    "protein_g": 6.5,
+    "carbs_g": 40,
+    "fat_g": 10.5,
+    "fiber_g": 0.6,
+    "sugar_g": 25,
+    "sodium_mg": 120,
+    "sat_fat_g": 5,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 80
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "brigadeiro",
+    "name_es": "Brigadeiro",
+    "name_en": "Brigadeiro",
+    "name_pt": "Brigadeiro",
+    "aliases": [],
+    "category": "dulces",
+    "kcal": 380,
+    "protein_g": 4,
+    "carbs_g": 55,
+    "fat_g": 16,
+    "fiber_g": 1.5,
+    "sugar_g": 48,
+    "sodium_mg": 60,
+    "sat_fat_g": 9,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 20
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "pepas",
+    "name_es": "Pepas de membrillo",
+    "name_en": "Quince thumbprint cookies",
+    "name_pt": "Biscoito de goiabada",
+    "aliases": [],
+    "category": "dulces",
+    "kcal": 430,
+    "protein_g": 5,
+    "carbs_g": 66,
+    "fat_g": 16,
+    "fiber_g": 1.5,
+    "sugar_g": 32,
+    "sodium_mg": 200,
+    "sat_fat_g": 7,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 12
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "garrapinada",
+    "name_es": "Garrapiñada",
+    "name_en": "Candied peanuts",
+    "name_pt": "Amendoim caramelizado",
+    "aliases": [],
+    "category": "snacks",
+    "kcal": 520,
+    "protein_g": 18,
+    "carbs_g": 52,
+    "fat_g": 28,
+    "fiber_g": 7,
+    "sugar_g": 40,
+    "sodium_mg": 10,
+    "sat_fat_g": 4,
+    "servings": [
+      {
+        "unit": "handful",
+        "grams": 30
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "chocolate_leche",
+    "name_es": "Chocolate con leche",
+    "name_en": "Milk chocolate",
+    "name_pt": "Chocolate ao leite",
+    "aliases": ["chocolate"],
+    "category": "dulces",
+    "kcal": 535,
+    "protein_g": 7.6,
+    "carbs_g": 59.4,
+    "fat_g": 29.7,
+    "fiber_g": 3.4,
+    "sugar_g": 51.5,
+    "sodium_mg": 79,
+    "sat_fat_g": 18.5,
+    "servings": [
+      {
+        "unit": "piece",
+        "grams": 6
+      },
+      {
+        "unit": "unit",
+        "grams": 100
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "turron_mani",
+    "name_es": "Turrón de maní",
+    "name_en": "Peanut nougat",
+    "name_pt": "Torrone de amendoim",
+    "aliases": ["turron"],
+    "category": "dulces",
+    "kcal": 450,
+    "protein_g": 13,
+    "carbs_g": 58,
+    "fat_g": 19,
+    "fiber_g": 3,
+    "sugar_g": 40,
+    "sodium_mg": 80,
+    "sat_fat_g": 3,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 25
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "barra_cereal",
+    "name_es": "Barra de cereal",
+    "name_en": "Cereal bar",
+    "name_pt": "Barra de cereal",
+    "aliases": [],
+    "category": "snacks",
+    "kcal": 400,
+    "protein_g": 6,
+    "carbs_g": 70,
+    "fat_g": 11,
+    "fiber_g": 4,
+    "sugar_g": 28,
+    "sodium_mg": 150,
+    "sat_fat_g": 3,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 25
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "leche_entera",
+    "name_es": "Leche entera",
+    "name_en": "Whole milk",
+    "name_pt": "Leite integral",
+    "aliases": ["leche"],
+    "category": "lacteos",
+    "kcal": 61,
+    "protein_g": 3.2,
+    "carbs_g": 4.8,
+    "fat_g": 3.3,
+    "fiber_g": 0,
+    "sugar_g": 4.8,
+    "sodium_mg": 44,
+    "sat_fat_g": 2.1,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 200
+      },
+      {
+        "unit": "cup",
+        "grams": 250
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "leche_descremada",
+    "name_es": "Leche descremada",
+    "name_en": "Skim milk",
+    "name_pt": "Leite desnatado",
+    "aliases": [],
+    "category": "lacteos",
+    "kcal": 37,
+    "protein_g": 3.4,
+    "carbs_g": 5,
+    "fat_g": 0.5,
+    "fiber_g": 0,
+    "sugar_g": 5,
+    "sodium_mg": 50,
+    "sat_fat_g": 0.3,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 200
+      },
+      {
+        "unit": "cup",
+        "grams": 250
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "yogur_natural",
+    "name_es": "Yogur entero natural",
+    "name_en": "Plain whole yogurt",
+    "name_pt": "Iogurte natural integral",
+    "aliases": ["yogurt"],
+    "category": "lacteos",
+    "kcal": 61,
+    "protein_g": 3.5,
+    "carbs_g": 4.7,
+    "fat_g": 3.3,
+    "fiber_g": 0,
+    "sugar_g": 4.7,
+    "sodium_mg": 46,
+    "sat_fat_g": 2.1,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 190
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "yogur_bebible",
+    "name_es": "Yogur bebible entero (frutilla)",
+    "name_en": "Drinkable yogurt (strawberry)",
+    "name_pt": "Iogurte para beber",
+    "aliases": [],
+    "category": "lacteos",
+    "kcal": 85,
+    "protein_g": 2.8,
+    "carbs_g": 13,
+    "fat_g": 2.5,
+    "fiber_g": 0,
+    "sugar_g": 12.5,
+    "sodium_mg": 45,
+    "sat_fat_g": 1.6,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 200
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "yogur_descremado_frutado",
+    "name_es": "Yogur descremado frutado",
+    "name_en": "Low-fat fruit yogurt",
+    "name_pt": "Iogurte desnatado com frutas",
+    "aliases": [],
+    "category": "lacteos",
+    "kcal": 50,
+    "protein_g": 4,
+    "carbs_g": 7,
+    "fat_g": 0.4,
+    "fiber_g": 0,
+    "sugar_g": 6.5,
+    "sodium_mg": 55,
+    "sat_fat_g": 0.2,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 190
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "queso_cremoso",
+    "name_es": "Queso cremoso",
+    "name_en": "Cremoso cheese",
+    "name_pt": "Queijo cremoso",
+    "aliases": ["queso", "port salut"],
+    "category": "lacteos",
+    "kcal": 300,
+    "protein_g": 19,
+    "carbs_g": 1.5,
+    "fat_g": 24.5,
+    "fiber_g": 0,
+    "sugar_g": 0.5,
+    "sodium_mg": 650,
+    "sat_fat_g": 15.5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 30
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "queso_rallado",
+    "name_es": "Queso rallado",
+    "name_en": "Grated hard cheese",
+    "name_pt": "Queijo ralado",
+    "aliases": ["reggianito"],
+    "category": "lacteos",
+    "kcal": 400,
+    "protein_g": 33,
+    "carbs_g": 3,
+    "fat_g": 28.5,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 1400,
+    "sat_fat_g": 18,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 6
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "muzzarella",
+    "name_es": "Queso muzzarella",
+    "name_en": "Mozzarella cheese",
+    "name_pt": "Muçarela",
+    "aliases": ["mozzarella"],
+    "category": "lacteos",
+    "kcal": 280,
+    "protein_g": 22,
+    "carbs_g": 2.5,
+    "fat_g": 20,
+    "fiber_g": 0,
+    "sugar_g": 1,
+    "sodium_mg": 630,
+    "sat_fat_g": 12.5,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 25
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "queso_untable",
+    "name_es": "Queso untable",
+    "name_en": "Cream cheese spread",
+    "name_pt": "Requeijão cremoso",
+    "aliases": ["casancrem"],
+    "category": "lacteos",
+    "kcal": 210,
+    "protein_g": 7,
+    "carbs_g": 4,
+    "fat_g": 18.5,
+    "fiber_g": 0,
+    "sugar_g": 3.5,
+    "sodium_mg": 450,
+    "sat_fat_g": 11,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 15
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "queso_untable_light",
+    "name_es": "Queso untable light",
+    "name_en": "Light cream cheese spread",
+    "name_pt": "Requeijão light",
+    "aliases": [],
+    "category": "lacteos",
+    "kcal": 125,
+    "protein_g": 11,
+    "carbs_g": 5,
+    "fat_g": 6.5,
+    "fiber_g": 0,
+    "sugar_g": 4,
+    "sodium_mg": 450,
+    "sat_fat_g": 4,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 15
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "ricota",
+    "name_es": "Ricota",
+    "name_en": "Ricotta",
+    "name_pt": "Ricota",
+    "aliases": ["ricotta"],
+    "category": "lacteos",
+    "kcal": 150,
+    "protein_g": 10,
+    "carbs_g": 4.5,
+    "fat_g": 10,
+    "fiber_g": 0,
+    "sugar_g": 0.3,
+    "sodium_mg": 90,
+    "sat_fat_g": 6.4,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 50
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "manteca",
+    "name_es": "Manteca",
+    "name_en": "Butter",
+    "name_pt": "Manteiga",
+    "aliases": ["mantequilla"],
+    "category": "grasas",
+    "kcal": 717,
+    "protein_g": 0.9,
+    "carbs_g": 0.1,
+    "fat_g": 81,
+    "fiber_g": 0,
+    "sugar_g": 0.1,
+    "sodium_mg": 11,
+    "sat_fat_g": 51,
+    "servings": [
+      {
+        "unit": "tsp",
+        "grams": 5
+      },
+      {
+        "unit": "tbsp",
+        "grams": 14
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "chocolatada",
+    "name_es": "Leche chocolatada",
+    "name_en": "Chocolate milk",
+    "name_pt": "Achocolatado",
+    "aliases": ["submarino", "cacao"],
+    "category": "lacteos",
+    "kcal": 85,
+    "protein_g": 3.2,
+    "carbs_g": 12,
+    "fat_g": 3,
+    "fiber_g": 0.5,
+    "sugar_g": 11,
+    "sodium_mg": 50,
+    "sat_fat_g": 1.9,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 250
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "aceite_girasol",
+    "name_es": "Aceite de girasol",
+    "name_en": "Sunflower oil",
+    "name_pt": "Óleo de girassol",
+    "aliases": ["aceite"],
+    "category": "grasas",
+    "kcal": 884,
+    "protein_g": 0,
+    "carbs_g": 0,
+    "fat_g": 100,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 0,
+    "sat_fat_g": 10,
+    "servings": [
+      {
+        "unit": "tsp",
+        "grams": 5
+      },
+      {
+        "unit": "tbsp",
+        "grams": 13
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "aceite_oliva",
+    "name_es": "Aceite de oliva",
+    "name_en": "Olive oil",
+    "name_pt": "Azeite de oliva",
+    "aliases": ["oliva"],
+    "category": "grasas",
+    "kcal": 884,
+    "protein_g": 0,
+    "carbs_g": 0,
+    "fat_g": 100,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 2,
+    "sat_fat_g": 14,
+    "servings": [
+      {
+        "unit": "tsp",
+        "grams": 5
+      },
+      {
+        "unit": "tbsp",
+        "grams": 13
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "mayonesa",
+    "name_es": "Mayonesa",
+    "name_en": "Mayonnaise",
+    "name_pt": "Maionese",
+    "aliases": ["mayo"],
+    "category": "condimentos",
+    "kcal": 680,
+    "protein_g": 1,
+    "carbs_g": 1.5,
+    "fat_g": 75,
+    "fiber_g": 0,
+    "sugar_g": 1,
+    "sodium_mg": 600,
+    "sat_fat_g": 11.5,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 14
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "mayonesa_light",
+    "name_es": "Mayonesa light",
+    "name_en": "Light mayonnaise",
+    "name_pt": "Maionese light",
+    "aliases": [],
+    "category": "condimentos",
+    "kcal": 300,
+    "protein_g": 1,
+    "carbs_g": 7,
+    "fat_g": 30,
+    "fiber_g": 0,
+    "sugar_g": 3,
+    "sodium_mg": 800,
+    "sat_fat_g": 4.5,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 15
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "ketchup",
+    "name_es": "Kétchup",
+    "name_en": "Ketchup",
+    "name_pt": "Ketchup",
+    "aliases": [],
+    "category": "condimentos",
+    "kcal": 110,
+    "protein_g": 1.2,
+    "carbs_g": 26,
+    "fat_g": 0.2,
+    "fiber_g": 0.3,
+    "sugar_g": 21,
+    "sodium_mg": 900,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 15
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "mostaza",
+    "name_es": "Mostaza",
+    "name_en": "Mustard",
+    "name_pt": "Mostarda",
+    "aliases": [],
+    "category": "condimentos",
+    "kcal": 66,
+    "protein_g": 4,
+    "carbs_g": 5.5,
+    "fat_g": 3.5,
+    "fiber_g": 3.3,
+    "sugar_g": 1,
+    "sodium_mg": 1100,
+    "sat_fat_g": 0.2,
+    "servings": [
+      {
+        "unit": "tsp",
+        "grams": 6
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "chimichurri",
+    "name_es": "Chimichurri",
+    "name_en": "Chimichurri",
+    "name_pt": "Chimichurri",
+    "aliases": [],
+    "category": "condimentos",
+    "kcal": 450,
+    "protein_g": 1,
+    "carbs_g": 4,
+    "fat_g": 48,
+    "fiber_g": 1.5,
+    "sugar_g": 1,
+    "sodium_mg": 600,
+    "sat_fat_g": 6.7,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 15
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "salsa_criolla",
+    "name_es": "Salsa criolla",
+    "name_en": "Criolla salsa",
+    "name_pt": "Molho vinagrete",
+    "aliases": ["criolla"],
+    "category": "condimentos",
+    "kcal": 60,
+    "protein_g": 1,
+    "carbs_g": 6,
+    "fat_g": 3.5,
+    "fiber_g": 1.2,
+    "sugar_g": 3,
+    "sodium_mg": 300,
+    "sat_fat_g": 0.5,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 20
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "hummus",
+    "name_es": "Hummus",
+    "name_en": "Hummus",
+    "name_pt": "Homus",
+    "aliases": [],
+    "category": "condimentos",
+    "kcal": 177,
+    "protein_g": 7.9,
+    "carbs_g": 14.3,
+    "fat_g": 9.6,
+    "fiber_g": 6,
+    "sugar_g": 0.3,
+    "sodium_mg": 380,
+    "sat_fat_g": 1.4,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 20
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "berenjena_escabeche",
+    "name_es": "Berenjenas en escabeche",
+    "name_en": "Pickled eggplant",
+    "name_pt": "Berinjela em conserva",
+    "aliases": [],
+    "category": "condimentos",
+    "kcal": 150,
+    "protein_g": 1,
+    "carbs_g": 6,
+    "fat_g": 13.5,
+    "fiber_g": 2.5,
+    "sugar_g": 3,
+    "sodium_mg": 300,
+    "sat_fat_g": 2,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 30
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "banana",
+    "name_es": "Banana",
+    "name_en": "Banana",
+    "name_pt": "Banana",
+    "aliases": ["platano"],
+    "category": "frutas",
+    "kcal": 89,
+    "protein_g": 1.1,
+    "carbs_g": 22.8,
+    "fat_g": 0.3,
+    "fiber_g": 2.6,
+    "sugar_g": 12.2,
+    "sodium_mg": 1,
+    "sat_fat_g": 0.1,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 120
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "manzana",
+    "name_es": "Manzana",
+    "name_en": "Apple",
+    "name_pt": "Maçã",
+    "aliases": [],
+    "category": "frutas",
+    "kcal": 52,
+    "protein_g": 0.3,
+    "carbs_g": 13.8,
+    "fat_g": 0.2,
+    "fiber_g": 2.4,
+    "sugar_g": 10.4,
+    "sodium_mg": 1,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 180
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "naranja",
+    "name_es": "Naranja",
+    "name_en": "Orange",
+    "name_pt": "Laranja",
+    "aliases": [],
+    "category": "frutas",
+    "kcal": 47,
+    "protein_g": 0.9,
+    "carbs_g": 11.8,
+    "fat_g": 0.1,
+    "fiber_g": 2.4,
+    "sugar_g": 9.4,
+    "sodium_mg": 0,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 160
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "mandarina",
+    "name_es": "Mandarina",
+    "name_en": "Tangerine",
+    "name_pt": "Tangerina",
+    "aliases": [],
+    "category": "frutas",
+    "kcal": 53,
+    "protein_g": 0.8,
+    "carbs_g": 13.3,
+    "fat_g": 0.3,
+    "fiber_g": 1.8,
+    "sugar_g": 10.6,
+    "sodium_mg": 2,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 90
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "pera",
+    "name_es": "Pera",
+    "name_en": "Pear",
+    "name_pt": "Pera",
+    "aliases": [],
+    "category": "frutas",
+    "kcal": 57,
+    "protein_g": 0.4,
+    "carbs_g": 15.2,
+    "fat_g": 0.1,
+    "fiber_g": 3.1,
+    "sugar_g": 9.8,
+    "sodium_mg": 1,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 170
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "durazno",
+    "name_es": "Durazno",
+    "name_en": "Peach",
+    "name_pt": "Pêssego",
+    "aliases": ["melocoton"],
+    "category": "frutas",
+    "kcal": 39,
+    "protein_g": 0.9,
+    "carbs_g": 9.5,
+    "fat_g": 0.3,
+    "fiber_g": 1.5,
+    "sugar_g": 8.4,
+    "sodium_mg": 0,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "frutilla",
+    "name_es": "Frutillas",
+    "name_en": "Strawberries",
+    "name_pt": "Morangos",
+    "aliases": ["fresas"],
+    "category": "frutas",
+    "kcal": 32,
+    "protein_g": 0.7,
+    "carbs_g": 7.7,
+    "fat_g": 0.3,
+    "fiber_g": 2,
+    "sugar_g": 4.9,
+    "sodium_mg": 1,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "uvas",
+    "name_es": "Uvas",
+    "name_en": "Grapes",
+    "name_pt": "Uvas",
+    "aliases": [],
+    "category": "frutas",
+    "kcal": 69,
+    "protein_g": 0.7,
+    "carbs_g": 18.1,
+    "fat_g": 0.2,
+    "fiber_g": 0.9,
+    "sugar_g": 15.5,
+    "sodium_mg": 2,
+    "sat_fat_g": 0.1,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "kiwi",
+    "name_es": "Kiwi",
+    "name_en": "Kiwi",
+    "name_pt": "Kiwi",
+    "aliases": [],
+    "category": "frutas",
+    "kcal": 61,
+    "protein_g": 1.1,
+    "carbs_g": 14.7,
+    "fat_g": 0.5,
+    "fiber_g": 3,
+    "sugar_g": 9,
+    "sodium_mg": 3,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 75
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "palta",
+    "name_es": "Palta",
+    "name_en": "Avocado",
+    "name_pt": "Abacate",
+    "aliases": ["aguacate"],
+    "category": "frutas",
+    "kcal": 160,
+    "protein_g": 2,
+    "carbs_g": 8.5,
+    "fat_g": 14.7,
+    "fiber_g": 6.7,
+    "sugar_g": 0.7,
+    "sodium_mg": 7,
+    "sat_fat_g": 2.1,
+    "servings": [
+      {
+        "unit": "half",
+        "grams": 80
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "sandia",
+    "name_es": "Sandía",
+    "name_en": "Watermelon",
+    "name_pt": "Melancia",
+    "aliases": [],
+    "category": "frutas",
+    "kcal": 30,
+    "protein_g": 0.6,
+    "carbs_g": 7.6,
+    "fat_g": 0.2,
+    "fiber_g": 0.4,
+    "sugar_g": 6.2,
+    "sodium_mg": 1,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 280
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "melon",
+    "name_es": "Melón",
+    "name_en": "Melon",
+    "name_pt": "Melão",
+    "aliases": [],
+    "category": "frutas",
+    "kcal": 34,
+    "protein_g": 0.8,
+    "carbs_g": 8.2,
+    "fat_g": 0.2,
+    "fiber_g": 0.9,
+    "sugar_g": 7.9,
+    "sodium_mg": 16,
+    "sat_fat_g": 0.1,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 200
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "anana",
+    "name_es": "Ananá",
+    "name_en": "Pineapple",
+    "name_pt": "Abacaxi",
+    "aliases": ["piña"],
+    "category": "frutas",
+    "kcal": 50,
+    "protein_g": 0.5,
+    "carbs_g": 13.1,
+    "fat_g": 0.1,
+    "fiber_g": 1.4,
+    "sugar_g": 9.9,
+    "sodium_mg": 1,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "slice",
+        "grams": 100
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "ciruela",
+    "name_es": "Ciruela",
+    "name_en": "Plum",
+    "name_pt": "Ameixa",
+    "aliases": [],
+    "category": "frutas",
+    "kcal": 46,
+    "protein_g": 0.7,
+    "carbs_g": 11.4,
+    "fat_g": 0.3,
+    "fiber_g": 1.4,
+    "sugar_g": 9.9,
+    "sodium_mg": 0,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 65
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "acai_bowl",
+    "name_es": "Bowl de açaí",
+    "name_en": "Açaí bowl",
+    "name_pt": "Açaí na tigela",
+    "aliases": ["acai"],
+    "category": "frutas",
+    "kcal": 110,
+    "protein_g": 1.5,
+    "carbs_g": 20,
+    "fat_g": 3.5,
+    "fiber_g": 2.5,
+    "sugar_g": 13,
+    "sodium_mg": 10,
+    "sat_fat_g": 0.8,
+    "servings": [
+      {
+        "unit": "bowl",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "tomate",
+    "name_es": "Tomate",
+    "name_en": "Tomato",
+    "name_pt": "Tomate",
+    "aliases": [],
+    "category": "verduras",
+    "kcal": 18,
+    "protein_g": 0.9,
+    "carbs_g": 3.9,
+    "fat_g": 0.2,
+    "fiber_g": 1.2,
+    "sugar_g": 2.6,
+    "sodium_mg": 5,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 120
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "lechuga",
+    "name_es": "Lechuga",
+    "name_en": "Lettuce",
+    "name_pt": "Alface",
+    "aliases": [],
+    "category": "verduras",
+    "kcal": 15,
+    "protein_g": 1.4,
+    "carbs_g": 2.9,
+    "fat_g": 0.2,
+    "fiber_g": 1.3,
+    "sugar_g": 0.8,
+    "sodium_mg": 28,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 50
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "zanahoria",
+    "name_es": "Zanahoria",
+    "name_en": "Carrot",
+    "name_pt": "Cenoura",
+    "aliases": [],
+    "category": "verduras",
+    "kcal": 41,
+    "protein_g": 0.9,
+    "carbs_g": 9.6,
+    "fat_g": 0.2,
+    "fiber_g": 2.8,
+    "sugar_g": 4.7,
+    "sodium_mg": 69,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 70
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "zapallito",
+    "name_es": "Zapallito hervido",
+    "name_en": "Boiled zucchini",
+    "name_pt": "Abobrinha cozida",
+    "aliases": ["zucchini"],
+    "category": "verduras",
+    "kcal": 16,
+    "protein_g": 1.2,
+    "carbs_g": 3.4,
+    "fat_g": 0.2,
+    "fiber_g": 1,
+    "sugar_g": 2,
+    "sodium_mg": 3,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "acelga",
+    "name_es": "Acelga hervida",
+    "name_en": "Boiled Swiss chard",
+    "name_pt": "Acelga cozida",
+    "aliases": [],
+    "category": "verduras",
+    "kcal": 20,
+    "protein_g": 1.9,
+    "carbs_g": 4.1,
+    "fat_g": 0.1,
+    "fiber_g": 2.1,
+    "sugar_g": 1.1,
+    "sodium_mg": 179,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 175
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "espinaca",
+    "name_es": "Espinaca hervida",
+    "name_en": "Boiled spinach",
+    "name_pt": "Espinafre cozido",
+    "aliases": [],
+    "category": "verduras",
+    "kcal": 23,
+    "protein_g": 3,
+    "carbs_g": 3.8,
+    "fat_g": 0.3,
+    "fiber_g": 2.4,
+    "sugar_g": 0.4,
+    "sodium_mg": 70,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 180
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "brocoli",
+    "name_es": "Brócoli hervido",
+    "name_en": "Boiled broccoli",
+    "name_pt": "Brócolis cozido",
+    "aliases": ["brocoli"],
+    "category": "verduras",
+    "kcal": 35,
+    "protein_g": 2.4,
+    "carbs_g": 7.2,
+    "fat_g": 0.4,
+    "fiber_g": 3.3,
+    "sugar_g": 1.4,
+    "sodium_mg": 41,
+    "sat_fat_g": 0.1,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "cebolla",
+    "name_es": "Cebolla",
+    "name_en": "Onion",
+    "name_pt": "Cebola",
+    "aliases": [],
+    "category": "verduras",
+    "kcal": 40,
+    "protein_g": 1.1,
+    "carbs_g": 9.3,
+    "fat_g": 0.1,
+    "fiber_g": 1.7,
+    "sugar_g": 4.2,
+    "sodium_mg": 4,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "medium_unit",
+        "grams": 110
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "morron",
+    "name_es": "Morrón rojo",
+    "name_en": "Red bell pepper",
+    "name_pt": "Pimentão vermelho",
+    "aliases": ["pimiento"],
+    "category": "verduras",
+    "kcal": 31,
+    "protein_g": 1,
+    "carbs_g": 6,
+    "fat_g": 0.3,
+    "fiber_g": 2.1,
+    "sugar_g": 4.2,
+    "sodium_mg": 4,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "choclo",
+    "name_es": "Choclo hervido",
+    "name_en": "Boiled corn",
+    "name_pt": "Milho cozido",
+    "aliases": ["maiz"],
+    "category": "verduras",
+    "kcal": 96,
+    "protein_g": 3.4,
+    "carbs_g": 21,
+    "fat_g": 1.5,
+    "fiber_g": 2.4,
+    "sugar_g": 4.5,
+    "sodium_mg": 1,
+    "sat_fat_g": 0.2,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 100
+      },
+      {
+        "unit": "cup",
+        "grams": 165
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "pepino",
+    "name_es": "Pepino",
+    "name_en": "Cucumber",
+    "name_pt": "Pepino",
+    "aliases": [],
+    "category": "verduras",
+    "kcal": 15,
+    "protein_g": 0.7,
+    "carbs_g": 3.6,
+    "fat_g": 0.1,
+    "fiber_g": 0.5,
+    "sugar_g": 1.7,
+    "sodium_mg": 2,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 200
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "remolacha",
+    "name_es": "Remolacha hervida",
+    "name_en": "Boiled beet",
+    "name_pt": "Beterraba cozida",
+    "aliases": ["betarraga"],
+    "category": "verduras",
+    "kcal": 44,
+    "protein_g": 1.7,
+    "carbs_g": 10,
+    "fat_g": 0.2,
+    "fiber_g": 2,
+    "sugar_g": 8,
+    "sodium_mg": 77,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "unit",
+        "grams": 80
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "champinones",
+    "name_es": "Champiñones salteados",
+    "name_en": "Sautéed mushrooms",
+    "name_pt": "Cogumelos salteados",
+    "aliases": ["hongos"],
+    "category": "verduras",
+    "kcal": 45,
+    "protein_g": 3.5,
+    "carbs_g": 4.5,
+    "fat_g": 2,
+    "fiber_g": 1.5,
+    "sugar_g": 2,
+    "sodium_mg": 250,
+    "sat_fat_g": 0.3,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 100
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "lentejas",
+    "name_es": "Lentejas cocidas",
+    "name_en": "Cooked lentils",
+    "name_pt": "Lentilha cozida",
+    "aliases": [],
+    "category": "legumbres",
+    "kcal": 116,
+    "protein_g": 9,
+    "carbs_g": 20,
+    "fat_g": 0.4,
+    "fiber_g": 7.9,
+    "sugar_g": 1.8,
+    "sodium_mg": 2,
+    "sat_fat_g": 0.1,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 200
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "garbanzos",
+    "name_es": "Garbanzos cocidos",
+    "name_en": "Cooked chickpeas",
+    "name_pt": "Grão-de-bico cozido",
+    "aliases": [],
+    "category": "legumbres",
+    "kcal": 164,
+    "protein_g": 8.9,
+    "carbs_g": 27.4,
+    "fat_g": 2.6,
+    "fiber_g": 7.6,
+    "sugar_g": 4.8,
+    "sodium_mg": 7,
+    "sat_fat_g": 0.3,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 160
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "porotos",
+    "name_es": "Porotos cocidos",
+    "name_en": "Cooked beans",
+    "name_pt": "Feijão cozido",
+    "aliases": ["frijoles", "feijao"],
+    "category": "legumbres",
+    "kcal": 127,
+    "protein_g": 8.7,
+    "carbs_g": 22.8,
+    "fat_g": 0.5,
+    "fiber_g": 6.4,
+    "sugar_g": 0.3,
+    "sodium_mg": 1,
+    "sat_fat_g": 0.1,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 180
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "arvejas",
+    "name_es": "Arvejas en lata",
+    "name_en": "Canned peas",
+    "name_pt": "Ervilha em conserva",
+    "aliases": ["guisantes"],
+    "category": "legumbres",
+    "kcal": 70,
+    "protein_g": 4.5,
+    "carbs_g": 11,
+    "fat_g": 0.4,
+    "fiber_g": 4,
+    "sugar_g": 3,
+    "sodium_mg": 300,
+    "sat_fat_g": 0.1,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 160
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "avena",
+    "name_es": "Avena arrollada",
+    "name_en": "Rolled oats",
+    "name_pt": "Aveia em flocos",
+    "aliases": ["avena"],
+    "category": "cereales",
+    "kcal": 389,
+    "protein_g": 16.9,
+    "carbs_g": 66.3,
+    "fat_g": 6.9,
+    "fiber_g": 10.6,
+    "sugar_g": 0,
+    "sodium_mg": 2,
+    "sat_fat_g": 1.2,
+    "servings": [
+      {
+        "unit": "tbsp",
+        "grams": 10
+      },
+      {
+        "unit": "cup",
+        "grams": 80
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "granola",
+    "name_es": "Granola",
+    "name_en": "Granola",
+    "name_pt": "Granola",
+    "aliases": [],
+    "category": "cereales",
+    "kcal": 471,
+    "protein_g": 10,
+    "carbs_g": 64,
+    "fat_g": 20,
+    "fiber_g": 7,
+    "sugar_g": 24,
+    "sodium_mg": 25,
+    "sat_fat_g": 3.5,
+    "servings": [
+      {
+        "unit": "portion",
+        "grams": 40
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "copos_maiz",
+    "name_es": "Copos de maíz",
+    "name_en": "Corn flakes",
+    "name_pt": "Flocos de milho",
+    "aliases": ["cereales", "corn flakes"],
+    "category": "cereales",
+    "kcal": 357,
+    "protein_g": 7.5,
+    "carbs_g": 84,
+    "fat_g": 0.4,
+    "fiber_g": 3.3,
+    "sugar_g": 8,
+    "sodium_mg": 700,
+    "sat_fat_g": 0.1,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 30
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "mani",
+    "name_es": "Maní tostado salado",
+    "name_en": "Salted roasted peanuts",
+    "name_pt": "Amendoim torrado salgado",
+    "aliases": ["mani"],
+    "category": "snacks",
+    "kcal": 590,
+    "protein_g": 24,
+    "carbs_g": 21,
+    "fat_g": 50,
+    "fiber_g": 8,
+    "sugar_g": 4,
+    "sodium_mg": 410,
+    "sat_fat_g": 7,
+    "servings": [
+      {
+        "unit": "handful",
+        "grams": 30
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "papas_chips",
+    "name_es": "Papas fritas de paquete",
+    "name_en": "Potato chips",
+    "name_pt": "Batata chips",
+    "aliases": ["papitas"],
+    "category": "snacks",
+    "kcal": 536,
+    "protein_g": 7,
+    "carbs_g": 53,
+    "fat_g": 34.6,
+    "fiber_g": 4.4,
+    "sugar_g": 0.3,
+    "sodium_mg": 525,
+    "sat_fat_g": 3.4,
+    "servings": [
+      {
+        "unit": "handful",
+        "grams": 30
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "nueces",
+    "name_es": "Nueces",
+    "name_en": "Walnuts",
+    "name_pt": "Nozes",
+    "aliases": [],
+    "category": "snacks",
+    "kcal": 654,
+    "protein_g": 15.2,
+    "carbs_g": 13.7,
+    "fat_g": 65.2,
+    "fiber_g": 6.7,
+    "sugar_g": 2.6,
+    "sodium_mg": 2,
+    "sat_fat_g": 6.1,
+    "servings": [
+      {
+        "unit": "handful",
+        "grams": 30
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "almendras",
+    "name_es": "Almendras",
+    "name_en": "Almonds",
+    "name_pt": "Amêndoas",
+    "aliases": [],
+    "category": "snacks",
+    "kcal": 579,
+    "protein_g": 21,
+    "carbs_g": 21.6,
+    "fat_g": 49.9,
+    "fiber_g": 12.5,
+    "sugar_g": 4.4,
+    "sodium_mg": 1,
+    "sat_fat_g": 3.8,
+    "servings": [
+      {
+        "unit": "handful",
+        "grams": 30
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "mate_amargo",
+    "name_es": "Mate amargo",
+    "name_en": "Yerba mate (unsweetened)",
+    "name_pt": "Chimarrão",
+    "aliases": ["mate"],
+    "category": "bebidas",
+    "kcal": 2,
+    "protein_g": 0.1,
+    "carbs_g": 0.3,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 1,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 250
+      }
+    ],
+    "source": "ARGENFOODS — Tabla de Composición de Alimentos de Argentina (UNLu), contrastado con USDA FDC SR Legacy"
+  },
+  {
+    "id": "mate_dulce",
+    "name_es": "Mate con azúcar",
+    "name_en": "Sweetened yerba mate",
+    "name_pt": "Mate doce",
+    "aliases": [],
+    "category": "bebidas",
+    "kcal": 18,
+    "protein_g": 0.1,
+    "carbs_g": 4.5,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 4.5,
+    "sodium_mg": 1,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 250
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "mate_cocido_leche",
+    "name_es": "Mate cocido con leche",
+    "name_en": "Mate tea with milk",
+    "name_pt": "Mate com leite",
+    "aliases": ["mate cocido"],
+    "category": "bebidas",
+    "kcal": 35,
+    "protein_g": 1.6,
+    "carbs_g": 3,
+    "fat_g": 1.7,
+    "fiber_g": 0,
+    "sugar_g": 3,
+    "sodium_mg": 25,
+    "sat_fat_g": 1.1,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 250
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "cafe_negro",
+    "name_es": "Café negro",
+    "name_en": "Black coffee",
+    "name_pt": "Café preto",
+    "aliases": ["cafe", "espresso"],
+    "category": "bebidas",
+    "kcal": 2,
+    "protein_g": 0.1,
+    "carbs_g": 0,
+    "fat_g": 0.1,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 2,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "small_cup",
+        "grams": 50
+      },
+      {
+        "unit": "cup",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "cafe_con_leche",
+    "name_es": "Café con leche",
+    "name_en": "Coffee with milk",
+    "name_pt": "Café com leite",
+    "aliases": [],
+    "category": "bebidas",
+    "kcal": 33,
+    "protein_g": 1.7,
+    "carbs_g": 2.5,
+    "fat_g": 1.7,
+    "fiber_g": 0,
+    "sugar_g": 2.5,
+    "sodium_mg": 25,
+    "sat_fat_g": 1.1,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 250
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "cortado",
+    "name_es": "Cortado",
+    "name_en": "Cortado",
+    "name_pt": "Pingado",
+    "aliases": [],
+    "category": "bebidas",
+    "kcal": 20,
+    "protein_g": 1,
+    "carbs_g": 1.5,
+    "fat_g": 1,
+    "fiber_g": 0,
+    "sugar_g": 1.5,
+    "sodium_mg": 15,
+    "sat_fat_g": 0.6,
+    "servings": [
+      {
+        "unit": "small_cup",
+        "grams": 80
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "te",
+    "name_es": "Té (sin azúcar)",
+    "name_en": "Tea (unsweetened)",
+    "name_pt": "Chá sem açúcar",
+    "aliases": ["te"],
+    "category": "bebidas",
+    "kcal": 1,
+    "protein_g": 0,
+    "carbs_g": 0.3,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 3,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "cup",
+        "grams": 250
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "gaseosa_cola",
+    "name_es": "Gaseosa cola",
+    "name_en": "Cola soda",
+    "name_pt": "Refrigerante de cola",
+    "aliases": ["coca", "coca cola"],
+    "category": "bebidas",
+    "kcal": 42,
+    "protein_g": 0,
+    "carbs_g": 10.6,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 10.6,
+    "sodium_mg": 4,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 250
+      },
+      {
+        "unit": "bottle",
+        "grams": 500
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "gaseosa_zero",
+    "name_es": "Gaseosa cola zero",
+    "name_en": "Diet cola",
+    "name_pt": "Refrigerante zero",
+    "aliases": ["coca zero", "light"],
+    "category": "bebidas",
+    "kcal": 0.3,
+    "protein_g": 0,
+    "carbs_g": 0,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 10,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 250
+      },
+      {
+        "unit": "can",
+        "grams": 354
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "agua_saborizada",
+    "name_es": "Agua saborizada",
+    "name_en": "Flavored water",
+    "name_pt": "Água saborizada",
+    "aliases": [],
+    "category": "bebidas",
+    "kcal": 20,
+    "protein_g": 0,
+    "carbs_g": 5,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 5,
+    "sodium_mg": 15,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 250
+      },
+      {
+        "unit": "bottle",
+        "grams": 500
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "jugo_naranja",
+    "name_es": "Jugo de naranja exprimido",
+    "name_en": "Fresh orange juice",
+    "name_pt": "Suco de laranja natural",
+    "aliases": ["jugo"],
+    "category": "bebidas",
+    "kcal": 45,
+    "protein_g": 0.7,
+    "carbs_g": 10.4,
+    "fat_g": 0.2,
+    "fiber_g": 0.2,
+    "sugar_g": 8.4,
+    "sodium_mg": 1,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 250
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "jugo_polvo_light",
+    "name_es": "Jugo en polvo light (preparado)",
+    "name_en": "Diet powdered drink (prepared)",
+    "name_pt": "Suco em pó diet",
+    "aliases": ["clight"],
+    "category": "bebidas",
+    "kcal": 2,
+    "protein_g": 0,
+    "carbs_g": 0.4,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 10,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 250
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "isotonica",
+    "name_es": "Bebida isotónica",
+    "name_en": "Sports drink",
+    "name_pt": "Isotônico",
+    "aliases": ["gatorade", "powerade"],
+    "category": "bebidas",
+    "kcal": 24,
+    "protein_g": 0,
+    "carbs_g": 6,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 6,
+    "sodium_mg": 45,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "bottle",
+        "grams": 500
+      }
+    ],
+    "source": "Promedio de rótulos nutricionales de marcas líderes en Argentina (2025–2026)"
+  },
+  {
+    "id": "cerveza",
+    "name_es": "Cerveza",
+    "name_en": "Beer",
+    "name_pt": "Cerveja",
+    "aliases": ["birra"],
+    "category": "bebidas",
+    "kcal": 43,
+    "protein_g": 0.5,
+    "carbs_g": 3.6,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 0,
+    "sodium_mg": 4,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 330
+      },
+      {
+        "unit": "can",
+        "grams": 473
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "vino_tinto",
+    "name_es": "Vino tinto",
+    "name_en": "Red wine",
+    "name_pt": "Vinho tinto",
+    "aliases": ["vino"],
+    "category": "bebidas",
+    "kcal": 85,
+    "protein_g": 0.1,
+    "carbs_g": 2.6,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 0.6,
+    "sodium_mg": 4,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  },
+  {
+    "id": "fernet_cola",
+    "name_es": "Fernet con cola",
+    "name_en": "Fernet and cola",
+    "name_pt": "Fernet com cola",
+    "aliases": ["fernet"],
+    "category": "bebidas",
+    "kcal": 75,
+    "protein_g": 0,
+    "carbs_g": 9,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 8,
+    "sodium_mg": 5,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 300
+      }
+    ],
+    "source": "Estimación por receta estándar argentina (ingredientes ARGENFOODS/USDA, pérdidas por cocción USDA)"
+  },
+  {
+    "id": "sidra",
+    "name_es": "Sidra",
+    "name_en": "Cider",
+    "name_pt": "Sidra",
+    "aliases": [],
+    "category": "bebidas",
+    "kcal": 50,
+    "protein_g": 0,
+    "carbs_g": 6,
+    "fat_g": 0,
+    "fiber_g": 0,
+    "sugar_g": 5,
+    "sodium_mg": 5,
+    "sat_fat_g": 0,
+    "servings": [
+      {
+        "unit": "glass",
+        "grams": 150
+      }
+    ],
+    "source": "USDA FoodData Central — SR Legacy / Foundation Foods"
+  }
+]
