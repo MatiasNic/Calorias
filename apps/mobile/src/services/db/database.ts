@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import { Platform } from 'react-native';
 
 /** Local schema version. Bump and add a step to MIGRATIONS when the local schema changes. */
 const MIGRATIONS: readonly string[] = [
@@ -29,25 +30,35 @@ const MIGRATIONS: readonly string[] = [
   `,
 ];
 
-let db: SQLite.SQLiteDatabase | null = null;
+let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
-export function getDb(): SQLite.SQLiteDatabase {
-  if (!db) {
-    db = SQLite.openDatabaseSync('plato.db');
-    db.execSync('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
-    migrate(db);
+/** Opens (once) and migrates the local database. All access is async (no JS-thread blocking). */
+export function getDb(): Promise<SQLite.SQLiteDatabase> {
+  if (!dbPromise) {
+    dbPromise = (async () => {
+      // Web is only used for previews: keep data in memory (avoids OPFS file locking).
+      const db = await SQLite.openDatabaseAsync(Platform.OS === 'web' ? ':memory:' : 'plato.db');
+      // WAL is not supported by the OPFS-backed web build (used only for previews).
+      if (Platform.OS !== 'web') await db.execAsync('PRAGMA journal_mode = WAL;');
+      await db.execAsync('PRAGMA foreign_keys = ON;');
+      await migrate(db);
+      return db;
+    })().catch((e) => {
+      dbPromise = null;
+      throw e;
+    });
   }
-  return db;
+  return dbPromise;
 }
 
-function migrate(database: SQLite.SQLiteDatabase) {
-  const row = database.getFirstSync<{ user_version: number }>('PRAGMA user_version');
+async function migrate(database: SQLite.SQLiteDatabase) {
+  const row = await database.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
   let version = row?.user_version ?? 0;
   while (version < MIGRATIONS.length) {
     const sql = MIGRATIONS[version]!;
-    database.withTransactionSync(() => {
-      database.execSync(sql);
-      database.execSync(`PRAGMA user_version = ${version + 1}`);
+    await database.withTransactionAsync(async () => {
+      await database.execAsync(sql);
+      await database.execAsync(`PRAGMA user_version = ${version + 1}`);
     });
     version += 1;
   }
@@ -55,6 +66,6 @@ function migrate(database: SQLite.SQLiteDatabase) {
 
 /** Wipes all local user data (sign-out / account deletion). */
 export async function resetLocalDatabase() {
-  const database = getDb();
+  const database = await getDb();
   await database.execAsync('DELETE FROM records; DELETE FROM sync_state; DELETE FROM cache;');
 }

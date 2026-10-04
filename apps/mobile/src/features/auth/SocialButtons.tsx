@@ -1,4 +1,5 @@
 import * as AppleAuthentication from 'expo-apple-authentication';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +19,7 @@ export function SocialButtons() {
     try {
       if (kind === 'google') await auth.signInWithGoogle();
       else await auth.signInWithApple();
+      router.replace('/');
     } catch (e) {
       if (!(e instanceof AuthError && e.code === 'cancelled')) toast.error(t('auth.errors.social'));
     } finally {

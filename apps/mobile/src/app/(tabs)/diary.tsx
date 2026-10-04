@@ -120,6 +120,6 @@ export default function Diary() {
 
 const styles = StyleSheet.create({
   dayHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  flex: { flex: 1, textTransform: 'capitalize' },
+  flex: { flex: 1 },
   actions: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
 });

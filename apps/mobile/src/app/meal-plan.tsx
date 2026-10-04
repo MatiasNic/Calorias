@@ -16,7 +16,7 @@ import {
 import { PremiumGate } from '@/features/premium/PremiumGate';
 import { useAiError } from '@/features/scan/useAiError';
 import { generateMealPlan } from '@/services/ai';
-import { kvStorage } from '@/stores/kv';
+import { kv } from '@/stores/kv';
 import { spacing } from '@/theme';
 import { formatKcal } from '@/utils/format';
 
@@ -28,7 +28,7 @@ export default function MealPlanScreen() {
   const [budget, setBudget] = useState<'low' | 'mid' | 'high'>('mid');
   const [plan, setPlan] = useState<MealPlan | null>(() => {
     try {
-      return JSON.parse(kvStorage.getItemSync(KEY) ?? 'null') as MealPlan | null;
+      return JSON.parse(kv.get(KEY) ?? 'null') as MealPlan | null;
     } catch {
       return null;
     }
@@ -42,7 +42,7 @@ export default function MealPlanScreen() {
     try {
       const p = await generateMealPlan(budget);
       setPlan(p);
-      kvStorage.setItemSync(KEY, JSON.stringify(p));
+      kv.set(KEY, JSON.stringify(p));
     } catch (e) {
       setError(aiError(e));
     } finally {

@@ -55,13 +55,14 @@ function dateOf(collection: CollectionName, record: object): string | null {
 
 export function collection<C extends CollectionName>(name: C) {
   type T = CollectionMap[C];
-  const db = () => getDb();
 
   return {
     name,
 
     async get(id: string): Promise<T | null> {
-      const row = await db().getFirstAsync<Row>(
+      const row = await (
+        await getDb()
+      ).getFirstAsync<Row>(
         'SELECT * FROM records WHERE collection = ? AND id = ? AND deleted_at IS NULL',
         [name, id],
       );
@@ -80,7 +81,9 @@ export function collection<C extends CollectionName>(name: C) {
         where.push('local_date <= ?');
         params.push(range.to);
       }
-      const rows = await db().getAllAsync<Row>(
+      const rows = await (
+        await getDb()
+      ).getAllAsync<Row>(
         `SELECT data FROM records WHERE ${where.join(' AND ')} ORDER BY local_date, updated_at`,
         params,
       );
@@ -88,7 +91,9 @@ export function collection<C extends CollectionName>(name: C) {
     },
 
     async count(): Promise<number> {
-      const r = await db().getFirstAsync<{ n: number }>(
+      const r = await (
+        await getDb()
+      ).getFirstAsync<{ n: number }>(
         'SELECT COUNT(*) as n FROM records WHERE collection = ? AND deleted_at IS NULL',
         [name],
       );
@@ -97,7 +102,9 @@ export function collection<C extends CollectionName>(name: C) {
 
     /** Distinct local dates that have at least one record. */
     async dates(): Promise<string[]> {
-      const rows = await db().getAllAsync<{ d: string }>(
+      const rows = await (
+        await getDb()
+      ).getAllAsync<{ d: string }>(
         'SELECT DISTINCT local_date as d FROM records WHERE collection = ? AND deleted_at IS NULL AND local_date IS NOT NULL ORDER BY d',
         [name],
       );
@@ -106,7 +113,9 @@ export function collection<C extends CollectionName>(name: C) {
 
     /** Local write: marks the record dirty so the sync engine pushes it. */
     async upsert(record: T): Promise<T> {
-      await db().runAsync(
+      await (
+        await getDb()
+      ).runAsync(
         `INSERT INTO records (collection, id, user_id, local_date, data, updated_at, deleted_at, dirty)
          VALUES (?, ?, ?, ?, ?, ?, NULL, 1)
          ON CONFLICT (collection, id) DO UPDATE SET
@@ -120,7 +129,9 @@ export function collection<C extends CollectionName>(name: C) {
 
     /** Soft delete (propagated to the server as deleted_at). */
     async remove(id: string): Promise<void> {
-      await db().runAsync(
+      await (
+        await getDb()
+      ).runAsync(
         'UPDATE records SET deleted_at = ?, updated_at = ?, dirty = 1 WHERE collection = ? AND id = ?',
         [nowIso(), nowIso(), name, id],
       );
@@ -129,10 +140,9 @@ export function collection<C extends CollectionName>(name: C) {
 
     // ── sync engine helpers ──
     async dirty(): Promise<StoredRecord<T>[]> {
-      const rows = await db().getAllAsync<Row>(
-        'SELECT * FROM records WHERE collection = ? AND dirty = 1',
-        [name],
-      );
+      const rows = await (
+        await getDb()
+      ).getAllAsync<Row>('SELECT * FROM records WHERE collection = ? AND dirty = 1', [name]);
       return rows.map((r) => ({
         record: JSON.parse(r.data) as T,
         updatedAt: r.updated_at,
@@ -142,7 +152,9 @@ export function collection<C extends CollectionName>(name: C) {
     },
 
     async markClean(id: string, updatedAt: string): Promise<void> {
-      await db().runAsync(
+      await (
+        await getDb()
+      ).runAsync(
         'UPDATE records SET dirty = 0 WHERE collection = ? AND id = ? AND updated_at = ?',
         [name, id, updatedAt],
       );
@@ -150,7 +162,9 @@ export function collection<C extends CollectionName>(name: C) {
 
     /** Applies a server row unless there is a pending local change (local wins until pushed). */
     async applyRemote(record: T, deletedAt: string | null, serverUpdatedAt: string): Promise<void> {
-      await db().runAsync(
+      await (
+        await getDb()
+      ).runAsync(
         `INSERT INTO records (collection, id, user_id, local_date, data, updated_at, deleted_at, dirty)
          VALUES (?, ?, ?, ?, ?, ?, ?, 0)
          ON CONFLICT (collection, id) DO UPDATE SET
@@ -175,7 +189,7 @@ export type Collection<C extends CollectionName> = ReturnType<typeof collection<
 
 /** Re-assigns guest data to a newly created account and queues everything for upload. */
 export async function adoptGuestData(newUserId: string, guestId: string) {
-  const db = getDb();
+  const db = await getDb();
   await db.withTransactionAsync(async () => {
     // Singleton collections are keyed by the user id.
     for (const c of SINGLETONS) {
@@ -197,9 +211,9 @@ export const SINGLETONS: readonly CollectionName[] = [
 ];
 
 export async function pendingChangesCount(): Promise<number> {
-  const r = await getDb().getFirstAsync<{ n: number }>(
-    'SELECT COUNT(*) as n FROM records WHERE dirty = 1',
-  );
+  const r = await (
+    await getDb()
+  ).getFirstAsync<{ n: number }>('SELECT COUNT(*) as n FROM records WHERE dirty = 1');
   return r?.n ?? 0;
 }
 

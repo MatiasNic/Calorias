@@ -2,6 +2,7 @@ import {
   AnalyzeResponseSchema,
   CoachResponseSchema,
   LabelResponseSchema,
+  matchScore,
   MealPlanSchema,
   mockAnalyzeImage,
   mockAnalyzeText,
@@ -31,7 +32,7 @@ import { newId } from '@/services/db/repository';
 import { MEAL_PHOTOS_BUCKET } from '@/services/photos';
 import { usePlanStore } from '@/services/purchases';
 import { requireSupabase } from '@/services/supabase/client';
-import { kvStorage } from '@/stores/kv';
+import { kv } from '@/stores/kv';
 import { usePrefsStore } from '@/stores/prefs';
 import { currentUserId, useSessionStore } from '@/stores/session';
 import { todayLocal } from '@/utils/dates';
@@ -59,7 +60,7 @@ type MockUsage = Record<string, Record<QuotaKind, number>>;
 
 function mockUsage(): MockUsage {
   try {
-    return JSON.parse(kvStorage.getItemSync(MOCK_QUOTA_KEY) ?? '{}') as MockUsage;
+    return JSON.parse(kv.get(MOCK_QUOTA_KEY) ?? '{}') as MockUsage;
   } catch {
     return {};
   }
@@ -78,7 +79,7 @@ function consumeMock(kind: QuotaKind) {
       { limit, used },
     );
   all[day] = { photo_scan: 0, text_query: 0, coach_message: 0, ...all[day], [kind]: used + 1 };
-  kvStorage.setItemSync(MOCK_QUOTA_KEY, JSON.stringify({ [day]: all[day] }));
+  kv.set(MOCK_QUOTA_KEY, JSON.stringify({ [day]: all[day] }));
   return { used: used + 1, limit, remaining: Math.max(0, limit - used - 1) };
 }
 
@@ -86,12 +87,19 @@ function consumeMock(kind: QuotaKind) {
 function enrichLocally(analysis: AiAnalysis): EnrichedItem[] {
   return analysis.items.map((it) => {
     const aiKcal = it.per_100g_estimate.kcal;
-    const candidates = [it.name, ...it.search_hints].flatMap((q) => searchRegional(q, 3));
-    const match = candidates.find((f) =>
-      aiKcal <= 5
-        ? f.per100g.kcal <= 20
-        : f.per100g.kcal / aiKcal >= 0.55 && f.per100g.kcal / aiKcal <= 1.8,
-    );
+    const queries = [it.name, ...it.search_hints];
+    const plausible = (kcal: number) =>
+      aiKcal <= 5 ? kcal <= 20 : kcal / aiKcal >= 0.55 && kcal / aiKcal <= 1.8;
+    // Same ranking as the server: best name match first, then closest kcal to the AI estimate.
+    const match = queries
+      .flatMap((q) => searchRegional(q, 5))
+      .map((f) => ({ f, score: Math.max(...queries.map((q) => matchScore(q, [f.name]))) }))
+      .filter((x) => x.score >= 60 && plausible(x.f.per100g.kcal))
+      .sort(
+        (a, b) =>
+          b.score - a.score ||
+          Math.abs(a.f.per100g.kcal - aiKcal) - Math.abs(b.f.per100g.kcal - aiKcal),
+      )[0]?.f;
     return {
       display_name: it.name,
       name_en: it.name_en,

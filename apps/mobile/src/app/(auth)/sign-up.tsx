@@ -22,7 +22,7 @@ import { SocialButtons } from '@/features/auth/SocialButtons';
 import { useAuthErrorMessage, type AuthMessageKey } from '@/features/auth/useAuthErrorMessage';
 import { auth } from '@/services/auth';
 import { useSessionStore } from '@/stores/session';
-import { kvStorage } from '@/stores/kv';
+import { kv } from '@/stores/kv';
 import { spacing } from '@/theme';
 
 export default function SignUp() {
@@ -39,7 +39,7 @@ export default function SignUp() {
     setFormError(null);
     try {
       // Legal acceptance (date + version) is stored with the profile during onboarding.
-      kvStorage.setItemSync(
+      kv.set(
         'plato.termsAcceptedAt',
         JSON.stringify({ at: new Date().toISOString(), version: LEGAL_VERSION }),
       );

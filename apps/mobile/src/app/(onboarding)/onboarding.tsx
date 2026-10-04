@@ -1,11 +1,12 @@
 import { ageFromBirthDate, SAFETY } from '@plato/shared';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { BackHandler, StyleSheet, View } from 'react-native';
+import { BackHandler, Platform, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { Button, IconButton, ProgressBar, Screen, toast } from '@/components';
 import { finishOnboarding } from '@/features/onboarding/finish';
+import { captureError } from '@/services/analytics';
 import { planFromAnswers } from '@/features/onboarding/plan';
 import {
   BirthStep,
@@ -92,6 +93,7 @@ export default function Onboarding() {
 
   useFocusEffect(
     useCallback(() => {
+      if (Platform.OS === 'web') return;
       const sub = BackHandler.addEventListener('hardwareBackPress', back);
       return () => sub.remove();
     }, [back]),
@@ -105,7 +107,8 @@ export default function Onboarding() {
       await finishOnboarding(answers, result.plan);
       reset();
       router.replace('/today');
-    } catch {
+    } catch (e) {
+      captureError(e, { where: 'finishOnboarding' });
       toast.error(t('common.errorMessage'));
     } finally {
       setSaving(false);

@@ -62,7 +62,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'android.permission.ACCESS_FINE_LOCATION',
     ],
   },
-  web: { output: 'static', favicon: './assets/images/favicon.png' },
+  web: { output: 'single', favicon: './assets/images/favicon.png' },
   plugins: [
     'expo-router',
     [

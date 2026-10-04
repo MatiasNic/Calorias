@@ -11,6 +11,7 @@ const SCHEDULE_DAYS = 7;
 const CHANNEL_ID = 'reminders';
 
 export function configureNotificationHandler() {
+  if (Platform.OS === 'web') return;
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowBanner: true,
@@ -28,6 +29,7 @@ export function configureNotificationHandler() {
 }
 
 export async function notificationPermission(): Promise<'granted' | 'denied' | 'undetermined'> {
+  if (Platform.OS === 'web') return 'denied';
   const { status } = await Notifications.getPermissionsAsync();
   return status;
 }
@@ -140,6 +142,7 @@ export async function rescheduleAll(
 }
 
 export async function cancelMealReminderToday(type: MealType) {
+  if (Platform.OS === 'web') return;
   await Notifications.cancelScheduledNotificationAsync(mealId(type, todayLocal())).catch(
     () => undefined,
   );

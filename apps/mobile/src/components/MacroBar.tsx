@@ -12,9 +12,19 @@ export interface MacroBarProps {
   color: string;
   unit?: string;
   compact?: boolean;
+  /** Label above value (for narrow side-by-side layouts). */
+  stacked?: boolean;
 }
 
-export function MacroBar({ label, value, target, color, unit = 'g', compact }: MacroBarProps) {
+export function MacroBar({
+  label,
+  value,
+  target,
+  color,
+  unit = 'g',
+  compact,
+  stacked,
+}: MacroBarProps) {
   const { colors } = useTheme();
   const ratio = target > 0 ? Math.min(1, value / target) : 0;
   const width = useSharedValue(0);
@@ -30,11 +40,11 @@ export function MacroBar({ label, value, target, color, unit = 'g', compact }: M
       accessibilityRole="progressbar"
       accessibilityLabel={`${label}: ${Math.round(value)} ${unit} / ${Math.round(target)} ${unit}`}
     >
-      <View style={styles.header}>
-        <AppText variant={compact ? 'caption' : 'label'} color="textMuted">
+      <View style={stacked ? styles.stackedHeader : styles.header}>
+        <AppText variant={compact ? 'caption' : 'label'} color="textMuted" numberOfLines={1}>
           {label}
         </AppText>
-        <AppText variant={compact ? 'caption' : 'label'} tabular>
+        <AppText variant={compact || stacked ? 'caption' : 'label'} tabular numberOfLines={1}>
           {Math.round(value)}
           <AppText variant="caption" color="textMuted">
             {' '}
@@ -51,6 +61,7 @@ export function MacroBar({ label, value, target, color, unit = 'g', compact }: M
 
 const styles = StyleSheet.create({
   wrap: { gap: spacing.xs, flex: 1 },
+  stackedHeader: { gap: 0 },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

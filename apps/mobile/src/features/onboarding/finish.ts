@@ -7,7 +7,7 @@ import { updateProfile } from '@/features/profile/hooks';
 import { track } from '@/services/analytics';
 import { repos } from '@/services/db/repository';
 import { DEFAULT_NOTIFICATION_SETTINGS } from '@/services/notifications';
-import { kvStorage } from '@/stores/kv';
+import { kv } from '@/stores/kv';
 import { usePrefsStore } from '@/stores/prefs';
 import { currentUserId } from '@/stores/session';
 import { todayLocal } from '@/utils/dates';
@@ -20,7 +20,7 @@ export async function finishOnboarding(a: OnboardingAnswers, plan: GoalPlan) {
     version: LEGAL_VERSION,
   };
   try {
-    const stored = kvStorage.getItemSync('plato.termsAcceptedAt');
+    const stored = kv.get('plato.termsAcceptedAt');
     if (stored) terms = JSON.parse(stored);
   } catch {
     // keep default (acceptance by continuing, shown on the welcome screen)

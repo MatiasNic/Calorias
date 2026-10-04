@@ -13,7 +13,9 @@ const isAccount = () => useSessionStore.getState().status === 'authenticated';
 
 /** Local dump of every record on the device (guest/demo, or offline fallback). */
 async function localExport(): Promise<Record<string, unknown[]>> {
-  const rows = await getDb().getAllAsync<{ collection: string; data: string }>(
+  const rows = await (
+    await getDb()
+  ).getAllAsync<{ collection: string; data: string }>(
     'SELECT collection, data FROM records WHERE deleted_at IS NULL',
   );
   const out: Record<string, unknown[]> = {};

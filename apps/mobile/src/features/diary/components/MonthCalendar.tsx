@@ -126,7 +126,7 @@ export function MonthCalendar({
 const styles = StyleSheet.create({
   wrap: { gap: spacing.xs },
   header: { flexDirection: 'row', alignItems: 'center' },
-  title: { flex: 1, textAlign: 'center', textTransform: 'capitalize' },
+  title: { flex: 1, textAlign: 'center' },
   week: { flexDirection: 'row' },
   cellText: { flex: 1, textAlign: 'center' },
   cell: {

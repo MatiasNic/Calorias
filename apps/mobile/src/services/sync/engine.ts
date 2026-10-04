@@ -28,7 +28,9 @@ export const useSyncStatus = create<SyncStatus>(() => ({
 }));
 
 async function getLastPulled(c: CollectionName): Promise<string | null> {
-  const row = await getDb().getFirstAsync<{ last_pulled_at: string | null }>(
+  const row = await (
+    await getDb()
+  ).getFirstAsync<{ last_pulled_at: string | null }>(
     'SELECT last_pulled_at FROM sync_state WHERE collection = ?',
     [c],
   );
@@ -36,7 +38,9 @@ async function getLastPulled(c: CollectionName): Promise<string | null> {
 }
 
 async function setLastPulled(c: CollectionName, ts: string) {
-  await getDb().runAsync(
+  await (
+    await getDb()
+  ).runAsync(
     'INSERT INTO sync_state (collection, last_pulled_at) VALUES (?, ?) ON CONFLICT (collection) DO UPDATE SET last_pulled_at = excluded.last_pulled_at',
     [c, ts],
   );

@@ -39,7 +39,10 @@ export default function Welcome() {
             <Button
               label={env.useMocks ? t('welcome.tryDemo') : t('welcome.tryGuest')}
               variant="outline"
-              onPress={() => auth.continueAsGuest()}
+              onPress={async () => {
+                await auth.continueAsGuest();
+                router.replace('/');
+              }}
               testID="welcome-guest"
             />
           ) : null}

@@ -20,7 +20,7 @@ export function useBootstrap() {
     let cancelled = false;
     (async () => {
       try {
-        getDb();
+        await getDb();
         configureNotificationHandler();
         await auth.restore();
         initAnalytics();

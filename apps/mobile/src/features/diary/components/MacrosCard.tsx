@@ -16,18 +16,21 @@ export function MacrosCard({ summary }: { summary: DailySummary }) {
           value={summary.consumed.protein_g}
           target={summary.target.protein_g}
           color={colors.protein}
+          stacked
         />
         <MacroBar
           label={t('macros.carbs')}
           value={summary.consumed.carbs_g}
           target={summary.target.carbs_g}
           color={colors.carbs}
+          stacked
         />
         <MacroBar
           label={t('macros.fat')}
           value={summary.consumed.fat_g}
           target={summary.target.fat_g}
           color={colors.fat}
+          stacked
         />
       </View>
       {summary.target.fiber_g ? (

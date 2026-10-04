@@ -1,10 +1,12 @@
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 
 /** Opens the deep link carried by a tapped notification (data.url). */
 export function useNotificationRouting() {
   useEffect(() => {
+    if (Platform.OS === 'web') return;
     const open = (n: Notifications.Notification) => {
       const url = n.request.content.data?.url;
       if (typeof url === 'string') router.push(url as never);

@@ -28,3 +28,24 @@ const syncStorage: StateStorage = {
 
 export const kvJSONStorage = createJSONStorage(() => syncStorage);
 export { Storage as kvStorage };
+
+const memoryFallback = new Map<string, string>();
+
+/** Small synchronous KV helpers that never throw (fall back to memory if storage fails). */
+export const kv = {
+  get(key: string): string | null {
+    try {
+      return Storage.getItemSync(key) ?? memoryFallback.get(key) ?? null;
+    } catch {
+      return memoryFallback.get(key) ?? null;
+    }
+  },
+  set(key: string, value: string) {
+    memoryFallback.set(key, value);
+    try {
+      Storage.setItemSync(key, value);
+    } catch {
+      // keep in memory only
+    }
+  },
+};
