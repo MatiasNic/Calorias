@@ -5,6 +5,9 @@ identifica cada alimento y estima la porción, y la app calcula calorías, macro
 los registra en tu diario y te muestra tu progreso. Español rioplatense primero; inglés y portugués
 incluidos.
 
+📲 **Probar la app (APK demo para Android):**
+https://github.com/MatiasNic/Calorias/releases/latest/download/plato.apk
+
 | Carpeta           | Qué hay                                                                      |
 | ----------------- | ---------------------------------------------------------------------------- |
 | `apps/mobile`     | App Expo SDK 57 (Expo Router, TS estricto, Zustand, TanStack Query, SQLite)  |

@@ -1,5 +1,10 @@
 # Descargas
 
+**Descarga directa (recomendada, abrila desde el celular):**
+https://github.com/MatiasNic/Calorias/releases/latest/download/plato.apk
+
+Todas las versiones: https://github.com/MatiasNic/Calorias/releases
+
 | Archivo                                        | Versión         | Para qué                                                 | SHA-256                                                            |
 | ---------------------------------------------- | --------------- | -------------------------------------------------------- | ------------------------------------------------------------------ |
 | [`plato-demo-0.1.0.apk`](plato-demo-0.1.0.apk) | 0.1.0 (build 1) | Demo: IA, pagos y nube **simulados**, no necesita claves | `6f856f3205da7e3c615ace03d8df6be9c036524946b1757e520449174742f54a` |
