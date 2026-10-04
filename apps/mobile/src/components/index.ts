@@ -22,3 +22,4 @@ export * from './AppLogo';
 export * from './Checkbox';
 export * from './BigNumberInput';
 export * from './OptionCard';
+export * from './ScreenHeader';

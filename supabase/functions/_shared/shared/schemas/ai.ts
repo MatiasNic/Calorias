@@ -164,7 +164,13 @@ export const MealPlanSchema = z.object({
       }),
     )
     .max(7),
-  shopping_list: z.array(z.object({ item: z.string().max(80), quantity: z.string().max(40), category: z.string().max(40) })),
+  shopping_list: z.array(
+    z.object({
+      item: z.string().max(80),
+      quantity: z.string().max(40),
+      category: z.string().max(40),
+    }),
+  ),
   notes: z.string().max(400).nullable(),
 });
 export type MealPlan = z.infer<typeof MealPlanSchema>;

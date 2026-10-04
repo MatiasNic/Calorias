@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import { auth } from '@/services/auth';
 import { initAnalytics } from '@/services/analytics';
 import { getDb } from '@/services/db/database';
+import { rescheduleReminders } from '@/features/settings/useNotificationSettings';
 import { configureNotificationHandler } from '@/services/notifications';
+import { dbEvents } from '@/services/db/repository';
 import { initPurchases } from '@/services/purchases';
 import { startSyncEngine } from '@/services/sync/engine';
 import { useSessionStore } from '@/stores/session';
@@ -37,6 +39,26 @@ export function useBootstrap() {
     if (status !== 'authenticated') return;
     return startSyncEngine();
   }, [status]);
+
+  // Keep the reminder schedule fresh: on start and whenever today's meals change (smart reminders).
+  useEffect(() => {
+    if (!ready || status === 'signedOut') return;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const reschedule = () => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(async () => {
+        await rescheduleReminders().catch(() => undefined);
+      }, 2000);
+    };
+    reschedule();
+    const unsub = dbEvents.subscribe((c) => {
+      if (c === 'meals') reschedule();
+    });
+    return () => {
+      unsub();
+      if (timer) clearTimeout(timer);
+    };
+  }, [ready, status]);
 
   useEffect(() => {
     if (!userId) return;

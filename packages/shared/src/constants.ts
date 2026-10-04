@@ -93,3 +93,23 @@ export const IMAGE_UPLOAD = {
 export const CONFIDENCE_LEVELS = { high: 0.75, medium: 0.5 } as const;
 
 export const WATER_QUICK_ADD_ML = 250;
+
+/**
+ * Daily reference intakes for adults (US DRIs/RDA, also used by ANMAT labeling as a reference).
+ * Values: [female, male]. Used for the premium micronutrient view (informational only).
+ */
+export const MICRO_REFERENCE: Record<
+  string,
+  { unit: string; female: number; male: number; foods: string }
+> = {
+  calcium_mg: { unit: 'mg', female: 1000, male: 1000, foods: 'lácteos, sardinas, almendras' },
+  iron_mg: { unit: 'mg', female: 18, male: 8, foods: 'carnes rojas, legumbres, espinaca' },
+  magnesium_mg: { unit: 'mg', female: 320, male: 420, foods: 'frutos secos, legumbres, avena' },
+  potassium_mg: { unit: 'mg', female: 2600, male: 3400, foods: 'banana, papa, legumbres' },
+  zinc_mg: { unit: 'mg', female: 8, male: 11, foods: 'carnes, semillas, garbanzos' },
+  vitamin_a_ug: { unit: 'µg', female: 700, male: 900, foods: 'zanahoria, calabaza, batata' },
+  vitamin_c_mg: { unit: 'mg', female: 75, male: 90, foods: 'cítricos, kiwi, morrón' },
+  vitamin_d_ug: { unit: 'µg', female: 15, male: 15, foods: 'pescados grasos, huevo, sol' },
+  vitamin_b12_ug: { unit: 'µg', female: 2.4, male: 2.4, foods: 'carnes, huevos, lácteos' },
+  folate_ug: { unit: 'µg', female: 400, male: 400, foods: 'hojas verdes, legumbres' },
+};

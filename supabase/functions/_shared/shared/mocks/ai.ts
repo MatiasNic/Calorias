@@ -22,7 +22,13 @@ const item = (
   household_measure: measure,
   cooking_method: method,
   confidence,
-  per_100g_estimate: { kcal: per[0], protein_g: per[1], carbs_g: per[2], fat_g: per[3], fiber_g: per[4] ?? 0 },
+  per_100g_estimate: {
+    kcal: per[0],
+    protein_g: per[1],
+    carbs_g: per[2],
+    fat_g: per[3],
+    fiber_g: per[4] ?? 0,
+  },
   search_hints: hints,
 });
 
@@ -31,8 +37,26 @@ export const MOCK_PLATES: readonly AiAnalysis[] = [
     is_food: true,
     dish_name: 'Milanesa con puré',
     items: [
-      item('Milanesa de carne frita', 'breaded fried beef cutlet', 160, '1 unidad mediana', 'fried', 0.82, [245, 18, 12, 14, 0.6], ['milanesa de carne frita', 'breaded beef cutlet']),
-      item('Puré de papa', 'mashed potatoes', 200, '1 porción', 'boiled', 0.74, [105, 2, 15, 4, 1.4], ['puré de papa', 'mashed potatoes']),
+      item(
+        'Milanesa de carne frita',
+        'breaded fried beef cutlet',
+        160,
+        '1 unidad mediana',
+        'fried',
+        0.82,
+        [245, 18, 12, 14, 0.6],
+        ['milanesa de carne frita', 'breaded beef cutlet'],
+      ),
+      item(
+        'Puré de papa',
+        'mashed potatoes',
+        200,
+        '1 porción',
+        'boiled',
+        0.74,
+        [105, 2, 15, 4, 1.4],
+        ['puré de papa', 'mashed potatoes'],
+      ),
     ],
     hidden_ingredients_question: '¿La milanesa fue frita o al horno?',
     notes: 'Porción de puré estimada por el tamaño del plato.',
@@ -40,7 +64,18 @@ export const MOCK_PLATES: readonly AiAnalysis[] = [
   {
     is_food: true,
     dish_name: 'Empanadas de carne',
-    items: [item('Empanada de carne al horno', 'baked beef empanada', 240, '2 unidades', 'baked', 0.86, [255, 10, 25, 12.5, 1.5], ['empanada de carne al horno', 'beef empanada'])],
+    items: [
+      item(
+        'Empanada de carne al horno',
+        'baked beef empanada',
+        240,
+        '2 unidades',
+        'baked',
+        0.86,
+        [255, 10, 25, 12.5, 1.5],
+        ['empanada de carne al horno', 'beef empanada'],
+      ),
+    ],
     hidden_ingredients_question: null,
     notes: null,
   },
@@ -48,9 +83,36 @@ export const MOCK_PLATES: readonly AiAnalysis[] = [
     is_food: true,
     dish_name: 'Ensalada con pollo',
     items: [
-      item('Pechuga de pollo a la plancha', 'grilled chicken breast', 150, '1 unidad', 'grilled', 0.8, [165, 31, 0, 3.6], ['pechuga de pollo a la plancha', 'grilled chicken breast']),
-      item('Ensalada mixta', 'mixed green salad', 180, '1 bowl', 'raw', 0.7, [20, 1, 4, 0.2, 1.5], ['ensalada mixta', 'mixed salad']),
-      item('Palta', 'avocado', 50, '1/4 unidad', 'raw', 0.55, [160, 2, 8.5, 14.7, 6.7], ['palta', 'avocado']),
+      item(
+        'Pechuga de pollo a la plancha',
+        'grilled chicken breast',
+        150,
+        '1 unidad',
+        'grilled',
+        0.8,
+        [165, 31, 0, 3.6],
+        ['pechuga de pollo a la plancha', 'grilled chicken breast'],
+      ),
+      item(
+        'Ensalada mixta',
+        'mixed green salad',
+        180,
+        '1 bowl',
+        'raw',
+        0.7,
+        [20, 1, 4, 0.2, 1.5],
+        ['ensalada mixta', 'mixed salad'],
+      ),
+      item(
+        'Palta',
+        'avocado',
+        50,
+        '1/4 unidad',
+        'raw',
+        0.55,
+        [160, 2, 8.5, 14.7, 6.7],
+        ['palta', 'avocado'],
+      ),
     ],
     hidden_ingredients_question: '¿Le pusiste aceite o aderezo a la ensalada?',
     notes: null,
@@ -59,8 +121,26 @@ export const MOCK_PLATES: readonly AiAnalysis[] = [
     is_food: true,
     dish_name: 'Fideos con tuco',
     items: [
-      item('Tallarines con tuco', 'spaghetti with meat tomato sauce', 320, '1 plato', 'boiled', 0.78, [140, 5, 24, 2.5, 1.8], ['tallarines con tuco', 'spaghetti tomato sauce']),
-      item('Queso rallado', 'grated parmesan cheese', 10, '1 cucharada', 'raw', 0.5, [400, 33, 3, 28.5], ['queso rallado', 'grated parmesan']),
+      item(
+        'Tallarines con tuco',
+        'spaghetti with meat tomato sauce',
+        320,
+        '1 plato',
+        'boiled',
+        0.78,
+        [140, 5, 24, 2.5, 1.8],
+        ['tallarines con tuco', 'spaghetti tomato sauce'],
+      ),
+      item(
+        'Queso rallado',
+        'grated parmesan cheese',
+        10,
+        '1 cucharada',
+        'raw',
+        0.5,
+        [400, 33, 3, 28.5],
+        ['queso rallado', 'grated parmesan'],
+      ),
     ],
     hidden_ingredients_question: null,
     notes: null,
@@ -68,20 +148,175 @@ export const MOCK_PLATES: readonly AiAnalysis[] = [
 ];
 
 const TEXT_DICTIONARY: { keys: string[]; item: AiItem; unitGrams: number }[] = [
-  { keys: ['empanada'], unitGrams: 120, item: item('Empanada de carne', 'beef empanada', 120, '1 unidad', 'baked', 0.8, [255, 10, 25, 12.5, 1.5], ['empanada de carne']) },
-  { keys: ['milanesa'], unitGrams: 150, item: item('Milanesa de carne', 'breaded beef cutlet', 150, '1 unidad', 'fried', 0.75, [270, 18, 14, 16, 0.8], ['milanesa de carne frita']) },
-  { keys: ['coca zero', 'zero', 'light'], unitGrams: 354, item: item('Gaseosa cola zero', 'diet cola', 354, '1 lata', 'raw', 0.9, [0.3, 0, 0, 0], ['gaseosa zero']) },
-  { keys: ['coca', 'gaseosa'], unitGrams: 354, item: item('Gaseosa cola', 'cola soda', 354, '1 lata', 'raw', 0.85, [42, 0, 10.6, 0], ['gaseosa cola']) },
-  { keys: ['medialuna'], unitGrams: 40, item: item('Medialuna de manteca', 'butter croissant', 40, '1 unidad', 'baked', 0.85, [410, 7.5, 47, 21, 1.5], ['medialuna de manteca']) },
-  { keys: ['cafe con leche'], unitGrams: 250, item: item('Café con leche', 'coffee with milk', 250, '1 taza', 'raw', 0.85, [33, 1.7, 2.5, 1.7], ['cafe con leche']) },
-  { keys: ['pure'], unitGrams: 200, item: item('Puré de papa', 'mashed potatoes', 200, '1 porción', 'boiled', 0.7, [105, 2, 15, 4, 1.4], ['pure de papa']) },
-  { keys: ['manzana'], unitGrams: 180, item: item('Manzana', 'apple', 180, '1 unidad mediana', 'raw', 0.9, [52, 0.3, 13.8, 0.2, 2.4], ['manzana']) },
-  { keys: ['banana'], unitGrams: 120, item: item('Banana', 'banana', 120, '1 unidad', 'raw', 0.9, [89, 1.1, 22.8, 0.3, 2.6], ['banana']) },
-  { keys: ['fideo', 'tallarin'], unitGrams: 300, item: item('Fideos con tuco', 'spaghetti with tomato sauce', 300, '1 plato', 'boiled', 0.7, [140, 5, 24, 2.5, 1.8], ['tallarines con tuco']) },
-  { keys: ['huevo'], unitGrams: 50, item: item('Huevo duro', 'hard-boiled egg', 50, '1 unidad', 'boiled', 0.8, [155, 12.6, 1.1, 10.6], ['huevo duro']) },
+  {
+    keys: ['empanada'],
+    unitGrams: 120,
+    item: item(
+      'Empanada de carne',
+      'beef empanada',
+      120,
+      '1 unidad',
+      'baked',
+      0.8,
+      [255, 10, 25, 12.5, 1.5],
+      ['empanada de carne'],
+    ),
+  },
+  {
+    keys: ['milanesa'],
+    unitGrams: 150,
+    item: item(
+      'Milanesa de carne',
+      'breaded beef cutlet',
+      150,
+      '1 unidad',
+      'fried',
+      0.75,
+      [270, 18, 14, 16, 0.8],
+      ['milanesa de carne frita'],
+    ),
+  },
+  {
+    keys: ['coca zero', 'zero', 'light'],
+    unitGrams: 354,
+    item: item(
+      'Gaseosa cola zero',
+      'diet cola',
+      354,
+      '1 lata',
+      'raw',
+      0.9,
+      [0.3, 0, 0, 0],
+      ['gaseosa zero'],
+    ),
+  },
+  {
+    keys: ['coca', 'gaseosa'],
+    unitGrams: 354,
+    item: item(
+      'Gaseosa cola',
+      'cola soda',
+      354,
+      '1 lata',
+      'raw',
+      0.85,
+      [42, 0, 10.6, 0],
+      ['gaseosa cola'],
+    ),
+  },
+  {
+    keys: ['medialuna'],
+    unitGrams: 40,
+    item: item(
+      'Medialuna de manteca',
+      'butter croissant',
+      40,
+      '1 unidad',
+      'baked',
+      0.85,
+      [410, 7.5, 47, 21, 1.5],
+      ['medialuna de manteca'],
+    ),
+  },
+  {
+    keys: ['cafe con leche'],
+    unitGrams: 250,
+    item: item(
+      'Café con leche',
+      'coffee with milk',
+      250,
+      '1 taza',
+      'raw',
+      0.85,
+      [33, 1.7, 2.5, 1.7],
+      ['cafe con leche'],
+    ),
+  },
+  {
+    keys: ['pure'],
+    unitGrams: 200,
+    item: item(
+      'Puré de papa',
+      'mashed potatoes',
+      200,
+      '1 porción',
+      'boiled',
+      0.7,
+      [105, 2, 15, 4, 1.4],
+      ['pure de papa'],
+    ),
+  },
+  {
+    keys: ['manzana'],
+    unitGrams: 180,
+    item: item(
+      'Manzana',
+      'apple',
+      180,
+      '1 unidad mediana',
+      'raw',
+      0.9,
+      [52, 0.3, 13.8, 0.2, 2.4],
+      ['manzana'],
+    ),
+  },
+  {
+    keys: ['banana'],
+    unitGrams: 120,
+    item: item(
+      'Banana',
+      'banana',
+      120,
+      '1 unidad',
+      'raw',
+      0.9,
+      [89, 1.1, 22.8, 0.3, 2.6],
+      ['banana'],
+    ),
+  },
+  {
+    keys: ['fideo', 'tallarin'],
+    unitGrams: 300,
+    item: item(
+      'Fideos con tuco',
+      'spaghetti with tomato sauce',
+      300,
+      '1 plato',
+      'boiled',
+      0.7,
+      [140, 5, 24, 2.5, 1.8],
+      ['tallarines con tuco'],
+    ),
+  },
+  {
+    keys: ['huevo'],
+    unitGrams: 50,
+    item: item(
+      'Huevo duro',
+      'hard-boiled egg',
+      50,
+      '1 unidad',
+      'boiled',
+      0.8,
+      [155, 12.6, 1.1, 10.6],
+      ['huevo duro'],
+    ),
+  },
 ];
 
-const NUMBER_WORDS: Record<string, number> = { un: 1, una: 1, uno: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, a: 1, one: 1, two: 2, three: 3 };
+const NUMBER_WORDS: Record<string, number> = {
+  un: 1,
+  una: 1,
+  uno: 1,
+  dos: 2,
+  tres: 3,
+  cuatro: 4,
+  cinco: 5,
+  a: 1,
+  one: 1,
+  two: 2,
+  three: 3,
+};
 
 function hash(s: string): number {
   let h = 0;
@@ -96,7 +331,10 @@ export function mockAnalyzeImage(seed: string): AiAnalysis {
 /** Very small text parser for demo mode: "dos empanadas y una coca zero". */
 export function mockAnalyzeText(text: string): AiAnalysis {
   const norm = normalizeText(text);
-  const parts = norm.split(/ y | con |,| and /).map((p) => p.trim()).filter(Boolean);
+  const parts = norm
+    .split(/ y | con |,| and /)
+    .map((p) => p.trim())
+    .filter(Boolean);
   const items: AiItem[] = [];
   for (const part of parts) {
     const entry = TEXT_DICTIONARY.find((d) => d.keys.some((k) => part.includes(k)));
@@ -106,7 +344,8 @@ export function mockAnalyzeText(text: string): AiAnalysis {
     items.push({
       ...entry.item,
       estimated_grams: entry.unitGrams * qty,
-      household_measure: qty > 1 ? `${qty} × ${entry.item.household_measure}` : entry.item.household_measure,
+      household_measure:
+        qty > 1 ? `${qty} × ${entry.item.household_measure}` : entry.item.household_measure,
     });
   }
   return {
@@ -124,8 +363,26 @@ export function mockReadLabel(): AiLabel {
     product_name: 'Galletitas de agua',
     brand: null,
     serving_size_g: 30,
-    per_100g: { kcal: 420, protein_g: 10, carbs_g: 70, fat_g: 11, fiber_g: 2.5, sugar_g: 2, sodium_mg: 700, sat_fat_g: 4.5 },
-    per_serving: { kcal: 126, protein_g: 3, carbs_g: 21, fat_g: 3.3, fiber_g: 0.8, sugar_g: 0.6, sodium_mg: 210, sat_fat_g: 1.4 },
+    per_100g: {
+      kcal: 420,
+      protein_g: 10,
+      carbs_g: 70,
+      fat_g: 11,
+      fiber_g: 2.5,
+      sugar_g: 2,
+      sodium_mg: 700,
+      sat_fat_g: 4.5,
+    },
+    per_serving: {
+      kcal: 126,
+      protein_g: 3,
+      carbs_g: 21,
+      fat_g: 3.3,
+      fiber_g: 0.8,
+      sugar_g: 0.6,
+      sodium_mg: 210,
+      sat_fat_g: 1.4,
+    },
     notes: 'Demo: etiqueta simulada.',
   };
 }
@@ -136,10 +393,42 @@ export function mockCoachReply(question: string): string {
 
 export function mockMealPlan(days: number): MealPlan {
   const base = [
-    { meal_type: 'breakfast' as const, name: 'Yogur con avena y banana', description: 'Yogur natural, 3 cdas de avena y media banana.', kcal: 350, protein_g: 15, carbs_g: 55, fat_g: 8 },
-    { meal_type: 'lunch' as const, name: 'Pollo con arroz y ensalada', description: 'Pechuga a la plancha, 1 taza de arroz y ensalada mixta.', kcal: 600, protein_g: 45, carbs_g: 65, fat_g: 15 },
-    { meal_type: 'snack' as const, name: 'Mate con tostadas y queso', description: '2 tostadas integrales con queso untable light.', kcal: 250, protein_g: 12, carbs_g: 30, fat_g: 8 },
-    { meal_type: 'dinner' as const, name: 'Tarta de verdura y ensalada', description: 'Una porción de tarta de acelga con ensalada de tomate.', kcal: 550, protein_g: 22, carbs_g: 45, fat_g: 28 },
+    {
+      meal_type: 'breakfast' as const,
+      name: 'Yogur con avena y banana',
+      description: 'Yogur natural, 3 cdas de avena y media banana.',
+      kcal: 350,
+      protein_g: 15,
+      carbs_g: 55,
+      fat_g: 8,
+    },
+    {
+      meal_type: 'lunch' as const,
+      name: 'Pollo con arroz y ensalada',
+      description: 'Pechuga a la plancha, 1 taza de arroz y ensalada mixta.',
+      kcal: 600,
+      protein_g: 45,
+      carbs_g: 65,
+      fat_g: 15,
+    },
+    {
+      meal_type: 'snack' as const,
+      name: 'Mate con tostadas y queso',
+      description: '2 tostadas integrales con queso untable light.',
+      kcal: 250,
+      protein_g: 12,
+      carbs_g: 30,
+      fat_g: 8,
+    },
+    {
+      meal_type: 'dinner' as const,
+      name: 'Tarta de verdura y ensalada',
+      description: 'Una porción de tarta de acelga con ensalada de tomate.',
+      kcal: 550,
+      protein_g: 22,
+      carbs_g: 45,
+      fat_g: 28,
+    },
   ];
   return {
     days: Array.from({ length: days }, (_, i) => ({ day: i + 1, meals: base })),
