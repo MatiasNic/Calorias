@@ -73,7 +73,9 @@ export const AnalyzeMealRequestSchema = z.object({
   image_sha256: z.string().regex(/^[a-f0-9]{64}$/),
   locale: LocaleSchema.default('es-AR'),
   meal_type: MealTypeSchema.optional(),
-  mode: z.enum(['meal', 'label', 'menu', 'fridge']).default('meal'),
+  mode: z.enum(['meal', 'label']).default('meal'),
+  /** false → the server deletes the photo right after analysis (user privacy setting). */
+  keep_photo: z.boolean().default(true),
 });
 export type AnalyzeMealRequest = z.infer<typeof AnalyzeMealRequestSchema>;
 
@@ -118,7 +120,70 @@ export const CoachMessageSchema = z.object({
 export const CoachRequestSchema = z.object({
   messages: z.array(CoachMessageSchema).min(1).max(30),
   locale: LocaleSchema.default('es-AR'),
+  /** Optional photo (premium): fridge → recipe ideas, menu → best choices for the user's goals. */
+  photo_path: z.string().min(3).max(300).optional(),
+  photo_kind: z.enum(['fridge', 'menu']).optional(),
 });
+
+export const CoachResponseSchema = z.object({
+  reply: z.string(),
+  quota: z.object({ used: z.number(), limit: z.number(), remaining: z.number() }),
+});
+export type CoachResponse = z.infer<typeof CoachResponseSchema>;
+
+export const LabelResponseSchema = z.object({
+  scan_id: z.string().uuid().nullable(),
+  label: AiLabelSchema,
+  quota: z.object({ used: z.number(), limit: z.number(), remaining: z.number() }),
+});
+export type LabelResponse = z.infer<typeof LabelResponseSchema>;
+
+export const MealPlanRequestSchema = z.object({
+  locale: LocaleSchema.default('es-AR'),
+  budget: z.enum(['low', 'mid', 'high']).default('mid'),
+  days: z.number().int().min(1).max(7).default(7),
+});
+
+export const MealPlanSchema = z.object({
+  days: z
+    .array(
+      z.object({
+        day: z.number().int(),
+        meals: z.array(
+          z.object({
+            meal_type: MealTypeSchema,
+            name: z.string().max(120),
+            description: z.string().max(300),
+            kcal: z.number(),
+            protein_g: z.number(),
+            carbs_g: z.number(),
+            fat_g: z.number(),
+          }),
+        ),
+      }),
+    )
+    .max(7),
+  shopping_list: z.array(
+    z.object({
+      item: z.string().max(80),
+      quantity: z.string().max(40),
+      category: z.string().max(40),
+    }),
+  ),
+  notes: z.string().max(400).nullable(),
+});
+export type MealPlan = z.infer<typeof MealPlanSchema>;
+
+export const QuotaStatusSchema = z.object({
+  plan: z.enum(['free', 'premium']),
+  day: z.string(),
+  photo_scan: z.object({ used: z.number(), limit: z.number(), remaining: z.number() }),
+  text_query: z.object({ used: z.number(), limit: z.number(), remaining: z.number() }),
+  coach_message: z.object({ used: z.number(), limit: z.number(), remaining: z.number() }),
+  bonus_photo_scans: z.number(),
+  coach_trial_remaining: z.number(),
+});
+export type QuotaStatus = z.infer<typeof QuotaStatusSchema>;
 export type CoachRequest = z.infer<typeof CoachRequestSchema>;
 
 export const ApiErrorCodeSchema = z.enum([

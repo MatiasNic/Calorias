@@ -13,6 +13,8 @@ export interface IconButtonProps {
   size?: number;
   disabled?: boolean;
   testID?: string;
+  /** White icon for use over camera/photos. */
+  rawWhite?: boolean;
 }
 
 export function IconButton({
@@ -24,6 +26,7 @@ export function IconButton({
   size = 22,
   disabled,
   testID,
+  rawWhite,
 }: IconButtonProps) {
   const { colors } = useTheme();
   return (
@@ -45,7 +48,7 @@ export function IconButton({
         },
       ]}
     >
-      <Icon name={icon} size={size} color={color} />
+      <Icon name={icon} size={size} color={color} rawColor={rawWhite ? '#FFFFFF' : undefined} />
     </Pressable>
   );
 }

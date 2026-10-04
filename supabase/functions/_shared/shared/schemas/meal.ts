@@ -48,7 +48,9 @@ export const FoodSchema = z.object({
   micros: MicronutrientsSchema.optional(),
   /** Typical servings. `unit` is an i18n key (unit, slice, cup…); `label` overrides it (e.g. OFF). */
   servings: z
-    .array(z.object({ unit: z.string(), grams: z.number().positive(), label: z.string().optional() }))
+    .array(
+      z.object({ unit: z.string(), grams: z.number().positive(), label: z.string().optional() }),
+    )
     .default([]),
   category: z.string().nullable().optional(),
   attribution: z.string().nullable().optional(),

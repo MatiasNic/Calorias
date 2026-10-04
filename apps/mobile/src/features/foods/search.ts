@@ -1,4 +1,4 @@
-import { type Food, type Nutrients } from '@plato/shared';
+import { matchScore, normalizeText, type Food, type Nutrients } from '@plato/shared';
 import regionalData from '@plato/shared/data/foods-regional.json';
 
 import { currentLocale } from '@/i18n';
@@ -32,14 +32,7 @@ export interface FoodOption extends Food {
   lastGrams?: number;
 }
 
-export const normalize = (s: string) =>
-  s
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9 ]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+export const normalize = normalizeText;
 
 function regionalName(r: RegionalRow): string {
   const locale = currentLocale();
@@ -78,22 +71,6 @@ const REGIONAL_INDEX = REGIONAL.map((r) => ({
 export function getRegionalFood(id: string): FoodOption | null {
   const r = REGIONAL.find((x) => x.id === id);
   return r ? regionalToFood(r) : null;
-}
-
-/** Scores a candidate: exact/prefix/word-prefix/substring/all-tokens. 0 = no match. */
-export function matchScore(query: string, candidates: readonly string[]): number {
-  const q = normalize(query);
-  if (!q) return 0;
-  const tokens = q.split(' ');
-  let best = 0;
-  for (const c of candidates) {
-    if (c === q) best = Math.max(best, 100);
-    else if (c.startsWith(q)) best = Math.max(best, 80);
-    else if (c.split(' ').some((w) => w.startsWith(q))) best = Math.max(best, 60);
-    else if (c.includes(q)) best = Math.max(best, 40);
-    else if (tokens.every((t) => c.includes(t))) best = Math.max(best, 30);
-  }
-  return best;
 }
 
 export function searchRegional(query: string, limit = 25): FoodOption[] {
@@ -154,4 +131,5 @@ export function dedupeFoods(lists: readonly FoodOption[][]): FoodOption[] {
   return [...map.values()];
 }
 
+export { matchScore };
 export const REGIONAL_COUNT = REGIONAL.length;

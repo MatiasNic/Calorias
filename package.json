@@ -22,6 +22,7 @@
     "db:reset": "supabase db reset"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "0.131.0",
     "@types/node": "^22.10.0",
     "@types/pg": "^8.11.0",
     "@vitest/coverage-v8": "^5.0.3",
@@ -33,11 +34,11 @@
     "lint-staged": "^17.0.0",
     "pg": "^8.23.0",
     "prettier": "^3.9.0",
+    "supabase": "2.119.0",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.71.0",
     "vitest": "^5.0.3",
-    "zod": "^4.1.0",
-    "supabase": "2.119.0"
+    "zod": "^4.1.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs,json,md,yml,yaml}": "prettier --write",
