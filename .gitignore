@@ -34,5 +34,6 @@ supabase/.env
 
 # build outputs
 *.apk
+!releases/*.apk
 *.aab
 artifacts/
