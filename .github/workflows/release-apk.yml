@@ -1,0 +1,35 @@
+name: Publish APK release
+
+# Publishes the APK committed under releases/ as a GitHub Release asset, which gives testers a
+# stable, phone-friendly download link (served as an attachment).
+on:
+  push:
+    paths: ['releases/*.apk', '.github/workflows/release-apk.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create or update release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          for apk in releases/*.apk; do
+            version=$(basename "$apk" .apk | sed -E 's/^plato-//')
+            tag="v${version}"
+            cp "$apk" plato.apk
+            if gh release view "$tag" >/dev/null 2>&1; then
+              gh release upload "$tag" "plato.apk#Plato ${version} (APK)" "$apk" --clobber
+            else
+              gh release create "$tag" "plato.apk#Plato ${version} (APK)" "$apk" \
+                --target "$GITHUB_SHA" --latest \
+                --title "Plato ${version}" \
+                --notes "APK de prueba (modo demo: IA, pagos y nube simulados). Android 8+, 64 bits. Descargá **plato.apk** desde el celular y abrilo para instalar. Guía: docs/TESTERS.md"
+            fi
+          done
