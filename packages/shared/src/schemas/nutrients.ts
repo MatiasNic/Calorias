@@ -1,0 +1,31 @@
+import { z } from 'zod';
+
+const nonNeg = z.number().finite().min(0);
+
+/** Core nutrient values. Interpreted either per 100 g or as absolute totals depending on context. */
+export const NutrientsSchema = z.object({
+  kcal: nonNeg,
+  protein_g: nonNeg,
+  carbs_g: nonNeg,
+  fat_g: nonNeg,
+  fiber_g: nonNeg.optional(),
+  sugar_g: nonNeg.optional(),
+  sodium_mg: nonNeg.optional(),
+  sat_fat_g: nonNeg.optional(),
+});
+export type Nutrients = z.infer<typeof NutrientsSchema>;
+
+/** Micronutrients keyed by a stable id (e.g. `vitamin_c_mg`, `iron_mg`). */
+export const MicronutrientsSchema = z.record(z.string(), nonNeg);
+export type Micronutrients = z.infer<typeof MicronutrientsSchema>;
+
+export const EMPTY_NUTRIENTS: Readonly<Required<Nutrients>> = Object.freeze({
+  kcal: 0,
+  protein_g: 0,
+  carbs_g: 0,
+  fat_g: 0,
+  fiber_g: 0,
+  sugar_g: 0,
+  sodium_mg: 0,
+  sat_fat_g: 0,
+});

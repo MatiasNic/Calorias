@@ -1,0 +1,90 @@
+import { KCAL_PER_G, MACRO_DEFAULTS } from '../constants.ts';
+import type { DietaryPreference, GoalType } from '../schemas/enums.ts';
+import { bmi, weightForBmi } from './energy.ts';
+
+export interface MacroTargets {
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+  fiber_g: number;
+}
+
+export interface MacroInput {
+  kcal: number;
+  goal: GoalType;
+  weightKg: number;
+  heightCm: number;
+  dietaryPreferences?: readonly DietaryPreference[];
+}
+
+/**
+ * Protein is computed per kg of a *reference* weight: for BMI above the cap we use the weight
+ * at the cap, so that protein targets for people with obesity stay realistic.
+ */
+export function proteinReferenceWeight(weightKg: number, heightCm: number): number {
+  const cap = MACRO_DEFAULTS.proteinReferenceBmiCap;
+  return bmi(weightKg, heightCm) > cap ? weightForBmi(cap, heightCm) : weightKg;
+}
+
+/**
+ * Split calories into macros:
+ * - protein: 1.6–2.0 g/kg (by goal) of reference weight
+ * - fat: default 28 % kcal, never below 25 %
+ * - carbs: the remainder (never below 15 % kcal; protein is trimmed if needed)
+ * Keto preference: ~25 g carbs, 25 % protein, rest fat.
+ */
+export function splitMacros(input: MacroInput): MacroTargets {
+  const { kcal, goal, weightKg, heightCm, dietaryPreferences = [] } = input;
+  const fiber_g = Math.round((kcal / 1000) * MACRO_DEFAULTS.fiberPer1000Kcal);
+
+  if (dietaryPreferences.includes('keto')) {
+    const carbs_g = MACRO_DEFAULTS.ketoCarbsG;
+    const protein_g = (kcal * MACRO_DEFAULTS.ketoProteinPct) / KCAL_PER_G.protein;
+    const fatKcal = kcal - carbs_g * KCAL_PER_G.carbs - protein_g * KCAL_PER_G.protein;
+    return {
+      protein_g: Math.round(protein_g),
+      carbs_g,
+      fat_g: Math.round(Math.max(0, fatKcal) / KCAL_PER_G.fat),
+      fiber_g: Math.min(fiber_g, 20),
+    };
+  }
+
+  const refWeight = proteinReferenceWeight(weightKg, heightCm);
+  let proteinKcal = MACRO_DEFAULTS.proteinPerKg[goal] * refWeight * KCAL_PER_G.protein;
+  const fatKcal = kcal * MACRO_DEFAULTS.fatDefaultPct;
+  const minCarbsKcal = kcal * MACRO_DEFAULTS.carbsMinPct;
+
+  // Ensure carbs keep their minimum share; trim protein first, fat stays ≥ fatMinPct.
+  const maxProteinKcal = kcal - fatKcal - minCarbsKcal;
+  if (proteinKcal > maxProteinKcal) proteinKcal = Math.max(0, maxProteinKcal);
+
+  const carbsKcal = Math.max(0, kcal - proteinKcal - fatKcal);
+  return {
+    protein_g: Math.round(proteinKcal / KCAL_PER_G.protein),
+    carbs_g: Math.round(carbsKcal / KCAL_PER_G.carbs),
+    fat_g: Math.round(fatKcal / KCAL_PER_G.fat),
+    fiber_g,
+  };
+}
+
+export function waterTargetMl(weightKg: number): number {
+  const raw = weightKg * MACRO_DEFAULTS.waterMlPerKg;
+  const clamped = Math.min(MACRO_DEFAULTS.waterMaxMl, Math.max(MACRO_DEFAULTS.waterMinMl, raw));
+  return Math.round(clamped / 50) * 50;
+}
+
+/** Calories implied by macro grams. */
+export function kcalFromMacros(m: { protein_g: number; carbs_g: number; fat_g: number }): number {
+  return m.protein_g * KCAL_PER_G.protein + m.carbs_g * KCAL_PER_G.carbs + m.fat_g * KCAL_PER_G.fat;
+}
+
+/** Share of calories (0–1) contributed by each macro. */
+export function macroPercentages(m: { protein_g: number; carbs_g: number; fat_g: number }) {
+  const total = kcalFromMacros(m);
+  if (total <= 0) return { protein: 0, carbs: 0, fat: 0 };
+  return {
+    protein: (m.protein_g * KCAL_PER_G.protein) / total,
+    carbs: (m.carbs_g * KCAL_PER_G.carbs) / total,
+    fat: (m.fat_g * KCAL_PER_G.fat) / total,
+  };
+}

@@ -1,0 +1,95 @@
+/**
+ * Central nutrition and product constants. No magic numbers elsewhere:
+ * every threshold used by formulas or safeguards lives here.
+ */
+
+export const KCAL_PER_KG_BODY_WEIGHT = 7700;
+export const KCAL_PER_G = { protein: 4, carbs: 4, fat: 9, alcohol: 7 } as const;
+
+export const ACTIVITY_FACTORS = {
+  sedentary: 1.2,
+  light: 1.375,
+  moderate: 1.55,
+  active: 1.725,
+  very_active: 1.9,
+} as const;
+
+export const SAFETY = {
+  /** Absolute calorie floors by biological sex. */
+  calorieFloor: { female: 1200, male: 1500 },
+  /** Max recommended loss rate as a fraction of body weight per week. */
+  maxWeeklyLossFraction: 0.01,
+  /** A loss rate above this fraction of body weight per week is flagged as aggressive. */
+  aggressiveWeeklyLossFraction: 0.0075,
+  /** Max recommended gain rate (kg / week). */
+  maxWeeklyGainKg: 0.5,
+  minHealthyBmi: 18.5,
+  /** Minimum age to use the app at all. */
+  minAge: 16,
+  /** Minimum age to receive a calorie deficit. Under this, goals are capped at maintenance. */
+  minAgeForDeficit: 18,
+  maxAge: 100,
+  /** Restriction detection: average kcal under this across the window triggers a supportive message. */
+  restrictionKcalThreshold: 800,
+  restrictionWindowDays: 7,
+  restrictionMinLoggedDays: 5,
+} as const;
+
+export const MACRO_DEFAULTS = {
+  /** Protein g per kg of reference body weight, by goal. */
+  proteinPerKg: {
+    lose: 2.0,
+    maintain: 1.6,
+    gain: 1.6,
+    build_muscle: 2.0,
+    eat_healthier: 1.6,
+  },
+  fatMinPct: 0.25,
+  fatDefaultPct: 0.28,
+  /** Carbs are never pushed below this share of calories unless keto is selected. */
+  carbsMinPct: 0.15,
+  ketoCarbsG: 25,
+  ketoProteinPct: 0.25,
+  /** g fiber per 1000 kcal (Dietary Guidelines). */
+  fiberPer1000Kcal: 14,
+  /** ml water per kg body weight. */
+  waterMlPerKg: 35,
+  waterMinMl: 1500,
+  waterMaxMl: 4000,
+  /** BMI above which protein is computed on an adjusted reference weight. */
+  proteinReferenceBmiCap: 27,
+} as const;
+
+/** Default surplus for goals that gain weight (kcal/day) when no rate is specified. */
+export const GAIN_DEFAULTS = {
+  build_muscle_surplus_pct: 0.1,
+} as const;
+
+export const PORTION_MULTIPLIERS = [0.5, 1, 1.5, 2] as const;
+
+export const WEIGHT_TREND = {
+  /** Exponential smoothing factor for the weight trend line. */
+  emaAlpha: 0.1,
+  movingAverageDays: 7,
+} as const;
+
+export const ADAPTIVE = {
+  minWindowDays: 14,
+  minLoggedDays: 10,
+  minWeighIns: 4,
+  /** Weight given to the new observation when blending with the previous TDEE estimate. */
+  blendNewWeight: 0.5,
+  /** Max weekly change of the target (kcal) to keep adjustments gentle. */
+  maxWeeklyChangeKcal: 150,
+} as const;
+
+export const IMAGE_UPLOAD = {
+  maxDimensionPx: 1024,
+  jpegQuality: 0.7,
+  premiumMaxDimensionPx: 2048,
+  premiumJpegQuality: 0.85,
+} as const;
+
+export const CONFIDENCE_LEVELS = { high: 0.75, medium: 0.5 } as const;
+
+export const WATER_QUICK_ADD_ML = 250;

@@ -1,0 +1,53 @@
+/** ISO calendar date (YYYY-MM-DD) helpers. All "day" logic uses the user's time zone. */
+
+export type IsoDate = string;
+
+/** Returns the calendar date of `instant` in the given IANA time zone. */
+export function localDate(instant: Date, timeZone: string): IsoDate {
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(instant);
+    const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
+    return `${get('year')}-${get('month')}-${get('day')}`;
+  } catch {
+    return instant.toISOString().slice(0, 10);
+  }
+}
+
+function toUtcDate(d: IsoDate): Date {
+  const [y, m, day] = d.split('-').map(Number) as [number, number, number];
+  return new Date(Date.UTC(y, m - 1, day));
+}
+
+export function addDays(d: IsoDate, days: number): IsoDate {
+  const date = toUtcDate(d);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+/** Whole days from a to b (b - a). */
+export function diffDays(a: IsoDate, b: IsoDate): number {
+  return Math.round((toUtcDate(b).getTime() - toUtcDate(a).getTime()) / 86_400_000);
+}
+
+/** Inclusive list of dates from `from` to `to`. */
+export function dateRange(from: IsoDate, to: IsoDate): IsoDate[] {
+  const out: IsoDate[] = [];
+  for (let d = from; d <= to; d = addDays(d, 1)) out.push(d);
+  return out;
+}
+
+/** Monday-based start of week. */
+export function startOfWeek(d: IsoDate): IsoDate {
+  const dow = toUtcDate(d).getUTCDay(); // 0 = Sunday
+  const offset = dow === 0 ? -6 : 1 - dow;
+  return addDays(d, offset);
+}
+
+export function isIsoDate(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(toUtcDate(value).getTime());
+}

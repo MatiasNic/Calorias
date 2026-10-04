@@ -1,0 +1,85 @@
+import { z } from 'zod';
+
+export const SexSchema = z.enum(['female', 'male']);
+export type Sex = z.infer<typeof SexSchema>;
+
+export const ActivityLevelSchema = z.enum([
+  'sedentary',
+  'light',
+  'moderate',
+  'active',
+  'very_active',
+]);
+export type ActivityLevel = z.infer<typeof ActivityLevelSchema>;
+
+export const GoalTypeSchema = z.enum(['lose', 'maintain', 'gain', 'build_muscle', 'eat_healthier']);
+export type GoalType = z.infer<typeof GoalTypeSchema>;
+
+export const GoalModeSchema = z.enum(['fixed', 'adaptive']);
+export type GoalMode = z.infer<typeof GoalModeSchema>;
+
+export const UnitSystemSchema = z.enum(['metric', 'imperial']);
+export type UnitSystem = z.infer<typeof UnitSystemSchema>;
+
+export const DietaryPreferenceSchema = z.enum([
+  'vegetarian',
+  'vegan',
+  'gluten_free',
+  'lactose_free',
+  'keto',
+  'low_carb',
+  'pescatarian',
+  'halal',
+  'kosher',
+]);
+export type DietaryPreference = z.infer<typeof DietaryPreferenceSchema>;
+
+export const MealTypeSchema = z.enum(['breakfast', 'lunch', 'snack', 'dinner', 'other']);
+export type MealType = z.infer<typeof MealTypeSchema>;
+/** Ordered for display: desayuno, almuerzo, merienda, cena, snack. */
+export const MEAL_TYPE_ORDER: readonly MealType[] = [
+  'breakfast',
+  'lunch',
+  'snack',
+  'dinner',
+  'other',
+];
+
+export const MealSourceSchema = z.enum([
+  'photo',
+  'barcode',
+  'text',
+  'voice',
+  'manual',
+  'recipe',
+  'favorite',
+  'label',
+]);
+export type MealSource = z.infer<typeof MealSourceSchema>;
+
+export const FoodSourceSchema = z.enum(['usda', 'off', 'regional', 'ai', 'custom', 'recipe']);
+export type FoodSource = z.infer<typeof FoodSourceSchema>;
+
+export const CookingMethodSchema = z.enum([
+  'raw',
+  'boiled',
+  'steamed',
+  'baked',
+  'grilled',
+  'fried',
+  'deep_fried',
+  'sauteed',
+  'roasted',
+  'stewed',
+  'unknown',
+]);
+export type CookingMethod = z.infer<typeof CookingMethodSchema>;
+
+export const PlanSchema = z.enum(['free', 'premium']);
+export type Plan = z.infer<typeof PlanSchema>;
+
+export const LocaleSchema = z.enum(['es-AR', 'en-US', 'pt-BR']);
+export type AppLocale = z.infer<typeof LocaleSchema>;
+
+export const QuotaKindSchema = z.enum(['photo_scan', 'text_query', 'coach_message']);
+export type QuotaKind = z.infer<typeof QuotaKindSchema>;

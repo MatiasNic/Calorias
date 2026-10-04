@@ -1,0 +1,61 @@
+import type { TranslationShape } from '../types';
+import type { Translation } from './es';
+
+export const pt: TranslationShape<Translation> = {
+  common: {
+    appName: 'Plato',
+    continue: 'Continuar',
+    back: 'Voltar',
+    cancel: 'Cancelar',
+    save: 'Salvar',
+    delete: 'Excluir',
+    edit: 'Editar',
+    done: 'Pronto',
+    close: 'Fechar',
+    retry: 'Tentar novamente',
+    skip: 'Pular',
+    add: 'Adicionar',
+    search: 'Buscar',
+    loading: 'Carregando…',
+    errorTitle: 'Algo deu errado',
+    errorMessage: 'Não foi possível concluir. Verifique sua conexão e tente novamente.',
+    offline:
+      'Sem conexão: suas alterações foram salvas e serão sincronizadas quando você voltar a ficar online.',
+    kcal: 'kcal',
+    g: 'g',
+    ml: 'ml',
+    kg: 'kg',
+    lb: 'lb',
+    cm: 'cm',
+    today: 'Hoje',
+    yesterday: 'Ontem',
+    disclaimer: 'O Plato não substitui o aconselhamento médico ou nutricional profissional.',
+    premium: 'Premium',
+    comingSoon: 'Em breve',
+    yes: 'Sim',
+    no: 'Não',
+  },
+  macros: {
+    protein: 'Proteínas',
+    carbs: 'Carboidratos',
+    fat: 'Gorduras',
+    fiber: 'Fibras',
+    sugar: 'Açúcares',
+    sodium: 'Sódio',
+    satFat: 'Gorduras saturadas',
+    proteinShort: 'P',
+    carbsShort: 'C',
+    fatShort: 'G',
+  },
+  scan: {
+    confidence: {
+      high: 'Confiança alta',
+      medium: 'Confiança média',
+      low: 'Confiança baixa',
+      a11y: 'Nível de confiança da IA: {{level}}',
+    },
+  },
+  dev: {
+    catalog: 'Catálogo de componentes',
+  },
+};

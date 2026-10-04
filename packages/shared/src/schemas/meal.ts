@@ -1,0 +1,53 @@
+import { z } from 'zod';
+import {
+  CookingMethodSchema,
+  FoodSourceSchema,
+  MealSourceSchema,
+  MealTypeSchema,
+} from './enums.ts';
+import { MicronutrientsSchema, NutrientsSchema } from './nutrients.ts';
+
+export const MealItemSchema = z.object({
+  id: z.string().uuid().optional(),
+  display_name: z.string().trim().min(1).max(120),
+  food_id: z.string().max(80).nullable().optional(),
+  food_source: FoodSourceSchema,
+  grams: z.number().min(0).max(5000),
+  serving_unit: z.string().max(40).nullable().optional(),
+  serving_qty: z.number().min(0).max(100).nullable().optional(),
+  per100g: NutrientsSchema,
+  nutrients: NutrientsSchema,
+  micros: MicronutrientsSchema.optional(),
+  ai_confidence: z.number().min(0).max(1).nullable().optional(),
+  cooking_method: CookingMethodSchema.nullable().optional(),
+  user_edited: z.boolean().default(false),
+});
+export type MealItem = z.infer<typeof MealItemSchema>;
+
+export const MealCreateSchema = z.object({
+  /** Client-generated id so offline-queued writes are idempotent. */
+  id: z.string().uuid(),
+  eaten_at: z.string().datetime({ offset: true }),
+  meal_type: MealTypeSchema,
+  source: MealSourceSchema,
+  photo_path: z.string().max(300).nullable().optional(),
+  note: z.string().max(500).nullable().optional(),
+  ai_scan_id: z.string().uuid().nullable().optional(),
+  items: z.array(MealItemSchema).min(1).max(40),
+});
+export type MealCreate = z.infer<typeof MealCreateSchema>;
+
+export const FoodSchema = z.object({
+  id: z.string(),
+  source: FoodSourceSchema,
+  name: z.string(),
+  brand: z.string().nullable().optional(),
+  barcode: z.string().nullable().optional(),
+  per100g: NutrientsSchema,
+  micros: MicronutrientsSchema.optional(),
+  /** Typical servings, e.g. { label: "1 empanada", grams: 120 }. */
+  servings: z.array(z.object({ label: z.string(), grams: z.number().positive() })).default([]),
+  category: z.string().nullable().optional(),
+  attribution: z.string().nullable().optional(),
+});
+export type Food = z.infer<typeof FoodSchema>;

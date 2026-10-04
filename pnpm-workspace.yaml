@@ -1,0 +1,8 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+onlyBuiltDependencies:
+  - '@shopify/react-native-skia'
+  - '@sentry/cli'
+  - esbuild
