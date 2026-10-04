@@ -46,8 +46,10 @@ export const FoodSchema = z.object({
   barcode: z.string().nullable().optional(),
   per100g: NutrientsSchema,
   micros: MicronutrientsSchema.optional(),
-  /** Typical servings, e.g. { label: "1 empanada", grams: 120 }. */
-  servings: z.array(z.object({ label: z.string(), grams: z.number().positive() })).default([]),
+  /** Typical servings. `unit` is an i18n key (unit, slice, cup…); `label` overrides it (e.g. OFF). */
+  servings: z
+    .array(z.object({ unit: z.string(), grams: z.number().positive(), label: z.string().optional() }))
+    .default([]),
   category: z.string().nullable().optional(),
   attribution: z.string().nullable().optional(),
 });

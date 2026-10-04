@@ -33,3 +33,16 @@ jest.mock('expo-localization', () => ({
 // eslint-disable-next-line import/first
 import { initI18n } from './src/i18n';
 initI18n('es-AR');
+
+jest.mock('expo-crypto', () => ({
+  randomUUID: () => require('crypto').randomUUID(),
+  getRandomValues: (a: Uint8Array) => require('crypto').getRandomValues(a),
+  digestStringAsync: jest.fn(async () => 'hash'),
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+}));
+
+jest.mock('expo-sqlite', () => ({
+  openDatabaseSync: () => {
+    throw new Error('expo-sqlite is not available in unit tests');
+  },
+}));
