@@ -31,7 +31,7 @@ jobs:
       - name: Unit tests (shared + edge function logic)
         run: pnpm test
       - name: Component tests (mobile)
-        run: pnpm --filter @plato/mobile test -- --ci
+        run: pnpm --filter @plato/mobile exec jest --ci
 
   database:
     name: Migrations & RLS tests
@@ -63,6 +63,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v2
         with:
-          deno-version: v2.x
-      - run: deno check supabase/functions/*/index.ts
-        working-directory: .
+          deno-version: v2.5.x
+      - name: Type-check functions
+        working-directory: supabase/functions
+        run: deno check --config deno.json */index.ts
