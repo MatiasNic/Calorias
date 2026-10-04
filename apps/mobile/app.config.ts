@@ -113,7 +113,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         speechRecognitionPermission: 'Plato transcribe tu voz para registrar lo que comiste.',
       },
     ],
-    'expo-health-connect',
     'react-native-health-connect',
     [
       '@kingstinct/react-native-healthkit',

@@ -61,7 +61,7 @@ pnpm install
 cd apps/mobile
 EXPO_PUBLIC_USE_MOCKS=true npx expo prebuild -p android --clean
 echo "sdk.dir=$ANDROID_HOME" > android/local.properties
-cd android && ./gradlew assembleRelease            # arquitecturas: -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
+cd android && SENTRY_DISABLE_AUTO_UPLOAD=true ./gradlew assembleRelease            # arquitecturas: -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
 # → android/app/build/outputs/apk/release/app-release.apk
 ```
 

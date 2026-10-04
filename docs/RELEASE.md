@@ -86,7 +86,7 @@ Usá precios por país (Play/App Store sugieren equivalentes; en Argentina convi
 - [ ] Crear la app en Play Console (`com.platoapp.plato`), completar ficha con
       [STORE_LISTING.md](STORE_LISTING.md).
 - [ ] **Play App Signing** activado; subir el primer AAB (`eas build -p android --profile
-  production`) a la pista **Prueba interna**.
+production`) a la pista **Prueba interna**.
 - [ ] Crear los productos y la suscripción con planes base + oferta de prueba de 7 días en el anual.
 - [ ] **Data safety**, **clasificación de contenido**, **público objetivo** (18+ recomendado,
       mínimo 13), **declaración de apps de salud** — respuestas en [PRIVACY.md](PRIVACY.md).
@@ -155,7 +155,9 @@ Para CI: guardá `EXPO_TOKEN` como secreto del repo en GitHub si querés builds 
 ## 6. Observabilidad
 
 - [ ] Sentry: crear proyecto React Native → DSN a `EXPO_PUBLIC_SENTRY_DSN`; `SENTRY_ORG`,
-      `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` en EAS para sourcemaps. Sentry solo se activa si el
+      `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` en EAS para sourcemaps, y en `eas.json` → perfil
+      `production` agregá `"env": { "SENTRY_DISABLE_AUTO_UPLOAD": "false" }` (por defecto la subida
+      está desactivada para que los builds no fallen sin token). Sentry solo se activa si el
       usuario acepta el diagnóstico (opt-in).
 - [ ] PostHog: key + host (EU si priorizás GDPR). También opt-in; nunca se envían fotos, comidas
       ni pesos, solo eventos de uso.
