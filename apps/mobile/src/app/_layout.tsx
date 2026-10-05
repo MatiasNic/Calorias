@@ -7,10 +7,11 @@ import {
   useFonts,
 } from '@expo-google-fonts/inter';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -27,6 +28,12 @@ SplashScreen.preventAutoHideAsync().catch(() => undefined);
 initI18n(usePrefsStore.getState().locale);
 
 export { ErrorBoundary } from '@/components/ErrorBoundary';
+
+// Dev-only hook so screenshot/QA scripts can navigate the web build without a full reload
+// (the web demo keeps its database in memory).
+if (__DEV__ && Platform.OS === 'web') {
+  (globalThis as { __platoRouter?: typeof router }).__platoRouter = router;
+}
 
 function RootStack() {
   const theme = useTheme();
