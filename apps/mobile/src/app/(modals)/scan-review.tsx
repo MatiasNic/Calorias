@@ -31,6 +31,7 @@ import { AnalyzingView } from '@/features/scan/AnalyzingView';
 import { useScanStore } from '@/features/scan/store';
 import { draftFromAnalysis } from '@/features/scan/toDraft';
 import { useAiError } from '@/features/scan/useAiError';
+import { env } from '@/config/env';
 import { analyzeMealPhoto, reportAiMistake } from '@/services/ai';
 import { track } from '@/services/analytics';
 import { prepareMealImage, persistLocalPhoto } from '@/services/image';
@@ -264,6 +265,14 @@ export default function ScanReview() {
         />
       ) : null}
       <AppText color="textMuted">{t('review.subtitle')}</AppText>
+      {env.useMocks ? (
+        <Banner
+          tone="warning"
+          icon="flask-outline"
+          title={t('review.demoTitle')}
+          message={t('review.demoMessage')}
+        />
+      ) : null}
       {lowConfidence ? <Banner tone="warning" message={t('review.lowConfidenceHint')} /> : null}
       {draft.items.map((item, i) => (
         <DraftItemCard

@@ -33,8 +33,8 @@ export class MockProvider implements AIProvider {
     data: mockCoachReply(messages[messages.length - 1]?.content ?? ''),
     usage: usage(model),
   });
-  mealPlan: AIProvider['mealPlan'] = async ({ days }, model) => ({
-    data: mockMealPlan(days),
+  mealPlan: AIProvider['mealPlan'] = async ({ days, preferences }, model) => ({
+    data: mockMealPlan(days, preferences),
     usage: usage(model),
   });
 }

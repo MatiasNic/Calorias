@@ -99,6 +99,7 @@ export async function mealPlan(req: Request, deps: ServerDeps): Promise<Response
         context,
         budget: body.budget,
         days: body.days,
+        preferences: body.preferences,
         ctx: {
           locale: body.locale,
           country: profile.country,

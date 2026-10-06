@@ -140,10 +140,10 @@ export class AnthropicProvider implements AIProvider {
       2048,
     );
 
-  mealPlan: AIProvider['mealPlan'] = ({ context, ctx, budget, days }, model) =>
+  mealPlan: AIProvider['mealPlan'] = ({ context, ctx, budget, days, preferences }, model) =>
     this.structured(
       model,
-      mealPlanSystem(ctx, context, budget, days),
+      mealPlanSystem(ctx, context, budget, days, preferences),
       [{ type: 'text', text: 'Create my meal plan.' }],
       MealPlanSchema,
       12000,

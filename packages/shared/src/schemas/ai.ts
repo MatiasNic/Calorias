@@ -138,10 +138,24 @@ export const LabelResponseSchema = z.object({
 });
 export type LabelResponse = z.infer<typeof LabelResponseSchema>;
 
+/** What the user tells us before generating a meal plan (all optional). */
+export const MealPlanPreferencesSchema = z.object({
+  /** Free text: foods/dishes the user likes. Treated as data, never as instructions. */
+  liked: z.string().trim().max(300).default(''),
+  /** Free text: foods to avoid (dislikes; allergies come from the profile). */
+  disliked: z.string().trim().max(300).default(''),
+  cookingTime: z.enum(['quick', 'normal', 'elaborate']).default('normal'),
+  mealsPerDay: z.number().int().min(3).max(5).default(4),
+  /** Repeat dishes to cook in batches (leftovers for the next day). */
+  batchCooking: z.boolean().default(false),
+});
+export type MealPlanPreferences = z.infer<typeof MealPlanPreferencesSchema>;
+
 export const MealPlanRequestSchema = z.object({
   locale: LocaleSchema.default('es-AR'),
   budget: z.enum(['low', 'mid', 'high']).default('mid'),
   days: z.number().int().min(1).max(7).default(7),
+  preferences: MealPlanPreferencesSchema.optional(),
 });
 
 export const MealPlanSchema = z.object({

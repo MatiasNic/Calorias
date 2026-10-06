@@ -391,53 +391,202 @@ export function mockCoachReply(question: string): string {
   return `(Demo) Buena pregunta: "${question.slice(0, 80)}". Una idea simple: sumá una porción de proteína magra (pollo, huevos, legumbres o yogur) y verduras para completar tus macros de hoy. Recordá que esto es información general y no reemplaza a un profesional.`;
 }
 
-export function mockMealPlan(days: number): MealPlan {
-  const base = [
-    {
-      meal_type: 'breakfast' as const,
-      name: 'Yogur con avena y banana',
-      description: 'Yogur natural, 3 cdas de avena y media banana.',
-      kcal: 350,
-      protein_g: 15,
-      carbs_g: 55,
-      fat_g: 8,
-    },
-    {
-      meal_type: 'lunch' as const,
-      name: 'Pollo con arroz y ensalada',
-      description: 'Pechuga a la plancha, 1 taza de arroz y ensalada mixta.',
-      kcal: 600,
-      protein_g: 45,
-      carbs_g: 65,
-      fat_g: 15,
-    },
-    {
-      meal_type: 'snack' as const,
-      name: 'Mate con tostadas y queso',
-      description: '2 tostadas integrales con queso untable light.',
-      kcal: 250,
-      protein_g: 12,
-      carbs_g: 30,
-      fat_g: 8,
-    },
-    {
-      meal_type: 'dinner' as const,
-      name: 'Tarta de verdura y ensalada',
-      description: 'Una porción de tarta de acelga con ensalada de tomate.',
-      kcal: 550,
-      protein_g: 22,
-      carbs_g: 45,
-      fat_g: 28,
-    },
-  ];
+type MockDish = MealPlan['days'][number]['meals'][number];
+
+const dish = (
+  meal_type: MockDish['meal_type'],
+  name: string,
+  description: string,
+  kcal: number,
+  protein_g: number,
+  carbs_g: number,
+  fat_g: number,
+): MockDish => ({ meal_type, name, description, kcal, protein_g, carbs_g, fat_g });
+
+const MOCK_DISHES: Record<'breakfast' | 'lunch' | 'snack' | 'dinner', MockDish[]> = {
+  breakfast: [
+    dish(
+      'breakfast',
+      'Yogur con avena y banana',
+      'Yogur natural, 3 cdas de avena y media banana.',
+      350,
+      15,
+      55,
+      8,
+    ),
+    dish(
+      'breakfast',
+      'Tostadas con palta y huevo',
+      '2 tostadas integrales, ¼ palta y 1 huevo.',
+      380,
+      17,
+      35,
+      18,
+    ),
+    dish(
+      'breakfast',
+      'Café con leche y medialuna',
+      'Café con leche descremada y una medialuna.',
+      320,
+      11,
+      42,
+      12,
+    ),
+    dish(
+      'breakfast',
+      'Licuado de frutilla y avena',
+      'Leche, frutillas, avena y una cdita de miel.',
+      340,
+      14,
+      58,
+      6,
+    ),
+  ],
+  lunch: [
+    dish(
+      'lunch',
+      'Pollo con arroz y ensalada',
+      'Pechuga a la plancha, 1 taza de arroz y ensalada mixta.',
+      600,
+      45,
+      65,
+      15,
+    ),
+    dish(
+      'lunch',
+      'Milanesa al horno con puré',
+      'Milanesa de carne al horno y puré de calabaza.',
+      620,
+      40,
+      55,
+      22,
+    ),
+    dish(
+      'lunch',
+      'Guiso de lentejas',
+      'Lentejas con verduras y un poco de chorizo colorado.',
+      580,
+      30,
+      75,
+      16,
+    ),
+    dish(
+      'lunch',
+      'Fideos con tuco y queso',
+      'Fideos con salsa de tomate casera y queso rallado.',
+      610,
+      24,
+      95,
+      14,
+    ),
+  ],
+  snack: [
+    dish(
+      'snack',
+      'Mate con tostadas y queso',
+      '2 tostadas integrales con queso untable light.',
+      250,
+      12,
+      30,
+      8,
+    ),
+    dish('snack', 'Fruta y un puñado de nueces', 'Una manzana y 20 g de nueces.', 230, 5, 25, 13),
+    dish('snack', 'Yogur con granola', 'Yogur bebible y 2 cdas de granola.', 240, 9, 38, 6),
+  ],
+  dinner: [
+    dish(
+      'dinner',
+      'Tarta de verdura y ensalada',
+      'Una porción de tarta de acelga con ensalada de tomate.',
+      550,
+      22,
+      45,
+      28,
+    ),
+    dish(
+      'dinner',
+      'Merluza con papas al horno',
+      'Filet de merluza y papas al horno con romero.',
+      520,
+      38,
+      50,
+      16,
+    ),
+    dish(
+      'dinner',
+      'Wok de carne y verduras',
+      'Carne en tiras con vegetales salteados y arroz.',
+      560,
+      38,
+      52,
+      20,
+    ),
+    dish(
+      'dinner',
+      'Omelette con ensalada',
+      'Omelette de 2 huevos con queso y ensalada verde.',
+      450,
+      28,
+      12,
+      30,
+    ),
+  ],
+};
+
+const words = (v: string | undefined) =>
+  (v ?? '')
+    .toLowerCase()
+    .split(/[,;\n]+|\sy\s/)
+    .map((w) => w.trim())
+    .filter((w) => w.length >= 3);
+
+/**
+ * Demo meal plan: rotates regional dishes, honours meals per day, skips dishes that mention
+ * something the user wants to avoid and favours the ones mentioning what they like.
+ */
+export function mockMealPlan(
+  days: number,
+  preferences?: { liked?: string; disliked?: string; mealsPerDay?: number },
+): MealPlan {
+  const liked = words(preferences?.liked);
+  const avoid = words(preferences?.disliked);
+  const text = (d: MockDish) => `${d.name} ${d.description}`.toLowerCase();
+  const slots: (keyof typeof MOCK_DISHES)[] =
+    (preferences?.mealsPerDay ?? 4) <= 3
+      ? ['breakfast', 'lunch', 'dinner']
+      : ['breakfast', 'lunch', 'snack', 'dinner'];
+  const options = (slot: keyof typeof MOCK_DISHES) => {
+    const ok = MOCK_DISHES[slot].filter((d) => !avoid.some((w) => text(d).includes(w)));
+    const pool = ok.length ? ok : MOCK_DISHES[slot];
+    return [...pool].sort(
+      (a, b) =>
+        Number(liked.some((w) => text(b).includes(w))) -
+        Number(liked.some((w) => text(a).includes(w))),
+    );
+  };
   return {
-    days: Array.from({ length: days }, (_, i) => ({ day: i + 1, meals: base })),
+    days: Array.from({ length: days }, (_, i) => ({
+      day: i + 1,
+      meals: slots.map((slot) => {
+        const pool = options(slot);
+        return pool[i % pool.length]!;
+      }),
+    })),
     shopping_list: [
       { item: 'Pechuga de pollo', quantity: '1 kg', category: 'Carnes' },
-      { item: 'Yogur natural', quantity: '7 unidades', category: 'Lácteos' },
+      { item: 'Carne picada o nalga', quantity: '700 g', category: 'Carnes' },
+      { item: 'Merluza', quantity: '500 g', category: 'Pescados' },
+      { item: 'Huevos', quantity: '1 docena', category: 'Lácteos y huevos' },
+      { item: 'Yogur natural', quantity: '7 unidades', category: 'Lácteos y huevos' },
       { item: 'Avena', quantity: '500 g', category: 'Almacén' },
+      { item: 'Lentejas', quantity: '500 g', category: 'Almacén' },
       { item: 'Acelga', quantity: '2 atados', category: 'Verdulería' },
+      { item: 'Tomates', quantity: '1 kg', category: 'Verdulería' },
+      { item: 'Bananas y manzanas', quantity: '1 kg', category: 'Verdulería' },
     ],
-    notes: 'Plan de demostración.',
+    notes:
+      liked.length || avoid.length
+        ? 'Plan de demostración armado con tus preferencias (en la versión real lo genera la IA).'
+        : 'Plan de demostración (en la versión real lo genera la IA según tus objetivos y gustos).',
   };
 }

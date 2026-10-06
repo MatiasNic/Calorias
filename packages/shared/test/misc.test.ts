@@ -7,6 +7,9 @@ import {
   dateRange,
   detectRestrictionPattern,
   diffDays,
+  ACHIEVEMENTS,
+  achievementProgress,
+  computeAchievementStats,
   evaluateAchievements,
   isIsoDate,
   localDate,
@@ -74,20 +77,104 @@ describe('detectRestrictionPattern', () => {
 });
 
 describe('achievements', () => {
-  it('unlocks new achievements only', () => {
-    const stats = {
-      mealsLogged: 1,
-      photoScans: 1,
-      currentStreak: 3,
-      proteinGoalHitToday: false,
-      waterGoalHitToday: false,
-      weighIns: 0,
-      recipes: 0,
-    };
-    expect(evaluateAchievements(stats, new Set(['first_meal']))).toEqual([
-      'first_scan',
-      'streak_3',
-    ]);
+  const base = {
+    meals: [],
+    waterByDate: new Map<string, number>(),
+    weights: [],
+    goalFor: () => ({ kcal: 2000, protein_g: 100, fiber_g: 25, water_ml: 2000 }),
+    goalType: 'lose' as const,
+    targetWeightKg: 70,
+    longestStreak: 0,
+    counts: { measurements: 0, recipes: 0, customFoods: 0, favorites: 0 },
+  };
+  const meal = (
+    date: string,
+    type: 'breakfast' | 'lunch' | 'dinner',
+    kcal: number,
+    protein: number,
+    source: 'photo' | 'text' | 'barcode' = 'photo',
+  ) => ({
+    local_date: date,
+    meal_type: type,
+    source,
+    totals: { kcal, protein_g: protein, fiber_g: 10 },
+    items: [{ display_name: `food-${type}`, user_edited: type === 'lunch' }],
+  });
+
+  it('has around 120 achievements with unique ids, keeping legacy ids', () => {
+    expect(ACHIEVEMENTS.length).toBeGreaterThanOrEqual(110);
+    expect(new Set(ACHIEVEMENTS.map((a) => a.id)).size).toBe(ACHIEVEMENTS.length);
+    const ids = ACHIEVEMENTS.map((a) => a.id);
+    for (const legacy of ['first_meal', 'first_scan', 'streak_7', 'meals_50', 'first_recipe'])
+      expect(ids).toContain(legacy);
+  });
+
+  it('computes stats from meals, water and weights', () => {
+    const stats = computeAchievementStats({
+      ...base,
+      meals: [
+        meal('2026-10-03', 'breakfast', 500, 30),
+        meal('2026-10-03', 'lunch', 800, 40, 'text'),
+        meal('2026-10-03', 'dinner', 700, 40, 'barcode'),
+        meal('2026-10-05', 'lunch', 600, 20),
+      ],
+      waterByDate: new Map([
+        ['2026-10-03', 2100],
+        ['2026-10-05', 500],
+      ]),
+      weights: [
+        { local_date: '2026-10-05', weight_kg: 72.4 },
+        { local_date: '2026-10-01', weight_kg: 75 },
+      ],
+      longestStreak: 2,
+    });
+    expect(stats).toMatchObject({
+      mealsLogged: 4,
+      photoScans: 2,
+      textLogs: 1,
+      barcodeScans: 1,
+      corrections: 2,
+      loggedDays: 2,
+      fullDays: 1,
+      weekendDays: 1, // 2026-10-03 is a Saturday
+      breakfastDays: 1,
+      proteinDays: 1,
+      calorieRangeDays: 1,
+      waterDays: 1,
+      weighIns: 2,
+      goalProgressKg: 2,
+      goalReached: 0,
+      uniqueFoods: 3,
+    });
+  });
+
+  it('only counts weight progress in the direction of the goal', () => {
+    const weights = [
+      { local_date: '2026-10-01', weight_kg: 70 },
+      { local_date: '2026-10-08', weight_kg: 73 },
+    ];
+    expect(computeAchievementStats({ ...base, weights }).goalProgressKg).toBe(0);
+    expect(
+      computeAchievementStats({ ...base, weights, goalType: 'gain', targetWeightKg: 73 }),
+    ).toMatchObject({ goalProgressKg: 3, goalReached: 1 });
+    expect(computeAchievementStats({ ...base, weights, goalType: 'maintain' }).goalProgressKg).toBe(
+      0,
+    );
+  });
+
+  it('unlocks new achievements only, by threshold', () => {
+    const stats = computeAchievementStats({
+      ...base,
+      meals: [meal('2026-10-05', 'lunch', 600, 20)],
+      longestStreak: 3,
+    });
+    const fresh = evaluateAchievements(stats, new Set(['first_meal']));
+    expect(fresh).toContain('first_scan');
+    expect(fresh).toContain('streak_3');
+    expect(fresh).not.toContain('first_meal');
+    expect(fresh).not.toContain('streak_7');
+    const streak7 = ACHIEVEMENTS.find((a) => a.id === 'streak_7')!;
+    expect(achievementProgress(streak7, stats)).toBeCloseTo(3 / 7);
   });
 });
 

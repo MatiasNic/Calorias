@@ -65,7 +65,7 @@ export const GAIN_DEFAULTS = {
   build_muscle_surplus_pct: 0.1,
 } as const;
 
-export const PORTION_MULTIPLIERS = [0.5, 1, 1.5, 2] as const;
+export const PORTION_MULTIPLIERS = [0.5, 1, 1.5, 2, 3, 4] as const;
 
 export const WEIGHT_TREND = {
   /** Exponential smoothing factor for the weight trend line. */

@@ -1,4 +1,11 @@
-import type { AiAnalysis, AiLabel, AppLocale, MealPlan, MealType } from '../shared/index.ts';
+import type {
+  AiAnalysis,
+  AiLabel,
+  AppLocale,
+  MealPlan,
+  MealPlanPreferences,
+  MealType,
+} from '../shared/index.ts';
 
 export interface ImageInput {
   base64: string;
@@ -49,7 +56,13 @@ export interface AIProvider {
     model: string,
   ): Promise<AIResult<string>>;
   mealPlan(
-    input: { context: string; ctx: UserContext; budget: 'low' | 'mid' | 'high'; days: number },
+    input: {
+      context: string;
+      ctx: UserContext;
+      budget: 'low' | 'mid' | 'high';
+      days: number;
+      preferences?: MealPlanPreferences;
+    },
     model: string,
   ): Promise<AIResult<MealPlan>>;
 }

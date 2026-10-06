@@ -17,6 +17,7 @@ import {
   type EnrichedItem,
   type LabelResponse,
   type MealPlan,
+  type MealPlanPreferences,
   type MealType,
   type QuotaKind,
   type QuotaStatus,
@@ -227,15 +228,16 @@ export async function askCoach(
 export async function generateMealPlan(
   budget: 'low' | 'mid' | 'high',
   days = 7,
+  preferences?: MealPlanPreferences,
 ): Promise<MealPlan> {
   if (mocked()) {
     if (usePlanStore.getState().plan !== 'premium') throw new ApiError('PREMIUM_REQUIRED', 403);
     await sleep(MOCK_DELAY_MS);
-    return mockMealPlan(days);
+    return mockMealPlan(days, preferences);
   }
   const res = await invokeFunction(
     'meal-plan',
-    { locale: currentLocale(), budget, days },
+    { locale: currentLocale(), budget, days, preferences },
     z.object({ plan: MealPlanSchema }),
   );
   return res.plan;

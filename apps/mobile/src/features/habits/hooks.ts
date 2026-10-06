@@ -1,9 +1,11 @@
 import {
+  computeAchievementStats,
   computeStreak,
   detectRestrictionPattern,
   evaluateAchievements,
   addDays,
   type AchievementId,
+  type AchievementStats,
 } from '@plato/shared';
 import { useQuery } from '@tanstack/react-query';
 
@@ -14,6 +16,7 @@ import { currentUserId } from '@/stores/session';
 import { haptic } from '@/utils/haptics';
 import { todayLocal } from '@/utils/dates';
 import { goalForDate } from '@/features/goals/hooks';
+import { achievementTitle } from './achievementText';
 
 export function useStreak() {
   return useQuery({
@@ -41,34 +44,56 @@ export function useRestrictionCheck() {
   });
 }
 
+/** Gathers everything the achievement catalog measures, from the local database. */
+export async function loadAchievementStats(): Promise<{
+  stats: AchievementStats;
+  streak: ReturnType<typeof computeStreak>;
+}> {
+  const today = todayLocal();
+  const [meals, weights, measurements, recipes, customFoods, favorites, goals, water, profile] =
+    await Promise.all([
+      repos.meals.list(),
+      repos.weight.list(),
+      repos.measurements.count(),
+      repos.recipes.count(),
+      repos.foodsCustom.count(),
+      repos.favorites.count(),
+      repos.goals.list(),
+      repos.water.list(),
+      repos.profile.get(currentUserId()),
+    ]);
+  const streak = computeStreak(new Set(meals.map((m) => m.local_date)), today);
+  const waterByDate = new Map<string, number>();
+  for (const w of water) waterByDate.set(w.local_date, (waterByDate.get(w.local_date) ?? 0) + w.ml);
+  const stats = computeAchievementStats({
+    meals,
+    waterByDate,
+    weights,
+    goalFor: (date) => goalForDate(goals, date),
+    goalType: profile?.goal_type ?? null,
+    targetWeightKg: profile?.target_weight_kg ?? null,
+    longestStreak: Math.max(streak.longest, streak.current),
+    counts: { measurements, recipes, customFoods, favorites },
+  });
+  return { stats, streak };
+}
+
+export function useAchievementStats() {
+  return useQuery({
+    queryKey: ['db', 'achievements', 'stats'],
+    queryFn: async () => (await loadAchievementStats()).stats,
+  });
+}
+
 /** Evaluates achievements after a relevant action and celebrates new ones. */
 export async function checkAchievements(): Promise<AchievementId[]> {
   const today = todayLocal();
-  const [meals, unlocked, weights, recipes, goals, water] = await Promise.all([
-    repos.meals.list(),
+  const [{ stats, streak }, unlocked, todayMeals] = await Promise.all([
+    loadAchievementStats(),
     repos.achievements.list(),
-    repos.weight.count(),
-    repos.recipes.count(),
-    repos.goals.list(),
-    repos.water.list({ from: today, to: today }),
+    repos.meals.list({ from: today, to: today }),
   ]);
-  const goal = goalForDate(goals, today);
-  const todayMeals = meals.filter((m) => m.local_date === today);
-  const protein = todayMeals.reduce((s, m) => s + m.totals.protein_g, 0);
-  const waterMl = water.reduce((s, w) => s + w.ml, 0);
-  const streak = computeStreak(new Set(meals.map((m) => m.local_date)), today);
-  const fresh = evaluateAchievements(
-    {
-      mealsLogged: meals.length,
-      photoScans: meals.filter((m) => m.source === 'photo').length,
-      currentStreak: streak.current,
-      proteinGoalHitToday: goal.protein_g > 0 && protein >= goal.protein_g,
-      waterGoalHitToday: !!goal.water_ml && waterMl >= goal.water_ml,
-      weighIns: weights,
-      recipes,
-    },
-    new Set(unlocked.map((a) => a.id)),
-  );
+  const fresh = evaluateAchievements(stats, new Set(unlocked.map((a) => a.id)));
   for (const id of fresh) {
     await repos.achievements.upsert({ id, unlocked_at: new Date().toISOString() });
   }
@@ -80,11 +105,7 @@ export async function checkAchievements(): Promise<AchievementId[]> {
   });
   if (fresh.length) {
     haptic('success');
-    toast.success(
-      i18next.t('achievements.unlocked', {
-        name: i18next.t(`achievements.items.${fresh[0]!}.title`),
-      }),
-    );
+    toast.success(i18next.t('achievements.unlocked', { name: achievementTitle(fresh[0]!) }));
   }
   return fresh;
 }

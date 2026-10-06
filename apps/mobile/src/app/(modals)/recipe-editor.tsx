@@ -19,6 +19,7 @@ import {
 } from '@/components';
 import { MealTypePicker } from '@/features/diary/MealTypePicker';
 import { checkAchievements } from '@/features/habits/hooks';
+import { PortionEditor } from '@/features/foods/PortionEditor';
 import { useRecipeDraftStore } from '@/features/foods/recipeDraft';
 import { logRecipe, recipeTotals, saveRecipe } from '@/features/foods/recipes';
 import { useAiError } from '@/features/scan/useAiError';
@@ -36,6 +37,7 @@ export default function RecipeEditor() {
   const [importText, setImportText] = useState('');
   const [importing, setImporting] = useState(false);
   const [showImport, setShowImport] = useState(false);
+  const [editing, setEditing] = useState<number | null>(null);
   const [logServings, setLogServings] = useState(1);
   const [mealType, setMealType] = useState<MealType>(suggestMealType(new Date().getHours()));
 
@@ -148,23 +150,53 @@ export default function RecipeEditor() {
         max={50}
       />
       <AppText variant="subheading">{t('recipes.ingredients')}</AppText>
-      <Card padded={false}>
-        {draft.items.map((i, idx) => (
-          <ListRow
-            key={`${i.display_name}-${idx}`}
-            title={i.display_name}
-            subtitle={`${Math.round(i.grams)} g · ${formatKcal(scaleNutrients(i.per100g, i.grams).kcal)} kcal`}
-            right={
-              <IconButton
-                icon="close-circle"
-                color="textMuted"
-                accessibilityLabel={t('review.removeItem')}
-                onPress={() => draft.removeItem(idx)}
+      {draft.items.length ? (
+        <Card padded={false}>
+          {draft.items.map((i, idx) => (
+            <View key={`${i.display_name}-${idx}`}>
+              <ListRow
+                title={i.display_name}
+                subtitle={`${Math.round(i.grams)} g · ${formatKcal(scaleNutrients(i.per100g, i.grams).kcal)} kcal`}
+                chevron={false}
+                right={
+                  <View style={styles.itemActions}>
+                    <IconButton
+                      testID={`recipe-item-${idx}`}
+                      icon={editing === idx ? 'chevron-up' : 'create-outline'}
+                      color="textMuted"
+                      size={20}
+                      accessibilityLabel={t('portionEditor.editIngredient', {
+                        name: i.display_name,
+                      })}
+                      onPress={() => setEditing(editing === idx ? null : idx)}
+                    />
+                    <IconButton
+                      icon="close-circle-outline"
+                      color="textMuted"
+                      size={20}
+                      accessibilityLabel={t('review.removeItem')}
+                      onPress={() => {
+                        setEditing(null);
+                        draft.removeItem(idx);
+                      }}
+                    />
+                  </View>
+                }
               />
-            }
-          />
-        ))}
-      </Card>
+              {editing === idx ? (
+                <View style={styles.editor}>
+                  <PortionEditor
+                    label={t('foodDetail.portion')}
+                    grams={i.grams}
+                    baseGrams={i.grams}
+                    onChange={(grams) => draft.updateItem(idx, { grams })}
+                  />
+                </View>
+              ) : null}
+            </View>
+          ))}
+        </Card>
+      ) : null}
       <View style={styles.row}>
         <Button
           label={t('recipes.addIngredient')}
@@ -238,4 +270,6 @@ export default function RecipeEditor() {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   card: { gap: spacing.md },
+  itemActions: { flexDirection: 'row' },
+  editor: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg },
 });
