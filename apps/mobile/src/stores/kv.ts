@@ -48,4 +48,12 @@ export const kv = {
       // keep in memory only
     }
   },
+  remove(key: string) {
+    memoryFallback.delete(key);
+    try {
+      Storage.removeItemSync(key);
+    } catch {
+      // nothing stored
+    }
+  },
 };

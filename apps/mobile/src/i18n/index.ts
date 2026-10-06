@@ -1,3 +1,6 @@
+// Hermes may ship without Intl.PluralRules; i18next needs it for _one/_other keys.
+import 'intl-pluralrules';
+
 import type { AppLocale } from '@plato/shared';
 import { getLocales } from 'expo-localization';
 import i18next from 'i18next';

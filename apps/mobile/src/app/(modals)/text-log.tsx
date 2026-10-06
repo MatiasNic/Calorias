@@ -18,12 +18,12 @@ import { spacing, useTheme } from '@/theme';
 export default function TextLog() {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const [text, setText] = useState('');
+  const params = useLocalSearchParams<{ date?: IsoDate; text?: string }>();
+  const [text, setText] = useState(params.text ?? '');
   const [usedVoice, setUsedVoice] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const aiError = useAiError();
-  const params = useLocalSearchParams<{ date?: IsoDate }>();
   const quota = useQuotaStatus();
   const plan = usePlan();
   const dictation = useDictation((value) => {
@@ -44,7 +44,7 @@ export default function TextLog() {
       queryClient.invalidateQueries({ queryKey: ['quota'] });
       useScanStore
         .getState()
-        .setTextResult(result, usedVoice ? 'voice' : 'text', params.date ?? null);
+        .setTextResult(result, usedVoice ? 'voice' : 'text', params.date ?? null, text.trim());
       router.replace('/scan-review');
     } catch (e) {
       setError(aiError(e));

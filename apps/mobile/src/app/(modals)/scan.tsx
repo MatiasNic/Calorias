@@ -7,7 +7,7 @@ import { ActivityIndicator, Linking, Pressable, StyleSheet, View } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Button, Card, EmptyState, Icon, IconButton, toast } from '@/components';
+import { AppText, Button, Card, Icon, IconButton, toast } from '@/components';
 import { env } from '@/config/env';
 import { useCustomFoodPrefill } from '@/features/foods/customFoodPrefill';
 import { usePickerStore } from '@/features/foods/pickerStore';
@@ -20,14 +20,16 @@ import { track } from '@/services/analytics';
 import { prepareMealImage } from '@/services/image';
 import { usePlan } from '@/services/purchases';
 import { radii, spacing, useTheme } from '@/theme';
+import { useUiStore } from '@/stores/ui';
 import { haptic } from '@/utils/haptics';
-import { todayLocal } from '@/utils/dates';
 
 type Mode = 'photo' | 'barcode' | 'label' | 'text';
 const BARCODE_TYPES = ['ean13', 'ean8', 'upc_a', 'upc_e'] as const;
 
 export default function Scan() {
   const { t } = useTranslation();
+  // Meals go to the day the user is looking at (Today/Diary), like text and search entries.
+  const [entryDate] = useState(() => useUiStore.getState().selectedDate);
   const { colors } = useTheme();
   const params = useLocalSearchParams<{ mode?: Mode; code?: string }>();
   const [mode, setMode] = useState<Mode>(params.mode ?? 'photo');
@@ -49,7 +51,7 @@ export default function Scan() {
   };
 
   const goReview = (uri: string, width: number, height: number) => {
-    useScanStore.getState().setPhoto({ uri, width, height });
+    useScanStore.getState().setPhoto({ uri, width, height }, null, entryDate);
     track('scan_started', { mode: 'photo' });
     router.replace('/scan-review');
   };
@@ -121,7 +123,7 @@ export default function Scan() {
       if (!picker.target)
         picker.open({
           kind: 'diary',
-          date: todayLocal(),
+          date: entryDate,
           mealType: suggestMealType(new Date().getHours()),
         });
       picker.select(food);
@@ -144,7 +146,8 @@ export default function Scan() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.code]);
 
-  if (mode === 'text') return <Redirect href="/text-log" />;
+  if (mode === 'text')
+    return <Redirect href={{ pathname: '/text-log', params: { date: entryDate } }} />;
 
   if (!permission) return <View style={[styles.flex, { backgroundColor: '#000' }]} />;
   if (!permission.granted) {
@@ -155,13 +158,25 @@ export default function Scan() {
           accessibilityLabel={t('common.close')}
           onPress={() => router.back()}
         />
-        <EmptyState
-          icon="camera"
-          title={t('scan.permissionTitle')}
-          message={t('scan.permissionBody')}
-          actionLabel={permission.canAskAgain ? t('scan.permissionCta') : t('scan.openSettings')}
-          onAction={() => (permission.canAskAgain ? requestPermission() : Linking.openSettings())}
-        />
+        <View style={styles.permission}>
+          <View style={[styles.permissionIcon, { backgroundColor: colors.surfaceAlt }]}>
+            <Icon name="camera-outline" size={28} color="text" />
+          </View>
+          <AppText variant="title">{t('scan.permissionTitle')}</AppText>
+          <AppText color="textMuted">{t('scan.permissionBody')}</AppText>
+        </View>
+        <View style={styles.permissionActions}>
+          <Button
+            label={permission.canAskAgain ? t('scan.permissionCta') : t('scan.openSettings')}
+            onPress={() => (permission.canAskAgain ? requestPermission() : Linking.openSettings())}
+          />
+          <Button
+            label={t('scan.textInstead')}
+            variant="ghost"
+            size="md"
+            onPress={() => router.replace({ pathname: '/text-log', params: { date: entryDate } })}
+          />
+        </View>
       </SafeAreaView>
     );
   }
@@ -251,8 +266,11 @@ export default function Scan() {
           </Card>
         ) : null}
 
-        <View style={styles.bottom}>
-          <View style={styles.modes} accessibilityRole="tablist">
+        <View style={[styles.bottom, { backgroundColor: colors.background }]}>
+          <View
+            style={[styles.modes, { backgroundColor: colors.surfaceAlt }]}
+            accessibilityRole="tablist"
+          >
             {(['photo', 'barcode', 'label', 'text'] as const).map((m) => (
               <Pressable
                 key={m}
@@ -265,10 +283,10 @@ export default function Scan() {
                   lastCode.current = null;
                   setMode(m);
                 }}
-                style={[styles.mode, mode === m && { backgroundColor: 'rgba(255,255,255,0.22)' }]}
+                style={[styles.mode, mode === m && { backgroundColor: colors.primary }]}
                 testID={`scan-mode-${m}`}
               >
-                <AppText variant="label" style={styles.white}>
+                <AppText variant="label" color={mode === m ? 'onPrimary' : 'textMuted'}>
                   {t(`scan.modes.${m}`)}
                 </AppText>
               </Pressable>
@@ -276,9 +294,10 @@ export default function Scan() {
           </View>
           <View style={styles.controls}>
             <IconButton
-              icon="images"
-              rawWhite
-              size={26}
+              icon="images-outline"
+              size={24}
+              background="surfaceAlt"
+              square
               accessibilityLabel={t('scan.gallery')}
               onPress={pickFromGallery}
               disabled={mode === 'barcode'}
@@ -288,18 +307,18 @@ export default function Scan() {
                 accessibilityRole="button"
                 accessibilityLabel={t('scan.capture')}
                 onPress={capture}
-                style={styles.shutter}
+                style={[styles.shutter, { borderColor: colors.primary }]}
                 testID="scan-capture"
               >
                 {busy === 'capture' ? (
-                  <ActivityIndicator color="#fff" />
+                  <ActivityIndicator color={colors.primary} />
                 ) : (
-                  <View style={styles.shutterInner} />
+                  <View style={[styles.shutterInner, { backgroundColor: colors.primary }]} />
                 )}
               </Pressable>
             ) : (
               <View style={styles.shutterPlaceholder}>
-                <Icon name="barcode-outline" size={34} rawColor="#fff" />
+                <Icon name="barcode-outline" size={34} color="text" />
               </View>
             )}
             <View style={styles.spacer} />
@@ -343,14 +362,28 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   sheet: { marginHorizontal: spacing.lg, gap: spacing.md },
-  bottom: { gap: spacing.lg, paddingBottom: spacing.lg },
+  bottom: {
+    gap: spacing.lg,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.lg,
+    borderTopLeftRadius: radii.xxl + 6,
+    borderTopRightRadius: radii.xxl + 6,
+  },
   modes: {
     flexDirection: 'row',
     alignSelf: 'center',
-    backgroundColor: 'rgba(0,0,0,0.45)',
     borderRadius: radii.pill,
     padding: 4,
   },
+  permission: { flex: 1, justifyContent: 'center', gap: spacing.md, padding: spacing.xl },
+  permissionIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: radii.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  permissionActions: { padding: spacing.lg, gap: spacing.xs },
   mode: {
     paddingHorizontal: spacing.md,
     minHeight: 40,
@@ -362,12 +395,11 @@ const styles = StyleSheet.create({
     width: 78,
     height: 78,
     borderRadius: 39,
-    borderWidth: 5,
-    borderColor: '#fff',
+    borderWidth: 4,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  shutterInner: { width: 58, height: 58, borderRadius: 29, backgroundColor: '#fff' },
+  shutterInner: { width: 60, height: 60, borderRadius: 30 },
   shutterPlaceholder: { width: 78, height: 78, alignItems: 'center', justifyContent: 'center' },
   spacer: { width: 48 },
 });

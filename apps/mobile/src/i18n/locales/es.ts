@@ -390,6 +390,9 @@ export const es = {
       'Notamos que en los últimos días registraste muy pocas calorías. Comer muy poco de forma sostenida puede afectar tu salud. Si te está costando, hablar con un/a profesional puede ayudar. En Argentina podés llamar gratis al 0800-222-1002 (Salud Mental).',
   },
   diary: {
+    consumed: 'Consumiste',
+    overGoal: '{{kcal}} kcal sobre el objetivo',
+    underGoal: '{{kcal}} kcal debajo del objetivo',
     empty: 'Sin registros',
     addTo: 'Agregar a {{meal}}',
     repeatYesterday: 'Repetir {{meal}} de ayer',
@@ -473,6 +476,7 @@ export const es = {
   },
   scan: {
     confidence: {
+      checkPortion: 'revisá la porción',
       high: 'Confianza alta',
       medium: 'Confianza media',
       low: 'Confianza baja',
@@ -488,6 +492,7 @@ export const es = {
     flashOff: 'Apagar flash',
     permissionTitle: 'Necesitamos la cámara',
     permissionBody: 'Para analizar tus platos y escanear códigos. Las fotos son privadas.',
+    textInstead: 'Registrar con texto',
     permissionCta: 'Permitir cámara',
     openSettings: 'Abrir ajustes',
     analyzing: 'Analizando tu plato…',
@@ -516,6 +521,11 @@ export const es = {
     },
   },
   review: {
+    editText: 'Editar el texto',
+    forDay: 'Se guarda en: {{day}}',
+    moreOptions: 'Tocá para más opciones de porción',
+    less: 'Menos {{name}}',
+    more: 'Más {{name}}',
     demoTitle: 'Resultado de ejemplo',
     demoMessage:
       'En el modo demo la IA no mira tu foto: muestra un plato de ejemplo. Con la IA real se analiza la imagen y, si no es comida, te avisa sin descontar escaneos.',
@@ -571,6 +581,8 @@ export const es = {
   },
   errors: {
     quotaTitle: 'Llegaste al límite de hoy',
+    quotaTextBody:
+      'El plan gratis incluye {{limit}} registros por texto o voz por día. Con Premium tenés uso libre (con un límite justo).',
     quotaBody:
       'El plan gratis incluye {{limit}} escaneos con IA por día. Con Premium son ilimitados (uso razonable).',
     aiTimeout: 'La IA tardó demasiado. Intentá de nuevo.',

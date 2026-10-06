@@ -67,17 +67,37 @@ function mockUsage(): MockUsage {
   }
 }
 
+/** Lifetime trials (e.g. the free coach message) are counted once, not per day. */
+const MOCK_TRIAL_KEY = 'plato.mockTrials';
+function mockTrialsUsed(kind: QuotaKind): number {
+  try {
+    return (
+      (JSON.parse(kv.get(MOCK_TRIAL_KEY) ?? '{}') as Partial<Record<QuotaKind, number>>)[kind] ?? 0
+    );
+  } catch {
+    return 0;
+  }
+}
+
 function consumeMock(kind: QuotaKind) {
   const plan = usePlanStore.getState().plan;
   const day = todayLocal();
   const all = mockUsage();
   const used = all[day]?.[kind] ?? 0;
-  const limit = PLANS[plan].daily[kind] + (kind === 'coach_message' && plan === 'free' ? 1 : 0);
+  const limit = PLANS[plan].daily[kind];
+  const trial = PLANS[plan].lifetimeTrial[kind] ?? 0;
+  if (limit === 0 && trial > 0) {
+    // Same as the server: a free feature with a one-time trial, then Premium is required.
+    const usedTrial = mockTrialsUsed(kind);
+    if (usedTrial >= trial) throw new ApiError('PREMIUM_REQUIRED', 403, { kind });
+    kv.set(MOCK_TRIAL_KEY, JSON.stringify({ [kind]: usedTrial + 1 }));
+    return { used: usedTrial + 1, limit: trial, remaining: Math.max(0, trial - usedTrial - 1) };
+  }
   if (used >= limit)
     throw new ApiError(
       limit === 0 ? 'PREMIUM_REQUIRED' : 'QUOTA_EXCEEDED',
       limit === 0 ? 403 : 402,
-      { limit, used },
+      { limit, used, kind },
     );
   all[day] = { photo_scan: 0, text_query: 0, coach_message: 0, ...all[day], [kind]: used + 1 };
   kv.set(MOCK_QUOTA_KEY, JSON.stringify({ [day]: all[day] }));
@@ -260,7 +280,13 @@ export async function fetchQuotaStatus(): Promise<QuotaStatus> {
       text_query: e('text_query'),
       coach_message: e('coach_message'),
       bonus_photo_scans: 0,
-      coach_trial_remaining: plan === 'free' ? Math.max(0, 1 - u.coach_message) : 0,
+      coach_trial_remaining:
+        plan === 'free'
+          ? Math.max(
+              0,
+              (PLANS.free.lifetimeTrial.coach_message ?? 0) - mockTrialsUsed('coach_message'),
+            )
+          : 0,
     };
   }
   return invokeFunction('quota-status', {}, QuotaStatusSchema);

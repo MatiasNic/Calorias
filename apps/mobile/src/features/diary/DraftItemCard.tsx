@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { AppText, Card, Chip, ConfidenceBadge, Icon, IconButton } from '@/components';
 import { PortionEditor } from '@/features/foods/PortionEditor';
 import { getRegionalFood } from '@/features/foods/search';
-import { spacing, useTheme } from '@/theme';
+import { radii, spacing, useTheme } from '@/theme';
 import { formatKcal } from '@/utils/format';
 import { applyCookingMethod, COOKING_CHOICES } from './cooking';
 import { useDraftStore } from './draftStore';
@@ -30,6 +30,7 @@ export function DraftItemCard({
   // Multipliers apply to a fixed base (the AI estimate, or the grams when the card was opened).
   const [fixedBase] = useState(() => baseGrams ?? item.grams);
   const { setGrams, removeItem, updateItem } = useDraftStore();
+  const step = item.grams >= 200 ? 25 : 10;
   const servings =
     item.food_source === 'regional' && item.food_id
       ? (getRegionalFood(item.food_id)?.servings ?? [])
@@ -46,6 +47,7 @@ export function DraftItemCard({
             grams: Math.round(item.grams),
             kcal: Math.round(item.nutrients.kcal),
           })}
+          accessibilityHint={t('review.moreOptions')}
           onPress={() => setOpen(!open)}
           style={styles.head}
           testID={`draft-item-${index}`}
@@ -54,31 +56,45 @@ export function DraftItemCard({
             <AppText variant="bodyStrong" numberOfLines={2}>
               {item.display_name}
             </AppText>
-            <AppText variant="caption" color="textMuted">
-              {Math.round(item.grams)} g{item.serving_unit ? ` · ${item.serving_unit}` : ''}
-            </AppText>
-            <View style={styles.macros}>
-              <AppText variant="caption" style={{ color: colors.protein }}>
-                P {Math.round(item.nutrients.protein_g)}
-              </AppText>
-              <AppText variant="caption" style={{ color: colors.carbs }}>
-                C {Math.round(item.nutrients.carbs_g)}
-              </AppText>
-              <AppText variant="caption" style={{ color: colors.fat }}>
-                G {Math.round(item.nutrients.fat_g)}
-              </AppText>
-            </View>
-          </View>
-          <View style={styles.right}>
-            <AppText variant="bodyStrong" tabular>
-              {formatKcal(item.nutrients.kcal)} kcal
-            </AppText>
             {showConfidence && item.ai_confidence != null ? (
               <ConfidenceBadge confidence={item.ai_confidence} />
+            ) : item.serving_unit ? (
+              <AppText variant="caption" color="textMuted">
+                {item.serving_unit}
+              </AppText>
             ) : null}
           </View>
-          <Icon name={open ? 'chevron-up' : 'chevron-down'} color="textMuted" size={18} />
+          <AppText variant="number" tabular>
+            {formatKcal(item.nutrients.kcal)}{' '}
+            <AppText variant="caption" color="textMuted">
+              kcal
+            </AppText>
+          </AppText>
+          <Icon name={open ? 'chevron-up' : 'chevron-down'} color="textSubtle" size={16} />
         </Pressable>
+        <View style={styles.quick}>
+          <View style={[styles.stepper, { backgroundColor: colors.surfaceAlt }]}>
+            <IconButton
+              icon="remove"
+              size={18}
+              accessibilityLabel={t('review.less', { name: item.display_name })}
+              onPress={() => setGrams(index, Math.max(1, Math.round(item.grams) - step))}
+            />
+            <AppText variant="bodyStrong" tabular style={styles.grams}>
+              {Math.round(item.grams)} g
+            </AppText>
+            <IconButton
+              icon="add"
+              size={18}
+              accessibilityLabel={t('review.more', { name: item.display_name })}
+              onPress={() => setGrams(index, Math.round(item.grams) + step)}
+            />
+          </View>
+          <AppText variant="caption" color="textMuted" tabular>
+            P {Math.round(item.nutrients.protein_g)} · C {Math.round(item.nutrients.carbs_g)} · G{' '}
+            {Math.round(item.nutrients.fat_g)}
+          </AppText>
+        </View>
         {open ? (
           <View style={styles.editor}>
             <PortionEditor
@@ -144,10 +160,16 @@ export function DraftItemCard({
 
 const styles = StyleSheet.create({
   card: { gap: spacing.md },
-  head: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  flex: { flex: 1 },
-  right: { alignItems: 'flex-end', gap: 4 },
-  macros: { flexDirection: 'row', gap: spacing.sm },
+  head: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
+  flex: { flex: 1, gap: 2 },
+  quick: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+  },
+  stepper: { flexDirection: 'row', alignItems: 'center', borderRadius: radii.lg },
+  grams: { minWidth: 64, textAlign: 'center' },
   editor: { gap: spacing.md },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   actions: { flexDirection: 'row', alignItems: 'center' },

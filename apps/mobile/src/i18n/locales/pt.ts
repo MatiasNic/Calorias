@@ -386,6 +386,9 @@ export const pt: TranslationShape<Translation> = {
       'Percebemos que nos últimos dias você registrou pouquíssimas calorias. Comer muito pouco por muito tempo pode afetar sua saúde. Se estiver difícil, conversar com um profissional pode ajudar. No Brasil, o CVV atende gratuitamente pelo 188.',
   },
   diary: {
+    consumed: 'Você consumiu',
+    overGoal: '{{kcal}} kcal acima da meta',
+    underGoal: '{{kcal}} kcal abaixo da meta',
     empty: 'Sem registros',
     addTo: 'Adicionar a {{meal}}',
     repeatYesterday: 'Repetir {{meal}} de ontem',
@@ -468,6 +471,7 @@ export const pt: TranslationShape<Translation> = {
   },
   scan: {
     confidence: {
+      checkPortion: 'confira a porção',
       high: 'Confiança alta',
       medium: 'Confiança média',
       low: 'Confiança baixa',
@@ -483,6 +487,7 @@ export const pt: TranslationShape<Translation> = {
     flashOff: 'Desligar flash',
     permissionTitle: 'Precisamos da câmera',
     permissionBody: 'Para analisar seus pratos e escanear códigos. As fotos são privadas.',
+    textInstead: 'Registrar por texto',
     permissionCta: 'Permitir câmera',
     openSettings: 'Abrir ajustes',
     analyzing: 'Analisando seu prato…',
@@ -511,6 +516,11 @@ export const pt: TranslationShape<Translation> = {
     },
   },
   review: {
+    editText: 'Editar o texto',
+    forDay: 'Será salvo em: {{day}}',
+    moreOptions: 'Toque para mais opções de porção',
+    less: 'Menos {{name}}',
+    more: 'Mais {{name}}',
     demoTitle: 'Resultado de exemplo',
     demoMessage:
       'No modo demo a IA não olha sua foto: mostra um prato de exemplo. Com a IA real a imagem é analisada e, se não for comida, você é avisado sem gastar escaneamentos.',
@@ -566,6 +576,8 @@ export const pt: TranslationShape<Translation> = {
   },
   errors: {
     quotaTitle: 'Você chegou ao limite de hoje',
+    quotaTextBody:
+      'O plano grátis inclui {{limit}} registros por texto ou voz por dia. Com o Premium o uso é livre (com limite justo).',
     quotaBody:
       'O plano grátis inclui {{limit}} escaneamentos com IA por dia. Com Premium são ilimitados (uso razoável).',
     aiTimeout: 'A IA demorou demais. Tente novamente.',

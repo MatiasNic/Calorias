@@ -13,7 +13,9 @@ export function useAiError() {
         case 'QUOTA_EXCEEDED':
           track('quota_exceeded', { limit: Number(e.details?.limit ?? 0) });
           router.push({ pathname: '/paywall', params: { context: 'quota' } });
-          return t('errors.quotaBody', { limit: Number(e.details?.limit ?? 3) });
+          return e.details?.kind === 'text_query'
+            ? t('errors.quotaTextBody', { limit: Number(e.details?.limit ?? 5) })
+            : t('errors.quotaBody', { limit: Number(e.details?.limit ?? 3) });
         case 'PREMIUM_REQUIRED':
           router.push({ pathname: '/paywall', params: { context: 'feature' } });
           return t('errors.premiumRequired');

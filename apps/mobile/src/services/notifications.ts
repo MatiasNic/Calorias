@@ -128,7 +128,7 @@ export async function rescheduleAll(
       content: {
         title: t('notifications.weekly.title'),
         body: t('notifications.weekly.body'),
-        data: { url: '/weekly-summary' },
+        data: { url: '/weekly-summary?week=last' },
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
@@ -161,3 +161,9 @@ export const DEFAULT_NOTIFICATION_SETTINGS = (id: string): NotificationSettingsR
   smart_reminders: true,
   weekly_summary: true,
 });
+
+/** Removes every scheduled reminder (account deletion, sign out). */
+export async function cancelAllNotifications() {
+  if (Platform.OS === 'web') return;
+  await Notifications.cancelAllScheduledNotificationsAsync().catch(() => undefined);
+}

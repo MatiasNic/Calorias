@@ -1,5 +1,6 @@
-import { addDays, computeStreak, fillDays, startOfWeek } from '@plato/shared';
+import { addDays, computeStreak, fillDays, PLANS, startOfWeek } from '@plato/shared';
 import { useQuery } from '@tanstack/react-query';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -9,16 +10,24 @@ import { BarChart } from '@/components/charts';
 import { useWeekRange } from '@/features/progress/hooks';
 import { weeklyReport } from '@/features/progress/weekly';
 import { repos } from '@/services/db/repository';
+import { usePlan } from '@/services/purchases';
 import { usePrefsStore } from '@/stores/prefs';
 import { spacing } from '@/theme';
 import { formatDay, todayLocal, weekdayShort } from '@/utils/dates';
 import { formatKcal, formatWeight } from '@/utils/format';
 
-/** Last full week by default (opened from the Monday notification). */
+/** Current week by default; the Monday notification opens last week (`?week=last`). */
 export default function WeeklySummary() {
   const { t } = useTranslation();
+  const params = useLocalSearchParams<{ week?: string }>();
   const units = usePrefsStore((s) => s.units);
-  const [weekStart, setWeekStart] = useState(addDays(startOfWeek(todayLocal()), -7));
+  const plan = usePlan();
+  const [weekStart, setWeekStart] = useState(() =>
+    addDays(startOfWeek(todayLocal()), params.week === 'last' ? -7 : 0),
+  );
+  const historyDays = PLANS[plan].historyDays;
+  const oldestAllowed = historyDays ? addDays(todayLocal(), -historyDays) : null;
+  const canGoBack = !oldestAllowed || addDays(weekStart, -1) >= oldestAllowed;
   const weekEnd = addDays(weekStart, 6);
   const q = useWeekRange(weekStart);
   const streak = useQuery({
@@ -41,6 +50,7 @@ export default function WeeklySummary() {
         <IconButton
           icon="chevron-back"
           accessibilityLabel={t('diary.prevWeek')}
+          disabled={!canGoBack}
           onPress={() => setWeekStart(addDays(weekStart, -7))}
         />
         <AppText variant="subheading" style={styles.flex} align="center">

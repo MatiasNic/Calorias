@@ -87,7 +87,8 @@ export default function Onboarding() {
   const step = steps[index]!;
 
   const back = useCallback(() => {
-    if (index > 0) goTo(index - 1);
+    if (index === 0) return false; // let Android back leave the onboarding
+    goTo(index - 1);
     return true;
   }, [index, goTo]);
 

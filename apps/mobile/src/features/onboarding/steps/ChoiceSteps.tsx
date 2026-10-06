@@ -30,7 +30,16 @@ export function GoalStep() {
             title={t(`onboarding.goal.options.${o.value}.title`)}
             description={t(`onboarding.goal.options.${o.value}.description`)}
             selected={answers.goal === o.value}
-            onPress={() => set({ goal: o.value })}
+            onPress={() => {
+              if (o.value === answers.goal) return;
+              // Rate and target belong to a direction (lose/gain); don't carry them across.
+              const sameDirection = goalDirection(o.value) === goalDirection(answers.goal);
+              set({
+                goal: o.value,
+                weeklyRateKg: sameDirection ? answers.weeklyRateKg : null,
+                targetWeightKg: sameDirection ? answers.targetWeightKg : null,
+              });
+            }}
           />
         ))}
       </View>
@@ -92,6 +101,11 @@ export function ActivityStep() {
 }
 
 export const LOSS_RATES = [0.25, 0.5, 0.75, 1] as const;
+/** -1 lose, +1 gain, 0 neither. */
+export function goalDirection(goal: string | null | undefined): -1 | 0 | 1 {
+  return goal === 'lose' ? -1 : goal === 'gain' || goal === 'build_muscle' ? 1 : 0;
+}
+
 export const GAIN_RATES = [0.1, 0.25, 0.5] as const;
 
 export function RateStep() {

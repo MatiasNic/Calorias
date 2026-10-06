@@ -9,7 +9,7 @@ describe('ConfidenceBadge', () => {
     [0.2, 'Confianza baja'],
   ])('shows the level for %s', async (confidence, label) => {
     await render(<ConfidenceBadge confidence={confidence} />);
-    expect(screen.getByText(label)).toBeTruthy();
+    expect(screen.getByText(new RegExp(`^${label}`))).toBeTruthy();
     expect(screen.getByLabelText(`Nivel de confianza de la IA: ${label}`)).toBeTruthy();
   });
 });

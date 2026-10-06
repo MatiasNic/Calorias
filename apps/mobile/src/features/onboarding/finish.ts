@@ -1,3 +1,5 @@
+import { rescheduleReminders } from '@/features/settings/useNotificationSettings';
+import { goalDirection } from './steps/ChoiceSteps';
 import type { GoalPlan } from '@plato/shared';
 
 import { LEGAL_VERSION } from '@/config/env';
@@ -32,8 +34,9 @@ export async function finishOnboarding(a: OnboardingAnswers, plan: GoalPlan) {
     height_cm: a.heightCm,
     activity_level: a.activity,
     goal_type: plan.effectiveGoal,
-    weekly_rate_kg: a.weeklyRateKg,
-    target_weight_kg: a.targetWeightKg,
+    // Only the goals that move weight use a rate and a target.
+    weekly_rate_kg: goalDirection(plan.effectiveGoal) !== 0 ? a.weeklyRateKg : null,
+    target_weight_kg: goalDirection(plan.effectiveGoal) !== 0 ? a.targetWeightKg : null,
     dietary_preferences: a.dietaryPreferences,
     allergies: a.allergies,
     unit_system: usePrefsStore.getState().units,
@@ -48,5 +51,7 @@ export async function finishOnboarding(a: OnboardingAnswers, plan: GoalPlan) {
   if (!(await repos.notificationSettings.get(userId))) {
     await repos.notificationSettings.upsert(DEFAULT_NOTIFICATION_SETTINGS(userId));
   }
+  // Permission may have just been granted in the permissions step: schedule reminders now.
+  await rescheduleReminders().catch(() => undefined);
   track('onboarding_completed', { goal: plan.effectiveGoal, warnings: plan.warnings.length });
 }

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { AppText, Button, Card, EmptyState, Screen } from '@/components';
 import { MealSection } from '@/features/diary/components/MealSection';
+import { DayTotalsCard } from '@/features/diary/components/DayTotalsCard';
 import { MonthCalendar, type DayCell } from '@/features/diary/components/MonthCalendar';
 import { useDaySummary } from '@/features/diary/useDaySummary';
 import { goalForDate } from '@/features/goals/hooks';
@@ -15,7 +16,6 @@ import { usePlan } from '@/services/purchases';
 import { useUiStore } from '@/stores/ui';
 import { spacing } from '@/theme';
 import { formatDay, todayLocal } from '@/utils/dates';
-import { formatKcal } from '@/utils/format';
 
 export default function Diary() {
   const { t } = useTranslation();
@@ -72,12 +72,8 @@ export default function Diary() {
         <AppText variant="heading" style={styles.flex}>
           {formatDay(date)}
         </AppText>
-        {!locked && day.meals.length ? (
-          <AppText variant="bodyStrong" tabular>
-            {formatKcal(day.summary.consumed.kcal)} / {formatKcal(day.goal.kcal)} kcal
-          </AppText>
-        ) : null}
       </View>
+      {!locked && day.meals.length ? <DayTotalsCard summary={day.summary} /> : null}
       {locked ? (
         <Card>
           <EmptyState

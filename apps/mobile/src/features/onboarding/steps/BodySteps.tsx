@@ -90,7 +90,13 @@ export function BirthStep() {
   );
 }
 
+/** Remount on unit change so the typed values are re-derived from the stored metric answer. */
 export function HeightStep() {
+  const units = usePrefsStore((s) => s.units);
+  return <HeightStepInner key={units} />;
+}
+
+function HeightStepInner() {
   const { t } = useTranslation();
   const { answers, set } = useOnboardingStore();
   const units = usePrefsStore((s) => s.units);
@@ -154,17 +160,19 @@ export function HeightStep() {
   );
 }
 
-function WeightInput({
-  field,
-  title,
-  subtitle,
-  testID,
-}: {
+type WeightInputProps = {
   field: 'weightKg' | 'targetWeightKg';
   title: string;
   subtitle?: string;
   testID: string;
-}) {
+};
+
+function WeightInput(props: WeightInputProps) {
+  const units = usePrefsStore((s) => s.units);
+  return <WeightInputInner key={units} {...props} />;
+}
+
+function WeightInputInner({ field, title, subtitle, testID }: WeightInputProps) {
   const { t } = useTranslation();
   const { answers, set } = useOnboardingStore();
   const units = usePrefsStore((s) => s.units);

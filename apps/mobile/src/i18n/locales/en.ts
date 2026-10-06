@@ -372,6 +372,9 @@ export const en: TranslationShape<Translation> = {
       'We noticed you logged very few calories in recent days. Eating very little for a long time can affect your health. If it is hard, talking to a professional can help. In the US you can call or text 988, or find local resources at findahelpline.com.',
   },
   diary: {
+    consumed: 'You ate',
+    overGoal: '{{kcal}} kcal over your goal',
+    underGoal: '{{kcal}} kcal under your goal',
     empty: 'Nothing logged',
     addTo: 'Add to {{meal}}',
     repeatYesterday: "Repeat yesterday's {{meal}}",
@@ -454,6 +457,7 @@ export const en: TranslationShape<Translation> = {
   },
   scan: {
     confidence: {
+      checkPortion: 'check the portion',
       high: 'High confidence',
       medium: 'Medium confidence',
       low: 'Low confidence',
@@ -469,6 +473,7 @@ export const en: TranslationShape<Translation> = {
     flashOff: 'Turn flash off',
     permissionTitle: 'We need the camera',
     permissionBody: 'To analyze your meals and scan barcodes. Photos are private.',
+    textInstead: 'Log with text instead',
     permissionCta: 'Allow camera',
     openSettings: 'Open settings',
     analyzing: 'Analyzing your plate…',
@@ -497,6 +502,11 @@ export const en: TranslationShape<Translation> = {
     },
   },
   review: {
+    editText: 'Edit the text',
+    forDay: 'Saving to: {{day}}',
+    moreOptions: 'Tap for more portion options',
+    less: 'Less {{name}}',
+    more: 'More {{name}}',
     demoTitle: 'Sample result',
     demoMessage:
       'In demo mode the AI does not look at your photo: it shows a sample plate. With the real AI the image is analyzed and, if it is not food, you are told without using a scan.',
@@ -552,6 +562,8 @@ export const en: TranslationShape<Translation> = {
   },
   errors: {
     quotaTitle: "You've reached today's limit",
+    quotaTextBody:
+      'The free plan includes {{limit}} text or voice entries per day. Premium gives you unlimited fair use.',
     quotaBody:
       'The free plan includes {{limit}} AI scans per day. Premium is unlimited (fair use).',
     aiTimeout: 'The AI took too long. Please try again.',

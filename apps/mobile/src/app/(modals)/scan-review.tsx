@@ -40,7 +40,7 @@ import { usePlan } from '@/services/purchases';
 import { queryClient } from '@/services/queryClient';
 import { usePrefsStore } from '@/stores/prefs';
 import { radii, spacing } from '@/theme';
-import { timestampFor } from '@/utils/dates';
+import { formatDay, timestampFor, todayLocal } from '@/utils/dates';
 import { haptic } from '@/utils/haptics';
 
 type Phase = 'analyzing' | 'review' | 'not_food' | 'error';
@@ -89,6 +89,7 @@ export default function ScanReview() {
         draftFromAnalysis(result, {
           source: 'photo',
           mealType: scan.mealType,
+          date: scan.date,
           photoPath,
           localPhotoUri: savePhotos ? img.uri : null,
         }),
@@ -202,12 +203,29 @@ export default function ScanReview() {
             {phase === 'error' && scan.photo ? (
               <Button label={t('common.retry')} icon="refresh" onPress={retry} />
             ) : null}
-            <Button
-              label={t('review.retake')}
-              variant="outline"
-              icon="camera"
-              onPress={() => router.replace('/scan')}
-            />
+            {scan.source === 'photo' ? (
+              <Button
+                label={t('review.retake')}
+                variant="outline"
+                icon="camera"
+                onPress={() => router.replace('/scan')}
+              />
+            ) : (
+              <Button
+                label={t('review.editText')}
+                variant="outline"
+                icon="create-outline"
+                onPress={() =>
+                  router.replace({
+                    pathname: '/text-log',
+                    params: {
+                      text: scan.inputText ?? '',
+                      ...(scan.date ? { date: scan.date } : {}),
+                    },
+                  })
+                }
+              />
+            )}
             <Button
               label={t('review.manual')}
               variant="ghost"
@@ -254,6 +272,11 @@ export default function ScanReview() {
           <AppText variant="heading" accessibilityRole="header">
             {draft.dishName ?? t('review.title')}
           </AppText>
+          {draft.date && draft.date !== todayLocal() ? (
+            <AppText variant="caption" color="warning">
+              {t('review.forDay', { day: formatDay(draft.date) })}
+            </AppText>
+          ) : null}
         </View>
       </View>
       {scan.photo ? (

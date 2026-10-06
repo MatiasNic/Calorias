@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { AppText, Card, Screen, ScreenHeader, SectionHeader, SegmentedControl } from '@/components';
 import { updateProfile } from '@/features/profile/hooks';
+import { rescheduleReminders } from '@/features/settings/useNotificationSettings';
 import { changeLocale, currentLocale } from '@/i18n';
 import { usePrefsStore, type ThemePreference } from '@/stores/prefs';
 import { spacing } from '@/theme';
@@ -33,6 +34,8 @@ export default function Preferences() {
           prefs.set({ locale });
           changeLocale(locale);
           updateProfile({ locale });
+          // Scheduled reminders carry their text: re-create them in the new language.
+          rescheduleReminders().catch(() => undefined);
         }}
         options={[
           { value: 'es-AR', label: 'Español' },

@@ -19,7 +19,7 @@ export function ConfidenceBadge({ confidence }: { confidence: number | null | un
     <View style={styles.badge} accessibilityLabel={t('scan.confidence.a11y', { level: label })}>
       <View style={[styles.dot, { backgroundColor: color }]} />
       <AppText variant="caption" style={{ color }}>
-        {label}
+        {level === 'high' ? label : `${label} · ${t('scan.confidence.checkPortion')}`}
       </AppText>
     </View>
   );
