@@ -312,6 +312,8 @@ export const pt: TranslationShape<Translation> = {
         'Seu peso objetivo não combina com a meta escolhida, então não estimamos uma data.',
       gain_rate_capped: 'Limitamos o ganho a 0,5 kg por semana.',
     },
+    belowFloor:
+      'Seus macros somam {{kcal}} kcal, abaixo do mínimo recomendado ({{floor}} kcal). Aumente carboidratos ou gorduras.',
     editTitle: 'Metas',
     recalculate: 'Recalcular com meus dados',
     custom: 'Personalizar manualmente',

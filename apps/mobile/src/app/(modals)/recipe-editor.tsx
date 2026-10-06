@@ -37,9 +37,17 @@ export default function RecipeEditor() {
   const [importText, setImportText] = useState('');
   const [importing, setImporting] = useState(false);
   const [showImport, setShowImport] = useState(false);
-  const [editing, setEditing] = useState<number | null>(null);
+  const [editing, setEditingIdx] = useState<number | null>(null);
+  const [editBase, setEditBase] = useState(100);
+  const setEditing = (idx: number | null) => {
+    if (idx != null) setEditBase(draft.items[idx]?.grams ?? 100);
+    setEditingIdx(idx);
+  };
   const [logServings, setLogServings] = useState(1);
   const [mealType, setMealType] = useState<MealType>(suggestMealType(new Date().getHours()));
+
+  // A closed editor must not leak its recipe into the next "new recipe".
+  useEffect(() => () => useRecipeDraftStore.getState().reset(), []);
 
   useEffect(() => {
     if (!id) return;
@@ -188,7 +196,7 @@ export default function RecipeEditor() {
                   <PortionEditor
                     label={t('foodDetail.portion')}
                     grams={i.grams}
-                    baseGrams={i.grams}
+                    baseGrams={editBase}
                     onChange={(grams) => draft.updateItem(idx, { grams })}
                   />
                 </View>

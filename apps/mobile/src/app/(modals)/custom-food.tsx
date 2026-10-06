@@ -26,20 +26,26 @@ import { parseDecimal } from '@/utils/format';
 const num = z.string().refine((v) => v.trim() === '' || (parseDecimal(v) ?? -1) >= 0, 'invalid');
 const requiredNum = z.string().refine((v) => (parseDecimal(v) ?? -1) >= 0, 'required');
 
-const Schema = z.object({
-  name: z.string().trim().min(1, 'required').max(120),
-  brand: z.string().max(80),
-  barcode: z.string().max(32),
-  basis: z.enum(['100g', 'serving']),
-  servingGrams: num,
-  kcal: requiredNum,
-  protein: requiredNum,
-  carbs: requiredNum,
-  fat: requiredNum,
-  fiber: num,
-  sugar: num,
-  sodium: num,
-});
+const Schema = z
+  .object({
+    name: z.string().trim().min(1, 'required').max(120),
+    brand: z.string().max(80),
+    barcode: z.string().max(32),
+    basis: z.enum(['100g', 'serving']),
+    servingGrams: num,
+    kcal: requiredNum,
+    protein: requiredNum,
+    carbs: requiredNum,
+    fat: requiredNum,
+    fiber: num,
+    sugar: num,
+    sodium: num,
+  })
+  .superRefine((v, ctx) => {
+    // "Per serving" values are converted to per 100 g, so the serving size is mandatory.
+    if (v.basis === 'serving' && !((parseDecimal(v.servingGrams) ?? 0) > 0))
+      ctx.addIssue({ code: 'custom', path: ['servingGrams'], message: 'required' });
+  });
 type Values = z.infer<typeof Schema>;
 
 export default function CustomFood() {

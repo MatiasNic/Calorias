@@ -21,7 +21,11 @@ export default function Diary() {
   const { t } = useTranslation();
   const date = useUiStore((s) => s.selectedDate);
   const setDate = useUiStore((s) => s.setSelectedDate);
-  const [month, setMonth] = useState(date.slice(0, 7));
+  // The visible month follows the selected date (e.g. picked on Today) unless the user pages it.
+  const [view, setView] = useState({ month: date.slice(0, 7), forDate: date });
+  if (view.forDate !== date) setView({ month: date.slice(0, 7), forDate: date });
+  const month = view.month;
+  const setMonth = (m: string) => setView({ month: m, forDate: date });
   const plan = usePlan();
   const historyDays = PLANS[plan].historyDays;
   const lockedBefore = historyDays ? addDays(todayLocal(), -historyDays) : null;
@@ -102,7 +106,7 @@ export default function Diary() {
               variant="outline"
               icon="book"
               fullWidth={false}
-              onPress={() => router.push('/recipe-editor')}
+              onPress={() => router.push('/recipes')}
             />
             <Button
               label={t('diary.customFood')}

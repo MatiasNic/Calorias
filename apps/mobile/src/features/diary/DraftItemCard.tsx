@@ -27,6 +27,8 @@ export function DraftItemCard({
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [open, setOpen] = useState(false);
+  // Multipliers apply to a fixed base (the AI estimate, or the grams when the card was opened).
+  const [fixedBase] = useState(() => baseGrams ?? item.grams);
   const { setGrams, removeItem, updateItem } = useDraftStore();
   const servings =
     item.food_source === 'regional' && item.food_id
@@ -83,7 +85,7 @@ export function DraftItemCard({
               label={t('review.grams', { name: item.display_name })}
               grams={Math.round(item.grams)}
               onChange={(g) => setGrams(index, g)}
-              baseGrams={baseGrams ?? item.grams}
+              baseGrams={baseGrams ?? fixedBase}
               servings={servings}
             />
             {item.cooking_method ? (

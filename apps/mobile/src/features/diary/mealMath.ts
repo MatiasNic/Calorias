@@ -50,7 +50,9 @@ export function makeItem(
 
 /** Returns a copy of the item with new grams (nutrients rescaled from per-100 g). */
 export function withGrams(item: MealItem, grams: number, edited = true): MealItem {
-  const g = clampGrams(grams);
+  // Never 0 g: micros and serving_qty are rescaled by ratio and could not recover from 0.
+  // (To drop a food the user removes the item.)
+  const g = Math.max(1, clampGrams(grams));
   const factor = item.grams > 0 ? g / item.grams : 0;
   return {
     ...item,

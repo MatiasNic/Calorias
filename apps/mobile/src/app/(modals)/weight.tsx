@@ -29,9 +29,11 @@ export default function WeightModal() {
   const plan = usePlan();
   const weights = useWeights();
   const last = weights.data?.[weights.data.length - 1];
-  const [text, setText] = useState(
-    last ? formatNumber(units === 'imperial' ? kgToLb(last.weight_kg) : last.weight_kg, 1) : '',
-  );
+  // null = not edited yet: show the last weight, which may load after the first render.
+  const [edited, setText] = useState<string | null>(null);
+  const text =
+    edited ??
+    (last ? formatNumber(units === 'imperial' ? kgToLb(last.weight_kg) : last.weight_kg, 1) : '');
   const value = parseDecimal(text);
   const kg = value == null ? null : units === 'imperial' ? lbToKg(value) : value;
   const valid = kg != null && kg >= 20 && kg <= 400;

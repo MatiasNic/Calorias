@@ -111,7 +111,7 @@ export default function ScanReview() {
     if (started.current) return;
     started.current = true;
     if (scan.result) {
-      start(draftFromAnalysis(scan.result, { source: scan.source }));
+      start(draftFromAnalysis(scan.result, { source: scan.source, date: scan.date }));
     } else {
       // State updates happen after awaits (async analysis), not synchronously in the effect.
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -279,7 +279,7 @@ export default function ScanReview() {
           key={item.id ?? i}
           item={item}
           index={i}
-          baseGrams={draft.original?.[i]?.grams}
+          baseGrams={draft.original?.find((o) => o.id === item.id)?.grams}
           showConfidence
         />
       ))}

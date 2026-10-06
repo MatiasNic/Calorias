@@ -308,6 +308,8 @@ export const es = {
         'Tu peso objetivo no coincide con la meta elegida, así que no calculamos una fecha.',
       gain_rate_capped: 'Limitamos el aumento a 0,5 kg por semana.',
     },
+    belowFloor:
+      'Tus macros suman {{kcal}} kcal, por debajo del mínimo recomendado ({{floor}} kcal). Subí carbohidratos o grasas.',
     editTitle: 'Objetivos',
     recalculate: 'Recalcular con mis datos',
     custom: 'Personalizar manualmente',

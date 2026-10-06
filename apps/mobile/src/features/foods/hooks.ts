@@ -1,4 +1,4 @@
-import type { MealItem } from '@plato/shared';
+import { scaleNutrients, type MealItem } from '@plato/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
@@ -69,7 +69,7 @@ export async function toggleFoodFavorite(
     food_source: food.source,
     grams: lastGrams,
     per100g: food.per100g,
-    nutrients: food.per100g,
+    nutrients: scaleNutrients(food.per100g, lastGrams),
     user_edited: false,
   };
   await repos.favorites.upsert({

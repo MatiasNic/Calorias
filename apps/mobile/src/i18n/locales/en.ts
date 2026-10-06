@@ -301,6 +301,8 @@ export const en: TranslationShape<Translation> = {
         "Your goal weight doesn't match the chosen goal, so we didn't estimate a date.",
       gain_rate_capped: 'We capped gains at 0.5 kg per week.',
     },
+    belowFloor:
+      'Your macros add up to {{kcal}} kcal, below the recommended minimum ({{floor}} kcal). Increase carbs or fat.',
     editTitle: 'Goals',
     recalculate: 'Recalculate from my details',
     custom: 'Customize manually',

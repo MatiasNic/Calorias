@@ -1,4 +1,10 @@
-import { suggestMealType, type AnalyzeResponse, type MealItem, type MealType } from '@plato/shared';
+import {
+  suggestMealType,
+  type AnalyzeResponse,
+  type IsoDate,
+  type MealItem,
+  type MealType,
+} from '@plato/shared';
 
 import { makeItem } from '@/features/diary/mealMath';
 import type { MealDraft } from '@/features/diary/draftStore';
@@ -25,13 +31,15 @@ export function draftFromAnalysis(
     mealType?: MealType | null;
     photoPath?: string | null;
     localPhotoUri?: string | null;
+    /** Day the meal belongs to (defaults to today). */
+    date?: IsoDate | null;
   },
 ): MealDraft {
   const now = new Date();
   const items = itemsFromAnalysis(r);
   return {
     mealId: null,
-    date: todayLocal(),
+    date: opts.date ?? todayLocal(),
     time: { h: now.getHours(), m: now.getMinutes() },
     mealType: opts.mealType ?? suggestMealType(now.getHours()),
     source: opts.source,

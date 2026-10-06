@@ -62,6 +62,9 @@ export default function FoodSearch() {
           ? { kind: 'recipe' }
           : { kind: 'diary', date, mealType };
     picker.open(target, params.replace != null ? Number(params.replace) : null);
+    // Leaving the search (X / back) must not leave a stale target for the next barcode scan or
+    // custom food, which would send the food to an old draft, date or recipe.
+    return () => usePickerStore.getState().clear();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  SAFETY,
   ActivityLevelSchema,
   GoalTypeSchema,
   kcalFromMacros,
@@ -69,9 +70,16 @@ export default function Goals() {
       fat_g: parseDecimal(v.fat) ?? 0,
     };
     const kcal = Math.round(kcalFromMacros(macros) / 10) * 10;
+    // Same safety floor as computed plans; female floor when sex is unknown is the lower one,
+    // so use the male floor only when we know it applies.
+    const floor = SAFETY.calorieFloor[p?.sex === 'male' ? 'male' : 'female'];
+    if (kcal < floor) {
+      toast.error(t('goals.belowFloor', { kcal: formatKcal(kcal), floor: formatKcal(floor) }));
+      return;
+    }
     await saveCustomGoal({
       ...macros,
-      kcal: Math.max(800, kcal),
+      kcal,
       fiber_g: Math.round((kcal / 1000) * 14),
       water_ml: parseDecimal(v.water) ?? goal.water_ml,
       mode: 'fixed',

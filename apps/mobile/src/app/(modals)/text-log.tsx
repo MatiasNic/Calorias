@@ -1,4 +1,5 @@
-import { router } from 'expo-router';
+import type { IsoDate } from '@plato/shared';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +23,7 @@ export default function TextLog() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const aiError = useAiError();
+  const params = useLocalSearchParams<{ date?: IsoDate }>();
   const quota = useQuotaStatus();
   const plan = usePlan();
   const dictation = useDictation((value) => {
@@ -40,7 +42,9 @@ export default function TextLog() {
     try {
       const result = await analyzeMealText(text.trim(), usedVoice ? 'voice' : 'text');
       queryClient.invalidateQueries({ queryKey: ['quota'] });
-      useScanStore.getState().setTextResult(result, usedVoice ? 'voice' : 'text');
+      useScanStore
+        .getState()
+        .setTextResult(result, usedVoice ? 'voice' : 'text', params.date ?? null);
       router.replace('/scan-review');
     } catch (e) {
       setError(aiError(e));
