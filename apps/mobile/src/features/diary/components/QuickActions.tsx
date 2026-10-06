@@ -11,25 +11,25 @@ export function QuickActions({ date }: { date: IsoDate }) {
   const { colors } = useTheme();
   const items: { icon: IconName; label: string; href: Href; testID: string }[] = [
     {
-      icon: 'search',
+      icon: 'search-outline',
       label: t('quick.search'),
       href: { pathname: '/food-search', params: { date } },
       testID: 'quick-search',
     },
     {
-      icon: 'barcode',
+      icon: 'barcode-outline',
       label: t('quick.barcode'),
       href: { pathname: '/scan', params: { mode: 'barcode' } },
       testID: 'quick-barcode',
     },
     {
-      icon: 'mic',
+      icon: 'mic-outline',
       label: t('quick.textVoice'),
       href: { pathname: '/text-log', params: { date } },
       testID: 'quick-text',
     },
     {
-      icon: 'star',
+      icon: 'star-outline',
       label: t('quick.favorites'),
       href: { pathname: '/food-search', params: { date, tab: 'favorites' } },
       testID: 'quick-favorites',
@@ -46,13 +46,10 @@ export function QuickActions({ date }: { date: IsoDate }) {
           onPress={() => router.push(i.href)}
           style={({ pressed }) => [
             styles.item,
-            {
-              backgroundColor: pressed ? colors.surfaceAlt : colors.surface,
-              borderColor: colors.border,
-            },
+            { backgroundColor: pressed ? colors.surfaceAlt : colors.surface },
           ]}
         >
-          <Icon name={i.icon} color="primary" />
+          <Icon name={i.icon} color="text" />
           <AppText variant="caption" align="center" numberOfLines={1}>
             {i.label}
           </AppText>
@@ -69,8 +66,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.xs,
     paddingVertical: spacing.md,
-    borderRadius: radii.lg,
-    borderWidth: 1,
+    borderRadius: radii.xl,
     minHeight: 64,
   },
 });

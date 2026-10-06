@@ -12,7 +12,7 @@ export interface CardProps extends ViewProps {
 
 export function Card({
   padded = true,
-  elevated = true,
+  elevated = false,
   onPress,
   style,
   children,
@@ -24,8 +24,6 @@ export function Card({
     styles.card,
     {
       backgroundColor: theme.colors.surface,
-      borderColor: theme.colors.border,
-      borderWidth: theme.dark ? 1 : 0,
       padding: padded ? spacing.lg : 0,
     },
     elevated ? shadow(theme, 1) : null,
@@ -51,5 +49,5 @@ export function Card({
 }
 
 const styles = StyleSheet.create({
-  card: { borderRadius: radii.xl },
+  card: { borderRadius: radii.xxl },
 });

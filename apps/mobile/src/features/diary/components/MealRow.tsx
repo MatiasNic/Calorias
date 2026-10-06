@@ -4,7 +4,7 @@ import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Icon, toast } from '@/components';
+import { AppText, Icon, toast, type IconName } from '@/components';
 import { deleteMeal, duplicateMeal } from '@/features/diary/hooks';
 import type { MealRecord } from '@/services/db/types';
 import { usePhotoUri } from '@/services/photos';
@@ -13,7 +13,16 @@ import { formatTime, todayLocal } from '@/utils/dates';
 import { formatKcal } from '@/utils/format';
 import { haptic } from '@/utils/haptics';
 
-export function MealRow({ meal }: { meal: MealRecord }) {
+const MEAL_ICONS: Record<MealRecord['meal_type'], IconName> = {
+  breakfast: 'cafe-outline',
+  lunch: 'restaurant-outline',
+  snack: 'nutrition-outline',
+  dinner: 'moon-outline',
+  other: 'fast-food-outline',
+};
+
+/** A logged meal. `card` renders it as a standalone card titled with the meal type (Today). */
+export function MealRow({ meal, card }: { meal: MealRecord; card?: boolean }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const photo = usePhotoUri(meal);
@@ -56,7 +65,12 @@ export function MealRow({ meal }: { meal: MealRecord }) {
   );
 
   return (
-    <ReanimatedSwipeable renderRightActions={actions} overshootRight={false} friction={2}>
+    <ReanimatedSwipeable
+      renderRightActions={actions}
+      overshootRight={false}
+      friction={2}
+      containerStyle={card ? styles.cardContainer : undefined}
+    >
       <Pressable
         testID={`meal-row-${meal.id}`}
         accessibilityRole="button"
@@ -72,6 +86,7 @@ export function MealRow({ meal }: { meal: MealRecord }) {
         onPress={() => router.push({ pathname: '/meal/[id]', params: { id: meal.id } })}
         style={({ pressed }) => [
           styles.row,
+          card ? styles.card : null,
           { backgroundColor: pressed ? colors.surfaceAlt : colors.surface },
         ]}
       >
@@ -85,27 +100,30 @@ export function MealRow({ meal }: { meal: MealRecord }) {
           />
         ) : (
           <View style={[styles.thumb, styles.placeholder, { backgroundColor: colors.surfaceAlt }]}>
-            <Icon
-              name={
-                meal.source === 'barcode'
-                  ? 'barcode'
-                  : meal.source === 'text' || meal.source === 'voice'
-                    ? 'chatbox-ellipses'
-                    : 'restaurant'
-              }
-              size={20}
-              color="textMuted"
-            />
+            <Icon name={MEAL_ICONS[meal.meal_type]} size={20} color="text" />
           </View>
         )}
         <View style={styles.text}>
-          <AppText variant="body" numberOfLines={2}>
-            {names}
-          </AppText>
-          <AppText variant="caption" color="textMuted">
-            {formatTime(meal.eaten_at)} · P {Math.round(meal.totals.protein_g)} · C{' '}
-            {Math.round(meal.totals.carbs_g)} · G {Math.round(meal.totals.fat_g)}
-          </AppText>
+          {card ? (
+            <>
+              <AppText variant="bodyStrong" numberOfLines={1}>
+                {t(`mealTypes.${meal.meal_type}`)}
+              </AppText>
+              <AppText variant="caption" color="textMuted" numberOfLines={1}>
+                {names}
+              </AppText>
+            </>
+          ) : (
+            <>
+              <AppText variant="body" numberOfLines={2}>
+                {names}
+              </AppText>
+              <AppText variant="caption" color="textMuted">
+                {formatTime(meal.eaten_at)} · P {Math.round(meal.totals.protein_g)} · C{' '}
+                {Math.round(meal.totals.carbs_g)} · G {Math.round(meal.totals.fat_g)}
+              </AppText>
+            </>
+          )}
         </View>
         <AppText variant="bodyStrong" tabular>
           {formatKcal(meal.totals.kcal)}
@@ -150,7 +168,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     minHeight: 64,
   },
-  thumb: { width: 48, height: 48, borderRadius: radii.md },
+  card: { borderRadius: radii.xl, paddingHorizontal: spacing.md },
+  cardContainer: { borderRadius: radii.xl, overflow: 'hidden' },
+  thumb: { width: 44, height: 44, borderRadius: radii.md },
   placeholder: { alignItems: 'center', justifyContent: 'center' },
   text: { flex: 1, gap: 2 },
   actions: { flexDirection: 'row' },

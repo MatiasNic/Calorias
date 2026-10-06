@@ -3,7 +3,7 @@ import type { Translation } from './es';
 
 export const en: TranslationShape<Translation> = {
   common: {
-    appName: 'Plato',
+    appName: 'Bocado',
     continue: 'Continue',
     back: 'Back',
     cancel: 'Cancel',
@@ -29,7 +29,7 @@ export const en: TranslationShape<Translation> = {
     today: 'Today',
     yesterday: 'Yesterday',
     disclaimer:
-      'Plato does not replace professional medical or nutrition advice. If in doubt, talk to a health professional.',
+      'Bocado does not replace professional medical or nutrition advice. If in doubt, talk to a health professional.',
     premium: 'Premium',
     comingSoon: 'Coming soon',
     yes: 'Yes',
@@ -120,14 +120,14 @@ export const en: TranslationShape<Translation> = {
   welcome: {
     title: 'Count calories with a photo',
     subtitle:
-      'Snap your plate and Plato recognizes each food, estimates the portion and calculates calories and nutrients.',
+      'Snap your plate and Bocado recognizes each food, estimates the portion and calculates calories and nutrients.',
     point1: 'Photo → foods, portions and calories in seconds',
     point2: 'Easy corrections: you always have the final say',
     point3: 'Personal goals and real progress, guilt-free',
     createAccount: 'Create account',
     haveAccount: 'I already have an account',
     tryGuest: 'Try without an account',
-    tryDemo: 'Enter demo mode',
+    tryDemo: 'Demo mode',
     demoTitle: 'Demo mode',
     demoMessage: 'AI and payments are simulated and your data stays on this device only.',
   },
@@ -195,7 +195,7 @@ export const en: TranslationShape<Translation> = {
       year: 'Year',
       age_one: '{{count}} year old',
       age_other: '{{count}} years old',
-      tooYoung: 'Plato is for people aged {{age}} or older.',
+      tooYoung: 'Bocado is for people aged {{age}} or older.',
       minor:
         "Since you're under 18, we won't suggest a calorie deficit. We recommend talking to a health professional.",
     },
@@ -249,6 +249,7 @@ export const en: TranslationShape<Translation> = {
       title: 'Your plan is ready',
       subtitle: 'Calculated with the Mifflin-St Jeor equation and your activity level.',
       kcalPerDay: 'kcal per day',
+      summaryLine: 'BMR {{bmr}} · TDEE {{tdee}} kcal · Water {{water}}',
       kcalA11y: 'Daily goal: {{kcal}} kilocalories',
       bmr: 'Basal metabolism',
       tdee: 'Daily expenditure',
@@ -265,7 +266,7 @@ export const en: TranslationShape<Translation> = {
       incomplete: 'Some details are missing to calculate your plan.',
       blockedTitle: "Let's review your goal",
       blocked: {
-        under_min_age: 'Plato is not available for your age.',
+        under_min_age: 'Bocado is not available for your age.',
         target_bmi_too_low:
           'The goal weight is below a healthy range (BMI < 18.5). Please choose another goal and consider talking to a professional.',
         underweight_cannot_lose:
@@ -309,6 +310,18 @@ export const en: TranslationShape<Translation> = {
     saved: 'Goals updated',
   },
   today: {
+    leftLabel: 'You have left',
+    overLabel: 'Above your goal',
+    consumedLine: '{{consumed}} eaten',
+    consumedWithExercise: '{{consumed}} eaten · {{exercise}} exercise',
+    goalLine: 'Goal {{goal}}',
+    meals: 'Meals',
+    addMeal: 'Add {{meal}}',
+    changeDay: 'Change day',
+    emptyTitle: 'Log your first meal',
+    emptyBody: 'Snap a photo of your plate or write what you ate.',
+    photo: 'Photo',
+    textVoice: 'Text or voice',
     morning: 'Good morning',
     afternoon: 'Good afternoon',
     evening: 'Good evening',
@@ -680,6 +693,8 @@ export const en: TranslationShape<Translation> = {
     deficit: 'You may be low on {{name}}: consider {{foods}}.',
   },
   profile: {
+    streakShort_one: '{{count}}-day streak',
+    streakShort_other: '{{count}}-day streak',
     title: 'Profile',
     guest: 'Guest',
     demo: 'Demo mode',
@@ -763,10 +778,10 @@ export const en: TranslationShape<Translation> = {
   },
   paywall: {
     title: {
-      onboarding: 'Unlock all of Plato',
+      onboarding: 'Unlock all of Bocado',
       quota: 'Keep scanning without limits',
       feature: 'This is a Premium feature',
-      settings: 'Plato Premium',
+      settings: 'Bocado Premium',
     },
     subtitle: 'Try it free and cancel anytime.',
     benefits: {

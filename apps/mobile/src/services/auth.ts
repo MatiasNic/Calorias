@@ -165,7 +165,7 @@ export const auth = {
     await onAuthenticated(data.user.id, data.user.email ?? null);
   },
 
-  /** Handles plato://auth/callback?code=… (OAuth / email confirmation / magic links). */
+  /** Handles bocado://auth/callback?code=… (OAuth / email confirmation / magic links). */
   async handleAuthRedirect(url: string) {
     const sb = getSupabase();
     if (!sb) return;

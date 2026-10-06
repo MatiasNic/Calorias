@@ -1,7 +1,7 @@
 # Borrado de cuenta dentro de la app (requisito de Apple/Google).
 appId: ${APP_ID}
 env:
-  APP_ID: com.platoapp.plato
+  APP_ID: com.bocadoapp.bocado
 ---
 - runFlow: _onboarding.yaml
 - tapOn:

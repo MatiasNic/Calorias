@@ -1,7 +1,7 @@
 # Escanear (IA simulada) → revisar → ajustar porción → guardar.
 appId: ${APP_ID}
 env:
-  APP_ID: com.platoapp.plato
+  APP_ID: com.bocadoapp.bocado
 ---
 - runFlow: _onboarding.yaml
 # Photo path: grant camera, capture (demo fixtures return a plate).

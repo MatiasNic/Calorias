@@ -1,8 +1,9 @@
-# CLAUDE.md — Plato
+# CLAUDE.md — Bocado
 
 App móvil de control de comidas con IA (foto → alimentos → porciones → calorías).
 Monorepo pnpm: `apps/mobile` (Expo SDK 57, Expo Router), `packages/shared` (tipos, Zod, fórmulas),
-`supabase/` (Postgres + RLS, Edge Functions Deno), `docs/` (ADRs, release, privacidad).
+`supabase/` (Postgres + RLS, Edge Functions Deno), `docs/` (ADRs, release, privacidad),
+`design/` (kit de diseño Bocado: tokens, marca y pantallas de referencia).
 
 ## Comandos
 
@@ -29,7 +30,8 @@ cd apps/mobile && pnpm start:mock          # app en modo demo (sin claves)
   usar `packages/shared/src/constants.ts` y `plans.ts`.
 - `packages/shared` usa imports relativos con extensión `.ts` para que el mismo código corra en
   Metro, Vitest y Deno. Después de cambiarlo: `pnpm sync:shared` (CI falla si está desincronizado).
-- Colores/espaciados solo desde `src/theme` (tokens). Proteína/carbos/grasas usan siempre
+- Colores/espaciados solo desde `src/theme` (tokens, fuente: `design/tokens/tokens.json`). La marca es
+  tinta (`primary`); el salvia (`kcal`) solo para calorías. Proteína/carbos/grasas usan siempre
   `colors.protein|carbs|fat`.
 - Datos: la app es **offline-first**. Todo se escribe en SQLite local (`src/services/db`) y se
   sincroniza con Supabase vía outbox (`src/services/sync`). Nunca escribir directo a Supabase

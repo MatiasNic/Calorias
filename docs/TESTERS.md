@@ -2,7 +2,7 @@
 
 ## Instalar el APK (Android 8 o superior)
 
-1. Descargá el archivo `plato-*.apk` que te compartieron (Drive, WhatsApp, link de EAS).
+1. Descargá el archivo `bocado-*.apk` que te compartieron (Drive, WhatsApp, link de EAS).
 2. Abrilo desde el teléfono. Android va a pedir permiso para **instalar apps desconocidas** desde
    ese origen (Chrome, Archivos, WhatsApp…): Ajustes → Permitir de esta fuente → volver → Instalar.
 3. Si Play Protect avisa "app no reconocida", tocá **Más detalles → Instalar de todos modos** (es
@@ -17,10 +17,10 @@
 
 ## APK de demo vs. APK de prueba
 
-- **Demo** (`plato-demo-*.apk`): no necesita internet ni cuenta. La IA, las compras y la nube
+- **Demo** (`bocado-demo-*.apk`): no necesita internet ni cuenta. La IA, las compras y la nube
   están **simuladas**: el escaneo devuelve uno de varios platos de ejemplo según la foto, y "comprar
   Premium" no cobra nada. Sirve para probar navegación, diseño, textos y flujos.
-- **Preview** (`plato-preview-*.apk`): conectado al backend real con IA real y compras de prueba
+- **Preview** (`bocado-preview-*.apk`): conectado al backend real con IA real y compras de prueba
   (sandbox, no cobran).
 
 ## Qué probar (≈ 20 minutos)
@@ -33,7 +33,7 @@
 3. **Texto o voz:** "dos empanadas de carne y una coca zero".
 4. **Código de barras:** escaneá un producto envasado (en la demo se busca en Open Food Facts si
    hay internet; sin conexión probá el código de ejemplo abriendo
-   `plato://scan?mode=barcode&code=7790000000017`).
+   `bocado://scan?mode=barcode&code=7790000000017`).
 5. **Buscador:** buscá "milanesa", "mate", "medialuna"; probá favoritos y crear un alimento propio.
 6. **Diario y progreso:** cargá tu peso, agua; revisá el calendario y los gráficos.
 7. **Plan gratis:** hacé 4 escaneos con foto en el día → al cuarto debe aparecer el aviso de

@@ -3,11 +3,11 @@ import { StyleSheet, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Banner, Card, MacroBar, ProgressRing } from '@/components';
+import { AppText, Banner, Card } from '@/components';
 import { LineChart } from '@/components/charts';
 import { GoalWarnings } from '@/features/goals/GoalWarnings';
 import { usePrefsStore } from '@/stores/prefs';
-import { spacing, useTheme } from '@/theme';
+import { radii, spacing, useTheme } from '@/theme';
 import { formatDay } from '@/utils/dates';
 import { formatKcal, formatNumber, formatVolume } from '@/utils/format';
 import { planFromAnswers } from '../plan';
@@ -33,54 +33,78 @@ export function ResultStep() {
   const { plan } = result;
   const w = (kg: number) => (units === 'imperial' ? kgToLb(kg) : kg);
   const water = formatVolume(plan.waterMl, units);
+  const macros = [
+    {
+      key: 'p',
+      label: t('macros.protein'),
+      grams: plan.macros.protein_g,
+      kcal: plan.macros.protein_g * 4,
+      color: colors.protein,
+    },
+    {
+      key: 'c',
+      label: t('macros.carbs'),
+      grams: plan.macros.carbs_g,
+      kcal: plan.macros.carbs_g * 4,
+      color: colors.carbs,
+    },
+    {
+      key: 'f',
+      label: t('macros.fat'),
+      grams: plan.macros.fat_g,
+      kcal: plan.macros.fat_g * 9,
+      color: colors.fat,
+    },
+  ];
 
   return (
     <StepScaffold title={t('onboarding.result.title')} subtitle={t('onboarding.result.subtitle')}>
       <Animated.View entering={FadeInUp.duration(500)}>
-        <Card style={styles.center}>
-          <ProgressRing
-            progress={1}
-            size={190}
-            accessibilityLabel={t('onboarding.result.kcalA11y', { kcal: plan.kcal })}
-          >
-            <AppText variant="display" tabular testID="result-kcal">
+        <Card
+          style={styles.main}
+          accessibilityLabel={t('onboarding.result.kcalA11y', { kcal: plan.kcal })}
+        >
+          <View style={styles.hero}>
+            <AppText variant="numberHero" testID="result-kcal">
               {formatKcal(plan.kcal)}
             </AppText>
-            <AppText variant="caption" color="textMuted">
+            <AppText variant="bodyStrong" color="textMuted" style={styles.unit}>
               {t('onboarding.result.kcalPerDay')}
             </AppText>
-          </ProgressRing>
-          <View style={styles.stats}>
-            <Stat label={t('onboarding.result.bmr')} value={`${formatKcal(plan.bmr)} kcal`} />
-            <Stat label={t('onboarding.result.tdee')} value={`${formatKcal(plan.tdee)} kcal`} />
-            <Stat label={t('onboarding.result.water')} value={`${water.value} ${water.unit}`} />
           </View>
+          <View style={styles.split}>
+            {macros.map((m) => (
+              <View
+                key={m.key}
+                style={[styles.segment, { flex: m.kcal, backgroundColor: m.color }]}
+              />
+            ))}
+          </View>
+          <View style={styles.legend}>
+            {macros.map((m) => (
+              <View key={m.key} style={styles.legendItem}>
+                <View style={styles.legendLabel}>
+                  <View style={[styles.dot, { backgroundColor: m.color }]} />
+                  <AppText variant="caption" color="textMuted">
+                    {m.label}
+                  </AppText>
+                </View>
+                <AppText variant="number" tabular>
+                  {m.grams} g
+                </AppText>
+              </View>
+            ))}
+          </View>
+          <View style={[styles.divider, { backgroundColor: colors.border }]} />
+          <AppText variant="caption" color="textMuted">
+            {t('onboarding.result.summaryLine', {
+              bmr: formatKcal(plan.bmr),
+              tdee: formatKcal(plan.tdee),
+              water: `${water.value} ${water.unit}`,
+            })}
+          </AppText>
         </Card>
       </Animated.View>
-      <Card style={styles.macros}>
-        <AppText variant="subheading">{t('onboarding.result.macrosTitle')}</AppText>
-        <MacroBar
-          label={t('macros.protein')}
-          value={plan.macros.protein_g}
-          target={plan.macros.protein_g}
-          color={colors.protein}
-        />
-        <MacroBar
-          label={t('macros.carbs')}
-          value={plan.macros.carbs_g}
-          target={plan.macros.carbs_g}
-          color={colors.carbs}
-        />
-        <MacroBar
-          label={t('macros.fat')}
-          value={plan.macros.fat_g}
-          target={plan.macros.fat_g}
-          color={colors.fat}
-        />
-        <AppText variant="caption" color="textMuted">
-          {t('onboarding.result.macrosExplain')}
-        </AppText>
-      </Card>
       {plan.estimatedDate ? (
         <Card style={styles.macros}>
           <AppText variant="subheading">{t('onboarding.result.projectionTitle')}</AppText>
@@ -99,8 +123,8 @@ export function ResultStep() {
             series={[
               {
                 points: plan.projection.map((p) => ({ x: p.week, y: w(p.weightKg) })),
-                color: colors.primary,
-                fill: true,
+                color: colors.kcal,
+                fill: false,
                 showDots: true,
               },
             ]}
@@ -117,22 +141,16 @@ export function ResultStep() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <View style={styles.stat}>
-      <AppText variant="caption" color="textMuted" align="center">
-        {label}
-      </AppText>
-      <AppText variant="bodyStrong" align="center" tabular>
-        {value}
-      </AppText>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  center: { alignItems: 'center', gap: spacing.lg },
-  stats: { flexDirection: 'row', gap: spacing.sm, alignSelf: 'stretch' },
-  stat: { flex: 1, gap: 2 },
+  main: { gap: spacing.md },
+  hero: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm, flexWrap: 'wrap' },
+  unit: { marginBottom: spacing.sm },
+  split: { flexDirection: 'row', gap: 3, height: 8 },
+  segment: { borderRadius: radii.pill },
+  legend: { flexDirection: 'row' },
+  legendItem: { flex: 1, gap: 2 },
+  legendLabel: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs + 2 },
+  dot: { width: 8, height: 8, borderRadius: 4 },
+  divider: { height: StyleSheet.hairlineWidth },
   macros: { gap: spacing.md },
 });

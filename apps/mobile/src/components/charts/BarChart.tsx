@@ -73,7 +73,7 @@ export function BarChart({ data, height = 180, target, color, accessibilityLabel
                 width={barW}
                 height={Math.max(d.value > 0 ? 2 : 0, PAD.top + h - y(d.value))}
                 rx={4}
-                fill={d.highlight ? colors.accent : (color ?? colors.primary)}
+                fill={d.highlight ? colors.primary : (color ?? colors.primary)}
                 opacity={d.value > 0 ? 1 : 0.3}
               />
             );

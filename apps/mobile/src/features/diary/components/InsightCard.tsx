@@ -3,16 +3,16 @@ import { useTranslation } from 'react-i18next';
 
 import { AppText, Card, Icon, type IconName } from '@/components';
 import type { Insight } from '@/features/habits/insights';
-import { spacing, useTheme } from '@/theme';
+import { radii, spacing, useTheme } from '@/theme';
 
 const ICON: Record<Insight['kind'], IconName> = {
-  start_day: 'sunny',
-  protein_gap: 'barbell',
-  water_low: 'water',
-  fiber_low: 'leaf',
-  over_target: 'information-circle',
-  on_track: 'checkmark-circle',
-  goal_reached: 'trophy',
+  start_day: 'sunny-outline',
+  protein_gap: 'barbell-outline',
+  water_low: 'water-outline',
+  fiber_low: 'leaf-outline',
+  over_target: 'information-circle-outline',
+  on_track: 'checkmark-circle-outline',
+  goal_reached: 'trophy-outline',
 };
 
 export function InsightCard({ insight }: { insight: Insight }) {
@@ -27,12 +27,12 @@ export function InsightCard({ insight }: { insight: Insight }) {
           ? { kcal: Math.round(insight.kcal) }
           : {};
   return (
-    <Card style={styles.card} accessibilityLabel={t(`insights.${insight.kind}.title`)}>
-      <View style={[styles.icon, { backgroundColor: colors.primarySoft }]}>
-        <Icon name={ICON[insight.kind]} color="primary" />
+    <Card style={styles.card} accessibilityLabel={t(`insights.${insight.kind}.title`, params)}>
+      <View style={[styles.icon, { backgroundColor: colors.surfaceAlt }]}>
+        <Icon name={ICON[insight.kind]} color="text" />
       </View>
       <View style={styles.flex}>
-        <AppText variant="bodyStrong">{t(`insights.${insight.kind}.title`)}</AppText>
+        <AppText variant="bodyStrong">{t(`insights.${insight.kind}.title`, params)}</AppText>
         <AppText variant="label" color="textMuted">
           {t(`insights.${insight.kind}.body`, params)}
         </AppText>
@@ -43,6 +43,12 @@ export function InsightCard({ insight }: { insight: Insight }) {
 
 const styles = StyleSheet.create({
   card: { flexDirection: 'row', gap: spacing.md, alignItems: 'flex-start' },
-  icon: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  icon: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   flex: { flex: 1, gap: 2 },
 });

@@ -33,7 +33,7 @@ JSON) y **eliminar su cuenta** desde la app, lo que borra todos sus registros y 
 **Última actualización: [FECHA]**
 
 [TITULAR] ("nosotros"), con domicilio en [DOMICILIO], es responsable de los datos personales
-tratados a través de la aplicación Plato.
+tratados a través de la aplicación Bocado.
 
 **1. Qué datos recolectamos.** (a) Datos de cuenta: email y, si usás Google o Apple, el nombre
 que esos servicios compartan. (b) Datos que cargás: edad, sexo, altura, peso, objetivo, nivel de
@@ -86,7 +86,7 @@ vamos a pedir que la aceptes de nuevo.
 
 ## Términos y condiciones (es-AR)
 
-**1. Servicio.** Plato es una herramienta de registro de alimentación y estimación nutricional.
+**1. Servicio.** Bocado es una herramienta de registro de alimentación y estimación nutricional.
 **No es un dispositivo médico ni brinda diagnóstico o tratamiento.** No reemplaza la consulta con
 un/a médico/a o nutricionista. Si estás embarazada, en período de lactancia, tenés una
 enfermedad crónica, un trastorno de la conducta alimentaria o sos menor de 18, consultá a un
@@ -98,7 +98,7 @@ de fotos) son aproximados y pueden contener errores. Sos responsable de revisarl
 **3. Cuenta.** Debés tener al menos 16 años. Sos responsable de la confidencialidad de tu
 contraseña. Podés eliminar tu cuenta en cualquier momento desde la app.
 
-**4. Suscripciones.** Plato Premium se ofrece como suscripción mensual o anual con renovación
+**4. Suscripciones.** Bocado Premium se ofrece como suscripción mensual o anual con renovación
 automática, cobrada por Google Play o App Store. La prueba gratuita, si la hay, se convierte en
 suscripción paga al terminar salvo que la canceles al menos 24 h antes. Podés cancelar desde la
 configuración de suscripciones de tu tienda; la cancelación aplica al final del período en curso.

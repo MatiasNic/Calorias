@@ -21,15 +21,15 @@ jobs:
         run: |
           set -euo pipefail
           for apk in releases/*.apk; do
-            version=$(basename "$apk" .apk | sed -E 's/^plato-//')
+            version=$(basename "$apk" .apk | sed -E 's/^(plato|bocado)-//')
             tag="v${version}"
-            cp "$apk" plato.apk
+            cp "$apk" bocado.apk
             if gh release view "$tag" >/dev/null 2>&1; then
-              gh release upload "$tag" "plato.apk#Plato ${version} (APK)" "$apk" --clobber
+              gh release upload "$tag" "bocado.apk#Bocado ${version} (APK)" "$apk" --clobber
             else
-              gh release create "$tag" "plato.apk#Plato ${version} (APK)" "$apk" \
+              gh release create "$tag" "bocado.apk#Bocado ${version} (APK)" "$apk" \
                 --target "$GITHUB_SHA" --latest \
-                --title "Plato ${version}" \
-                --notes "APK de prueba (modo demo: IA, pagos y nube simulados). Android 8+ (32 y 64 bits). Descargá **plato.apk** desde el celular y abrilo para instalar. Guía: docs/TESTERS.md"
+                --title "Bocado ${version}" \
+                --notes "APK de prueba (modo demo: IA, pagos y nube simulados). Android 8+ (32 y 64 bits). Descargá **bocado.apk** desde el celular y abrilo para instalar. Guía: docs/TESTERS.md"
             fi
           done

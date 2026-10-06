@@ -20,7 +20,7 @@ import { useProgress } from '@/features/progress/hooks';
 import { usePlan } from '@/services/purchases';
 import { usePrefsStore } from '@/stores/prefs';
 import { spacing, useTheme } from '@/theme';
-import { formatDay, weekdayShort } from '@/utils/dates';
+import { formatDay, todayLocal, weekdayShort } from '@/utils/dates';
 import { formatKcal, formatNumber, formatWeight } from '@/utils/format';
 
 type Range = 7 | 30 | 90;
@@ -111,13 +111,12 @@ export default function Progress() {
                     },
                     {
                       points: data.trend.map((p, i) => ({ x: i, y: w(p.trendKg) })),
-                      color: colors.primary,
-                      fill: true,
+                      color: colors.text,
                     },
                   ]}
                   reference={
                     target
-                      ? { y: w(target), color: colors.accent, label: t('progress.goal') }
+                      ? { y: w(target), color: colors.textSubtle, label: t('progress.goal') }
                       : undefined
                   }
                   yFormat={(v) => formatNumber(v, 0)}
@@ -182,22 +181,11 @@ export default function Progress() {
               <BarChart
                 accessibilityLabel={t('progress.caloriesA11y', { avg: data.summary.avg.kcal })}
                 target={data.goal.kcal}
+                color={colors.kcal}
                 data={data.filled.map((d) => ({
                   label: effective <= 7 ? weekdayShort(d.date) : String(Number(d.date.slice(8))),
                   value: d.totals.kcal,
-                  segments: d.totals.kcal
-                    ? [
-                        { value: d.totals.protein_g * 4, color: colors.protein },
-                        { value: d.totals.carbs_g * 4, color: colors.carbs },
-                        {
-                          value: Math.max(
-                            0,
-                            d.totals.kcal - d.totals.protein_g * 4 - d.totals.carbs_g * 4,
-                          ),
-                          color: colors.fat,
-                        },
-                      ]
-                    : undefined,
+                  highlight: d.date === todayLocal(),
                 }))}
               />
             ) : (

@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { BackHandler, Platform, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { Button, IconButton, ProgressBar, Screen, toast } from '@/components';
+import { AppText, Button, IconButton, ProgressBar, Screen, toast } from '@/components';
 import { finishOnboarding } from '@/features/onboarding/finish';
 import { captureError } from '@/services/analytics';
 import { planFromAnswers } from '@/features/onboarding/plan';
@@ -162,6 +162,9 @@ export default function Onboarding() {
             label={t('onboarding.progress', { current: index + 1, total: steps.length })}
           />
         </View>
+        <AppText variant="caption" color="textMuted" tabular>
+          {index + 1}/{steps.length}
+        </AppText>
       </View>
       <StepView key={step} />
     </Screen>

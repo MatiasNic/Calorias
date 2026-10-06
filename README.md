@@ -1,4 +1,4 @@
-# Plato 🍽️
+# Bocado 🍽️
 
 App móvil (Android + iOS) de control de alimentación con IA: sacás una foto de tu plato, la IA
 identifica cada alimento y estima la porción, y la app calcula calorías, macros y micronutrientes,
@@ -6,7 +6,7 @@ los registra en tu diario y te muestra tu progreso. Español rioplatense primero
 incluidos.
 
 📲 **Probar la app (APK demo para Android):**
-https://github.com/MatiasNic/Calorias/releases/latest/download/plato.apk
+https://github.com/MatiasNic/Calorias/releases/latest/download/bocado.apk
 
 | Carpeta           | Qué hay                                                                      |
 | ----------------- | ---------------------------------------------------------------------------- |

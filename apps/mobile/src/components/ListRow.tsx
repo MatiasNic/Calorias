@@ -22,7 +22,7 @@ export function ListRow({
   title,
   subtitle,
   icon,
-  iconColor = 'primary',
+  iconColor = 'text',
   right,
   value,
   onPress,
@@ -41,17 +41,12 @@ export function ListRow({
       style={({ pressed }) => [styles.row, pressed && { backgroundColor: colors.surfaceAlt }]}
     >
       {icon ? (
-        <View
-          style={[
-            styles.iconWrap,
-            { backgroundColor: destructive ? colors.dangerSoft : colors.primarySoft },
-          ]}
-        >
-          <Icon name={icon} size={18} color={destructive ? 'danger' : iconColor} />
+        <View style={styles.iconWrap}>
+          <Icon name={icon} size={20} color={destructive ? 'danger' : iconColor} />
         </View>
       ) : null}
       <View style={styles.text}>
-        <AppText variant="body" color={destructive ? 'danger' : 'text'} numberOfLines={2}>
+        <AppText variant="bodyStrong" color={destructive ? 'danger' : 'text'} numberOfLines={2}>
           {title}
         </AppText>
         {subtitle ? (
@@ -80,12 +75,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
   },
-  iconWrap: {
-    width: 34,
-    height: 34,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  iconWrap: { width: 24, alignItems: 'center', justifyContent: 'center' },
   text: { flex: 1, gap: 2 },
 });

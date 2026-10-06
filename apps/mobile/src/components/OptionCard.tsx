@@ -40,8 +40,8 @@ export function OptionCard({
       style={({ pressed }) => [
         styles.card,
         {
-          borderColor: selected ? colors.primary : colors.border,
-          backgroundColor: selected ? colors.primarySoft : colors.surface,
+          borderColor: selected ? colors.primary : 'transparent',
+          backgroundColor: colors.surface,
           opacity: pressed ? 0.85 : 1,
         },
       ]}
@@ -57,8 +57,8 @@ export function OptionCard({
         <View style={styles.titleRow}>
           <AppText variant="bodyStrong">{title}</AppText>
           {badge ? (
-            <View style={[styles.badge, { backgroundColor: colors.primary }]}>
-              <AppText variant="caption" color="onPrimary">
+            <View style={[styles.badge, { backgroundColor: colors.primarySoft }]}>
+              <AppText variant="caption" color="text">
                 {badge}
               </AppText>
             </View>
@@ -75,12 +75,13 @@ export function OptionCard({
           selected
             ? multi
               ? 'checkbox'
-              : 'radio-button-on'
+              : 'checkmark-circle'
             : multi
               ? 'square-outline'
-              : 'radio-button-off'
+              : 'ellipse-outline'
         }
-        color={selected ? 'primary' : 'textSubtle'}
+        size={24}
+        color={selected ? 'primary' : 'border'}
       />
     </Pressable>
   );
@@ -92,8 +93,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.md,
     padding: spacing.lg,
-    borderRadius: radii.lg,
-    borderWidth: 2,
+    borderRadius: radii.xl,
+    borderWidth: 1.5,
     minHeight: 64,
   },
   icon: {

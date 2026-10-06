@@ -1,12 +1,14 @@
 # Ficha de tienda (ASO)
 
-Nombre de trabajo: **Plato**. Antes de publicar, verificá que el nombre esté libre en ambas
-tiendas y como marca (INPI en Argentina). Alternativas: "Plato: calorías con foto",
-"Bocado", "Porción".
+Marca: **Bocado** (siempre en minúscula en el logo) · eslogan: _Lo que comés, sin vueltas._
+Antes de publicar, verificá que el nombre esté libre en ambas tiendas y registralo como marca
+(INPI en Argentina). Recursos de marca en [`design/marca`](../design/marca): ícono 1024 px,
+ícono adaptativo, splash y **gráfico destacado de Play 1024×500**
+(`feature-graphic-1024x500.png`).
 
 ## Español (es-AR / es-419) — idioma principal
 
-**Título (30):** `Plato: contador de calorías IA`
+**Título (30):** `Bocado: contador de calorías IA`
 
 **Subtítulo iOS (30):** `Sacale foto y sabé qué comés`
 
@@ -19,7 +21,7 @@ tiendas y como marca (INPI en Argentina). Alternativas: "Plato: calorías con fo
 **Descripción larga:**
 
 ```
-¿Cuántas calorías tiene esa milanesa con puré? Sacale una foto y en segundos Plato te lo dice.
+¿Cuántas calorías tiene esa milanesa con puré? Sacale una foto y en segundos Bocado te lo dice.
 
 📸 FOTO → CALORÍAS
 La inteligencia artificial reconoce cada alimento del plato, estima la porción en gramos y calcula
@@ -52,13 +54,13 @@ micronutrientes, historial y gráficos completos. Probalo 7 días gratis con el 
 Sin publicidad. Las fotos se borran después del análisis. Exportá o eliminá tu cuenta cuando
 quieras. Funciona sin conexión.
 
-Plato no reemplaza el consejo de un profesional de la salud. Las estimaciones pueden tener
+Bocado no reemplaza el consejo de un profesional de la salud. Las estimaciones pueden tener
 errores; siempre podés corregirlas.
 ```
 
 ## English (en-US)
 
-**Title:** `Plato: AI Calorie Counter` · **Subtitle:** `Snap your meal, know your macros`
+**Title:** `Bocado: AI Calorie Counter` · **Subtitle:** `Snap your meal, know your macros`
 
 **Short description:** `Snap a photo of your meal and AI counts calories, protein and more in seconds.`
 
@@ -70,7 +72,7 @@ barcode."
 
 ## Português (pt-BR)
 
-**Título:** `Plato: contador de calorias IA` · **Descrição curta:**
+**Título:** `Bocado: contador de calorias IA` · **Descrição curta:**
 `Tire uma foto da refeição e a IA calcula calorias, proteínas e mais em segundos.`
 
 ## Capturas (6-8, 1080×2340 Android / 1290×2796 iPhone 6,9")

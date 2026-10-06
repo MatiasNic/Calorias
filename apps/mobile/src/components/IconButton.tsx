@@ -15,6 +15,8 @@ export interface IconButtonProps {
   testID?: string;
   /** White icon for use over camera/photos. */
   rawWhite?: boolean;
+  /** Rounded square instead of a circle (header actions). */
+  square?: boolean;
 }
 
 export function IconButton({
@@ -27,6 +29,7 @@ export function IconButton({
   disabled,
   testID,
   rawWhite,
+  square,
 }: IconButtonProps) {
   const { colors } = useTheme();
   return (
@@ -42,6 +45,7 @@ export function IconButton({
       }}
       style={({ pressed }) => [
         styles.base,
+        square ? styles.square : null,
         {
           backgroundColor: background === 'transparent' ? 'transparent' : colors[background],
           opacity: disabled ? 0.4 : pressed ? 0.6 : 1,
@@ -54,6 +58,7 @@ export function IconButton({
 }
 
 const styles = StyleSheet.create({
+  square: { borderRadius: radii.lg },
   base: {
     minWidth: MIN_TOUCH,
     minHeight: MIN_TOUCH,

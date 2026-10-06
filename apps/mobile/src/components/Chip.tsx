@@ -33,7 +33,6 @@ export function Chip({ label, selected, onPress, icon, testID }: ChipProps) {
         styles.chip,
         {
           backgroundColor: selected ? colors.primary : colors.surfaceAlt,
-          borderColor: selected ? colors.primary : colors.border,
           opacity: pressed ? 0.8 : 1,
         },
       ]}
@@ -54,6 +53,5 @@ const styles = StyleSheet.create({
     minHeight: 40,
     paddingHorizontal: spacing.md,
     borderRadius: radii.pill,
-    borderWidth: 1,
   },
 });

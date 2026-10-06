@@ -19,9 +19,9 @@ export const env = {
   posthogHost: process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
   useMocks: mocksRequested || !backendConfigured,
   backendConfigured,
-  termsUrl: process.env.EXPO_PUBLIC_TERMS_URL ?? 'https://plato.app/terminos',
-  privacyUrl: process.env.EXPO_PUBLIC_PRIVACY_URL ?? 'https://plato.app/privacidad',
-  supportEmail: process.env.EXPO_PUBLIC_SUPPORT_EMAIL ?? 'soporte@plato.app',
+  termsUrl: process.env.EXPO_PUBLIC_TERMS_URL ?? 'https://bocado.app/terminos',
+  privacyUrl: process.env.EXPO_PUBLIC_PRIVACY_URL ?? 'https://bocado.app/privacidad',
+  supportEmail: process.env.EXPO_PUBLIC_SUPPORT_EMAIL ?? 'soporte@bocado.app',
 } as const;
 
 /** Current version of Terms/Privacy the user must accept. Bump when legal docs change. */

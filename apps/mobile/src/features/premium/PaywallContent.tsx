@@ -5,10 +5,10 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 
 import {
+  AppLogo,
   AppText,
   Banner,
   Button,
-  Card,
   Icon,
   IconButton,
   toast,
@@ -23,7 +23,7 @@ import {
   restorePurchases,
   type PlanPackage,
 } from '@/services/purchases';
-import { radii, spacing, useTheme } from '@/theme';
+import { palette, radii, spacing, useTheme } from '@/theme';
 import { haptic } from '@/utils/haptics';
 
 export type PaywallContext = 'onboarding' | 'quota' | 'feature' | 'settings';
@@ -106,6 +106,7 @@ export function PaywallContent({
   return (
     <View style={styles.wrap}>
       <View style={styles.header}>
+        <AppLogo size={32} />
         <IconButton
           icon="close"
           accessibilityLabel={t('common.close')}
@@ -114,25 +115,22 @@ export function PaywallContent({
         />
       </View>
       <Animated.View entering={FadeInDown} style={styles.hero}>
-        <View style={[styles.crown, { backgroundColor: colors.primarySoft }]}>
-          <Icon name="sparkles" size={32} color="primary" />
-        </View>
-        <AppText variant="title" align="center" accessibilityRole="header">
+        <AppText variant="title" accessibilityRole="header">
           {t(`paywall.title.${context}`)}
         </AppText>
-        <AppText color="textMuted" align="center">
-          {t('paywall.subtitle')}
-        </AppText>
+        <AppText color="textMuted">{t('paywall.subtitle')}</AppText>
       </Animated.View>
 
-      <Card style={styles.benefits}>
+      <View style={styles.benefits}>
         {BENEFITS.map((b) => (
           <View key={b.key} style={styles.benefit}>
-            <Icon name={b.icon} color="primary" size={20} />
-            <AppText style={styles.flex}>{t(`paywall.benefits.${b.key}`)}</AppText>
+            <Icon name="checkmark" color="text" size={20} />
+            <AppText variant="label" style={styles.flex}>
+              {t(`paywall.benefits.${b.key}`)}
+            </AppText>
           </View>
         ))}
-      </Card>
+      </View>
 
       {packages.isLoading ? <ActivityIndicator color={colors.primary} /> : null}
       {packages.isError ? <Banner tone="danger" message={t('paywall.loadError')} /> : null}
@@ -218,28 +216,29 @@ function PackageOption({
       style={[
         styles.pkg,
         {
-          borderColor: selected ? colors.primary : colors.border,
-          backgroundColor: selected ? colors.primarySoft : colors.surface,
+          borderColor: selected ? colors.primary : 'transparent',
+          backgroundColor: colors.surface,
         },
       ]}
     >
       <Icon
         name={selected ? 'radio-button-on' : 'radio-button-off'}
         color={selected ? 'primary' : 'textSubtle'}
+        size={22}
       />
       <View style={styles.flex}>
         <View style={styles.pkgTitle}>
           <AppText variant="bodyStrong">{t(`paywall.plan.${pkg.kind}`)}</AppText>
           {savings && savings > 0 ? (
             <View style={[styles.save, { backgroundColor: colors.accent }]}>
-              <AppText variant="caption" color="textInverse">
+              <AppText variant="caption" style={{ color: palette.ink800 }}>
                 {t('paywall.save', { percent: savings })}
               </AppText>
             </View>
           ) : null}
         </View>
         {pkg.trialDays ? (
-          <AppText variant="caption" color="primary">
+          <AppText variant="caption" color="textMuted">
             {t('paywall.trialBadge', { days: pkg.trialDays })}
           </AppText>
         ) : null}
@@ -258,8 +257,8 @@ function PackageOption({
 
 const styles = StyleSheet.create({
   wrap: { gap: spacing.lg },
-  header: { flexDirection: 'row', justifyContent: 'flex-end' },
-  hero: { alignItems: 'center', gap: spacing.sm },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  hero: { gap: spacing.xs },
   crown: {
     width: 64,
     height: 64,
@@ -267,7 +266,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  benefits: { gap: spacing.md },
+  benefits: { gap: spacing.sm },
   benefit: { flexDirection: 'row', gap: spacing.md, alignItems: 'center' },
   flex: { flex: 1 },
   packages: { gap: spacing.md },
@@ -276,8 +275,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.md,
     padding: spacing.lg,
-    borderRadius: radii.lg,
-    borderWidth: 2,
+    borderRadius: radii.xl,
+    borderWidth: 1.5,
   },
   pkgTitle: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   save: { paddingHorizontal: spacing.sm, borderRadius: radii.pill },

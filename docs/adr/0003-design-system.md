@@ -1,6 +1,6 @@
 # ADR 0003 — Design system propio sobre tokens
 
-- Estado: aceptada · Fecha: 2026-10-04
+- Estado: aceptada · Fecha: 2026-10-04 · valores reemplazados por [ADR 0008](0008-rediseno-bocado.md)
 
 ## Decisión
 

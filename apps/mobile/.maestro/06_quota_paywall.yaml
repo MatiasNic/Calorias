@@ -1,7 +1,7 @@
 # Plan gratis: 3 fotos por día; la cuarta abre el paywall contextual.
 appId: ${APP_ID}
 env:
-  APP_ID: com.platoapp.plato
+  APP_ID: com.bocadoapp.bocado
 ---
 - runFlow: _onboarding.yaml
 - repeat:

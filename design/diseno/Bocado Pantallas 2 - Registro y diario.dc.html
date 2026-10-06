@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<style>body{margin:0;background:#E6E6E0;font-family:Manrope,system-ui,sans-serif;color:#1B1E1C}a{color:#1F2B27}a:hover{color:#4F6E58}ion-icon{display:block}*{box-sizing:border-box}</style>
+</helmet>
+<section data-screen-label="Registro y diario" style="padding:48px 56px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:700 12px Manrope;letter-spacing:1.2px;text-transform:uppercase;color:#5F6460">Bocado · Pantallas 2 de 4</span>
+<span style="font:800 28px Manrope;letter-spacing:-0.8px">Hoy, registro y diario</span>
+<span style="font:500 14px Manrope;color:#5F6460">23, 26 y 30 están en Bocado Kit. Cada pantalla en claro y oscuro.</span>
+</div>
+
+<div data-screen-label="20 Hoy vacío" style="display:flex;flex-direction:column;gap:12px">
+<span style="font:700 14px Manrope">20–21 · Hoy (vacío)</span>
+<div style="display:flex;gap:20px;flex-wrap:wrap">
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div style="width:360px;height:780px;border-radius:40px;background:{{ t.background }};border:1px solid {{ t.border }};position:relative;overflow:hidden;color:{{ t.text }}">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 0;font:700 13px Manrope"><span>9:41</span><span style="display:flex;align-items:center;gap:4px"><ion-icon name="cellular" style="font-size:14px"></ion-icon><ion-icon name="wifi" style="font-size:14px"></ion-icon><ion-icon name="battery-full" style="font-size:18px"></ion-icon></span></div>
+<div style="padding:16px 20px 0;display:flex;justify-content:space-between;align-items:center">
+<div style="display:flex;flex-direction:column"><span style="font:500 12px Manrope;color:{{ t.textMuted }}">Buen día, Lu</span><div style="display:flex;align-items:center;gap:6px;font:800 20px Manrope;letter-spacing:-0.5px"><span>Hoy, lunes 5</span><ion-icon name="chevron-down" style="font-size:16px;color:{{ t.textMuted }}"></ion-icon></div></div>
+<div style="width:40px;height:40px;border-radius:12px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center"><ion-icon name="sparkles-outline" style="font-size:19px"></ion-icon></div>
+</div>
+<div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:2px">
+<span style="font:600 13px Manrope;color:{{ t.textMuted }}">Te quedan</span>
+<div style="display:flex;align-items:baseline;gap:8px"><span style="font:800 64px/1 Manrope;letter-spacing:-3px">1.400</span><span style="font:600 17px Manrope;color:{{ t.textMuted }}">kcal</span></div>
+</div>
+<div style="padding:14px 20px 0"><div style="height:10px;border-radius:5px;background:{{ t.ringTrack }}"></div><div style="display:flex;justify-content:space-between;margin-top:8px;font:600 12px Manrope;color:{{ t.textMuted }}"><span>0 consumidas</span><span>Objetivo 1.400</span></div></div>
+<div style="margin:18px 16px 0;background:{{ t.surface }};border-radius:16px;padding:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-size:12px">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;align-items:center;gap:6px;font-weight:700"><span style="width:8px;height:8px;border-radius:4px;background:{{ t.protein }}"></span>Proteínas</span><div style="height:6px;border-radius:3px;background:{{ t.surfaceAlt }}"></div><span style="font-weight:800">0<span style="font-weight:500;color:{{ t.textMuted }}">/144 g</span></span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;align-items:center;gap:6px;font-weight:700"><span style="width:8px;height:8px;border-radius:4px;background:{{ t.carbs }}"></span>Carbos</span><div style="height:6px;border-radius:3px;background:{{ t.surfaceAlt }}"></div><span style="font-weight:800">0<span style="font-weight:500;color:{{ t.textMuted }}">/108 g</span></span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;align-items:center;gap:6px;font-weight:700"><span style="width:8px;height:8px;border-radius:4px;background:{{ t.fat }}"></span>Grasas</span><div style="height:6px;border-radius:3px;background:{{ t.surfaceAlt }}"></div><span style="font-weight:800">0<span style="font-weight:500;color:{{ t.textMuted }}">/44 g</span></span></div>
+</div>
+<div style="margin:24px 20px 0;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:24px 12px;border:1.5px dashed {{ t.border }};border-radius:22px">
+<div style="width:56px;height:56px;border-radius:18px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center"><ion-icon name="camera-outline" style="font-size:26px"></ion-icon></div>
+<span style="font:800 17px Manrope">Registrá tu primera comida</span>
+<span style="font:500 14px/20px Manrope;color:{{ t.textMuted }}">Sacale una foto al plato o escribí lo que comiste.</span>
+<div style="display:flex;gap:8px;padding-top:4px"><span style="height:42px;padding:0 16px;border-radius:12px;background:{{ t.primary }};color:{{ t.onPrimary }};display:flex;align-items:center;gap:6px;font:700 14px Manrope"><ion-icon name="camera" style="font-size:16px"></ion-icon>Foto</span><span style="height:42px;padding:0 16px;border-radius:12px;background:{{ t.surfaceAlt }};display:flex;align-items:center;gap:6px;font:700 14px Manrope"><ion-icon name="mic-outline" style="font-size:16px"></ion-icon>Texto o voz</span></div>
+</div>
+<div style="position:absolute;left:12px;right:12px;bottom:14px;height:64px;background:{{ t.tabBar }};border-radius:22px;display:flex;justify-content:space-around;align-items:center;color:{{ t.tabIcon }}">
+<ion-icon name="today" style="font-size:23px;color:{{ t.tabActive }}"></ion-icon><ion-icon name="book-outline" style="font-size:23px"></ion-icon>
+<div style="width:46px;height:46px;border-radius:15px;background:#B9CDBD;color:#1F2B27;display:flex;align-items:center;justify-content:center"><ion-icon name="scan" style="font-size:23px"></ion-icon></div>
+<ion-icon name="trending-up-outline" style="font-size:23px"></ion-icon><ion-icon name="person-outline" style="font-size:23px"></ion-icon>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div data-screen-label="22 Texto y voz" style="display:flex;flex-direction:column;gap:12px">
+<span style="font:700 14px Manrope">22 · Registro por texto o voz · 24 · Revisión IA, editar ítem</span>
+<div style="display:flex;gap:20px;flex-wrap:wrap">
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div style="width:360px;height:780px;border-radius:40px;background:{{ t.background }};border:1px solid {{ t.border }};position:relative;overflow:hidden;color:{{ t.text }};display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 0;font:700 13px Manrope"><span>9:41</span><span style="display:flex;align-items:center;gap:4px"><ion-icon name="cellular" style="font-size:14px"></ion-icon><ion-icon name="wifi" style="font-size:14px"></ion-icon><ion-icon name="battery-full" style="font-size:18px"></ion-icon></span></div>
+<div style="padding:12px 20px 0;display:flex;justify-content:space-between;align-items:center"><ion-icon name="close" style="font-size:24px"></ion-icon><span style="font:700 15px Manrope">Contame qué comiste</span><span style="width:24px"></span></div>
+<div style="padding:12px 20px 0;display:flex;gap:8px;font:700 13px Manrope"><span style="height:34px;padding:0 14px;border-radius:999px;background:{{ t.surfaceAlt }};display:flex;align-items:center">Desayuno</span><span style="height:34px;padding:0 14px;border-radius:999px;background:{{ t.primary }};color:{{ t.onPrimary }};display:flex;align-items:center">Almuerzo</span><span style="height:34px;padding:0 14px;border-radius:999px;background:{{ t.surfaceAlt }};display:flex;align-items:center">Merienda</span></div>
+<div style="margin:20px 20px 0;min-height:150px;border-radius:22px;background:{{ t.surface }};padding:18px;font:600 20px/28px Manrope;letter-spacing:-0.3px">Dos empanadas de carne y una coca zero<span style="display:inline-block;width:2px;height:24px;background:{{ t.text }};vertical-align:-4px;margin-left:2px"></span></div>
+<div style="padding:14px 20px 0;display:flex;flex-direction:column;gap:8px"><span style="font:700 12px Manrope;letter-spacing:1px;text-transform:uppercase;color:{{ t.textMuted }}">Ejemplos</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px;font:600 13px Manrope;color:{{ t.textMuted }}"><span style="padding:8px 12px;border-radius:12px;border:1px solid {{ t.border }}">un tostado de jamón y queso</span><span style="padding:8px 12px;border-radius:12px;border:1px solid {{ t.border }}">yogur con granola</span><span style="padding:8px 12px;border-radius:12px;border:1px solid {{ t.border }}">200 g de pollo y ensalada</span></div></div>
+<div style="flex:1"></div>
+<div style="padding:0 20px 28px;display:flex;align-items:center;gap:12px"><div style="width:54px;height:54px;border-radius:16px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center;flex:none"><ion-icon name="mic" style="font-size:22px"></ion-icon></div><div style="flex:1;height:54px;border-radius:16px;background:{{ t.primary }};color:{{ t.onPrimary }};display:flex;align-items:center;justify-content:center;gap:8px;font:700 16px Manrope"><ion-icon name="sparkles" style="font-size:17px"></ion-icon>Calcular</div></div>
+</div>
+</sc-for>
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div style="width:360px;height:780px;border-radius:40px;background:{{ t.background }};border:1px solid {{ t.border }};position:relative;overflow:hidden;color:{{ t.text }};display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 0;font:700 13px Manrope"><span>9:41</span><span style="display:flex;align-items:center;gap:4px"><ion-icon name="cellular" style="font-size:14px"></ion-icon><ion-icon name="wifi" style="font-size:14px"></ion-icon><ion-icon name="battery-full" style="font-size:18px"></ion-icon></span></div>
+<div style="padding:12px 20px 0;display:flex;justify-content:space-between;align-items:center"><ion-icon name="chevron-back" style="font-size:22px"></ion-icon><span style="font:700 15px Manrope">Revisá tu comida</span><span style="width:22px"></span></div>
+<div style="margin:16px 20px 0;display:flex;flex-direction:column;gap:8px;opacity:.45">
+<div style="height:64px;border-radius:16px;background:{{ t.surface }}"></div><div style="height:64px;border-radius:16px;background:{{ t.surface }}"></div>
+</div>
+<div style="position:absolute;inset:0;background:rgba(15,18,17,.45)"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:{{ t.surface }};border-radius:28px 28px 0 0;padding:12px 20px 28px;display:flex;flex-direction:column;gap:16px">
+<div style="align-self:center;width:40px;height:5px;border-radius:3px;background:{{ t.border }}"></div>
+<div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="display:flex;flex-direction:column;gap:4px"><span style="font:800 20px Manrope;letter-spacing:-0.4px">Empanada de carne</span><span style="display:flex;align-items:center;gap:6px;font:600 12px Manrope;color:{{ t.textMuted }}"><span style="width:7px;height:7px;border-radius:4px;background:{{ t.confidenceMedium }}"></span>Confianza media · revisá la cantidad</span></div><ion-icon name="trash-outline" style="font-size:20px;color:{{ t.danger }}"></ion-icon></div>
+<div style="display:flex;align-items:center;justify-content:space-between;background:{{ t.surfaceAlt }};border-radius:16px;padding:8px"><div style="width:44px;height:44px;border-radius:12px;background:{{ t.surface }};display:flex;align-items:center;justify-content:center"><ion-icon name="remove" style="font-size:20px"></ion-icon></div><div style="display:flex;align-items:baseline;gap:4px"><span style="font:800 28px Manrope;letter-spacing:-1px">2</span><span style="font:600 14px Manrope;color:{{ t.textMuted }}">unidades · 180 g</span></div><div style="width:44px;height:44px;border-radius:12px;background:{{ t.surface }};display:flex;align-items:center;justify-content:center"><ion-icon name="add" style="font-size:20px"></ion-icon></div></div>
+<div style="display:flex;gap:8px;font:700 13px Manrope"><span style="height:34px;padding:0 14px;border-radius:999px;background:{{ t.primary }};color:{{ t.onPrimary }};display:flex;align-items:center">unidad</span><span style="height:34px;padding:0 14px;border-radius:999px;background:{{ t.surfaceAlt }};display:flex;align-items:center">gramos</span><span style="height:34px;padding:0 14px;border-radius:999px;background:{{ t.surfaceAlt }};display:flex;align-items:center">porción</span></div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 18px Manrope">520</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">kcal</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 18px Manrope;color:{{ t.protein }}">22 g</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">proteínas</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 18px Manrope;color:{{ t.carbs }}">48 g</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">carbos</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 18px Manrope;color:{{ t.fat }}">27 g</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">grasas</span></div>
+</div>
+<div style="height:54px;border-radius:16px;background:{{ t.primary }};color:{{ t.onPrimary }};display:flex;align-items:center;justify-content:center;font:700 16px Manrope">Listo</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div data-screen-label="25 Registrar peso" style="display:flex;flex-direction:column;gap:12px">
+<span style="font:700 14px Manrope">25 · Registrar peso · 27 · Hoy con datos (agua y peso, scrolleado)</span>
+<div style="display:flex;gap:20px;flex-wrap:wrap">
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div style="width:360px;height:780px;border-radius:40px;background:{{ t.background }};border:1px solid {{ t.border }};position:relative;overflow:hidden;color:{{ t.text }}">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 0;font:700 13px Manrope"><span>9:41</span><span style="display:flex;align-items:center;gap:4px"><ion-icon name="cellular" style="font-size:14px"></ion-icon><ion-icon name="wifi" style="font-size:14px"></ion-icon><ion-icon name="battery-full" style="font-size:18px"></ion-icon></span></div>
+<div style="position:absolute;inset:0;background:rgba(15,18,17,.45)"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:{{ t.surface }};border-radius:28px 28px 0 0;padding:12px 20px 28px;display:flex;flex-direction:column;gap:18px">
+<div style="align-self:center;width:40px;height:5px;border-radius:3px;background:{{ t.border }}"></div>
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font:800 20px Manrope">Registrar peso</span><span style="font:600 13px Manrope;color:{{ t.textMuted }}">Hoy, 7:40</span></div>
+<div style="display:flex;align-items:baseline;justify-content:center;gap:8px;padding:12px 0"><span style="font:800 72px/1 Manrope;letter-spacing:-3.5px">67,8</span><span style="font:600 18px Manrope;color:{{ t.textMuted }}">kg</span></div>
+<div style="text-align:center;font:700 14px Manrope;color:{{ t.success }}">−0,7 kg desde el lunes pasado</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font:800 24px Manrope;text-align:center">
+<span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">1</span><span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">2</span><span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">3</span>
+<span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">4</span><span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">5</span><span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">6</span>
+<span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">7</span><span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">8</span><span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">9</span>
+<span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">,</span><span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">0</span><span style="height:52px;border-radius:14px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center"><ion-icon name="backspace-outline" style="font-size:22px"></ion-icon></span>
+</div>
+<div style="height:54px;border-radius:16px;background:{{ t.primary }};color:{{ t.onPrimary }};display:flex;align-items:center;justify-content:center;font:700 16px Manrope">Guardar</div>
+</div>
+</div>
+</sc-for>
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div style="width:360px;height:780px;border-radius:40px;background:{{ t.background }};border:1px solid {{ t.border }};position:relative;overflow:hidden;color:{{ t.text }}">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 0;font:700 13px Manrope"><span>9:41</span><span style="display:flex;align-items:center;gap:4px"><ion-icon name="cellular" style="font-size:14px"></ion-icon><ion-icon name="wifi" style="font-size:14px"></ion-icon><ion-icon name="battery-full" style="font-size:18px"></ion-icon></span></div>
+<div style="padding:16px 20px 10px;display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 17px Manrope">Comidas</span><span style="font:600 12px Manrope;color:{{ t.textMuted }}">1.290 kcal</span></div>
+<div style="margin:0 16px;display:flex;flex-direction:column;gap:8px">
+<div style="background:{{ t.surface }};border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center;flex:none"><ion-icon name="restaurant-outline" style="font-size:19px"></ion-icon></div><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Almuerzo</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">Milanesa de carne, puré</span></div><span style="font:800 14px Manrope">545</span></div>
+<div style="background:{{ t.surface }};border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center;flex:none"><ion-icon name="ice-cream-outline" style="font-size:19px"></ion-icon></div><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Merienda</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">Yogur con granola</span></div><span style="font:800 14px Manrope">215</span></div>
+<div style="background:{{ t.surface }};border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center;flex:none"><ion-icon name="moon-outline" style="font-size:19px"></ion-icon></div><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Cena</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">Tarta de verdura, ensalada</span></div><span style="font:800 14px Manrope">210</span></div>
+</div>
+<div style="margin:18px 16px 0;background:{{ t.surface }};border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;align-items:center;gap:8px;font:700 15px Manrope"><ion-icon name="water-outline" style="font-size:19px;color:{{ t.water }}"></ion-icon>Agua</span><span style="font:800 14px Manrope">1.500<span style="font-weight:500;color:{{ t.textMuted }}"> / 2.500 ml</span></span></div>
+<div style="display:grid;grid-template-columns:repeat(10,1fr);gap:5px">
+<div style="height:28px;border-radius:7px;background:{{ t.water }}"></div><div style="height:28px;border-radius:7px;background:{{ t.water }}"></div><div style="height:28px;border-radius:7px;background:{{ t.water }}"></div><div style="height:28px;border-radius:7px;background:{{ t.water }}"></div><div style="height:28px;border-radius:7px;background:{{ t.water }}"></div><div style="height:28px;border-radius:7px;background:{{ t.water }}"></div>
+<div style="height:28px;border-radius:7px;background:{{ t.surfaceAlt }}"></div><div style="height:28px;border-radius:7px;background:{{ t.surfaceAlt }}"></div><div style="height:28px;border-radius:7px;background:{{ t.surfaceAlt }}"></div><div style="height:28px;border-radius:7px;background:{{ t.surfaceAlt }}"></div>
+</div>
+<div style="display:flex;gap:8px;font:700 13px Manrope"><span style="flex:1;height:40px;border-radius:12px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">+ 250 ml</span><span style="flex:1;height:40px;border-radius:12px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center">+ 500 ml</span></div>
+</div>
+<div style="margin:10px 16px 0;background:{{ t.surface }};border-radius:16px;padding:16px;display:flex;justify-content:space-between;align-items:center">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="display:flex;align-items:center;gap:8px;font:700 15px Manrope"><ion-icon name="scale-outline" style="font-size:19px"></ion-icon>Peso</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">Hoy 7:40 · −0,7 kg esta semana</span></div>
+<div style="display:flex;align-items:center;gap:12px"><span style="font:800 20px Manrope">67,8<span style="font:600 13px Manrope;color:{{ t.textMuted }}"> kg</span></span><div style="width:36px;height:36px;border-radius:11px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center"><ion-icon name="add" style="font-size:19px"></ion-icon></div></div>
+</div>
+<div style="position:absolute;left:12px;right:12px;bottom:14px;height:64px;background:{{ t.tabBar }};border-radius:22px;display:flex;justify-content:space-around;align-items:center;color:{{ t.tabIcon }}">
+<ion-icon name="today" style="font-size:23px;color:{{ t.tabActive }}"></ion-icon><ion-icon name="book-outline" style="font-size:23px"></ion-icon>
+<div style="width:46px;height:46px;border-radius:15px;background:#B9CDBD;color:#1F2B27;display:flex;align-items:center;justify-content:center"><ion-icon name="scan" style="font-size:23px"></ion-icon></div>
+<ion-icon name="trending-up-outline" style="font-size:23px"></ion-icon><ion-icon name="person-outline" style="font-size:23px"></ion-icon>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div data-screen-label="28 Detalle comida" style="display:flex;flex-direction:column;gap:12px">
+<span style="font:700 14px Manrope">28 · Detalle de comida · 29 · Editar hora y tipo</span>
+<div style="display:flex;gap:20px;flex-wrap:wrap">
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div style="width:360px;height:780px;border-radius:40px;background:{{ t.background }};border:1px solid {{ t.border }};position:relative;overflow:hidden;color:{{ t.text }};display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 0;font:700 13px Manrope"><span>9:41</span><span style="display:flex;align-items:center;gap:4px"><ion-icon name="cellular" style="font-size:14px"></ion-icon><ion-icon name="wifi" style="font-size:14px"></ion-icon><ion-icon name="battery-full" style="font-size:18px"></ion-icon></span></div>
+<div style="padding:12px 20px 0;display:flex;justify-content:space-between;align-items:center"><ion-icon name="chevron-back" style="font-size:22px"></ion-icon><div style="display:flex;gap:16px"><ion-icon name="star-outline" style="font-size:21px"></ion-icon><ion-icon name="ellipsis-horizontal" style="font-size:21px"></ion-icon></div></div>
+<div style="margin:16px 20px 0;height:150px;border-radius:22px;background:repeating-linear-gradient(135deg,{{ t.surfaceAlt }} 0 12px,{{ t.surface }} 12px 24px);display:flex;align-items:flex-end;padding:12px"><span style="padding:4px 8px;border-radius:8px;background:{{ t.surface }};font:600 11px ui-monospace,monospace;color:{{ t.textMuted }}">foto del plato</span></div>
+<div style="padding:16px 20px 0;display:flex;flex-direction:column;gap:4px"><span style="font:600 13px Manrope;color:{{ t.textMuted }}">Almuerzo · 13:20</span><span style="font:800 24px Manrope;letter-spacing:-0.6px">Milanesa con puré</span></div>
+<div style="margin:14px 20px 0;background:{{ t.surface }};border-radius:16px;padding:14px;display:grid;grid-template-columns:repeat(4,1fr);text-align:center">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 18px Manrope">545</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">kcal</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 18px Manrope;color:{{ t.protein }}">38 g</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">prot.</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 18px Manrope;color:{{ t.carbs }}">41 g</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">carbos</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 18px Manrope;color:{{ t.fat }}">24 g</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">grasas</span></div>
+</div>
+<div style="padding:18px 20px 8px;font:700 15px Manrope">Ítems</div>
+<div style="margin:0 20px;background:{{ t.surface }};border-radius:16px;padding:0 14px">
+<div style="height:56px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid {{ t.border }}"><div style="display:flex;flex-direction:column"><span style="font:700 14px Manrope">Milanesa de carne</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">160 g</span></div><span style="font:800 14px Manrope">385</span></div>
+<div style="height:56px;display:flex;align-items:center;justify-content:space-between"><div style="display:flex;flex-direction:column"><span style="font:700 14px Manrope">Puré de papa</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">150 g</span></div><span style="font:800 14px Manrope">160</span></div>
+</div>
+<div style="flex:1"></div>
+<div style="padding:0 20px 28px;display:flex;gap:10px"><div style="flex:1;height:54px;border-radius:16px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center;gap:8px;font:700 15px Manrope"><ion-icon name="copy-outline" style="font-size:17px"></ion-icon>Repetir</div><div style="flex:1;height:54px;border-radius:16px;background:{{ t.primary }};color:{{ t.onPrimary }};display:flex;align-items:center;justify-content:center;font:700 15px Manrope">Editar</div></div>
+</div>
+</sc-for>
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div style="width:360px;height:780px;border-radius:40px;background:{{ t.background }};border:1px solid {{ t.border }};position:relative;overflow:hidden;color:{{ t.text }};display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 0;font:700 13px Manrope"><span>9:41</span><span style="display:flex;align-items:center;gap:4px"><ion-icon name="cellular" style="font-size:14px"></ion-icon><ion-icon name="wifi" style="font-size:14px"></ion-icon><ion-icon name="battery-full" style="font-size:18px"></ion-icon></span></div>
+<div style="padding:12px 20px 0;display:flex;justify-content:space-between;align-items:center"><span style="font:700 15px Manrope;color:{{ t.textMuted }}">Cancelar</span><span style="font:700 15px Manrope">Editar comida</span><span style="font:800 15px Manrope">Guardar</span></div>
+<div style="padding:24px 20px 0;display:flex;flex-direction:column;gap:10px"><span style="font:700 12px Manrope;letter-spacing:1px;text-transform:uppercase;color:{{ t.textMuted }}">Tipo</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="height:56px;border-radius:16px;background:{{ t.surface }};padding:0 14px;display:flex;align-items:center;gap:10px;font:700 14px Manrope"><ion-icon name="cafe-outline" style="font-size:19px"></ion-icon>Desayuno</div>
+<div style="height:56px;border-radius:16px;background:{{ t.surface }};border:2px solid {{ t.primary }};padding:0 14px;display:flex;align-items:center;gap:10px;font:700 14px Manrope"><ion-icon name="restaurant-outline" style="font-size:19px"></ion-icon>Almuerzo</div>
+<div style="height:56px;border-radius:16px;background:{{ t.surface }};padding:0 14px;display:flex;align-items:center;gap:10px;font:700 14px Manrope"><ion-icon name="ice-cream-outline" style="font-size:19px"></ion-icon>Merienda</div>
+<div style="height:56px;border-radius:16px;background:{{ t.surface }};padding:0 14px;display:flex;align-items:center;gap:10px;font:700 14px Manrope"><ion-icon name="moon-outline" style="font-size:19px"></ion-icon>Cena</div>
+</div></div>
+<div style="padding:24px 20px 0;display:flex;flex-direction:column;gap:10px"><span style="font:700 12px Manrope;letter-spacing:1px;text-transform:uppercase;color:{{ t.textMuted }}">Cuándo</span>
+<div style="background:{{ t.surface }};border-radius:16px;padding:0 14px">
+<div style="height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid {{ t.border }};font:600 15px Manrope"><span>Fecha</span><span style="font-weight:800">Lunes 5 de febrero</span></div>
+<div style="height:54px;display:flex;align-items:center;justify-content:space-between;font:600 15px Manrope"><span>Hora</span><span style="padding:6px 12px;border-radius:10px;background:{{ t.surfaceAlt }};font-weight:800">13:20</span></div>
+</div></div>
+<div style="padding:24px 20px 0;display:flex;flex-direction:column;gap:10px"><span style="font:700 12px Manrope;letter-spacing:1px;text-transform:uppercase;color:{{ t.textMuted }}">Nota</span><div style="min-height:80px;border-radius:16px;background:{{ t.surface }};padding:14px;font:500 14px Manrope;color:{{ t.textSubtle }}">Opcional</div></div>
+<div style="flex:1"></div>
+<div style="padding:0 20px 28px"><div style="height:54px;border-radius:16px;background:{{ t.dangerSoft }};color:{{ t.danger }};display:flex;align-items:center;justify-content:center;gap:8px;font:700 15px Manrope"><ion-icon name="trash-outline" style="font-size:17px"></ion-icon>Eliminar comida</div></div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div data-screen-label="31 Buscador" style="display:flex;flex-direction:column;gap:12px">
+<span style="font:700 14px Manrope">31 · Buscador de alimentos</span>
+<div style="display:flex;gap:20px;flex-wrap:wrap">
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div style="width:360px;height:780px;border-radius:40px;background:{{ t.background }};border:1px solid {{ t.border }};position:relative;overflow:hidden;color:{{ t.text }};display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 0;font:700 13px Manrope"><span>9:41</span><span style="display:flex;align-items:center;gap:4px"><ion-icon name="cellular" style="font-size:14px"></ion-icon><ion-icon name="wifi" style="font-size:14px"></ion-icon><ion-icon name="battery-full" style="font-size:18px"></ion-icon></span></div>
+<div style="padding:12px 20px 0;display:flex;align-items:center;gap:10px"><div style="flex:1;height:48px;border-radius:14px;background:{{ t.surface }};border:1.5px solid {{ t.primary }};padding:0 14px;display:flex;align-items:center;gap:10px;font:600 15px Manrope"><ion-icon name="search" style="font-size:18px;color:{{ t.textMuted }}"></ion-icon>medialuna</div><span style="font:700 14px Manrope;color:{{ t.textMuted }}">Cancelar</span></div>
+<div style="padding:14px 20px 0;display:flex;gap:8px;font:700 13px Manrope"><span style="height:34px;padding:0 14px;border-radius:999px;background:{{ t.primary }};color:{{ t.onPrimary }};display:flex;align-items:center">Todo</span><span style="height:34px;padding:0 14px;border-radius:999px;background:{{ t.surfaceAlt }};display:flex;align-items:center">Recientes</span><span style="height:34px;padding:0 14px;border-radius:999px;background:{{ t.surfaceAlt }};display:flex;align-items:center">Favoritos</span><span style="height:34px;padding:0 14px;border-radius:999px;background:{{ t.surfaceAlt }};display:flex;align-items:center">Míos</span></div>
+<div style="padding:18px 20px 8px;font:700 12px Manrope;letter-spacing:1px;text-transform:uppercase;color:{{ t.textMuted }}">Genéricos</div>
+<div style="margin:0 20px;background:{{ t.surface }};border-radius:16px;padding:0 14px">
+<div style="height:62px;display:flex;align-items:center;gap:12px;border-bottom:1px solid {{ t.border }}"><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Medialuna de manteca</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">1 unidad · 45 g</span></div><span style="font:800 14px Manrope">190</span><div style="width:32px;height:32px;border-radius:10px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center"><ion-icon name="add" style="font-size:18px"></ion-icon></div></div>
+<div style="height:62px;display:flex;align-items:center;gap:12px;border-bottom:1px solid {{ t.border }}"><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Medialuna de grasa</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">1 unidad · 40 g</span></div><span style="font:800 14px Manrope">165</span><div style="width:32px;height:32px;border-radius:10px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center"><ion-icon name="add" style="font-size:18px"></ion-icon></div></div>
+<div style="height:62px;display:flex;align-items:center;gap:12px"><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Medialuna rellena de jamón y queso</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">1 unidad · 80 g</span></div><span style="font:800 14px Manrope">310</span><div style="width:32px;height:32px;border-radius:10px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center"><ion-icon name="add" style="font-size:18px"></ion-icon></div></div>
+</div>
+<div style="padding:18px 20px 8px;font:700 12px Manrope;letter-spacing:1px;text-transform:uppercase;color:{{ t.textMuted }}">Productos</div>
+<div style="margin:0 20px;background:{{ t.surface }};border-radius:16px;padding:0 14px">
+<div style="height:62px;display:flex;align-items:center;gap:12px;border-bottom:1px solid {{ t.border }}"><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Medialunas congeladas</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">La Salteña · 1 u · 35 g</span></div><span style="font:800 14px Manrope">138</span><div style="width:32px;height:32px;border-radius:10px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center"><ion-icon name="add" style="font-size:18px"></ion-icon></div></div>
+<div style="height:62px;display:flex;align-items:center;gap:12px"><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Mini medialunas</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">Bimbo · 3 u · 60 g</span></div><span style="font:800 14px Manrope">245</span><div style="width:32px;height:32px;border-radius:10px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center"><ion-icon name="add" style="font-size:18px"></ion-icon></div></div>
+</div>
+<div style="flex:1"></div>
+<div style="padding:0 20px 28px;text-align:center;font:600 13px Manrope;color:{{ t.textMuted }}">¿No está? <span style="font-weight:800;color:{{ t.text }};text-decoration:underline">Crear alimento</span> · <span style="font-weight:800;color:{{ t.text }};text-decoration:underline">Escanear código</span></div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div data-screen-label="32 Diario" style="display:flex;flex-direction:column;gap:12px">
+<span style="font:700 14px Manrope">32 · Diario (mes) · 33 · Día anterior</span>
+<div style="display:flex;gap:20px;flex-wrap:wrap">
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div style="width:360px;height:780px;border-radius:40px;background:{{ t.background }};border:1px solid {{ t.border }};position:relative;overflow:hidden;color:{{ t.text }}">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 0;font:700 13px Manrope"><span>9:41</span><span style="display:flex;align-items:center;gap:4px"><ion-icon name="cellular" style="font-size:14px"></ion-icon><ion-icon name="wifi" style="font-size:14px"></ion-icon><ion-icon name="battery-full" style="font-size:18px"></ion-icon></span></div>
+<div style="padding:16px 20px 0;display:flex;justify-content:space-between;align-items:center"><span style="font:800 26px Manrope;letter-spacing:-0.8px">Diario</span><div style="display:flex;align-items:center;gap:14px;font:700 14px Manrope"><ion-icon name="chevron-back" style="font-size:18px"></ion-icon>Febrero<ion-icon name="chevron-forward" style="font-size:18px;color:{{ t.textSubtle }}"></ion-icon></div></div>
+<div style="margin:18px 16px 0;background:{{ t.surface }};border-radius:22px;padding:14px">
+<div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font:700 11px Manrope;color:{{ t.textSubtle }};padding-bottom:8px"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+<sc-for list="{{ t.calWeeks }}" as="w" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:3px 0">
+<sc-for list="{{ w }}" as="d" hint-placeholder-count="7">
+<div style="height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:12px;background:{{ d.bg }};color:{{ d.fg }};font:700 13px Manrope"><span>{{ d.n }}</span><span style="width:5px;height:5px;border-radius:3px;background:{{ d.dot }}"></span></div>
+</sc-for>
+</div>
+</sc-for>
+<div style="display:flex;gap:14px;padding-top:10px;font:600 11px Manrope;color:{{ t.textMuted }}"><span style="display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:4px;background:{{ t.kcal }}"></span>En objetivo</span><span style="display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:4px;background:{{ t.warning }}"></span>Pasado</span></div>
+</div>
+<div style="margin:12px 16px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="background:{{ t.surface }};border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:2px"><span style="font:600 12px Manrope;color:{{ t.textMuted }}">Promedio</span><span style="font:800 20px Manrope">1.362 <span style="font:600 12px Manrope;color:{{ t.textMuted }}">kcal</span></span></div>
+<div style="background:{{ t.surface }};border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:2px"><span style="font:600 12px Manrope;color:{{ t.textMuted }}">Días en objetivo</span><span style="font:800 20px Manrope">3 <span style="font:600 12px Manrope;color:{{ t.textMuted }}">de 4</span></span></div>
+</div>
+<div style="position:absolute;left:12px;right:12px;bottom:14px;height:64px;background:{{ t.tabBar }};border-radius:22px;display:flex;justify-content:space-around;align-items:center;color:{{ t.tabIcon }}">
+<ion-icon name="today-outline" style="font-size:23px"></ion-icon><ion-icon name="book" style="font-size:23px;color:{{ t.tabActive }}"></ion-icon>
+<div style="width:46px;height:46px;border-radius:15px;background:#B9CDBD;color:#1F2B27;display:flex;align-items:center;justify-content:center"><ion-icon name="scan" style="font-size:23px"></ion-icon></div>
+<ion-icon name="trending-up-outline" style="font-size:23px"></ion-icon><ion-icon name="person-outline" style="font-size:23px"></ion-icon>
+</div>
+</div>
+</sc-for>
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div style="width:360px;height:780px;border-radius:40px;background:{{ t.background }};border:1px solid {{ t.border }};position:relative;overflow:hidden;color:{{ t.text }}">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 0;font:700 13px Manrope"><span>9:41</span><span style="display:flex;align-items:center;gap:4px"><ion-icon name="cellular" style="font-size:14px"></ion-icon><ion-icon name="wifi" style="font-size:14px"></ion-icon><ion-icon name="battery-full" style="font-size:18px"></ion-icon></span></div>
+<div style="padding:12px 20px 0;display:flex;justify-content:space-between;align-items:center"><ion-icon name="chevron-back" style="font-size:22px"></ion-icon><span style="font:700 15px Manrope">Sábado 3 de febrero</span><ion-icon name="chevron-forward" style="font-size:22px"></ion-icon></div>
+<div style="padding:22px 20px 0;display:flex;flex-direction:column;gap:2px"><span style="font:600 13px Manrope;color:{{ t.textMuted }}">Consumiste</span><div style="display:flex;align-items:baseline;gap:8px"><span style="font:800 56px/1 Manrope;letter-spacing:-2.5px">1.580</span><span style="font:600 16px Manrope;color:{{ t.textMuted }}">/ 1.400 kcal</span></div></div>
+<div style="padding:14px 20px 0"><div style="height:10px;border-radius:5px;background:{{ t.warning }}"></div><div style="margin-top:8px;font:600 12px Manrope;color:{{ t.warning }}">180 kcal sobre el objetivo</div></div>
+<div style="margin:16px 16px 0;background:{{ t.surface }};border-radius:16px;padding:14px;display:grid;grid-template-columns:repeat(3,1fr);text-align:center">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 17px Manrope;color:{{ t.protein }}">98 g</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">proteínas</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 17px Manrope;color:{{ t.carbs }}">162 g</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">carbos</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font:800 17px Manrope;color:{{ t.fat }}">58 g</span><span style="font:600 11px Manrope;color:{{ t.textMuted }}">grasas</span></div>
+</div>
+<div style="margin:12px 16px 0;display:flex;flex-direction:column;gap:8px">
+<div style="background:{{ t.surface }};border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center;flex:none"><ion-icon name="cafe-outline" style="font-size:19px"></ion-icon></div><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Desayuno</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">Tostadas con palta</span></div><span style="font:800 14px Manrope">340</span></div>
+<div style="background:{{ t.surface }};border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center;flex:none"><ion-icon name="restaurant-outline" style="font-size:19px"></ion-icon></div><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Almuerzo</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">Asado: vacío, chorizo, ensalada</span></div><span style="font:800 14px Manrope">890</span></div>
+<div style="background:{{ t.surface }};border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:{{ t.surfaceAlt }};display:flex;align-items:center;justify-content:center;flex:none"><ion-icon name="moon-outline" style="font-size:19px"></ion-icon></div><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Manrope">Cena</span><span style="font:500 12px Manrope;color:{{ t.textMuted }}">Sopa de verduras, pan</span></div><span style="font:800 14px Manrope">350</span></div>
+</div>
+<div style="position:absolute;left:12px;right:12px;bottom:14px;height:64px;background:{{ t.tabBar }};border-radius:22px;display:flex;justify-content:space-around;align-items:center;color:{{ t.tabIcon }}">
+<ion-icon name="today-outline" style="font-size:23px"></ion-icon><ion-icon name="book" style="font-size:23px;color:{{ t.tabActive }}"></ion-icon>
+<div style="width:46px;height:46px;border-radius:15px;background:#B9CDBD;color:#1F2B27;display:flex;align-items:center;justify-content:center"><ion-icon name="scan" style="font-size:23px"></ion-icon></div>
+<ion-icon name="trending-up-outline" style="font-size:23px"></ion-icon><ion-icon name="person-outline" style="font-size:23px"></ion-icon>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const light = {id:'l',name:'Claro',background:'#F2F2EE',surface:'#FFFFFF',surfaceAlt:'#E9E9E3',border:'#DEDED6',text:'#1B1E1C',textMuted:'#5F6460',textSubtle:'#7A807C',primary:'#1F2B27',onPrimary:'#FFFFFF',primarySoft:'#E4EAE5',mark:'#1F2B27',kcal:'#7E9B86',protein:'#C7766A',carbs:'#CFA552',fat:'#6E86A8',fiber:'#8F9F4E',water:'#4E9BA6',warning:'#93650F',warningSoft:'#F5EDDA',danger:'#B4413A',dangerSoft:'#F6E4E1',success:'#4F6E58',confidenceHigh:'#4F6E58',confidenceMedium:'#93650F',confidenceLow:'#B4413A',ringTrack:'#E1E2DB',tabBar:'#1F2B27',tabIcon:'#9AA49E',tabActive:'#FFFFFF'};
+    const dark = {id:'d',name:'Oscuro',background:'#121413',surface:'#1B1E1C',surfaceAlt:'#252927',border:'#303532',text:'#ECEDE9',textMuted:'#A2A8A3',textSubtle:'#737A75',primary:'#E9ECE6',onPrimary:'#121413',primarySoft:'#263029',mark:'#B9CDBD',kcal:'#9DB8A4',protein:'#DB9184',carbs:'#DDB873',fat:'#8FA6C6',fiber:'#A9B86A',water:'#72BCC6',warning:'#DDB873',warningSoft:'#33291A',danger:'#E8857C',dangerSoft:'#3A2220',success:'#9DB8A4',confidenceHigh:'#9DB8A4',confidenceMedium:'#DDB873',confidenceLow:'#E8857C',ringTrack:'#2A2E2C',tabBar:'#252927',tabIcon:'#8C938E',tabActive:'#ECEDE9'};
+    // Feb 2024 starts Thursday; logged days 1–4, today = 5
+    const status = {1:'ok',2:'ok',3:'over',4:'ok'};
+    const mkCal = (t) => {
+      const cells = [];
+      for (let i = 0; i < 3; i++) cells.push({n:'',bg:'transparent',fg:t.text,dot:'transparent'});
+      for (let n = 1; n <= 29; n++) {
+        const s = status[n], today = n === 5, future = n > 5;
+        cells.push({n, bg: today ? t.primary : 'transparent', fg: today ? t.onPrimary : future ? t.textSubtle : t.text,
+          dot: s === 'ok' ? t.kcal : s === 'over' ? t.warning : 'transparent'});
+      }
+      while (cells.length % 7) cells.push({n:'',bg:'transparent',fg:t.text,dot:'transparent'});
+      const weeks = []; for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+      return weeks;
+    };
+    light.calWeeks = mkCal(light); dark.calWeeks = mkCal(dark);
+    return { themes: [light, dark] };
+  }
+}
+</script>
+</body>
+</html>

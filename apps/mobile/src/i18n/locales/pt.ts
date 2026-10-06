@@ -3,7 +3,7 @@ import type { Translation } from './es';
 
 export const pt: TranslationShape<Translation> = {
   common: {
-    appName: 'Plato',
+    appName: 'Bocado',
     continue: 'Continuar',
     back: 'Voltar',
     cancel: 'Cancelar',
@@ -30,7 +30,7 @@ export const pt: TranslationShape<Translation> = {
     today: 'Hoje',
     yesterday: 'Ontem',
     disclaimer:
-      'O Plato não substitui o aconselhamento médico ou nutricional profissional. Em caso de dúvida, consulte um profissional de saúde.',
+      'O Bocado não substitui o aconselhamento médico ou nutricional profissional. Em caso de dúvida, consulte um profissional de saúde.',
     premium: 'Premium',
     comingSoon: 'Em breve',
     yes: 'Sim',
@@ -121,14 +121,14 @@ export const pt: TranslationShape<Translation> = {
   welcome: {
     title: 'Conte calorias com uma foto',
     subtitle:
-      'Tire uma foto do seu prato e o Plato reconhece cada alimento, estima a porção e calcula calorias e nutrientes.',
+      'Tire uma foto do seu prato e o Bocado reconhece cada alimento, estima a porção e calcula calorias e nutrientes.',
     point1: 'Foto → alimentos, porções e calorias em segundos',
     point2: 'Correções fáceis: a palavra final é sua',
     point3: 'Metas personalizadas e progresso real, sem culpa',
     createAccount: 'Criar conta',
     haveAccount: 'Já tenho conta',
     tryGuest: 'Testar sem conta',
-    tryDemo: 'Entrar no modo demo',
+    tryDemo: 'Modo demo',
     demoTitle: 'Modo demo',
     demoMessage: 'A IA e os pagamentos são simulados e seus dados ficam apenas neste dispositivo.',
   },
@@ -203,7 +203,7 @@ export const pt: TranslationShape<Translation> = {
       year: 'Ano',
       age_one: '{{count}} ano',
       age_other: '{{count}} anos',
-      tooYoung: 'O Plato é para pessoas com {{age}} anos ou mais.',
+      tooYoung: 'O Bocado é para pessoas com {{age}} anos ou mais.',
       minor:
         'Como você tem menos de 18 anos, não vamos sugerir déficit calórico. Recomendamos conversar com um profissional de saúde.',
     },
@@ -257,6 +257,7 @@ export const pt: TranslationShape<Translation> = {
       title: 'Seu plano está pronto',
       subtitle: 'Calculado com a fórmula de Mifflin-St Jeor e seu nível de atividade.',
       kcalPerDay: 'kcal por dia',
+      summaryLine: 'Basal {{bmr}} · Gasto {{tdee}} kcal · Água {{water}}',
       kcalA11y: 'Meta diária: {{kcal}} quilocalorias',
       bmr: 'Metabolismo basal',
       tdee: 'Gasto diário',
@@ -274,7 +275,7 @@ export const pt: TranslationShape<Translation> = {
       incomplete: 'Faltam dados para calcular seu plano.',
       blockedTitle: 'Vamos revisar seu objetivo',
       blocked: {
-        under_min_age: 'O Plato não está disponível para sua idade.',
+        under_min_age: 'O Bocado não está disponível para sua idade.',
         target_bmi_too_low:
           'O peso objetivo está abaixo de uma faixa saudável (IMC < 18,5). Sugerimos escolher outro objetivo e consultar um profissional.',
         underweight_cannot_lose:
@@ -320,6 +321,18 @@ export const pt: TranslationShape<Translation> = {
     saved: 'Metas atualizadas',
   },
   today: {
+    leftLabel: 'Faltam',
+    overLabel: 'Acima da meta',
+    consumedLine: '{{consumed}} consumidas',
+    consumedWithExercise: '{{consumed}} consumidas · {{exercise}} exercício',
+    goalLine: 'Meta {{goal}}',
+    meals: 'Refeições',
+    addMeal: 'Adicionar {{meal}}',
+    changeDay: 'Mudar de dia',
+    emptyTitle: 'Registre sua primeira refeição',
+    emptyBody: 'Tire uma foto do prato ou escreva o que comeu.',
+    photo: 'Foto',
+    textVoice: 'Texto ou voz',
     morning: 'Bom dia',
     afternoon: 'Boa tarde',
     evening: 'Boa noite',
@@ -698,6 +711,8 @@ export const pt: TranslationShape<Translation> = {
     deficit: 'Pode estar faltando {{name}}: considere {{foods}}.',
   },
   profile: {
+    streakShort_one: '{{count}} dia de sequência',
+    streakShort_other: '{{count}} dias de sequência',
     title: 'Perfil',
     guest: 'Convidado',
     demo: 'Modo demo',
@@ -781,10 +796,10 @@ export const pt: TranslationShape<Translation> = {
   },
   paywall: {
     title: {
-      onboarding: 'Desbloqueie todo o Plato',
+      onboarding: 'Desbloqueie todo o Bocado',
       quota: 'Continue escaneando sem limites',
       feature: 'Este recurso é Premium',
-      settings: 'Plato Premium',
+      settings: 'Bocado Premium',
     },
     subtitle: 'Teste grátis e cancele quando quiser.',
     benefits: {

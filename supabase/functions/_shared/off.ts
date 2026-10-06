@@ -61,7 +61,7 @@ export async function fetchOffProduct(
   fetchFn: typeof fetch = fetch,
 ): Promise<OffProduct | null> {
   const res = await fetchFn(`${OFF_URL}/${encodeURIComponent(barcode)}.json?fields=${FIELDS}`, {
-    headers: { 'User-Agent': 'Plato/0.1 (soporte@plato.app)' },
+    headers: { 'User-Agent': 'Bocado/0.1 (soporte@bocado.app)' },
     signal: AbortSignal.timeout(8000),
   });
   if (res.status === 404) return null;

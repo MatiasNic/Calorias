@@ -7,3 +7,4 @@ supabase/functions/_shared/shared
 supabase/seed/*.sql
 coverage
 dist
+design/diseno

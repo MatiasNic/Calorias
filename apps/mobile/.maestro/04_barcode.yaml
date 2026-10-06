@@ -1,10 +1,10 @@
 # Código de barras: el deep link de prueba simula el escaneo (solo builds demo).
 appId: ${APP_ID}
 env:
-  APP_ID: com.platoapp.plato
+  APP_ID: com.bocadoapp.bocado
 ---
 - runFlow: _onboarding.yaml
-- openLink: 'plato://scan?mode=barcode&code=7790000000017'
+- openLink: 'bocado://scan?mode=barcode&code=7790000000017'
 - runFlow:
     when:
       visible: 'Permitir cámara'

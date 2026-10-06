@@ -49,7 +49,7 @@ export async function checkBudget(deps: ServerDeps, plan: Plan) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              text: `Plato: AI spend today $${spent.toFixed(2)} > budget $${budget}`,
+              text: `Bocado: AI spend today $${spent.toFixed(2)} > budget $${budget}`,
             }),
           })
           .catch(() => undefined);

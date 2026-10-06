@@ -14,6 +14,8 @@ export interface MacroBarProps {
   compact?: boolean;
   /** Label above value (for narrow side-by-side layouts). */
   stacked?: boolean;
+  /** One row: dot + label · bar · value/target (Today). */
+  inline?: boolean;
 }
 
 export function MacroBar({
@@ -24,6 +26,7 @@ export function MacroBar({
   unit = 'g',
   compact,
   stacked,
+  inline,
 }: MacroBarProps) {
   const { colors } = useTheme();
   const ratio = target > 0 ? Math.min(1, value / target) : 0;
@@ -33,13 +36,33 @@ export function MacroBar({
   }, [ratio, width]);
   const fill = useAnimatedStyle(() => ({ width: `${width.value * 100}%` }));
 
+  const a11y = `${label}: ${Math.round(value)} ${unit} / ${Math.round(target)} ${unit}`;
+  if (inline) {
+    return (
+      <View
+        style={styles.inline}
+        accessible
+        accessibilityRole="progressbar"
+        accessibilityLabel={a11y}
+      >
+        <View style={[styles.dot, { backgroundColor: color }]} />
+        <AppText variant="label" style={styles.inlineLabel} numberOfLines={1}>
+          {label}
+        </AppText>
+        <View style={[styles.track, styles.inlineTrack, { backgroundColor: colors.ringTrack }]}>
+          <Animated.View style={[styles.fill, { backgroundColor: color }, fill]} />
+        </View>
+        <AppText variant="label" tabular style={styles.inlineValue} numberOfLines={1}>
+          {Math.round(value)}
+          <AppText variant="caption" color="textMuted">
+            /{Math.round(target)}
+          </AppText>
+        </AppText>
+      </View>
+    );
+  }
   return (
-    <View
-      style={styles.wrap}
-      accessible
-      accessibilityRole="progressbar"
-      accessibilityLabel={`${label}: ${Math.round(value)} ${unit} / ${Math.round(target)} ${unit}`}
-    >
+    <View style={styles.wrap} accessible accessibilityRole="progressbar" accessibilityLabel={a11y}>
       <View style={stacked ? styles.stackedHeader : styles.header}>
         <AppText variant={compact ? 'caption' : 'label'} color="textMuted" numberOfLines={1}>
           {label}
@@ -69,5 +92,10 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   track: { borderRadius: radii.pill, overflow: 'hidden' },
+  inline: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, minHeight: 28 },
+  dot: { width: 8, height: 8, borderRadius: 4 },
+  inlineLabel: { width: 96 },
+  inlineTrack: { flex: 1, height: 6 },
+  inlineValue: { minWidth: 64, textAlign: 'right' },
   fill: { height: '100%', borderRadius: radii.pill },
 });

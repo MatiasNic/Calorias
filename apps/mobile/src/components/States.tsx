@@ -18,8 +18,8 @@ export function EmptyState({ icon, title, message, actionLabel, onAction }: Empt
   const { colors } = useTheme();
   return (
     <View style={styles.wrap} accessibilityRole="summary">
-      <View style={[styles.badge, { backgroundColor: colors.primarySoft }]}>
-        <Icon name={icon} size={34} color="primary" />
+      <View style={[styles.badge, { backgroundColor: colors.surfaceAlt }]}>
+        <Icon name={icon} size={28} color="text" />
       </View>
       <AppText variant="subheading" align="center">
         {title}
@@ -78,9 +78,9 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
 const styles = StyleSheet.create({
   wrap: { alignItems: 'center', justifyContent: 'center', gap: spacing.md, padding: spacing.xxl },
   badge: {
-    width: 72,
-    height: 72,
-    borderRadius: radii.pill,
+    width: 60,
+    height: 60,
+    borderRadius: radii.lg,
     alignItems: 'center',
     justifyContent: 'center',
   },

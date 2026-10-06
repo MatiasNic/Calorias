@@ -134,7 +134,7 @@ export default function Scan() {
     }
   };
 
-  // Test hook (demo builds only): plato://scan?mode=barcode&code=… simulates a scanned barcode
+  // Test hook (demo builds only): bocado://scan?mode=barcode&code=… simulates a scanned barcode
   // so E2E tests can cover the barcode flow without a physical camera.
   useEffect(() => {
     const code = params.code;

@@ -1,7 +1,7 @@
 // Fuente de verdad de los textos de la app (es-AR). en.ts y pt.ts están tipados contra este objeto.
 export const es = {
   common: {
-    appName: 'Plato',
+    appName: 'Bocado',
     continue: 'Continuar',
     back: 'Volver',
     cancel: 'Cancelar',
@@ -28,7 +28,7 @@ export const es = {
     today: 'Hoy',
     yesterday: 'Ayer',
     disclaimer:
-      'Plato no reemplaza el consejo médico o nutricional profesional. Ante cualquier duda, consultá con un profesional de la salud.',
+      'Bocado no reemplaza el consejo médico o nutricional profesional. Ante cualquier duda, consultá con un profesional de la salud.',
     premium: 'Premium',
     comingSoon: 'Muy pronto',
     yes: 'Sí',
@@ -45,7 +45,7 @@ export const es = {
   },
   macros: {
     protein: 'Proteínas',
-    carbs: 'Carbohidratos',
+    carbs: 'Carbos',
     fat: 'Grasas',
     fiber: 'Fibra',
     sugar: 'Azúcares',
@@ -119,14 +119,14 @@ export const es = {
   welcome: {
     title: 'Contá calorías con una foto',
     subtitle:
-      'Sacale una foto a tu plato y Plato reconoce cada alimento, estima la porción y calcula calorías y nutrientes.',
+      'Sacale una foto a tu plato y Bocado reconoce cada alimento, estima la porción y calcula calorías y nutrientes.',
     point1: 'Foto → alimentos, porciones y calorías en segundos',
     point2: 'Corregí todo fácil: vos tenés la última palabra',
     point3: 'Objetivos personalizados y progreso real, sin culpa',
     createAccount: 'Crear cuenta',
     haveAccount: 'Ya tengo cuenta',
     tryGuest: 'Probar sin cuenta',
-    tryDemo: 'Entrar en modo demo',
+    tryDemo: 'Modo demo',
     demoTitle: 'Modo demo',
     demoMessage: 'La IA y los pagos están simulados y tus datos quedan solo en este dispositivo.',
   },
@@ -201,7 +201,7 @@ export const es = {
       year: 'Año',
       age_one: '{{count}} año',
       age_other: '{{count}} años',
-      tooYoung: 'Plato es para personas de {{age}} años o más.',
+      tooYoung: 'Bocado es para personas de {{age}} años o más.',
       minor:
         'Como sos menor de 18, no vamos a sugerir un déficit calórico. Te recomendamos hablar con un profesional de la salud.',
     },
@@ -255,6 +255,7 @@ export const es = {
       title: 'Tu plan está listo',
       subtitle: 'Calculado con la fórmula de Mifflin-St Jeor y tu nivel de actividad.',
       kcalPerDay: 'kcal por día',
+      summaryLine: 'Basal {{bmr}} · Gasto {{tdee}} kcal · Agua {{water}}',
       kcalA11y: 'Objetivo diario: {{kcal}} kilocalorías',
       bmr: 'Metabolismo basal',
       tdee: 'Gasto diario',
@@ -271,7 +272,7 @@ export const es = {
       incomplete: 'Faltan datos para calcular tu plan.',
       blockedTitle: 'Revisemos tu objetivo',
       blocked: {
-        under_min_age: 'Plato no está disponible para tu edad.',
+        under_min_age: 'Bocado no está disponible para tu edad.',
         target_bmi_too_low:
           'El peso objetivo está por debajo de un rango saludable (IMC < 18,5). Te sugerimos elegir otro objetivo y consultar con un profesional.',
         underweight_cannot_lose:
@@ -316,6 +317,18 @@ export const es = {
     saved: 'Objetivos actualizados',
   },
   today: {
+    leftLabel: 'Te quedan',
+    overLabel: 'Por encima del objetivo',
+    consumedLine: '{{consumed}} consumidas',
+    consumedWithExercise: '{{consumed}} consumidas · {{exercise}} ejercicio',
+    goalLine: 'Objetivo {{goal}}',
+    meals: 'Comidas',
+    addMeal: 'Agregar {{meal}}',
+    changeDay: 'Cambiar de día',
+    emptyTitle: 'Registrá tu primera comida',
+    emptyBody: 'Sacale una foto al plato o escribí lo que comiste.',
+    photo: 'Foto',
+    textVoice: 'Texto o voz',
     morning: 'Buen día',
     afternoon: 'Buenas tardes',
     evening: 'Buenas noches',
@@ -700,6 +713,8 @@ export const es = {
     deficit: 'Podría faltarte {{name}}: considerá {{foods}}.',
   },
   profile: {
+    streakShort_one: '{{count}} día de racha',
+    streakShort_other: '{{count}} días de racha',
     title: 'Perfil',
     guest: 'Invitado',
     demo: 'Modo demo',
@@ -783,10 +798,10 @@ export const es = {
   },
   paywall: {
     title: {
-      onboarding: 'Desbloqueá todo Plato',
+      onboarding: 'Desbloqueá todo Bocado',
       quota: 'Seguí escaneando sin límites',
       feature: 'Esta función es Premium',
-      settings: 'Plato Premium',
+      settings: 'Bocado Premium',
     },
     subtitle: 'Probalo gratis y cancelá cuando quieras.',
     benefits: {

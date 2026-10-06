@@ -1,10 +1,10 @@
 # Release — de cero a las tiendas
 
-Guía paso a paso para conectar servicios reales y publicar Plato. Seguila en orden. Las casillas
+Guía paso a paso para conectar servicios reales y publicar Bocado. Seguila en orden. Las casillas
 son el checklist de lanzamiento (sección 11 del brief).
 
 > Valores de identidad (cambialos en `.env` antes del primer build si querés otro nombre):
-> `APP_NAME=Plato`, `APP_BUNDLE_ID=com.platoapp.plato`, esquema de deep links `plato://`.
+> `APP_NAME=Bocado`, `APP_BUNDLE_ID=com.bocadoapp.bocado`, esquema de deep links `bocado://`.
 > El `package`/`bundleIdentifier` **no se puede cambiar** una vez publicado.
 
 ---
@@ -47,8 +47,8 @@ inyecta Supabase en las funciones.)
 
 En el dashboard:
 
-- [ ] **Auth → URL configuration:** Site URL `plato://`, Redirect URLs `plato://auth/callback`,
-      `plato://auth/reset-password`.
+- [ ] **Auth → URL configuration:** Site URL `bocado://`, Redirect URLs `bocado://auth/callback`,
+      `bocado://auth/reset-password`.
 - [ ] **Auth → Email:** confirmación de email activada; SMTP propio (Resend, Postmark, SES) — el
       SMTP de Supabase tiene límite de pocos mails por hora. Plantillas en español.
 - [ ] **Auth → Providers:** Google (client ID/secret web; agregá también el client ID de Android
@@ -83,7 +83,7 @@ Usá precios por país (Play/App Store sugieren equivalentes; en Argentina convi
 
 ### Google Play
 
-- [ ] Crear la app en Play Console (`com.platoapp.plato`), completar ficha con
+- [ ] Crear la app en Play Console (`com.bocadoapp.bocado`), completar ficha con
       [STORE_LISTING.md](STORE_LISTING.md).
 - [ ] **Play App Signing** activado; subir el primer AAB (`eas build -p android --profile
 production`) a la pista **Prueba interna**.

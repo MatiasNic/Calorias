@@ -1,7 +1,7 @@
 # Registro por texto (IA simulada) → revisión → guardar.
 appId: ${APP_ID}
 env:
-  APP_ID: com.platoapp.plato
+  APP_ID: com.bocadoapp.bocado
 ---
 - runFlow: _onboarding.yaml
 - tapOn:

@@ -2,87 +2,67 @@ import type { DailySummary } from '@plato/shared';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Card, Icon, ProgressRing } from '@/components';
+import { AppText, ProgressBar } from '@/components';
 import { spacing, useTheme } from '@/theme';
 import { formatKcal } from '@/utils/format';
 
+/** Today's hero: the kcal left as the one big number on the screen, with a thin progress bar. */
 export function CaloriesCard({ summary, steps }: { summary: DailySummary; steps: number | null }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const over = summary.remainingKcal < 0;
+  const target = summary.target.kcal + summary.exerciseKcal;
   return (
-    <Card style={styles.card}>
-      <ProgressRing
-        progress={summary.progress.kcal}
-        size={200}
-        strokeWidth={18}
-        accessibilityLabel={t('today.ringA11y', {
-          consumed: Math.round(summary.consumed.kcal),
-          target: summary.target.kcal + summary.exerciseKcal,
-        })}
-      >
-        <AppText variant="display" tabular testID="today-remaining">
+    <View
+      style={styles.wrap}
+      accessible
+      accessibilityLabel={t('today.ringA11y', {
+        consumed: Math.round(summary.consumed.kcal),
+        target,
+      })}
+    >
+      <AppText variant="label" color="textMuted">
+        {over ? t('today.overLabel') : t('today.leftLabel')}
+      </AppText>
+      <View style={styles.hero}>
+        <AppText
+          variant="numberHero"
+          testID="today-remaining"
+          style={over ? { color: colors.warning } : undefined}
+        >
           {formatKcal(Math.abs(summary.remainingKcal))}
         </AppText>
-        <AppText variant="caption" color="textMuted">
-          {over ? t('today.overBy') : t('today.remaining')}
+        <AppText variant="heading" color="textMuted" style={styles.unit}>
+          kcal
         </AppText>
-      </ProgressRing>
-      <View style={styles.stats}>
-        <Stat
-          icon="restaurant"
-          color={colors.kcal}
-          label={t('today.eaten')}
-          value={formatKcal(summary.consumed.kcal)}
-        />
-        <Stat
-          icon="flag"
-          color={colors.textMuted}
-          label={t('today.goal')}
-          value={formatKcal(summary.target.kcal)}
-        />
-        <Stat
-          icon="flame"
-          color={colors.accent}
-          label={t('today.exercise')}
-          value={formatKcal(summary.exerciseKcal)}
-        />
       </View>
-      {steps != null ? (
-        <AppText variant="caption" color="textMuted">
-          {t('today.steps', { count: steps })}
+      <ProgressBar
+        progress={Math.min(1, summary.progress.kcal)}
+        color={over ? colors.warning : colors.kcal}
+        height={8}
+      />
+      <View style={styles.footer}>
+        <AppText variant="caption" color="textMuted" style={styles.flex} numberOfLines={1}>
+          {summary.exerciseKcal > 0
+            ? t('today.consumedWithExercise', {
+                consumed: formatKcal(summary.consumed.kcal),
+                exercise: formatKcal(summary.exerciseKcal),
+              })
+            : t('today.consumedLine', { consumed: formatKcal(summary.consumed.kcal) })}
+          {steps != null ? ` · ${t('today.steps', { count: steps })}` : ''}
         </AppText>
-      ) : null}
-    </Card>
-  );
-}
-
-function Stat({
-  icon,
-  color,
-  label,
-  value,
-}: {
-  icon: 'restaurant' | 'flag' | 'flame';
-  color: string;
-  label: string;
-  value: string;
-}) {
-  return (
-    <View style={styles.stat} accessible accessibilityLabel={`${label}: ${value} kcal`}>
-      <Icon name={icon} size={18} rawColor={color} />
-      <AppText variant="bodyStrong" tabular>
-        {value}
-      </AppText>
-      <AppText variant="caption" color="textMuted">
-        {label}
-      </AppText>
+        <AppText variant="caption" color="textMuted">
+          {t('today.goalLine', { goal: formatKcal(summary.target.kcal) })}
+        </AppText>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { alignItems: 'center', gap: spacing.lg },
-  stats: { flexDirection: 'row', alignSelf: 'stretch' },
-  stat: { flex: 1, alignItems: 'center', gap: 2 },
+  wrap: { gap: spacing.sm, paddingHorizontal: spacing.xs },
+  hero: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm },
+  unit: { marginBottom: spacing.sm },
+  footer: { flexDirection: 'row', gap: spacing.sm },
+  flex: { flex: 1 },
 });

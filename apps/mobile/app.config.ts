@@ -4,19 +4,19 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
  * Dynamic Expo config. Identity values come from env so the same code can ship under a
  * different bundle id / name (see docs/RELEASE.md). Never put secrets here.
  */
-const APP_NAME = process.env.APP_NAME ?? 'Plato';
-const BUNDLE_ID = process.env.APP_BUNDLE_ID ?? 'com.platoapp.plato';
+const APP_NAME = process.env.APP_NAME ?? 'Bocado';
+const BUNDLE_ID = process.env.APP_BUNDLE_ID ?? 'com.bocadoapp.bocado';
 const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID;
 const IS_DEV = process.env.APP_VARIANT === 'development';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: IS_DEV ? `${APP_NAME} (dev)` : APP_NAME,
-  slug: 'plato',
-  version: '0.1.0',
+  slug: 'bocado',
+  version: '0.2.0',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
-  scheme: 'plato',
+  scheme: 'bocado',
   userInterfaceStyle: 'automatic',
   runtimeVersion: { policy: 'appVersion' },
   updates: EAS_PROJECT_ID ? { url: `https://u.expo.dev/${EAS_PROJECT_ID}` } : undefined,
@@ -27,21 +27,23 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     config: { usesNonExemptEncryption: false },
     infoPlist: {
       NSCameraUsageDescription:
-        'Plato usa la cámara para fotografiar tus comidas y escanear códigos de barras.',
+        'Bocado usa la cámara para fotografiar tus comidas y escanear códigos de barras.',
       NSPhotoLibraryUsageDescription:
-        'Plato accede a tus fotos solo cuando elegís una imagen de tu comida.',
-      NSMicrophoneUsageDescription: 'Plato usa el micrófono para registrar comidas por voz.',
-      NSSpeechRecognitionUsageDescription: 'Plato transcribe tu voz para registrar lo que comiste.',
+        'Bocado accede a tus fotos solo cuando elegís una imagen de tu comida.',
+      NSMicrophoneUsageDescription: 'Bocado usa el micrófono para registrar comidas por voz.',
+      NSSpeechRecognitionUsageDescription:
+        'Bocado transcribe tu voz para registrar lo que comiste.',
       NSHealthShareUsageDescription:
-        'Plato lee tu peso, pasos y calorías activas para ajustar tus objetivos.',
-      NSHealthUpdateUsageDescription: 'Plato registra tu peso en Salud cuando lo cargás en la app.',
+        'Bocado lee tu peso, pasos y calorías activas para ajustar tus objetivos.',
+      NSHealthUpdateUsageDescription:
+        'Bocado registra tu peso en Salud cuando lo cargás en la app.',
     },
     entitlements: { 'com.apple.developer.healthkit': true },
   },
   android: {
     package: IS_DEV ? `${BUNDLE_ID}.dev` : BUNDLE_ID,
     adaptiveIcon: {
-      backgroundColor: '#0E8F67',
+      backgroundColor: '#F2F2EE',
       foregroundImage: './assets/images/android-icon-foreground.png',
       backgroundImage: './assets/images/android-icon-background.png',
       monochromeImage: './assets/images/android-icon-monochrome.png',
@@ -68,10 +70,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#F7F8F6',
+        backgroundColor: '#F2F2EE',
         image: './assets/images/splash-icon.png',
         imageWidth: 120,
-        dark: { backgroundColor: '#0E1412', image: './assets/images/splash-icon.png' },
+        dark: { backgroundColor: '#121413', image: './assets/images/splash-icon-dark.png' },
       },
     ],
     'expo-sqlite',
@@ -82,13 +84,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-camera',
       {
         cameraPermission:
-          'Plato usa la cámara para fotografiar tus comidas y escanear códigos de barras.',
+          'Bocado usa la cámara para fotografiar tus comidas y escanear códigos de barras.',
         recordAudioAndroid: false,
       },
     ],
     [
       'expo-image-picker',
-      { photosPermission: 'Plato accede a tus fotos solo cuando elegís una imagen de tu comida.' },
+      { photosPermission: 'Bocado accede a tus fotos solo cuando elegís una imagen de tu comida.' },
     ],
     ['expo-notifications', { color: '#0E8F67' }],
     [
@@ -109,8 +111,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-speech-recognition',
       {
-        microphonePermission: 'Plato usa el micrófono para registrar comidas por voz.',
-        speechRecognitionPermission: 'Plato transcribe tu voz para registrar lo que comiste.',
+        microphonePermission: 'Bocado usa el micrófono para registrar comidas por voz.',
+        speechRecognitionPermission: 'Bocado transcribe tu voz para registrar lo que comiste.',
       },
     ],
     'react-native-health-connect',
@@ -118,9 +120,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       '@kingstinct/react-native-healthkit',
       {
         NSHealthShareUsageDescription:
-          'Plato lee tu peso, pasos y calorías activas para ajustar tus objetivos.',
+          'Bocado lee tu peso, pasos y calorías activas para ajustar tus objetivos.',
         NSHealthUpdateUsageDescription:
-          'Plato registra tu peso en Salud cuando lo cargás en la app.',
+          'Bocado registra tu peso en Salud cuando lo cargás en la app.',
         background: false,
       },
     ],

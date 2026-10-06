@@ -7,7 +7,7 @@ import { toast } from '@/components';
 import { i18next } from '@/i18n';
 import { auth } from '@/services/auth';
 
-/** Deep link target for OAuth and email confirmation: plato://auth/callback?code=… */
+/** Deep link target for OAuth and email confirmation: bocado://auth/callback?code=… */
 export default function AuthCallback() {
   const url = Linking.useLinkingURL();
   useEffect(() => {

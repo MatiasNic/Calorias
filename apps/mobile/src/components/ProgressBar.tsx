@@ -4,7 +4,17 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 
 import { radii, useTheme } from '@/theme';
 
-export function ProgressBar({ progress, label }: { progress: number; label?: string }) {
+export function ProgressBar({
+  progress,
+  label,
+  color,
+  height = 6,
+}: {
+  progress: number;
+  label?: string;
+  color?: string;
+  height?: number;
+}) {
   const { colors } = useTheme();
   const v = useSharedValue(progress);
   useEffect(() => {
@@ -17,14 +27,14 @@ export function ProgressBar({ progress, label }: { progress: number; label?: str
       accessibilityRole="progressbar"
       accessibilityLabel={label}
       accessibilityValue={{ min: 0, max: 100, now: Math.round(progress * 100) }}
-      style={[styles.track, { backgroundColor: colors.ringTrack }]}
+      style={[styles.track, { backgroundColor: colors.ringTrack, height }]}
     >
-      <Animated.View style={[styles.fill, { backgroundColor: colors.primary }, style]} />
+      <Animated.View style={[styles.fill, { backgroundColor: color ?? colors.primary }, style]} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  track: { height: 6, borderRadius: radii.pill, overflow: 'hidden' },
+  track: { borderRadius: radii.pill, overflow: 'hidden' },
   fill: { height: '100%', borderRadius: radii.pill },
 });

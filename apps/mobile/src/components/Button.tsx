@@ -46,15 +46,15 @@ export function Button({
       border: 'transparent',
     },
     secondary: {
-      bg: colors.primarySoft,
-      pressed: colors.surfaceAlt,
-      fg: 'primary' as const,
+      bg: colors.surfaceAlt,
+      pressed: colors.border,
+      fg: 'text' as const,
       border: 'transparent',
     },
     ghost: {
       bg: 'transparent',
       pressed: colors.surfaceAlt,
-      fg: 'primary' as const,
+      fg: 'textMuted' as const,
       border: 'transparent',
     },
     outline: {
@@ -70,7 +70,7 @@ export function Button({
       border: 'transparent',
     },
   }[variant];
-  const height = size === 'lg' ? 56 : size === 'md' ? MIN_TOUCH : 40;
+  const height = size === 'lg' ? 54 : size === 'md' ? MIN_TOUCH : 40;
 
   return (
     <Pressable
@@ -89,7 +89,7 @@ export function Button({
           height,
           backgroundColor: pressed ? palette.pressed : palette.bg,
           borderColor: palette.border,
-          borderWidth: variant === 'outline' ? 1.5 : 0,
+          borderWidth: variant === 'outline' ? 1 : 0,
           opacity: isDisabled ? 0.5 : 1,
           alignSelf: fullWidth ? 'stretch' : 'flex-start',
           paddingHorizontal: size === 'sm' ? spacing.md : spacing.xl,

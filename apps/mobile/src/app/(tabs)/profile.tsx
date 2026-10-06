@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -11,12 +11,14 @@ import {
   Card,
   Icon,
   ListRow,
+  ProgressBar,
   Screen,
   SectionHeader,
   toast,
 } from '@/components';
 import { env } from '@/config/env';
 import { features } from '@/config/features';
+import { useStreak } from '@/features/habits/hooks';
 import { useProfile } from '@/features/profile/hooks';
 import { useQuotaStatus } from '@/features/scan/useQuota';
 import { auth } from '@/services/auth';
@@ -30,12 +32,13 @@ import {
 } from '@/services/purchases';
 import { useSyncStatus } from '@/services/sync/engine';
 import { useSessionStore } from '@/stores/session';
-import { radii, spacing, useTheme } from '@/theme';
+import { MIN_TOUCH, palette, radii, spacing, useTheme } from '@/theme';
 import { formatDay, todayLocal } from '@/utils/dates';
 
 export default function Profile() {
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const theme = useTheme();
+  const { colors } = theme;
   const session = useSessionStore();
   const profile = useProfile();
   const planState = usePlanStore();
@@ -44,6 +47,15 @@ export default function Profile() {
   const pending = useQuery({ queryKey: ['db', 'pending'], queryFn: auth.pendingChanges });
   const premium = planState.plan === 'premium';
   const isGuest = session.status === 'guest';
+  const streak = useStreak();
+  const onDark = theme.dark ? colors.text : colors.onPrimary;
+  const name =
+    profile.data?.display_name ||
+    (isGuest
+      ? session.demo
+        ? t('profile.demo')
+        : t('profile.guest')
+      : (session.email?.split('@')[0] ?? t('profile.title')));
 
   const signOut = () => {
     const count = pending.data ?? 0;
@@ -85,7 +97,8 @@ export default function Profile() {
     <ListRow
       icon={icon}
       title={title}
-      value={premium ? undefined : t('common.premium')}
+      chevron={premium}
+      right={premium ? undefined : <Icon name="lock-closed-outline" size={18} color="textSubtle" />}
       onPress={() => router.push(href as never)}
     />
   );
@@ -93,23 +106,26 @@ export default function Profile() {
   return (
     <Screen>
       <View style={styles.header}>
-        <View style={[styles.avatar, { backgroundColor: colors.primarySoft }]}>
-          <Icon name="person" color="primary" size={30} />
+        <View style={[styles.avatar, { backgroundColor: colors.surfaceAlt }]}>
+          <AppText variant="heading">{name.charAt(0).toUpperCase()}</AppText>
         </View>
         <View style={styles.flex}>
-          <AppText variant="title" numberOfLines={1}>
-            {profile.data?.display_name ||
-              (isGuest
-                ? session.demo
-                  ? t('profile.demo')
-                  : t('profile.guest')
-                : (session.email ?? t('profile.title')))}
+          <AppText variant="heading" numberOfLines={1}>
+            {name}
           </AppText>
-          {session.email ? (
-            <AppText variant="caption" color="textMuted">
-              {session.email}
-            </AppText>
-          ) : null}
+          <AppText variant="caption" color="textMuted" numberOfLines={1}>
+            {[
+              premium
+                ? t('common.premium')
+                : `${t('profile.plan')} ${t('profile.free').toLowerCase()}`,
+              streak.data?.current
+                ? t('profile.streakShort', { count: streak.data.current })
+                : null,
+              session.email,
+            ]
+              .filter(Boolean)
+              .join(' · ')}
+          </AppText>
         </View>
       </View>
 
@@ -120,12 +136,12 @@ export default function Profile() {
         <Button label={t('welcome.createAccount')} onPress={() => router.push('/sign-up')} />
       ) : null}
 
-      <Card style={styles.planCard}>
-        <View style={styles.row}>
-          <Icon name={premium ? 'sparkles' : 'leaf'} color="primary" />
-          <AppText variant="subheading" style={styles.flex}>
-            {premium
-              ? planState.expiresAt
+      {premium ? (
+        <Card style={styles.planCard}>
+          <View style={styles.row}>
+            <Icon name="sparkles-outline" color="text" />
+            <AppText variant="subheading" style={styles.flex}>
+              {planState.expiresAt
                 ? t(planState.isTrial ? 'profile.premiumTrial' : 'profile.premiumUntil', {
                     date: formatDay(planState.expiresAt.slice(0, 10), {
                       day: 'numeric',
@@ -133,53 +149,80 @@ export default function Profile() {
                       year: 'numeric',
                     }),
                   })
-                : t('common.premium')
-              : `${t('profile.plan')}: ${t('profile.free')}`}
-          </AppText>
-        </View>
-        {quota.data && !premium ? (
-          <AppText variant="caption" color="textMuted">
-            {t('profile.scansToday')}: {quota.data.photo_scan.used}/{quota.data.photo_scan.limit}
-          </AppText>
-        ) : null}
-        {premium ? (
+                : t('common.premium')}
+            </AppText>
+          </View>
           <Button
             label={t('profile.manageSubscription')}
             variant="outline"
             size="md"
             onPress={manage}
           />
-        ) : (
-          <Button
-            label={t('profile.upgrade')}
-            icon="sparkles"
-            size="md"
+        </Card>
+      ) : (
+        <View style={[styles.planCard, styles.upsell, { backgroundColor: colors.tabBar }]}>
+          {quota.data ? (
+            <>
+              <View style={styles.row}>
+                <AppText variant="bodyStrong" style={[styles.flex, { color: onDark }]}>
+                  {t('profile.scansToday')}
+                </AppText>
+                <AppText variant="bodyStrong" tabular style={{ color: onDark }}>
+                  {quota.data.photo_scan.used} / {quota.data.photo_scan.limit}
+                </AppText>
+              </View>
+              <ProgressBar
+                progress={quota.data.photo_scan.used / Math.max(1, quota.data.photo_scan.limit)}
+                color={colors.accent}
+              />
+            </>
+          ) : null}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('profile.upgrade')}
             onPress={() => router.push({ pathname: '/paywall', params: { context: 'settings' } })}
             testID="profile-upgrade"
-          />
-        )}
-      </Card>
+            style={({ pressed }) => [
+              styles.upgrade,
+              { backgroundColor: colors.accent, opacity: pressed ? 0.85 : 1 },
+            ]}
+          >
+            <Icon name="sparkles" size={18} rawColor={palette.ink800} />
+            <AppText variant="bodyStrong" style={{ color: palette.ink800 }}>
+              {t('profile.upgrade')}
+            </AppText>
+          </Pressable>
+        </View>
+      )}
 
       <SectionHeader title={t('profile.goals')} />
       <Card padded={false}>
-        <ListRow icon="flag" title={t('goals.editTitle')} onPress={() => router.push('/goals')} />
         <ListRow
-          icon="trophy"
+          icon="flag-outline"
+          title={t('goals.editTitle')}
+          onPress={() => router.push('/goals')}
+        />
+        <ListRow
+          icon="trophy-outline"
           title={t('profile.achievements')}
           onPress={() => router.push('/achievements')}
         />
-        <ListRow icon="book" title={t('profile.recipes')} onPress={() => router.push('/recipes')} />
+        <ListRow
+          icon="book-outline"
+          title={t('profile.recipes')}
+          onPress={() => router.push('/recipes')}
+        />
       </Card>
 
       <SectionHeader title={t('common.premium')} />
       <Card padded={false}>
-        {premiumRow(t('profile.coach'), 'chatbubbles', '/coach')}
-        {premiumRow(t('profile.mealPlan'), 'calendar', '/meal-plan')}
-        {premiumRow(t('profile.adaptive'), 'analytics', '/adaptive')}
-        {premiumRow(t('profile.micros'), 'nutrition', '/micros')}
+        {premiumRow(t('profile.coach'), 'chatbubbles-outline', '/coach')}
+        {premiumRow(t('profile.mealPlan'), 'calendar-outline', '/meal-plan')}
+        {premiumRow(t('profile.adaptive'), 'pulse-outline', '/adaptive')}
+        {premiumRow(t('profile.micros'), 'nutrition-outline', '/micros')}
         {features.healthSync && isHealthSupported() ? (
           <ListRow
-            icon="heart"
+            icon="heart-outline"
             title={t('profile.healthSync')}
             value={premium ? undefined : t('common.premium')}
             onPress={connectHealth}
@@ -190,23 +233,23 @@ export default function Profile() {
       <SectionHeader title={t('settings.title')} />
       <Card padded={false}>
         <ListRow
-          icon="notifications"
+          icon="notifications-outline"
           title={t('profile.reminders')}
           onPress={() => router.push('/settings/reminders')}
         />
         <ListRow
-          icon="options"
+          icon="options-outline"
           title={t('profile.preferences')}
           onPress={() => router.push('/settings/preferences')}
         />
         <ListRow
-          icon="shield-checkmark"
+          icon="shield-checkmark-outline"
           title={t('profile.privacy')}
           onPress={() => router.push('/settings/privacy')}
           testID="profile-privacy"
         />
         <ListRow
-          icon="help-buoy"
+          icon="help-buoy-outline"
           title={t('profile.help')}
           onPress={() => router.push('/settings/about')}
         />
@@ -238,13 +281,22 @@ export default function Profile() {
 const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: radii.pill,
+    width: 56,
+    height: 56,
+    borderRadius: radii.lg,
     alignItems: 'center',
     justifyContent: 'center',
   },
   flex: { flex: 1 },
   planCard: { gap: spacing.md },
+  upsell: { borderRadius: radii.xxl, padding: spacing.lg },
+  upgrade: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    minHeight: MIN_TOUCH,
+    borderRadius: radii.lg,
+  },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
 });

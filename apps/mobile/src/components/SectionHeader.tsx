@@ -14,8 +14,8 @@ export function SectionHeader({
 }) {
   return (
     <View style={styles.row}>
-      <AppText variant="heading" accessibilityRole="header">
-        {title}
+      <AppText variant="overline" color="textMuted" accessibilityRole="header">
+        {title.toLocaleUpperCase()}
       </AppText>
       {actionLabel && onAction ? (
         <Pressable accessibilityRole="button" onPress={onAction} hitSlop={12}>
@@ -34,5 +34,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: spacing.sm,
+    paddingHorizontal: spacing.xs,
   },
 });

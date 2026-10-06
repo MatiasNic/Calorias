@@ -1,7 +1,7 @@
 # Onboarding completo: objetivos calculados (Mifflin-St Jeor) y llegada a Hoy.
 appId: ${APP_ID}
 env:
-  APP_ID: com.platoapp.plato
+  APP_ID: com.bocadoapp.bocado
 ---
 - runFlow: _onboarding.yaml
 - assertVisible: 'Hoy'

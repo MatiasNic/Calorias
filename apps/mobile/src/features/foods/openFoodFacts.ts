@@ -55,7 +55,7 @@ export function offToFood(p: OffProduct): FoodOption | null {
 
 export async function lookupBarcodeOffDirect(barcode: string): Promise<FoodOption | null> {
   const res = await fetch(`${OFF_URL}/${encodeURIComponent(barcode)}.json?fields=${FIELDS}`, {
-    headers: { 'User-Agent': 'Plato/0.1 (soporte@plato.app)' },
+    headers: { 'User-Agent': 'Bocado/0.1 (soporte@bocado.app)' },
   });
   if (!res.ok) return null;
   const json = (await res.json()) as { status: number; product?: OffProduct };

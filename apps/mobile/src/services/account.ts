@@ -42,7 +42,7 @@ export async function exportMyData(format: 'json' | 'csv') {
   }
   const file = new File(
     Paths.cache,
-    `plato-export-${new Date().toISOString().slice(0, 10)}.${format}`,
+    `bocado-export-${new Date().toISOString().slice(0, 10)}.${format}`,
   );
   if (file.exists) file.delete();
   file.create();
