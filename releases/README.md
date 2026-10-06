@@ -5,9 +5,9 @@ https://github.com/MatiasNic/Calorias/releases/latest/download/bocado.apk
 
 Todas las versiones: https://github.com/MatiasNic/Calorias/releases
 
-| Archivo                                          | Versión         | Para qué                                                                            | SHA-256                                                            |
-| ------------------------------------------------ | --------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| [`bocado-demo-0.2.0.apk`](bocado-demo-0.2.0.apk) | 0.2.0 (build 1) | Demo con el rediseño **Bocado**: IA, pagos y nube **simulados**, no necesita claves | `11123ae462e8e4560c7d9e08c50e535e900ef30b8e43cf93ee3af0e2e4a29f7c` |
+| Archivo                                          | Versión         | Para qué                                                                                                              | SHA-256                                                            |
+| ------------------------------------------------ | --------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| [`bocado-demo-0.2.1.apk`](bocado-demo-0.2.1.apk) | 0.2.1 (build 3) | Demo Bocado: 121 logros, recetas editables, plan con preferencias, 12 bugs corregidos. IA, pagos y nube **simulados** | `e4f638b10dd837633c1b1e3d3cf82dda7df9e2d634bc0aa73ab64bba58d944b8` |
 
 - Android 8.0 o superior, teléfonos de 32 y 64 bits (armeabi-v7a y arm64-v8a).
 - Firmado con la clave de debug de Android: es solo para pruebas, Google Play no lo acepta.
