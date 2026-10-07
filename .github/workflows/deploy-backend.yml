@@ -94,7 +94,7 @@ jobs:
           echo "sdk.dir=$ANDROID_HOME" > android/local.properties
           # The template's 2 GB heap makes D8 (mergeExtDexRelease) run out of memory and hang.
           sed -i '/^org.gradle.jvmargs=/d' android/gradle.properties
-          echo 'org.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError' >> android/gradle.properties
+          printf '\norg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError\n' >> android/gradle.properties
       - uses: gradle/actions/setup-gradle@v4
       - name: Gradle assembleRelease
         working-directory: apps/mobile/android
