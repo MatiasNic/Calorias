@@ -5,6 +5,7 @@ import { AnthropicProvider } from './ai/anthropic.ts';
 import { MockProvider } from './ai/mock.ts';
 import { loadConfig, type ServerConfig } from './config.ts';
 import type { ServerDeps } from './deps.ts';
+import { trainingSummaryLine } from './coachSummary.ts';
 import type { RegionalRow } from './enrich.ts';
 
 const EXPORT_TABLES = [
@@ -22,6 +23,9 @@ const EXPORT_TABLES = [
   'usage_quotas',
   'subscriptions',
   'ai_feedback',
+  'workouts',
+  'supplements',
+  'supplement_intakes',
 ] as const;
 
 function must<T>(res: { data: T; error: { message: string } | null }): T {
@@ -189,7 +193,7 @@ export function createDeps(config: ServerConfig = loadConfig((k) => Deno.env.get
       },
       async coachContext(userId, today) {
         const from = addDays(today, -6);
-        const [meals, goal, weight, profile] = await Promise.all([
+        const [meals, goal, weight, profile, workouts, supplements] = await Promise.all([
           sb
             .from('meals')
             .select('local_date, meal_type, kcal, protein_g, carbs_g, fat_g, fiber_g')
@@ -219,6 +223,20 @@ export function createDeps(config: ServerConfig = loadConfig((k) => Deno.env.get
             .select('goal_type, sex, activity_level')
             .eq('id', userId)
             .maybeSingle(),
+          sb
+            .from('workouts')
+            .select('duration_min, kcal')
+            .eq('user_id', userId)
+            .is('deleted_at', null)
+            .gte('local_date', from)
+            .lte('local_date', today),
+          sb
+            .from('supplements')
+            .select('name')
+            .eq('user_id', userId)
+            .eq('active', true)
+            .is('deleted_at', null)
+            .order('name'),
         ]);
         const byDay = new Map<string, { kcal: number; p: number; c: number; f: number }>();
         for (const m of meals.data ?? []) {
@@ -241,6 +259,7 @@ export function createDeps(config: ServerConfig = loadConfig((k) => Deno.env.get
           weight.data
             ? `Latest weight: ${weight.data.weight_kg} kg (${weight.data.local_date}).`
             : 'No weight logged.',
+          trainingSummaryLine(workouts.data ?? [], supplements.data ?? []),
         ];
         return lines.join('\n');
       },

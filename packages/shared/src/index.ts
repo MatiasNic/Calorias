@@ -5,6 +5,8 @@ export * from './plans.ts';
 export * from './quota.ts';
 export * from './streaks.ts';
 export * from './achievements.ts';
+export * from './training.ts';
+export * from './supplements.ts';
 export * from './meals.ts';
 export * from './nutrition/energy.ts';
 export * from './nutrition/macros.ts';

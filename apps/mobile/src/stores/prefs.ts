@@ -15,6 +15,8 @@ export interface PrefsState {
   savePhotos: boolean;
   hapticsEnabled: boolean;
   seenScanTips: boolean;
+  /** Adds exercise calories to the day's budget ("kcal disponibles"). */
+  exerciseInBudget: boolean;
   set: (patch: Partial<Omit<PrefsState, 'set' | 'reset'>>) => void;
   reset: () => void;
 }
@@ -28,6 +30,7 @@ const defaults = {
   savePhotos: true,
   hapticsEnabled: true,
   seenScanTips: false,
+  exerciseInBudget: true,
 };
 
 export const usePrefsStore = create<PrefsState>()(

@@ -26,6 +26,7 @@ import { WeekStrip } from '@/features/diary/components/WeekStrip';
 import { repeatFromYesterday } from '@/features/diary/hooks';
 import { useDaySummary } from '@/features/diary/useDaySummary';
 import { useRestrictionCheck, useStreak } from '@/features/habits/hooks';
+import { ActivityRow } from '@/features/training/components/ActivityRow';
 import { pickInsight } from '@/features/habits/insights';
 import { useProfile } from '@/features/profile/hooks';
 import { repos } from '@/services/db/repository';
@@ -212,6 +213,7 @@ export default function Today() {
         </View>
       )}
       <WaterWeightRow date={date} waterMl={day.waterMl} waterTarget={day.goal.water_ml} />
+      <ActivityRow date={date} workouts={day.workouts} burnedKcal={day.burnedKcal} />
     </Screen>
   );
 }

@@ -15,6 +15,7 @@ export const ACHIEVEMENT_CATEGORIES = [
   'body',
   'kitchen',
   'exploration',
+  'training',
 ] as const;
 export type AchievementCategory = (typeof ACHIEVEMENT_CATEGORIES)[number];
 
@@ -55,6 +56,10 @@ export const ACHIEVEMENT_METRICS = {
   favorites: { category: 'kitchen', icon: 'star', tiers: [1, 5, 10, 25] },
   // exploration
   uniqueFoods: { category: 'exploration', icon: 'grid', tiers: [10, 25, 50, 100, 200, 500] },
+  // training
+  workouts: { category: 'training', icon: 'barbell', tiers: [1, 5, 10, 25, 50, 100, 200] },
+  activeMinutes: { category: 'training', icon: 'stopwatch', tiers: [60, 300, 600, 1500, 3000, 6000] },
+  supplementDays: { category: 'training', icon: 'medkit', tiers: [1, 7, 30, 100] },
 } as const satisfies Record<
   string,
   { category: AchievementCategory; icon: string; tiers: readonly number[] }
@@ -145,6 +150,8 @@ export interface AchievementInput {
   targetWeightKg: number | null;
   longestStreak: number;
   counts: { measurements: number; recipes: number; customFoods: number; favorites: number };
+  /** Workout totals and days with every scheduled supplement dose taken. */
+  training?: { workouts: number; activeMinutes: number; supplementDays: number };
 }
 
 /** Tolerance for "within your calorie range" days. */
@@ -240,5 +247,8 @@ export function computeAchievementStats(input: AchievementInput): AchievementSta
     customFoods: input.counts.customFoods,
     favorites: input.counts.favorites,
     uniqueFoods,
+    workouts: input.training?.workouts ?? 0,
+    activeMinutes: Math.round(input.training?.activeMinutes ?? 0),
+    supplementDays: input.training?.supplementDays ?? 0,
   };
 }

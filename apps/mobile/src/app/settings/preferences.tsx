@@ -78,6 +78,19 @@ export default function Preferences() {
             }}
           />
         </View>
+        <View style={styles.row}>
+          <View style={styles.flex}>
+            <AppText>{t('settings.exerciseInBudget')}</AppText>
+            <AppText variant="caption" color="textMuted">
+              {t('settings.exerciseInBudgetHint')}
+            </AppText>
+          </View>
+          <Switch
+            accessibilityLabel={t('settings.exerciseInBudget')}
+            value={prefs.exerciseInBudget}
+            onValueChange={(v) => prefs.set({ exerciseInBudget: v })}
+          />
+        </View>
       </Card>
     </Screen>
   );

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { doseLabel, supplementName } from '@/features/training/labels';
 import { repos } from '@/services/db/repository';
 import type { NotificationSettingsRecord } from '@/services/db/types';
 import { DEFAULT_NOTIFICATION_SETTINGS, rescheduleAll } from '@/services/notifications';
@@ -28,6 +29,12 @@ export async function rescheduleReminders(settings?: NotificationSettingsRecord)
     (await repos.notificationSettings.get(currentUserId())) ??
     DEFAULT_NOTIFICATION_SETTINGS(currentUserId());
   const today = todayLocal();
-  const meals = await repos.meals.list({ from: today, to: today });
-  await rescheduleAll(s, new Set(meals.map((m) => m.meal_type)));
+  const [meals, supplements] = await Promise.all([
+    repos.meals.list({ from: today, to: today }),
+    repos.supplements.list(),
+  ]);
+  await rescheduleAll(s, new Set(meals.map((m) => m.meal_type)), supplements, (x) => ({
+    name: supplementName(x),
+    dose: doseLabel(x),
+  }));
 }

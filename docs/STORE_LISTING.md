@@ -46,7 +46,12 @@ extremas.
 Peso con tendencia, calorías y macros por semana, rachas, logros y un resumen semanal con ideas
 concretas.
 
-✨ PLATO PREMIUM
+🏋️ ENTRENAMIENTO Y SUPLEMENTOS
+Registrá gimnasio, running, fútbol, pádel y 30 actividades más: calculamos las calorías y las
+sumamos a tu día. Series, repeticiones y récords personales. Agenda de suplementos con
+recordatorios, checklist diario y aviso cuando se te están por terminar.
+
+✨ BOCADO PREMIUM
 Escaneos ilimitados (uso justo), modelo de IA más preciso, coach nutricional, plan de comidas,
 micronutrientes, historial y gráficos completos. Probalo 7 días gratis con el plan anual.
 

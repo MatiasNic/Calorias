@@ -935,6 +935,122 @@ export type Database = {
         };
         Relationships: [];
       };
+      supplement_intakes: {
+        Row: {
+          created_at: string;
+          deleted_at: string | null;
+          dose_amount: number;
+          id: string;
+          local_date: string;
+          meal_id: string | null;
+          slot: string;
+          supplement_id: string;
+          taken_at: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          deleted_at?: string | null;
+          dose_amount: number;
+          id?: string;
+          local_date: string;
+          meal_id?: string | null;
+          slot: string;
+          supplement_id: string;
+          taken_at: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          deleted_at?: string | null;
+          dose_amount?: number;
+          id?: string;
+          local_date?: string;
+          meal_id?: string | null;
+          slot?: string;
+          supplement_id?: string;
+          taken_at?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'supplement_intakes_supplement_id_fkey';
+            columns: ['supplement_id'];
+            isOneToOne: false;
+            referencedRelation: 'supplements';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      supplements: {
+        Row: {
+          active: boolean;
+          count_in_macros: boolean;
+          created_at: string;
+          days: number[];
+          deleted_at: string | null;
+          dose_amount: number;
+          dose_unit: string;
+          id: string;
+          low_stock_threshold: number | null;
+          name: string;
+          note: string | null;
+          nutrition: Json | null;
+          preset: string | null;
+          reminders: boolean;
+          start_date: string;
+          stock: number | null;
+          times: string[];
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          active?: boolean;
+          count_in_macros?: boolean;
+          created_at?: string;
+          days?: number[];
+          deleted_at?: string | null;
+          dose_amount: number;
+          dose_unit: string;
+          id?: string;
+          low_stock_threshold?: number | null;
+          name: string;
+          note?: string | null;
+          nutrition?: Json | null;
+          preset?: string | null;
+          reminders?: boolean;
+          start_date: string;
+          stock?: number | null;
+          times: string[];
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          active?: boolean;
+          count_in_macros?: boolean;
+          created_at?: string;
+          days?: number[];
+          deleted_at?: string | null;
+          dose_amount?: number;
+          dose_unit?: string;
+          id?: string;
+          low_stock_threshold?: number | null;
+          name?: string;
+          note?: string | null;
+          nutrition?: Json | null;
+          preset?: string | null;
+          reminders?: boolean;
+          start_date?: string;
+          stock?: number | null;
+          times?: string[];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       usage_quotas: {
         Row: {
           coach_messages: number;
@@ -1049,6 +1165,66 @@ export type Database = {
           updated_at?: string;
           user_id?: string;
           weight_kg?: number;
+        };
+        Relationships: [];
+      };
+      workouts: {
+        Row: {
+          activity: string;
+          created_at: string;
+          deleted_at: string | null;
+          distance_km: number | null;
+          duration_min: number;
+          exercises: NonNullable<Json>;
+          id: string;
+          intensity: string;
+          kcal: number;
+          kcal_source: string;
+          local_date: string;
+          note: string | null;
+          rpe: number | null;
+          started_at: string;
+          title: string | null;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          activity: string;
+          created_at?: string;
+          deleted_at?: string | null;
+          distance_km?: number | null;
+          duration_min: number;
+          exercises?: NonNullable<Json>;
+          id?: string;
+          intensity: string;
+          kcal?: number;
+          kcal_source?: string;
+          local_date: string;
+          note?: string | null;
+          rpe?: number | null;
+          started_at: string;
+          title?: string | null;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          activity?: string;
+          created_at?: string;
+          deleted_at?: string | null;
+          distance_km?: number | null;
+          duration_min?: number;
+          exercises?: NonNullable<Json>;
+          id?: string;
+          intensity?: string;
+          kcal?: number;
+          kcal_source?: string;
+          local_date?: string;
+          note?: string | null;
+          rpe?: number | null;
+          started_at?: string;
+          title?: string | null;
+          updated_at?: string;
+          user_id?: string;
         };
         Relationships: [];
       };

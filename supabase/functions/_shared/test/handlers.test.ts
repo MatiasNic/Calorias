@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { estimateCostUsd } from '../ai/cost.ts';
+import { trainingSummaryLine } from '../coachSummary.ts';
 import { enrichItem } from '../enrich.ts';
 import { analyzeMeal } from '../handlers/analyzeMeal.ts';
 import { analyzeText } from '../handlers/analyzeText.ts';
@@ -354,5 +355,29 @@ describe('cost', () => {
   it('prices Haiku and Sonnet per MTok', () => {
     expect(estimateCostUsd('claude-haiku-4-5', 1_000_000, 0)).toBe(1);
     expect(estimateCostUsd('claude-sonnet-5-5', 1000, 500)).toBeCloseTo(0.007, 6);
+  });
+});
+
+describe('coach context: training summary', () => {
+  it('summarises the last 7 days of workouts and active supplements', () => {
+    expect(
+      trainingSummaryLine(
+        [
+          { duration_min: 60, kcal: '320.0' },
+          { duration_min: '30', kcal: 210 },
+        ],
+        [{ name: 'Creatina' }, { name: '  Vitamina\nD ' }],
+      ),
+    ).toBe(
+      'Training last 7 days: 2 sessions, 90 min, 530 kcal burned. Supplements: Creatina, Vitamina D.',
+    );
+  });
+
+  it('handles no data and caps long supplement lists', () => {
+    expect(trainingSummaryLine([], [])).toBe(
+      'Training last 7 days: none logged. Supplements: none.',
+    );
+    const many = Array.from({ length: 10 }, (_, i) => ({ name: `S${i}` }));
+    expect(trainingSummaryLine([], many)).toContain('S7 (+2 more).');
   });
 });

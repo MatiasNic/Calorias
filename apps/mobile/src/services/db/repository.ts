@@ -25,6 +25,8 @@ const DATE_FIELD: Partial<Record<CollectionName, string>> = {
   weight: 'local_date',
   measurements: 'local_date',
   goals: 'effective_from',
+  workouts: 'local_date',
+  supplement_intakes: 'local_date',
 };
 
 interface Row {
@@ -230,4 +232,7 @@ export const repos = {
   achievements: collection('achievements'),
   notificationSettings: collection('notification_settings'),
   streaks: collection('streaks'),
+  workouts: collection('workouts'),
+  supplements: collection('supplements'),
+  supplementIntakes: collection('supplement_intakes'),
 };

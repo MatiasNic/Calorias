@@ -325,6 +325,119 @@ describe('reference data', () => {
   });
 });
 
+describe('training & supplements', () => {
+  const workoutId = randomUUID();
+  const suppId = randomUUID();
+  const intakeId = randomUUID();
+
+  const insertWorkout = (user, id) =>
+    q(
+      `insert into public.workouts (id, user_id, started_at, local_date, activity, duration_min, intensity, kcal, exercises)
+       values ($1, $2, '2026-10-06T18:00:00-03:00', '2026-10-06', 'gym', 60, 'moderate', 320, $3::jsonb)`,
+      [id, user, JSON.stringify([{ key: 'squat', sets: [{ reps: 8, kg: 80 }] }])],
+    );
+  const insertSupplement = (user, id) =>
+    q(
+      `insert into public.supplements (id, user_id, name, preset, dose_amount, dose_unit, days, times, start_date)
+       values ($1, $2, 'Creatina', 'creatine', 5, 'g', '{1,3,5}', '{08:00,21:30}', '2026-10-01')`,
+      [id, user],
+    );
+  const insertIntake = (user, id, supplementId) =>
+    q(
+      `insert into public.supplement_intakes (id, user_id, supplement_id, taken_at, local_date, slot, dose_amount)
+       values ($1, $2, $3, now(), '2026-10-06', '08:00', 5)`,
+      [id, user, supplementId],
+    );
+
+  it('owner can create and read their rows', async () => {
+    await as(A, () => insertWorkout(A, workoutId));
+    await as(A, () => insertSupplement(A, suppId));
+    await as(A, () => insertIntake(A, intakeId, suppId));
+    for (const t of ['workouts', 'supplements', 'supplement_intakes']) {
+      const r = await as(A, () => q(`select count(*)::int n from public.${t}`));
+      assert.equal(r.rows[0].n, 1, t);
+    }
+  });
+
+  it('another user cannot read, update or delete them', async () => {
+    for (const [t, id] of [
+      ['workouts', workoutId],
+      ['supplements', suppId],
+      ['supplement_intakes', intakeId],
+    ]) {
+      const r = await as(B, () => q(`select * from public.${t} where id = $1`, [id]));
+      assert.equal(r.rowCount, 0, t);
+      const u = await as(B, () =>
+        q(`update public.${t} set deleted_at = now() where id = $1`, [id]),
+      );
+      assert.equal(u.rowCount, 0, t);
+      const d = await as(B, () => q(`delete from public.${t} where id = $1`, [id]));
+      assert.equal(d.rowCount, 0, t);
+      const still = await as(A, () => q(`select deleted_at from public.${t} where id = $1`, [id]));
+      assert.equal(still.rows[0].deleted_at, null, t);
+    }
+  });
+
+  it('rejects writing rows on behalf of another user', async () => {
+    await assert.rejects(as(B, () => insertWorkout(A, randomUUID())));
+    await assert.rejects(as(B, () => insertSupplement(A, randomUUID())));
+    await assert.rejects(as(B, () => insertIntake(A, randomUUID(), suppId)));
+    // Nor attach an intake of their own to someone else's supplement.
+    await assert.rejects(as(B, () => insertIntake(B, randomUUID(), suppId)));
+  });
+
+  it('upsert by the owner bumps updated_at for sync', async () => {
+    const before = await as(A, () =>
+      q('select updated_at from public.workouts where id = $1', [workoutId]),
+    );
+    await new Promise((r) => setTimeout(r, 10));
+    await as(A, () => q(`update public.workouts set rpe = 7 where id = $1`, [workoutId]));
+    const after_ = await as(A, () =>
+      q('select updated_at, rpe from public.workouts where id = $1', [workoutId]),
+    );
+    assert.equal(after_.rows[0].rpe, 7);
+    assert.ok(after_.rows[0].updated_at > before.rows[0].updated_at);
+  });
+
+  it('enforces value constraints', async () => {
+    await assert.rejects(
+      as(A, () => q(`update public.workouts set duration_min = 601 where id = $1`, [workoutId])),
+    );
+    await assert.rejects(
+      as(A, () => q(`update public.workouts set intensity = 'extreme' where id = $1`, [workoutId])),
+    );
+    await assert.rejects(
+      as(A, () => q(`update public.workouts set rpe = 11 where id = $1`, [workoutId])),
+    );
+    await assert.rejects(
+      as(A, () => q(`update public.supplements set dose_unit = 'kg' where id = $1`, [suppId])),
+    );
+    await assert.rejects(
+      as(A, () => q(`update public.supplements set times = '{25:00}' where id = $1`, [suppId])),
+    );
+    await assert.rejects(
+      as(A, () => q(`update public.supplements set days = '{7}' where id = $1`, [suppId])),
+    );
+    await assert.rejects(
+      as(A, () =>
+        q(`update public.supplement_intakes set slot = 'noon' where id = $1`, [intakeId]),
+      ),
+    );
+    await as(A, () =>
+      q(`update public.supplement_intakes set slot = 'extra' where id = $1`, [intakeId]),
+    );
+  });
+
+  it('anon cannot read them', async () => {
+    for (const t of ['workouts', 'supplements', 'supplement_intakes']) {
+      const rows = await as('anon', () => q(`select * from public.${t}`))
+        .then((r) => r.rowCount)
+        .catch(() => 0);
+      assert.equal(rows, 0, t);
+    }
+  });
+});
+
 describe('account deletion', () => {
   it('deleting the auth user cascades to all personal data', async () => {
     await q('delete from auth.users where id = $1', [A]);
@@ -335,6 +448,9 @@ describe('account deletion', () => {
       'subscriptions',
       'user_credits',
       'notification_settings',
+      'workouts',
+      'supplements',
+      'supplement_intakes',
     ]) {
       const c = await q(`select count(*)::int n from public.${t} where user_id = $1`, [A]);
       assert.equal(c.rows[0].n, 0, t);

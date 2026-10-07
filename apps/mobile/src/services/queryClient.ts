@@ -20,6 +20,9 @@ dbEvents.subscribe((collection) => {
   // also read weights and goals.
   if (collection === 'weight' || collection === 'goals' || collection === 'profile')
     queryClient.invalidateQueries({ queryKey: ['db', 'meals'] });
+  // The supplement checklist and adherence are keyed under intakes but read the schedule too.
+  if (collection === 'supplements')
+    queryClient.invalidateQueries({ queryKey: ['db', 'supplement_intakes'] });
   // Achievement stats read almost every collection.
   queryClient.invalidateQueries({ queryKey: ['db', 'achievements', 'stats'] });
   queryClient.invalidateQueries({ queryKey: ['db', 'pending'] });

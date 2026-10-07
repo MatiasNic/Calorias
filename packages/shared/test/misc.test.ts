@@ -109,6 +109,20 @@ describe('achievements', () => {
       expect(ids).toContain(legacy);
   });
 
+  it('counts training and supplement achievements', () => {
+    const empty = computeAchievementStats(base);
+    expect([empty.workouts, empty.activeMinutes, empty.supplementDays]).toEqual([0, 0, 0]);
+    const stats = computeAchievementStats({
+      ...base,
+      training: { workouts: 5, activeMinutes: 300.4, supplementDays: 7 },
+    });
+    expect([stats.workouts, stats.activeMinutes, stats.supplementDays]).toEqual([5, 300, 7]);
+    const unlocked = evaluateAchievements(stats, new Set());
+    expect(unlocked).toEqual(
+      expect.arrayContaining(['workouts_5', 'activeMinutes_300', 'supplementDays_7']),
+    );
+  });
+
   it('computes stats from meals, water and weights', () => {
     const stats = computeAchievementStats({
       ...base,

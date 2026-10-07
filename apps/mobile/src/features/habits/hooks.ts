@@ -1,5 +1,6 @@
 import {
   computeAchievementStats,
+  fullAdherenceDays,
   computeStreak,
   detectRestrictionPattern,
   evaluateAchievements,
@@ -50,18 +51,33 @@ export async function loadAchievementStats(): Promise<{
   streak: ReturnType<typeof computeStreak>;
 }> {
   const today = todayLocal();
-  const [meals, weights, measurements, recipes, customFoods, favorites, goals, water, profile] =
-    await Promise.all([
-      repos.meals.list(),
-      repos.weight.list(),
-      repos.measurements.count(),
-      repos.recipes.count(),
-      repos.foodsCustom.count(),
-      repos.favorites.count(),
-      repos.goals.list(),
-      repos.water.list(),
-      repos.profile.get(currentUserId()),
-    ]);
+  const [
+    meals,
+    weights,
+    measurements,
+    recipes,
+    customFoods,
+    favorites,
+    goals,
+    water,
+    profile,
+    workouts,
+    supplements,
+    intakes,
+  ] = await Promise.all([
+    repos.meals.list(),
+    repos.weight.list(),
+    repos.measurements.count(),
+    repos.recipes.count(),
+    repos.foodsCustom.count(),
+    repos.favorites.count(),
+    repos.goals.list(),
+    repos.water.list(),
+    repos.profile.get(currentUserId()),
+    repos.workouts.list(),
+    repos.supplements.list(),
+    repos.supplementIntakes.list(),
+  ]);
   const streak = computeStreak(new Set(meals.map((m) => m.local_date)), today);
   const waterByDate = new Map<string, number>();
   for (const w of water) waterByDate.set(w.local_date, (waterByDate.get(w.local_date) ?? 0) + w.ml);
@@ -74,6 +90,11 @@ export async function loadAchievementStats(): Promise<{
     targetWeightKg: profile?.target_weight_kg ?? null,
     longestStreak: Math.max(streak.longest, streak.current),
     counts: { measurements, recipes, customFoods, favorites },
+    training: {
+      workouts: workouts.length,
+      activeMinutes: workouts.reduce((s, w) => s + w.duration_min, 0),
+      supplementDays: fullAdherenceDays(supplements, intakes),
+    },
   });
   return { stats, streak };
 }

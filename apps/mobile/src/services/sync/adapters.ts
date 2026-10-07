@@ -403,6 +403,101 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
       }));
     },
   },
+  workouts: {
+    async push(sb, userId, r, deletedAt) {
+      check(
+        await sb.from('workouts').upsert({
+          ...r,
+          exercises: r.exercises as unknown as NonNullable<Json>,
+          user_id: userId,
+          deleted_at: deletedAt,
+        }),
+      );
+    },
+    async pull(sb, _u, since) {
+      const rows = check(await sinceFilter(sb.from('workouts').select('*'), since));
+      return rows.map((row) => ({
+        record: {
+          id: row.id,
+          started_at: row.started_at,
+          local_date: row.local_date,
+          activity: row.activity,
+          title: row.title,
+          duration_min: row.duration_min,
+          intensity: row.intensity as CollectionMap['workouts']['intensity'],
+          kcal: num(row.kcal),
+          kcal_source: row.kcal_source as CollectionMap['workouts']['kcal_source'],
+          distance_km: nullableNum(row.distance_km),
+          exercises: (row.exercises ?? []) as unknown as CollectionMap['workouts']['exercises'],
+          rpe: nullableNum(row.rpe),
+          note: row.note,
+        },
+        updatedAt: row.updated_at,
+        deletedAt: row.deleted_at,
+      }));
+    },
+  },
+  supplements: {
+    async push(sb, userId, r, deletedAt) {
+      check(
+        await sb.from('supplements').upsert({
+          ...r,
+          nutrition: r.nutrition ? json(r.nutrition) : null,
+          user_id: userId,
+          deleted_at: deletedAt,
+        }),
+      );
+    },
+    async pull(sb, _u, since) {
+      const rows = check(await sinceFilter(sb.from('supplements').select('*'), since));
+      return rows.map((row) => ({
+        record: {
+          id: row.id,
+          name: row.name,
+          preset: row.preset,
+          dose_amount: num(row.dose_amount),
+          dose_unit: row.dose_unit as CollectionMap['supplements']['dose_unit'],
+          days: (row.days ?? []).map(Number),
+          times: row.times ?? [],
+          reminders: row.reminders,
+          stock: nullableNum(row.stock),
+          low_stock_threshold: nullableNum(row.low_stock_threshold),
+          nutrition: (row.nutrition ?? null) as CollectionMap['supplements']['nutrition'],
+          count_in_macros: row.count_in_macros,
+          active: row.active,
+          start_date: row.start_date,
+          note: row.note,
+        },
+        updatedAt: row.updated_at,
+        deletedAt: row.deleted_at,
+      }));
+    },
+  },
+  supplement_intakes: {
+    async push(sb, userId, r, deletedAt) {
+      check(
+        await sb
+          .from('supplement_intakes')
+          .upsert({ ...r, user_id: userId, deleted_at: deletedAt }),
+      );
+    },
+    async pull(sb, _u, since) {
+      const rows = check(await sinceFilter(sb.from('supplement_intakes').select('*'), since));
+      return rows.map((row) => ({
+        record: {
+          id: row.id,
+          supplement_id: row.supplement_id,
+          taken_at: row.taken_at,
+          local_date: row.local_date,
+          slot: row.slot,
+          dose_amount: num(row.dose_amount),
+          meal_id: row.meal_id,
+        },
+        updatedAt: row.updated_at,
+        deletedAt: row.deleted_at,
+      }));
+    },
+  },
 };
 
 /** Push order matters for FKs and for the server-side profile timezone used by quotas. */
@@ -419,4 +514,8 @@ export const SYNC_ORDER: readonly CollectionName[] = [
   'favorites',
   'achievements',
   'streaks',
+  'workouts',
+  // supplement_intakes.supplement_id → supplements(id): parents first.
+  'supplements',
+  'supplement_intakes',
 ];

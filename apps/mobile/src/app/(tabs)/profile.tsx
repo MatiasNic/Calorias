@@ -212,6 +212,16 @@ export default function Profile() {
           title={t('profile.recipes')}
           onPress={() => router.push('/recipes')}
         />
+        <ListRow
+          icon="barbell-outline"
+          title={t('profile.training')}
+          onPress={() => router.push('/training')}
+        />
+        <ListRow
+          icon="medkit-outline"
+          title={t('profile.supplements')}
+          onPress={() => router.push('/supplements')}
+        />
       </Card>
 
       <SectionHeader title={t('common.premium')} />

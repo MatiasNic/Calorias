@@ -2,6 +2,7 @@ export const LB_PER_KG = 2.2046226218;
 export const CM_PER_IN = 2.54;
 export const ML_PER_FL_OZ = 29.5735295625;
 export const G_PER_OZ = 28.349523125;
+export const KM_PER_MI = 1.609344;
 
 export const kgToLb = (kg: number) => kg * LB_PER_KG;
 export const lbToKg = (lb: number) => lb / LB_PER_KG;
@@ -9,6 +10,8 @@ export const gToOz = (g: number) => g / G_PER_OZ;
 export const ozToG = (oz: number) => oz * G_PER_OZ;
 export const mlToFlOz = (ml: number) => ml / ML_PER_FL_OZ;
 export const flOzToMl = (oz: number) => oz * ML_PER_FL_OZ;
+export const kmToMi = (km: number) => km / KM_PER_MI;
+export const miToKm = (mi: number) => mi * KM_PER_MI;
 
 export function cmToFtIn(cm: number): { ft: number; inches: number } {
   const totalIn = cm / CM_PER_IN;

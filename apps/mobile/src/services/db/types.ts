@@ -12,7 +12,10 @@ import type {
   Micronutrients,
   Nutrients,
   Sex,
+  StrengthExercise,
+  SupplementUnit,
   UnitSystem,
+  WorkoutIntensity,
 } from '@plato/shared';
 
 /** Local record shapes (what screens read). Each collection maps 1:1 to a Supabase table. */
@@ -163,6 +166,62 @@ export interface StreakRecord {
   last_logged_date: string | null;
 }
 
+export interface WorkoutRecord {
+  id: string;
+  started_at: string;
+  local_date: string;
+  /** ACTIVITIES key (packages/shared/src/training.ts). */
+  activity: string;
+  /** Optional custom title ("Piernas", "Fútbol con amigos"). */
+  title: string | null;
+  duration_min: number;
+  intensity: WorkoutIntensity;
+  /** Net kcal: estimated from METs unless the user typed it (kcal_source 'manual'). */
+  kcal: number;
+  kcal_source: 'estimated' | 'manual';
+  distance_km: number | null;
+  /** Gym log: exercises with sets of reps × kg. */
+  exercises: StrengthExercise[];
+  /** Perceived effort 1–10. */
+  rpe: number | null;
+  note: string | null;
+}
+
+export interface SupplementRecord {
+  id: string;
+  name: string;
+  /** SUPPLEMENT_PRESETS key when created from a preset (for localized names/icons). */
+  preset: string | null;
+  dose_amount: number;
+  dose_unit: SupplementUnit;
+  /** 0 = Sunday … 6 = Saturday; empty = every day. */
+  days: number[];
+  /** "HH:MM", at least one. */
+  times: string[];
+  reminders: boolean;
+  /** Doses left; null = not tracking stock. */
+  stock: number | null;
+  low_stock_threshold: number | null;
+  /** Nutrition of one dose (e.g. whey); counted in the diary when count_in_macros. */
+  nutrition: Nutrients | null;
+  count_in_macros: boolean;
+  active: boolean;
+  start_date: string;
+  note: string | null;
+}
+
+export interface SupplementIntakeRecord {
+  id: string;
+  supplement_id: string;
+  taken_at: string;
+  local_date: string;
+  /** Scheduled "HH:MM" or "extra". */
+  slot: string;
+  dose_amount: number;
+  /** Diary meal created when the supplement counts in macros. */
+  meal_id: string | null;
+}
+
 export interface CollectionMap {
   profile: ProfileRecord;
   goals: GoalRecord;
@@ -176,6 +235,9 @@ export interface CollectionMap {
   achievements: AchievementRecord;
   notification_settings: NotificationSettingsRecord;
   streaks: StreakRecord;
+  workouts: WorkoutRecord;
+  supplements: SupplementRecord;
+  supplement_intakes: SupplementIntakeRecord;
 }
 
 export type CollectionName = keyof CollectionMap;

@@ -3,7 +3,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { i18next } from '@/i18n';
-import type { NotificationSettingsRecord } from '@/services/db/types';
+import type { NotificationSettingsRecord, SupplementRecord } from '@/services/db/types';
 import { isoDateToDate, todayLocal } from '@/utils/dates';
 
 /** Days ahead we pre-schedule one-off meal reminders (so a logged meal can cancel today's). */
@@ -53,6 +53,12 @@ const mealId = (type: MealType, date: string) => `meal-${type}-${date}`;
 export async function rescheduleAll(
   settings: NotificationSettingsRecord,
   loggedToday: ReadonlySet<MealType>,
+  supplements: readonly SupplementRecord[] = [],
+  /** Localized "name · dose" for a supplement notification. */
+  describeSupplement: (s: SupplementRecord) => { name: string; dose: string } = (s) => ({
+    name: s.name,
+    dose: String(s.dose_amount),
+  }),
 ) {
   if ((await notificationPermission()) !== 'granted') return;
   await Notifications.cancelAllScheduledNotificationsAsync();
@@ -121,6 +127,43 @@ export async function rescheduleAll(
         channelId: CHANNEL_ID,
       },
     });
+  }
+
+  // Supplement reminders: one per scheduled time, daily or on the chosen weekdays.
+  for (const s of supplements) {
+    if (!s.active || !s.reminders) continue;
+    const content = {
+      title: t('notifications.supplement.title'),
+      body: t('notifications.supplement.body', describeSupplement(s)),
+      data: { url: '/supplements' },
+    };
+    for (const time of s.times) {
+      const { hour, minute } = parseTime(time);
+      if (s.days.length === 0) {
+        await Notifications.scheduleNotificationAsync({
+          content,
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.DAILY,
+            hour,
+            minute,
+            channelId: CHANNEL_ID,
+          },
+        });
+        continue;
+      }
+      for (const day of s.days) {
+        await Notifications.scheduleNotificationAsync({
+          content,
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+            weekday: day + 1,
+            hour,
+            minute,
+            channelId: CHANNEL_ID,
+          },
+        });
+      }
+    }
   }
 
   if (settings.weekly_summary) {

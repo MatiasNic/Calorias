@@ -64,6 +64,8 @@ function RootStack() {
         <Stack.Screen name="(modals)/food-detail" options={modal} />
         <Stack.Screen name="(modals)/meal/[id]" options={modal} />
         <Stack.Screen name="(modals)/weight" options={modal} />
+        <Stack.Screen name="(modals)/workout" options={modal} />
+        <Stack.Screen name="(modals)/supplement" options={modal} />
         <Stack.Screen name="(modals)/text-log" options={modal} />
         <Stack.Screen name="(modals)/custom-food" options={modal} />
         <Stack.Screen name="(modals)/recipe-editor" options={modal} />
