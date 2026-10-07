@@ -13,13 +13,17 @@ es comida), cuenta propia y datos guardados en la nube, antes de publicar.
 4. Cargá estos valores como **variables del entorno** de la sesión de Claude Code (menú del
    entorno → Editar). No los pegues en el chat:
 
-   | Variable                | Valor                                                     |
-   | ----------------------- | --------------------------------------------------------- |
-   | `SUPABASE_ACCESS_TOKEN` | token del paso 1                                          |
-   | `SUPABASE_PROJECT_REF`  | el id del proyecto (`xxxx` de `https://xxxx.supabase.co`) |
-   | `SUPABASE_DB_PASSWORD`  | contraseña de la base                                     |
-   | `ANTHROPIC_API_KEY`     | key del paso 2                                            |
-   | `USDA_FDC_API_KEY`      | (opcional)                                                |
+   | Variable                   | Valor                                                     |
+   | -------------------------- | --------------------------------------------------------- |
+   | `SUPABASE_ACCESS_TOKEN`    | token del paso 1                                          |
+   | `SUPABASE_PROJECT_REF`     | el id del proyecto (`xxxx` de `https://xxxx.supabase.co`) |
+   | `SUPABASE_DB_PASSWORD`     | contraseña de la base                                     |
+   | `BOCADO_ANTHROPIC_API_KEY` | key del paso 2 (**no** `ANTHROPIC_API_KEY`: ver nota)     |
+   | `USDA_FDC_API_KEY`         | (opcional)                                                |
+
+   > El entorno de Claude Code reserva el nombre `ANTHROPIC_API_KEY` para su propia autenticación
+   > ("no se usará para autenticar solicitudes") y no lo pasa a los comandos. Por eso la key de la
+   > app va como `BOCADO_ANTHROPIC_API_KEY`; el script de deploy acepta cualquiera de los dos.
 
 5. Abrí una sesión nueva y pedí: _"desplegá el backend y generame el APK de prueba real"_.
 

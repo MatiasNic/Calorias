@@ -7,6 +7,8 @@
 #   SUPABASE_PROJECT_REF   project id (the xxxx in https://xxxx.supabase.co)
 #   SUPABASE_DB_PASSWORD   database password chosen when creating the project
 #   ANTHROPIC_API_KEY      key from https://console.anthropic.com (set a monthly spend limit!)
+#                          In Claude Code cloud sessions that name is reserved for Claude Code's own
+#                          auth and is not passed to commands: use BOCADO_ANTHROPIC_API_KEY instead.
 # Optional:
 #   USDA_FDC_API_KEY, REVENUECAT_WEBHOOK_SECRET, AI_DAILY_BUDGET_USD (default 20),
 #   AI_MODEL_FREE, AI_MODEL_PREMIUM, AI_ALERT_WEBHOOK_URL
@@ -16,7 +18,8 @@ cd "$(dirname "$0")/.."
 : "${SUPABASE_ACCESS_TOKEN:?missing}"
 : "${SUPABASE_PROJECT_REF:?missing}"
 : "${SUPABASE_DB_PASSWORD:?missing}"
-: "${ANTHROPIC_API_KEY:?missing}"
+ANTHROPIC_API_KEY="${BOCADO_ANTHROPIC_API_KEY:-${ANTHROPIC_API_KEY:-}}"
+: "${ANTHROPIC_API_KEY:?missing (set BOCADO_ANTHROPIC_API_KEY or ANTHROPIC_API_KEY)}"
 
 SB="pnpm exec supabase"
 echo "→ Linking project $SUPABASE_PROJECT_REF"
