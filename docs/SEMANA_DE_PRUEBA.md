@@ -33,6 +33,12 @@ es comida), cuenta propia y datos guardados en la nube, antes de publicar.
 ./scripts/deploy-backend.sh        # base + RLS + 229 alimentos + funciones + secretos
 ```
 
+> Si el entorno no llega al puerto de Postgres (sesiones en la nube con red restringida), usá el
+> workflow **Deploy backend + real APK** (`.github/workflows/deploy-backend.yml`): cargá los mismos
+> valores como secretos del repositorio (_Settings → Secrets and variables → Actions_) y ejecutalo
+> desde _Actions → Run workflow_. Despliega, compila el APK real y lo publica como Release
+> `vX.Y.Z-real`.
+
 Después compila un APK `preview` con `EXPO_PUBLIC_USE_MOCKS=false` y la URL/anon key públicas
 del proyecto (esas dos sí van en la app; no son secretas) y lo publica en el Release de GitHub.
 
