@@ -30,9 +30,6 @@ jobs:
   deploy:
     name: Deploy Supabase backend
     runs-on: ubuntu-latest
-    outputs:
-      supabase_url: ${{ steps.keys.outputs.supabase_url }}
-      anon_key: ${{ steps.keys.outputs.anon_key }}
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
@@ -52,17 +49,6 @@ jobs:
       - name: Deploy (migrations, seed, secrets, Edge Functions)
         if: ${{ inputs.deploy_backend }}
         run: ./scripts/deploy-backend.sh
-      - name: Public values for the app (URL and anon key are not secret)
-        id: keys
-        run: |
-          set -euo pipefail
-          anon=$(pnpm exec supabase projects api-keys --project-ref "$SUPABASE_PROJECT_REF" -o json \
-            | node -e 'const k=JSON.parse(require("fs").readFileSync(0,"utf8"));process.stdout.write((k.find(x=>x.name==="anon")||{}).api_key||"")')
-          test -n "$anon" || { echo "::error::anon key not found"; exit 1; }
-          echo "supabase_url=https://${SUPABASE_PROJECT_REF}.supabase.co" >> "$GITHUB_OUTPUT"
-          echo "anon_key=$anon" >> "$GITHUB_OUTPUT"
-          echo "EXPO_PUBLIC_SUPABASE_URL=https://${SUPABASE_PROJECT_REF}.supabase.co" >> "$GITHUB_STEP_SUMMARY"
-
   apk:
     name: Build real-mode APK and publish release
     needs: deploy
@@ -71,8 +57,6 @@ jobs:
     timeout-minutes: 60
     env:
       EXPO_PUBLIC_USE_MOCKS: 'false'
-      EXPO_PUBLIC_SUPABASE_URL: ${{ needs.deploy.outputs.supabase_url }}
-      EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ needs.deploy.outputs.anon_key }}
       EXPO_NO_TELEMETRY: '1'
       SENTRY_DISABLE_AUTO_UPLOAD: 'true'
     steps:
@@ -87,6 +71,20 @@ jobs:
           distribution: temurin
           java-version: '17'
       - run: pnpm install --frozen-lockfile
+      # Read here, not as outputs of the deploy job: GitHub drops job outputs that contain a
+      # secret value (the project ref is one), which silently produced demo-mode APKs.
+      - name: Public values for the app (URL and anon key are not secret)
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          set -euo pipefail
+          anon=$(pnpm exec supabase projects api-keys --project-ref "$SUPABASE_PROJECT_REF" -o json \
+            | node -e 'const k=JSON.parse(require("fs").readFileSync(0,"utf8"));process.stdout.write((k.find(x=>x.name==="anon")||{}).api_key||"")')
+          test -n "$SUPABASE_PROJECT_REF" || { echo "::error::SUPABASE_PROJECT_REF missing"; exit 1; }
+          test -n "$anon" || { echo "::error::anon key not found"; exit 1; }
+          echo "EXPO_PUBLIC_SUPABASE_URL=https://${SUPABASE_PROJECT_REF}.supabase.co" >> "$GITHUB_ENV"
+          echo "EXPO_PUBLIC_SUPABASE_ANON_KEY=$anon" >> "$GITHUB_ENV"
       - name: Prebuild Android project
         working-directory: apps/mobile
         run: |
@@ -101,6 +99,17 @@ jobs:
         timeout-minutes: 45
         # 64-bit only: covers practically every phone from recent years and halves native build time.
         run: ./gradlew assembleRelease --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a
+      - name: Check the APK talks to the real backend
+        env:
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          set -euo pipefail
+          apk=apps/mobile/android/app/build/outputs/apk/release/app-release.apk
+          unzip -p "$apk" assets/index.android.bundle > /tmp/bundle
+          if ! grep -aq "${SUPABASE_PROJECT_REF}.supabase.co" /tmp/bundle; then
+            echo "::error::The JS bundle has no Supabase URL: the APK would run in demo mode"
+            exit 1
+          fi
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
