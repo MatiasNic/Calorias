@@ -15,6 +15,8 @@ export function useAuthErrorMessage() {
         return t('auth.errors.emailTaken');
       case 'weak_password':
         return t('auth.errors.passwordShort');
+      case 'link_expired':
+        return t('auth.errors.linkExpired');
       case 'network':
         return t('auth.errors.network');
       default:

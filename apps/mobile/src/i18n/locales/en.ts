@@ -154,6 +154,9 @@ export const en: TranslationShape<Translation> = {
     sendResetLink: 'Send link',
     resetSent: 'If an account exists for that email, you will receive a link in a few minutes.',
     newPasswordTitle: 'New password',
+    resetLinkHint:
+      'That link was already used or expired. Email links work once and must be opened on the phone.',
+    requestNewLink: 'Request a new link',
     passwordUpdated: 'Password updated',
     errors: {
       email: 'Enter a valid email.',

@@ -153,6 +153,9 @@ export const es = {
     sendResetLink: 'Enviar enlace',
     resetSent: 'Si existe una cuenta con ese email, vas a recibir un enlace en unos minutos.',
     newPasswordTitle: 'Nueva contraseña',
+    resetLinkHint:
+      'Ese link ya se usó o venció. Los links del mail sirven una sola vez y hay que abrirlos desde el celular.',
+    requestNewLink: 'Pedir un link nuevo',
     passwordUpdated: 'Contraseña actualizada',
     errors: {
       email: 'Ingresá un email válido.',

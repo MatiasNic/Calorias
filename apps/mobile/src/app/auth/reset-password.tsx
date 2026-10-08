@@ -1,22 +1,29 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { z } from 'zod';
 
 import { AppText, Button, Screen, TextField, toast } from '@/components';
 import { NewPasswordSchema } from '@/features/auth/schemas';
-import type { AuthMessageKey } from '@/features/auth/useAuthErrorMessage';
+import { useAuthErrorMessage, type AuthMessageKey } from '@/features/auth/useAuthErrorMessage';
 import { auth } from '@/services/auth';
 
 export default function ResetPassword() {
   const { t } = useTranslation();
   const url = Linking.useLinkingURL();
+  const authError = useAuthErrorMessage();
+  // Recovery links work once: opening one twice (or on a computer first) leaves no session.
+  const [linkFailed, setLinkFailed] = useState(false);
   useEffect(() => {
-    if (url) auth.handleAuthRedirect(url).catch(() => undefined);
-  }, [url]);
+    if (!url) return;
+    auth.handleAuthRedirect(url).catch(() => {
+      setLinkFailed(true);
+      toast.error(t('auth.errors.linkExpired'));
+    });
+  }, [url, t]);
   const { control, handleSubmit, formState } = useForm<z.infer<typeof NewPasswordSchema>>({
     resolver: zodResolver(NewPasswordSchema),
     defaultValues: { password: '' },
@@ -26,8 +33,8 @@ export default function ResetPassword() {
       await auth.updatePassword(v.password);
       toast.success(t('auth.passwordUpdated'));
       router.replace('/');
-    } catch {
-      toast.error(t('common.errorMessage'));
+    } catch (e) {
+      toast.error(linkFailed ? t('auth.errors.linkExpired') : authError(e));
     }
   });
   return (
@@ -46,7 +53,15 @@ export default function ResetPassword() {
           />
         )}
       />
+      {linkFailed ? <AppText color="danger">{t('auth.resetLinkHint')}</AppText> : null}
       <Button label={t('common.save')} onPress={onSubmit} loading={formState.isSubmitting} />
+      {linkFailed ? (
+        <Button
+          label={t('auth.requestNewLink')}
+          variant="outline"
+          onPress={() => router.replace('/forgot-password')}
+        />
+      ) : null}
     </Screen>
   );
 }

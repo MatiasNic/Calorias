@@ -23,6 +23,7 @@ export class AuthError extends Error {
       | 'weak_password'
       | 'cancelled'
       | 'provider_unavailable'
+      | 'link_expired'
       | 'network'
       | 'unknown',
     message?: string,
@@ -41,6 +42,8 @@ function mapError(e: { message?: string; code?: string; status?: number } | null
     return new AuthError('email_taken');
   if (e?.code === 'weak_password' || msg.includes('password'))
     return new AuthError('weak_password');
+  if (msg.includes('session missing') || msg.includes('otp_expired') || msg.includes('expired'))
+    return new AuthError('link_expired');
   if (msg.includes('network') || msg.includes('fetch')) return new AuthError('network');
   return new AuthError('unknown', e?.message);
 }
