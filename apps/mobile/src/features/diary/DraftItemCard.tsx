@@ -39,39 +39,50 @@ export function DraftItemCard({
   return (
     <Animated.View layout={LinearTransition} entering={FadeIn}>
       <Card style={styles.card}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ expanded: open }}
-          accessibilityLabel={t('review.itemA11y', {
-            name: item.display_name,
-            grams: Math.round(item.grams),
-            kcal: Math.round(item.nutrients.kcal),
-          })}
-          accessibilityHint={t('review.moreOptions')}
-          onPress={() => setOpen(!open)}
-          style={styles.head}
-          testID={`draft-item-${index}`}
-        >
-          <View style={styles.flex}>
-            <AppText variant="bodyStrong" numberOfLines={2}>
-              {item.display_name}
-            </AppText>
-            {showConfidence && item.ai_confidence != null ? (
-              <ConfidenceBadge confidence={item.ai_confidence} />
-            ) : item.serving_unit ? (
-              <AppText variant="caption" color="textMuted">
-                {item.serving_unit}
+        <View style={styles.headRow}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ expanded: open }}
+            accessibilityLabel={t('review.itemA11y', {
+              name: item.display_name,
+              grams: Math.round(item.grams),
+              kcal: Math.round(item.nutrients.kcal),
+            })}
+            accessibilityHint={t('review.moreOptions')}
+            onPress={() => setOpen(!open)}
+            style={styles.head}
+            testID={`draft-item-${index}`}
+          >
+            <View style={styles.flex}>
+              <AppText variant="bodyStrong" numberOfLines={2}>
+                {item.display_name}
               </AppText>
-            ) : null}
-          </View>
-          <AppText variant="number" tabular>
-            {formatKcal(item.nutrients.kcal)}{' '}
-            <AppText variant="caption" color="textMuted">
-              kcal
+              {showConfidence && item.ai_confidence != null ? (
+                <ConfidenceBadge confidence={item.ai_confidence} />
+              ) : item.serving_unit ? (
+                <AppText variant="caption" color="textMuted">
+                  {item.serving_unit}
+                </AppText>
+              ) : null}
+            </View>
+            <AppText variant="number" tabular>
+              {formatKcal(item.nutrients.kcal)}{' '}
+              <AppText variant="caption" color="textMuted">
+                kcal
+              </AppText>
             </AppText>
-          </AppText>
-          <Icon name={open ? 'chevron-up' : 'chevron-down'} color="textSubtle" size={16} />
-        </Pressable>
+            <Icon name={open ? 'chevron-up' : 'chevron-down'} color="textSubtle" size={16} />
+          </Pressable>
+          {/* Removing is a one-tap action: wrong guesses and extras shouldn't need the editor. */}
+          <IconButton
+            icon="trash-outline"
+            size={20}
+            accessibilityLabel={t('review.removeNamed', { name: item.display_name })}
+            color="danger"
+            onPress={() => removeItem(index)}
+            testID={`draft-remove-${index}`}
+          />
+        </View>
         <View style={styles.quick}>
           <View style={[styles.stepper, { backgroundColor: colors.surfaceAlt }]}>
             <IconButton
@@ -142,14 +153,6 @@ export function DraftItemCard({
               >
                 {t('review.changeFood')}
               </AppText>
-              <View style={styles.flex} />
-              <IconButton
-                icon="trash"
-                accessibilityLabel={t('review.removeItem')}
-                color="danger"
-                onPress={() => removeItem(index)}
-                testID={`draft-remove-${index}`}
-              />
             </View>
           </View>
         ) : null}
@@ -160,7 +163,8 @@ export function DraftItemCard({
 
 const styles = StyleSheet.create({
   card: { gap: spacing.md },
-  head: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
+  headRow: { flexDirection: 'row', alignItems: 'center', marginRight: -spacing.sm },
+  head: { flex: 1, flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
   flex: { flex: 1, gap: 2 },
   quick: {
     flexDirection: 'row',

@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 
 import { i18next } from '@/i18n';
 import type { NotificationSettingsRecord, SupplementRecord } from '@/services/db/types';
+import type { TrainingReminder } from '@/stores/prefs';
 import { isoDateToDate, todayLocal } from '@/utils/dates';
 
 /** Days ahead we pre-schedule one-off meal reminders (so a logged meal can cancel today's). */
@@ -59,6 +60,7 @@ export async function rescheduleAll(
     name: s.name,
     dose: String(s.dose_amount),
   }),
+  training?: TrainingReminder,
 ) {
   if ((await notificationPermission()) !== 'granted') return;
   await Notifications.cancelAllScheduledNotificationsAsync();
@@ -163,6 +165,27 @@ export async function rescheduleAll(
           },
         });
       }
+    }
+  }
+
+  // Workout reminder on the chosen weekdays; it opens the workout log.
+  if (training?.enabled) {
+    const { hour, minute } = parseTime(training.time);
+    for (const day of training.days) {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: t('notifications.training.title'),
+          body: t('notifications.training.body'),
+          data: { url: '/workout' },
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+          weekday: day + 1,
+          hour,
+          minute,
+          channelId: CHANNEL_ID,
+        },
+      });
     }
   }
 

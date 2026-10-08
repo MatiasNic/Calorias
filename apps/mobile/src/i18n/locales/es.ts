@@ -165,6 +165,8 @@ export const es = {
       network: 'No hay conexión. Intentá de nuevo.',
       social: 'No pudimos iniciar sesión. Intentá de nuevo.',
       linkExpired: 'El enlace venció o ya fue usado.',
+      providerUnavailable:
+        'El ingreso con Google todavía no está habilitado. Usá tu email y contraseña.',
     },
   },
   onboarding: {
@@ -390,6 +392,13 @@ export const es = {
       'Notamos que en los últimos días registraste muy pocas calorías. Comer muy poco de forma sostenida puede afectar tu salud. Si te está costando, hablar con un/a profesional puede ayudar. En Argentina podés llamar gratis al 0800-222-1002 (Salud Mental).',
   },
   diary: {
+    activityReminder: 'Recordatorio de actividad',
+    supplementsNone: 'Nada programado para este día',
+    activity: 'Actividad',
+    activitySummary: '{{minutes}} min · {{kcal}} kcal quemadas',
+    supplements: 'Suplementos',
+    supplementsEmpty: 'Registrá tus tomas diarias junto a tus comidas',
+    manageSupplements: 'Administrar suplementos',
     consumed: 'Consumiste',
     overGoal: '{{kcal}} kcal sobre el objetivo',
     underGoal: '{{kcal}} kcal debajo del objetivo',
@@ -549,6 +558,7 @@ export const es = {
     grams: 'Gramos de {{name}}',
     changeFood: 'Cambiar alimento',
     removeItem: 'Quitar alimento',
+    removeNamed: 'Quitar {{name}}',
     save: 'Guardar comida',
     saved: '¡Comida guardada!',
     report: 'Reportar error',
@@ -561,6 +571,7 @@ export const es = {
     source: 'Fuente de los valores',
     lowConfidenceHint: 'Revisá los ítems con confianza baja.',
     cookingHint: 'El método de cocción ajusta las grasas de forma aproximada.',
+    cookingTitle: '¿Cómo se cocinó?',
     dontSavePhoto: 'Tu configuración: no guardamos la foto, solo los datos.',
   },
   textLog: {
@@ -1190,6 +1201,9 @@ export const es = {
     licensesBody:
       'Datos nutricionales: USDA FoodData Central (dominio público), Open Food Facts (ODbL, © colaboradores de Open Food Facts) y ARGENFOODS (UNLu).',
     reminders: {
+      training: 'Actividad',
+      trainingHint: 'Te avisamos los días que elijas.',
+      trainingDays: 'Días',
       title: 'Recordatorios',
       meals: 'Comidas',
       water: 'Agua',
@@ -1254,6 +1268,10 @@ export const es = {
     water: { title: 'Un vaso de agua 💧', body: 'Tomá agua y sumala con un toque.' },
     weighIn: { title: 'Pesaje semanal', body: 'Registrá tu peso para ver tu tendencia.' },
     supplement: { title: 'Hora de tu suplemento', body: '{{name}} · {{dose}}' },
+    training: {
+      title: 'Hora de entrenar',
+      body: 'Registrá tu actividad en el diario cuando termines.',
+    },
     weekly: {
       title: 'Tu resumen semanal está listo',
       body: 'Mirá cómo te fue y una sugerencia para esta semana.',

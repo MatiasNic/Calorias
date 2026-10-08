@@ -6,7 +6,9 @@ import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, Button, Card, EmptyState, Screen } from '@/components';
+import { ActivitySection } from '@/features/diary/components/ActivitySection';
 import { MealSection } from '@/features/diary/components/MealSection';
+import { SupplementsSection } from '@/features/diary/components/SupplementsSection';
 import { DayTotalsCard } from '@/features/diary/components/DayTotalsCard';
 import { MonthCalendar, type DayCell } from '@/features/diary/components/MonthCalendar';
 import { useDaySummary } from '@/features/diary/useDaySummary';
@@ -96,6 +98,8 @@ export default function Diary() {
               meals={day.meals.filter((m) => m.meal_type === type)}
             />
           ))}
+          <ActivitySection date={date} />
+          <SupplementsSection date={date} />
           <View style={styles.actions}>
             <Button
               label={t('diary.recipes')}

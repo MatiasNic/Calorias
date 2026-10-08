@@ -22,6 +22,7 @@ export class AuthError extends Error {
       | 'email_taken'
       | 'weak_password'
       | 'cancelled'
+      | 'provider_unavailable'
       | 'network'
       | 'unknown',
     message?: string,
@@ -45,6 +46,33 @@ function mapError(e: { message?: string; code?: string; status?: number } | null
 }
 
 const redirectTo = () => Linking.createURL('auth/callback');
+
+/** In-flight or finished PKCE code exchanges, keyed by code. */
+const codeExchanges = new Map<string, Promise<void>>();
+
+/** Query and fragment params of an auth redirect (Supabase puts errors in either). */
+export function redirectParams(url: string): Record<string, string | undefined> {
+  const out: Record<string, string | undefined> = {};
+  const [beforeHash, hash = ''] = url.split('#');
+  const query = beforeHash?.split('?')[1] ?? '';
+  // Parsed by hand: React Native's URLSearchParams is incomplete without a polyfill.
+  const decode = (v: string) => {
+    try {
+      return decodeURIComponent(v.replace(/\+/g, ' '));
+    } catch {
+      return v;
+    }
+  };
+  for (const part of [query, hash]) {
+    for (const pair of part.split('&')) {
+      if (!pair) continue;
+      const i = pair.indexOf('=');
+      const key = decode(i < 0 ? pair : pair.slice(0, i));
+      out[key] = i < 0 ? '' : decode(pair.slice(i + 1));
+    }
+  }
+  return out;
+}
 
 /** When a guest creates an account, their local data is attached to it and uploaded. */
 async function onAuthenticated(userId: string, email: string | null) {
@@ -123,6 +151,10 @@ export const auth = {
       options: { redirectTo: redirectTo(), skipBrowserRedirect: true },
     });
     if (error || !data.url) throw mapError(error);
+    // Supabase answers 400 when the provider isn't enabled in the project: say so instead of
+    // opening a browser that only shows a JSON error.
+    const probe = await fetch(data.url).catch(() => null);
+    if (probe?.status === 400) throw new AuthError('provider_unavailable');
     const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo());
     if (result.type !== 'success') throw new AuthError('cancelled');
     await auth.handleAuthRedirect(result.url);
@@ -169,12 +201,26 @@ export const auth = {
   async handleAuthRedirect(url: string) {
     const sb = getSupabase();
     if (!sb) return;
-    const { queryParams } = Linking.parse(url);
-    const code = typeof queryParams?.code === 'string' ? queryParams.code : null;
+    const params = redirectParams(url);
+    if (params.error) {
+      const description = (params.error_description ?? '').toLowerCase();
+      throw description.includes('not enabled') || description.includes('unsupported provider')
+        ? new AuthError('provider_unavailable')
+        : new AuthError('unknown', params.error_description ?? params.error);
+    }
+    const code = params.code;
     if (!code) throw new AuthError('unknown', 'Missing auth code');
-    const { data, error } = await sb.auth.exchangeCodeForSession(code);
-    if (error || !data.user) throw mapError(error);
-    await onAuthenticated(data.user.id, data.user.email ?? null);
+    // The redirect reaches both the auth session and the /auth/callback route: exchange once.
+    let pending = codeExchanges.get(code);
+    if (!pending) {
+      pending = (async () => {
+        const { data, error } = await sb.auth.exchangeCodeForSession(code);
+        if (error || !data.user) throw mapError(error);
+        await onAuthenticated(data.user.id, data.user.email ?? null);
+      })();
+      codeExchanges.set(code, pending);
+    }
+    await pending;
   },
 
   /** Restores a persisted Supabase session at startup. */

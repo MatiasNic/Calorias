@@ -4,6 +4,7 @@ import { doseLabel, supplementName } from '@/features/training/labels';
 import { repos } from '@/services/db/repository';
 import type { NotificationSettingsRecord } from '@/services/db/types';
 import { DEFAULT_NOTIFICATION_SETTINGS, rescheduleAll } from '@/services/notifications';
+import { usePrefsStore } from '@/stores/prefs';
 import { currentUserId } from '@/stores/session';
 import { todayLocal } from '@/utils/dates';
 
@@ -33,8 +34,11 @@ export async function rescheduleReminders(settings?: NotificationSettingsRecord)
     repos.meals.list({ from: today, to: today }),
     repos.supplements.list(),
   ]);
-  await rescheduleAll(s, new Set(meals.map((m) => m.meal_type)), supplements, (x) => ({
-    name: supplementName(x),
-    dose: doseLabel(x),
-  }));
+  await rescheduleAll(
+    s,
+    new Set(meals.map((m) => m.meal_type)),
+    supplements,
+    (x) => ({ name: supplementName(x), dose: doseLabel(x) }),
+    usePrefsStore.getState().trainingReminder,
+  );
 }

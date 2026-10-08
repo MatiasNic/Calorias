@@ -1,6 +1,12 @@
 import { dailySummary } from '@plato/shared';
 
-import { applyCookingMethod, FRYING_FAT_G_PER_100G } from '../diary/cooking';
+import {
+  applyCookingMethod,
+  COOKING_CHOICES,
+  cookingChoicesFor,
+  FRYING_FAT_G_PER_100G,
+  isCookable,
+} from '../diary/cooking';
 import { makeItem, mealTotals, withGrams } from '../diary/mealMath';
 import {
   matchScore,
@@ -98,6 +104,32 @@ describe('cooking method adjustment', () => {
       cooking_method: 'fried' as const,
     };
     expect(applyCookingMethod(lean, 'boiled').per100g.fat_g).toBe(0);
+  });
+});
+
+describe('cooking question in the review', () => {
+  const item = (cooking_method?: 'raw' | 'fried' | 'stewed' | 'unknown') => ({
+    ...makeItem(
+      {
+        id: 'm',
+        source: 'ai',
+        name: 'Milanesa',
+        per100g: { kcal: 250, protein_g: 20, carbs_g: 12, fat_g: 13 },
+      },
+      150,
+    ),
+    cooking_method,
+  });
+  it('asks only about cooked or unsure items', () => {
+    expect(isCookable(item('fried'))).toBe(true);
+    expect(isCookable(item('unknown'))).toBe(true);
+    expect(isCookable(item('raw'))).toBe(false);
+    expect(isCookable(item())).toBe(false);
+  });
+  it("keeps the AI's method among the choices", () => {
+    expect(cookingChoicesFor(item('fried'))).toEqual(COOKING_CHOICES);
+    expect(cookingChoicesFor(item('unknown'))).toEqual(COOKING_CHOICES);
+    expect(cookingChoicesFor(item('stewed'))).toEqual(['stewed', ...COOKING_CHOICES]);
   });
 });
 

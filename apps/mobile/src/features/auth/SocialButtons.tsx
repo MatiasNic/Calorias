@@ -21,7 +21,12 @@ export function SocialButtons() {
       else await auth.signInWithApple();
       router.replace('/');
     } catch (e) {
-      if (!(e instanceof AuthError && e.code === 'cancelled')) toast.error(t('auth.errors.social'));
+      if (e instanceof AuthError && e.code === 'cancelled') return;
+      toast.error(
+        e instanceof AuthError && e.code === 'provider_unavailable'
+          ? t('auth.errors.providerUnavailable')
+          : t('auth.errors.social'),
+      );
     } finally {
       setBusy(null);
     }

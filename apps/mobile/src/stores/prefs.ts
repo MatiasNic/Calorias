@@ -6,6 +6,14 @@ import { kvJSONStorage } from './kv';
 
 export type ThemePreference = 'system' | 'light' | 'dark';
 
+export interface TrainingReminder {
+  enabled: boolean;
+  /** 0 = Sunday … 6 = Saturday. */
+  days: number[];
+  /** "HH:mm". */
+  time: string;
+}
+
 export interface PrefsState {
   theme: ThemePreference;
   locale: AppLocale | null;
@@ -17,6 +25,8 @@ export interface PrefsState {
   seenScanTips: boolean;
   /** Adds exercise calories to the day's budget ("kcal disponibles"). */
   exerciseInBudget: boolean;
+  /** Workout reminder (device-local, like the notification schedule itself). */
+  trainingReminder: TrainingReminder;
   set: (patch: Partial<Omit<PrefsState, 'set' | 'reset'>>) => void;
   reset: () => void;
 }
@@ -31,6 +41,7 @@ const defaults = {
   hapticsEnabled: true,
   seenScanTips: false,
   exerciseInBudget: true,
+  trainingReminder: { enabled: false, days: [1, 3, 5], time: '18:00' } as TrainingReminder,
 };
 
 export const usePrefsStore = create<PrefsState>()(

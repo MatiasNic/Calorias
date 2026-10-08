@@ -167,6 +167,7 @@ export const pt: TranslationShape<Translation> = {
       network: 'Sem conexão. Tente novamente.',
       social: 'Não foi possível entrar. Tente novamente.',
       linkExpired: 'O link expirou ou já foi usado.',
+      providerUnavailable: 'O login com Google ainda não está ativado. Use seu e-mail e senha.',
     },
   },
   onboarding: {
@@ -386,6 +387,13 @@ export const pt: TranslationShape<Translation> = {
       'Percebemos que nos últimos dias você registrou pouquíssimas calorias. Comer muito pouco por muito tempo pode afetar sua saúde. Se estiver difícil, conversar com um profissional pode ajudar. No Brasil, o CVV atende gratuitamente pelo 188.',
   },
   diary: {
+    activityReminder: 'Lembrete de atividade',
+    supplementsNone: 'Nada programado para este dia',
+    activity: 'Atividade',
+    activitySummary: '{{minutes}} min · {{kcal}} kcal gastas',
+    supplements: 'Suplementos',
+    supplementsEmpty: 'Registre suas doses diárias junto às refeições',
+    manageSupplements: 'Gerenciar suplementos',
     consumed: 'Você consumiu',
     overGoal: '{{kcal}} kcal acima da meta',
     underGoal: '{{kcal}} kcal abaixo da meta',
@@ -544,6 +552,7 @@ export const pt: TranslationShape<Translation> = {
     grams: 'Gramas de {{name}}',
     changeFood: 'Trocar alimento',
     removeItem: 'Remover alimento',
+    removeNamed: 'Remover {{name}}',
     save: 'Salvar refeição',
     saved: 'Refeição salva!',
     report: 'Reportar erro',
@@ -556,6 +565,7 @@ export const pt: TranslationShape<Translation> = {
     source: 'Fonte dos valores',
     lowConfidenceHint: 'Revise os itens com confiança baixa.',
     cookingHint: 'O método de preparo ajusta as gorduras de forma aproximada.',
+    cookingTitle: 'Como foi preparado?',
     dontSavePhoto: 'Sua configuração: não guardamos a foto, apenas os dados.',
   },
   textLog: {
@@ -1186,6 +1196,9 @@ export const pt: TranslationShape<Translation> = {
     licensesBody:
       'Dados nutricionais: USDA FoodData Central (domínio público), Open Food Facts (ODbL, © colaboradores do Open Food Facts) e ARGENFOODS (UNLu).',
     reminders: {
+      training: 'Atividade',
+      trainingHint: 'Avisamos nos dias que você escolher.',
+      trainingDays: 'Dias',
       title: 'Lembretes',
       meals: 'Refeições',
       water: 'Água',
@@ -1248,6 +1261,10 @@ export const pt: TranslationShape<Translation> = {
     water: { title: 'Um copo de água 💧', body: 'Beba água e registre com um toque.' },
     weighIn: { title: 'Pesagem semanal', body: 'Registre seu peso para ver sua tendência.' },
     supplement: { title: 'Hora do seu suplemento', body: '{{name}} · {{dose}}' },
+    training: {
+      title: 'Hora de treinar',
+      body: 'Registre sua atividade no diário quando terminar.',
+    },
     weekly: {
       title: 'Seu resumo semanal está pronto',
       body: 'Veja como foi e uma sugestão para esta semana.',

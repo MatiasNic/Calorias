@@ -166,6 +166,7 @@ export const en: TranslationShape<Translation> = {
       network: 'No connection. Please try again.',
       social: "We couldn't sign you in. Please try again.",
       linkExpired: 'The link expired or was already used.',
+      providerUnavailable: "Google sign-in isn't enabled yet. Use your email and password.",
     },
   },
   onboarding: {
@@ -372,6 +373,13 @@ export const en: TranslationShape<Translation> = {
       'We noticed you logged very few calories in recent days. Eating very little for a long time can affect your health. If it is hard, talking to a professional can help. In the US you can call or text 988, or find local resources at findahelpline.com.',
   },
   diary: {
+    activityReminder: 'Activity reminder',
+    supplementsNone: 'Nothing scheduled for this day',
+    activity: 'Activity',
+    activitySummary: '{{minutes}} min · {{kcal}} kcal burned',
+    supplements: 'Supplements',
+    supplementsEmpty: 'Track your daily doses next to your meals',
+    manageSupplements: 'Manage supplements',
     consumed: 'You ate',
     overGoal: '{{kcal}} kcal over your goal',
     underGoal: '{{kcal}} kcal under your goal',
@@ -530,6 +538,7 @@ export const en: TranslationShape<Translation> = {
     grams: 'Grams of {{name}}',
     changeFood: 'Change food',
     removeItem: 'Remove food',
+    removeNamed: 'Remove {{name}}',
     save: 'Save meal',
     saved: 'Meal saved!',
     report: 'Report a mistake',
@@ -542,6 +551,7 @@ export const en: TranslationShape<Translation> = {
     source: 'Values source',
     lowConfidenceHint: 'Review low-confidence items.',
     cookingHint: 'The cooking method adjusts fat approximately.',
+    cookingTitle: 'How was it cooked?',
     dontSavePhoto: "Your setting: we don't keep the photo, only the data.",
   },
   textLog: {
@@ -1170,6 +1180,9 @@ export const en: TranslationShape<Translation> = {
     licensesBody:
       'Nutrition data: USDA FoodData Central (public domain), Open Food Facts (ODbL, © Open Food Facts contributors) and ARGENFOODS (UNLu).',
     reminders: {
+      training: 'Activity',
+      trainingHint: 'We remind you on the days you choose.',
+      trainingDays: 'Days',
       title: 'Reminders',
       meals: 'Meals',
       water: 'Water',
@@ -1232,6 +1245,7 @@ export const en: TranslationShape<Translation> = {
     water: { title: 'A glass of water 💧', body: 'Drink some water and add it with one tap.' },
     weighIn: { title: 'Weekly weigh-in', body: 'Log your weight to see your trend.' },
     supplement: { title: 'Time for your supplement', body: '{{name}} · {{dose}}' },
+    training: { title: 'Time to train', body: 'Log your activity in the diary when you finish.' },
     weekly: {
       title: 'Your weekly summary is ready',
       body: 'See how it went and a tip for this week.',

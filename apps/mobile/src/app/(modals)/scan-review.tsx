@@ -20,7 +20,12 @@ import {
 import { DraftItemCard } from '@/features/diary/DraftItemCard';
 import { DraftTotals } from '@/features/diary/DraftTotals';
 import { useDraftStore } from '@/features/diary/draftStore';
-import { HIDDEN_EXTRAS } from '@/features/diary/cooking';
+import {
+  applyCookingMethod,
+  cookingChoicesFor,
+  HIDDEN_EXTRAS,
+  isCookable,
+} from '@/features/diary/cooking';
 import { saveMeal } from '@/features/diary/hooks';
 import { makeItem } from '@/features/diary/mealMath';
 import { MealTypePicker } from '@/features/diary/MealTypePicker';
@@ -48,7 +53,7 @@ type Phase = 'analyzing' | 'review' | 'not_food' | 'error';
 export default function ScanReview() {
   const { t } = useTranslation();
   const scan = useScanStore();
-  const { draft, start, patch, addItem, clear } = useDraftStore();
+  const { draft, start, patch, addItem, removeItem, updateItem, clear } = useDraftStore();
   const savePhotos = usePrefsStore((s) => s.savePhotos);
   const plan = usePlan();
   const aiError = useAiError();
@@ -250,6 +255,9 @@ export default function ScanReview() {
 
   if (!draft) return null;
   const lowConfidence = draft.items.some((i) => (i.ai_confidence ?? 1) < 0.5);
+  const cookable = draft.items
+    .map((item, index) => ({ item, index }))
+    .filter(({ item }) => isCookable(item));
 
   return (
     <Screen
@@ -315,17 +323,51 @@ export default function ScanReview() {
       />
 
       <Card style={styles.card}>
-        <AppText variant="subheading">{draft.hiddenQuestion ?? t('review.hiddenTitle')}</AppText>
+        <AppText variant="subheading">
+          {draft.hiddenQuestion ??
+            (cookable.length ? t('review.cookingTitle') : t('review.hiddenTitle'))}
+        </AppText>
+        {/* Answer the cooking question right here: it adjusts the fat of that item. */}
+        {cookable.map(({ item, index }) => (
+          <View key={item.id ?? index} style={styles.cookRow}>
+            <AppText variant="label" color="textMuted">
+              {item.display_name}
+            </AppText>
+            <View style={styles.chips}>
+              {cookingChoicesFor(item).map((m) => (
+                <Chip
+                  key={m}
+                  label={t(`cooking.${m}`)}
+                  selected={item.cooking_method === m}
+                  onPress={() =>
+                    updateItem(index, { ...applyCookingMethod(item, m), user_edited: true })
+                  }
+                />
+              ))}
+            </View>
+          </View>
+        ))}
+        {draft.hiddenQuestion || cookable.length ? (
+          <AppText variant="label" color="textMuted">
+            {t('review.hiddenTitle')}
+          </AppText>
+        ) : null}
         <View style={styles.chips}>
           {HIDDEN_EXTRAS.map((x) => {
             const food = getRegionalFood(x.id);
             if (!food) return null;
+            const added = draft.items.findIndex((i) => i.food_id === x.id);
             return (
               <Chip
                 key={x.id}
-                icon="add"
+                icon={added >= 0 ? 'checkmark' : 'add'}
+                selected={added >= 0}
                 label={t(`review.extras.${x.key}`)}
-                onPress={() => addItem({ ...makeItem(food, x.grams), user_edited: true })}
+                onPress={() =>
+                  added >= 0
+                    ? removeItem(added)
+                    : addItem({ ...makeItem(food, x.grams), user_edited: true })
+                }
               />
             );
           })}
@@ -380,4 +422,5 @@ const styles = StyleSheet.create({
   photo: { width: '100%', height: 200, borderRadius: radii.xl },
   card: { gap: spacing.md },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  cookRow: { gap: spacing.xs },
 });

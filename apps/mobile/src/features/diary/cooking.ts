@@ -44,3 +44,17 @@ export const HIDDEN_EXTRAS = [
   { id: 'mayonesa', grams: 14, key: 'mayo' },
   { id: 'chimichurri', grams: 15, key: 'dressing' },
 ] as const;
+
+/** Items whose cooking method the user can answer in the review (AI said it's cooked/unsure). */
+export function isCookable(item: MealItem): boolean {
+  return item.cooking_method != null && item.cooking_method !== 'raw';
+}
+
+/** The quick choices for an item, keeping the AI's own method visible when it isn't one of them. */
+export function cookingChoicesFor(item: MealItem): readonly CookingMethod[] {
+  const current = item.cooking_method;
+  if (!current || current === 'unknown' || COOKING_CHOICES.includes(current)) {
+    return COOKING_CHOICES;
+  }
+  return [current, ...COOKING_CHOICES];
+}

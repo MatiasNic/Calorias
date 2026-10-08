@@ -42,6 +42,19 @@ es comida), cuenta propia y datos guardados en la nube, antes de publicar.
 Después compila un APK `preview` con `EXPO_PUBLIC_USE_MOCKS=false` y la URL/anon key públicas
 del proyecto (esas dos sí van en la app; no son secretas) y lo publica en el Release de GitHub.
 
+## 2b. Ingresar con Google (opcional)
+
+El botón "Continuar con Google" necesita que el proveedor esté activado en Supabase; si no, la app
+avisa "El ingreso con Google todavía no está habilitado" y se puede usar email y contraseña.
+
+1. Google Cloud Console → _APIs y servicios → Credenciales_ → Crear credenciales → **ID de cliente
+   de OAuth** → tipo **Aplicación web**. En _URIs de redireccionamiento autorizados_ poné
+   `https://<SUPABASE_PROJECT_REF>.supabase.co/auth/v1/callback`.
+2. Supabase → _Authentication → Sign In / Providers → Google_ → activalo y pegá el Client ID y el
+   Client Secret.
+3. Supabase → _Authentication → URL Configuration_ → en _Redirect URLs_ agregá
+   `bocado://auth/callback` y `bocado://auth/reset-password`.
+
 ## 3. Premium sin pagar durante la prueba
 
 Mientras no estén creados los productos en Play Console y RevenueCat, el dueño se da Premium a sí
