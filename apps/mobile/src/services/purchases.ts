@@ -80,6 +80,9 @@ export async function initPurchases(appUserId: string) {
   if (mockPurchasesEnabled()) {
     if (usePlanStore.getState().source === 'default')
       usePlanStore.getState().setPlan({ source: 'mock' });
+    // Real backend without store keys (test builds): the server plan still applies, e.g. a
+    // promotional subscription granted from the dashboard.
+    if (!env.useMocks) await refreshPlan();
     return;
   }
   const apiKey = Platform.OS === 'android' ? env.revenueCatAndroidKey : env.revenueCatIosKey;
