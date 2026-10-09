@@ -75,7 +75,8 @@ export class AnthropicProvider implements AIProvider {
       });
     } catch (e) {
       if (e instanceof Anthropic.APIConnectionTimeoutError) throw new AIError('timeout');
-      if (e instanceof Anthropic.APIError) throw new AIError('upstream', `${e.status}`);
+      if (e instanceof Anthropic.APIError)
+        throw new AIError('upstream', `${e.status} ${e.message}`);
       throw new AIError('invalid', e instanceof Error ? e.message : String(e));
     }
     const usage = this.usageOf(model, started, response.usage);
@@ -180,7 +181,8 @@ export class AnthropicProvider implements AIProvider {
     } catch (e) {
       if (e instanceof AIError) throw e;
       if (e instanceof Anthropic.APIConnectionTimeoutError) throw new AIError('timeout');
-      if (e instanceof Anthropic.APIError) throw new AIError('upstream', `${e.status}`);
+      if (e instanceof Anthropic.APIError)
+        throw new AIError('upstream', `${e.status} ${e.message}`);
       throw new AIError('upstream', e instanceof Error ? e.message : String(e));
     }
   };
