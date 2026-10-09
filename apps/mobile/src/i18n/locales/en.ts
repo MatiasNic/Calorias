@@ -580,6 +580,7 @@ export const en: TranslationShape<Translation> = {
     quotaBody:
       'The free plan includes {{limit}} AI scans per day. Premium is unlimited (fair use).',
     aiTimeout: 'The AI took too long. Please try again.',
+    aiUnavailable: 'The AI is unavailable right now. Try later or log it manually.',
     aiInvalid: "We couldn't read the response. Try again or log manually.",
     offline: 'You need a connection to analyze with AI. You can log manually meanwhile.',
     rateLimited: 'Too many attempts in a row. Wait a minute.',

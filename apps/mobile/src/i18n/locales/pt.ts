@@ -594,6 +594,7 @@ export const pt: TranslationShape<Translation> = {
     quotaBody:
       'O plano grátis inclui {{limit}} escaneamentos com IA por dia. Com Premium são ilimitados (uso razoável).',
     aiTimeout: 'A IA demorou demais. Tente novamente.',
+    aiUnavailable: 'A IA não está disponível agora. Tente mais tarde ou registre manualmente.',
     aiInvalid: 'Não conseguimos interpretar a resposta. Tente novamente ou registre manualmente.',
     offline:
       'Você precisa de conexão para analisar com IA. Pode registrar manualmente enquanto isso.',

@@ -20,7 +20,8 @@ export function useAiError() {
           router.push({ pathname: '/paywall', params: { context: 'feature' } });
           return t('errors.premiumRequired');
         case 'AI_TIMEOUT':
-          return t('errors.aiTimeout');
+          // The server also uses this code for upstream failures (bad key, outage): say so.
+          return e.details?.upstream ? t('errors.aiUnavailable') : t('errors.aiTimeout');
         case 'AI_INVALID_RESPONSE':
           return t('errors.aiInvalid');
         case 'OFFLINE':

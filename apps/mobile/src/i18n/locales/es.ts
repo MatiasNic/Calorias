@@ -600,6 +600,7 @@ export const es = {
     quotaBody:
       'El plan gratis incluye {{limit}} escaneos con IA por día. Con Premium son ilimitados (uso razonable).',
     aiTimeout: 'La IA tardó demasiado. Intentá de nuevo.',
+    aiUnavailable: 'La IA no está disponible en este momento. Probá más tarde o registrá a mano.',
     aiInvalid: 'No pudimos interpretar la respuesta. Intentá de nuevo o registrá a mano.',
     offline: 'Necesitás conexión para analizar con IA. Podés registrar a mano mientras tanto.',
     rateLimited: 'Demasiados intentos seguidos. Esperá un minuto.',
