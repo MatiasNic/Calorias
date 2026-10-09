@@ -1232,6 +1232,7 @@ export const en: TranslationShape<Translation> = {
     nothingToRestore: 'No purchases to restore',
     welcomePremium: 'Welcome to Premium!',
     purchaseError: "The purchase couldn't be completed.",
+    unavailable: 'Payments are not enabled yet in this test build.',
     loadError: "We couldn't load the plans. Check your connection.",
     sandboxNote: 'Demo mode: purchases are simulated and nothing is charged.',
     legal: 'Payment through the store. See <terms>Terms</terms> and <privacy>Privacy</privacy>.',

@@ -35,7 +35,9 @@ export default function Scan() {
   const [mode, setMode] = useState<Mode>(params.mode ?? 'photo');
   const [permission, requestPermission] = useCameraPermissions();
   const [torch, setTorch] = useState(false);
-  const [busy, setBusy] = useState<null | 'barcode' | 'label' | 'capture'>(null);
+  const [busy, setBusy] = useState<null | 'barcode' | 'label' | 'capture' | 'gallery'>(null);
+  // One photo per visit: a second capture/pick while leaving used to replace the first mid-analysis.
+  const leaving = useRef(false);
   const [notFound, setNotFound] = useState<string | null>(null);
   const camera = useRef<CameraView>(null);
   const lastCode = useRef<string | null>(null);
@@ -51,6 +53,8 @@ export default function Scan() {
   };
 
   const goReview = (uri: string, width: number, height: number) => {
+    if (leaving.current) return;
+    leaving.current = true;
     useScanStore.getState().setPhoto({ uri, width, height }, null, entryDate);
     track('scan_started', { mode: 'photo' });
     router.replace('/scan-review');
@@ -82,7 +86,7 @@ export default function Scan() {
   };
 
   const capture = async () => {
-    if (!camera.current || busy) return;
+    if (!camera.current || busy || leaving.current) return;
     if (mode !== 'barcode' && needsAccount()) return;
     haptic('medium');
     setBusy('capture');
@@ -99,12 +103,21 @@ export default function Scan() {
   };
 
   const pickFromGallery = async () => {
-    if (needsAccount()) return;
-    const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.9 });
-    const asset = res.canceled ? null : res.assets[0];
-    if (!asset) return;
-    if (mode === 'label') await onLabel(asset.uri, asset.width, asset.height);
-    else goReview(asset.uri, asset.width, asset.height);
+    if (busy || needsAccount()) return;
+    // Block the shutter while the picker is open and the chosen photo is being handed over.
+    setBusy('gallery');
+    try {
+      const res = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        quality: 0.9,
+      });
+      const asset = res.canceled ? null : res.assets[0];
+      if (!asset) return;
+      if (mode === 'label') await onLabel(asset.uri, asset.width, asset.height);
+      else goReview(asset.uri, asset.width, asset.height);
+    } finally {
+      setBusy((b) => (b === 'gallery' ? null : b));
+    }
   };
 
   const onBarcode = async ({ data }: BarcodeScanningResult) => {
@@ -300,14 +313,16 @@ export default function Scan() {
               square
               accessibilityLabel={t('scan.gallery')}
               onPress={pickFromGallery}
-              disabled={mode === 'barcode'}
+              disabled={mode === 'barcode' || !!busy}
             />
             {mode !== 'barcode' ? (
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel={t('scan.capture')}
                 onPress={capture}
-                style={[styles.shutter, { borderColor: colors.primary }]}
+                disabled={!!busy}
+                accessibilityState={{ disabled: !!busy }}
+                style={[styles.shutter, { borderColor: colors.primary, opacity: busy ? 0.5 : 1 }]}
                 testID="scan-capture"
               >
                 {busy === 'capture' ? (

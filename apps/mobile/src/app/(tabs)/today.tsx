@@ -30,7 +30,7 @@ import { ActivityRow } from '@/features/training/components/ActivityRow';
 import { pickInsight } from '@/features/habits/insights';
 import { useProfile } from '@/features/profile/hooks';
 import { repos } from '@/services/db/repository';
-import { syncNow, useSyncStatus } from '@/services/sync/engine';
+import { syncNow } from '@/services/sync/engine';
 import { useUiStore } from '@/stores/ui';
 import { radii, spacing, useTheme } from '@/theme';
 import { formatDay, todayLocal } from '@/utils/dates';
@@ -46,7 +46,14 @@ export default function Today() {
   const day = useDaySummary(date);
   const streak = useStreak();
   const restriction = useRestrictionCheck();
-  const syncing = useSyncStatus((s) => s.syncing);
+  // The spinner follows the user's pull-to-refresh only, not every background sync.
+  const [pulling, setPulling] = useState(false);
+  const pullToRefresh = () => {
+    setPulling(true);
+    syncNow()
+      .catch(() => undefined)
+      .finally(() => setPulling(false));
+  };
   const logged = useQuery({
     queryKey: ['db', 'meals', 'dates'],
     queryFn: () => repos.meals.dates(),
@@ -84,7 +91,7 @@ export default function Today() {
   };
 
   return (
-    <Screen onRefresh={() => syncNow()} refreshing={syncing} testID="today-screen">
+    <Screen onRefresh={pullToRefresh} refreshing={pulling} testID="today-screen">
       <View style={styles.header}>
         <Pressable
           style={styles.flex}

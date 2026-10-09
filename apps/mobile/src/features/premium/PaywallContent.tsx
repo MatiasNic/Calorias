@@ -82,6 +82,8 @@ export function PaywallContent({
       onClose(true);
     } else if (outcome === 'error') {
       toast.error(t('paywall.purchaseError'));
+    } else if (outcome === 'unavailable') {
+      toast.info(t('paywall.unavailable'));
     }
   };
 

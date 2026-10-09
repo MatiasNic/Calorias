@@ -92,7 +92,7 @@ async function doSync() {
         if (!maxTs || row.updatedAt > maxTs) maxTs = row.updatedAt;
       }
       if (maxTs) await setLastPulled(name, maxTs);
-      if (rows.length) dbEvents.emit(name);
+      if (rows.length) dbEvents.emit(name, 'remote');
     } catch (e) {
       errors.push(`${name}: ${e instanceof Error ? e.message : String(e)}`);
     }
@@ -115,7 +115,11 @@ function scheduleSync() {
 
 /** Wires automatic sync: after local writes, on reconnect and when the app comes to foreground. */
 export function startSyncEngine(): () => void {
-  const unsubDb = dbEvents.subscribe(() => scheduleSync());
+  // Only local writes need an upload; reacting to pulled rows re-synced forever (the pull
+  // overlap always returns the latest rows again).
+  const unsubDb = dbEvents.subscribe((_, origin) => {
+    if (origin === 'local') scheduleSync();
+  });
   const unsubNet = NetInfo.addEventListener((state) => {
     const online = !!state.isConnected && state.isInternetReachable !== false;
     const wasOnline = useSyncStatus.getState().online;

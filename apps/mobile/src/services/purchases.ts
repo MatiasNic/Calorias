@@ -207,9 +207,12 @@ export async function getPackages(): Promise<PlanPackage[]> {
   );
 }
 
-export type PurchaseOutcome = 'purchased' | 'cancelled' | 'error';
+export type PurchaseOutcome = 'purchased' | 'cancelled' | 'error' | 'unavailable';
 
 export async function purchase(pkg: PlanPackage): Promise<PurchaseOutcome> {
+  // Real backend without store keys (test builds): a simulated purchase would only unlock the
+  // UI while the server keeps enforcing the free plan. The plan comes from the server instead.
+  if (mockPurchasesEnabled() && !env.useMocks) return 'unavailable';
   if (mockPurchasesEnabled()) {
     usePlanStore.getState().setPlan({
       plan: 'premium',
@@ -235,6 +238,7 @@ export async function purchase(pkg: PlanPackage): Promise<PurchaseOutcome> {
 }
 
 export async function restorePurchases(): Promise<boolean> {
+  if (mockPurchasesEnabled() && !env.useMocks) return (await refreshPlan()) === 'premium';
   if (mockPurchasesEnabled()) return usePlanStore.getState().plan === 'premium';
   const info = await Purchases.restorePurchases();
   applyCustomerInfo(info);

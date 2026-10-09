@@ -4,7 +4,9 @@ import { currentUserId } from '@/stores/session';
 import { getDb } from './database';
 import type { CollectionMap, CollectionName } from './types';
 
-type Listener = (collection: CollectionName) => void;
+/** 'local': written on this device (needs upload). 'remote': applied from a sync pull. */
+export type ChangeOrigin = 'local' | 'remote';
+type Listener = (collection: CollectionName, origin: ChangeOrigin) => void;
 const listeners = new Set<Listener>();
 
 /** Notifies subscribers (TanStack Query invalidation, sync scheduler) about local writes. */
@@ -13,8 +15,8 @@ export const dbEvents = {
     listeners.add(fn);
     return () => listeners.delete(fn);
   },
-  emit(collection: CollectionName) {
-    listeners.forEach((fn) => fn(collection));
+  emit(collection: CollectionName, origin: ChangeOrigin = 'local') {
+    listeners.forEach((fn) => fn(collection, origin));
   },
 };
 

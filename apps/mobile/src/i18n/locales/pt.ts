@@ -1248,6 +1248,7 @@ export const pt: TranslationShape<Translation> = {
     nothingToRestore: 'Não encontramos compras para restaurar',
     welcomePremium: 'Bem-vindo/a ao Premium!',
     purchaseError: 'Não foi possível concluir a compra.',
+    unavailable: 'Os pagamentos ainda não estão ativados nesta versão de teste.',
     loadError: 'Não foi possível carregar os planos. Verifique sua conexão.',
     sandboxNote: 'Modo demo: as compras são simuladas e nada é cobrado.',
     legal: 'Pagamento pela loja. Veja os <terms>Termos</terms> e a <privacy>Privacidade</privacy>.',

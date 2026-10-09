@@ -1254,6 +1254,7 @@ export const es = {
     nothingToRestore: 'No encontramos compras para restaurar',
     welcomePremium: '¡Bienvenido/a a Premium!',
     purchaseError: 'No se pudo completar la compra.',
+    unavailable: 'Los pagos todavía no están habilitados en esta versión de prueba.',
     loadError: 'No pudimos cargar los planes. Revisá tu conexión.',
     sandboxNote: 'Modo demo: las compras son simuladas y no se cobra nada.',
     legal:
