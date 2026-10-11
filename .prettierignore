@@ -8,3 +8,4 @@ supabase/seed/*.sql
 coverage
 dist
 design/diseno
+packages/shared/data/*.json

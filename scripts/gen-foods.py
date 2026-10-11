@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
 """Generates packages/shared/data/foods-regional.json and supabase/seed/01_foods_regional.sql."""
-import json, os, sys
+import glob, importlib.util, json, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'data'))
 from foods_regional_source import F, SOURCES  # noqa: E402
+
+# Extra tables (home dishes, supermarket products, LatAm…) live in foods_extra_*.py with the same
+# columns. Run scripts/check-foods.py first: it validates ranges, units and duplicates.
+F = list(F)
+for path in sorted(glob.glob(os.path.join(os.path.dirname(__file__), 'data', 'foods_extra_*.py'))):
+    spec = importlib.util.spec_from_file_location(os.path.basename(path)[:-3], path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    F.extend(mod.F)
 
 root = os.path.join(os.path.dirname(__file__), '..')
 ids = set(); out = []
@@ -23,7 +32,8 @@ for row in F:
 
 data_path = os.path.join(root, 'packages/shared/data/foods-regional.json')
 with open(data_path, 'w') as fh:
-    json.dump(out, fh, ensure_ascii=False, indent=1); fh.write('\n')
+    # One food per line: readable diffs, ~40 % smaller than indented JSON in the app bundle.
+    fh.write('[\n' + ',\n'.join(json.dumps(o, ensure_ascii=False, separators=(',', ':')) for o in out) + '\n]\n')
 
 def q(s): return "'" + str(s).replace("'", "''") + "'"
 def arr(a): return "array[" + ",".join(q(x) for x in a) + "]::text[]" if a else "'{}'::text[]"

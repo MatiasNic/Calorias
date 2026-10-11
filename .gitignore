@@ -37,3 +37,4 @@ supabase/.env
 !releases/*.apk
 *.aab
 artifacts/
+__pycache__/

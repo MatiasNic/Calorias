@@ -359,7 +359,7 @@ export default function ScanReview() {
           accessibilityIgnoresInvertColors
         />
       ) : null}
-      {env.useMocks ? (
+      {env.useMocks && scan.photo ? (
         <Banner
           tone="warning"
           icon="flask-outline"
