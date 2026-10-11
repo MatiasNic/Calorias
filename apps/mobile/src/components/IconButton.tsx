@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { MIN_TOUCH, radii, useTheme, type ThemeColors } from '@/theme';
 import { haptic } from '@/utils/haptics';
@@ -17,6 +17,8 @@ export interface IconButtonProps {
   rawWhite?: boolean;
   /** Rounded square instead of a circle (header actions). */
   square?: boolean;
+  /** Shows a spinner instead of the icon and ignores presses. */
+  loading?: boolean;
 }
 
 export function IconButton({
@@ -30,6 +32,7 @@ export function IconButton({
   testID,
   rawWhite,
   square,
+  loading,
 }: IconButtonProps) {
   const { colors } = useTheme();
   return (
@@ -37,7 +40,8 @@ export function IconButton({
       testID={testID}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
-      disabled={disabled}
+      disabled={disabled || loading}
+      accessibilityState={{ disabled: !!(disabled || loading), busy: !!loading }}
       hitSlop={4}
       onPress={() => {
         haptic('light');
@@ -48,11 +52,15 @@ export function IconButton({
         square ? styles.square : null,
         {
           backgroundColor: background === 'transparent' ? 'transparent' : colors[background],
-          opacity: disabled ? 0.4 : pressed ? 0.6 : 1,
+          opacity: disabled && !loading ? 0.4 : pressed ? 0.6 : 1,
         },
       ]}
     >
-      <Icon name={icon} size={size} color={color} rawColor={rawWhite ? '#FFFFFF' : undefined} />
+      {loading ? (
+        <ActivityIndicator color={rawWhite ? '#FFFFFF' : colors[color]} />
+      ) : (
+        <Icon name={icon} size={size} color={color} rawColor={rawWhite ? '#FFFFFF' : undefined} />
+      )}
     </Pressable>
   );
 }

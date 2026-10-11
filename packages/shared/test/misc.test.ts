@@ -217,9 +217,11 @@ describe('schemas', () => {
           confidence: 0.82,
           per_100g_estimate: { kcal: 245, protein_g: 18, carbs_g: 12, fat_g: 14, fiber_g: 0.6 },
           search_hints: ['milanesa'],
+          meal_type: null,
         },
       ],
       hidden_ingredients_question: '¿Usaste aceite?',
+      quick_answers: ['Sí', 'No'],
       notes: null,
     };
     expect(AiAnalysisSchema.safeParse(sample).success).toBe(true);

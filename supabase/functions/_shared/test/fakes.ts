@@ -36,6 +36,7 @@ export function fakeAi(
     dish_name: null,
     items: [],
     hidden_ingredients_question: null,
+    quick_answers: [],
     notes: 'Es un perro',
   };
   return {

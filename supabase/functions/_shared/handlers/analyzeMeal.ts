@@ -57,9 +57,12 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
       await deps.storage.remove(MEAL_PHOTOS_BUCKET, [body.photo_path]).catch(() => undefined);
   };
 
-  // Dedup: the same image analyzed before is returned without consuming quota.
+  // Dedup: the same image analyzed before is returned without consuming quota (unless the user
+  // added a hint this time, which can change the answer).
   const since = new Date(deps.now().getTime() - DEDUP_WINDOW_DAYS * 86_400_000).toISOString();
-  const cached = await deps.db.findScanByHash(user.id, body.image_sha256, kind, since);
+  const cached = body.hint
+    ? null
+    : await deps.db.findScanByHash(user.id, body.image_sha256, kind, since);
   if (cached) {
     await cleanup();
     return json({ ...(cached.result as object), scan_id: cached.id, cached: true });
@@ -96,7 +99,10 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
     result =
       kind === 'label'
         ? await deps.ai.readLabel({ image, ctx }, model)
-        : await deps.ai.analyzeMealImage({ image, ctx, mealType: body.meal_type }, model);
+        : await deps.ai.analyzeMealImage(
+            { image, ctx, mealType: body.meal_type, hint: body.hint },
+            model,
+          );
   } catch (e) {
     await deps.db.refundQuota(user.id, 'photo_scan', ticket.day, ticket.bucket);
     const err = e instanceof AIError ? e : new AIError('upstream', String(e));
@@ -170,6 +176,7 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
     dish_name: analysis.dish_name,
     items,
     hidden_ingredients_question: analysis.hidden_ingredients_question,
+    quick_answers: analysis.quick_answers,
     notes: analysis.notes,
     model: usage.model,
     quota: analysis.is_food

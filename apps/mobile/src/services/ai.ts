@@ -19,6 +19,7 @@ import {
   type MealPlan,
   type MealPlanPreferences,
   type MealType,
+  type PreviousItem,
   type QuotaKind,
   type QuotaStatus,
 } from '@plato/shared';
@@ -134,6 +135,7 @@ function enrichLocally(analysis: AiAnalysis): EnrichedItem[] {
         ? { ...match.per100g, fiber_g: match.per100g.fiber_g ?? 0 }
         : it.per_100g_estimate,
       bbox: it.bbox,
+      meal_type: it.meal_type,
     };
   });
 }
@@ -146,6 +148,7 @@ function mockResponse(analysis: AiAnalysis, quota: AnalyzeResponse['quota']): An
     dish_name: analysis.dish_name,
     items: enrichLocally(analysis),
     hidden_ingredients_question: analysis.hidden_ingredients_question,
+    quick_answers: analysis.quick_answers,
     notes: analysis.notes,
     model: 'demo',
     quota,
@@ -169,6 +172,8 @@ export interface PhotoAnalysis {
 export async function analyzeMealPhoto(
   img: PreparedImage,
   mealType?: MealType,
+  /** What the user said about the photo ("es de pollo, sin aceite"). */
+  hint?: string,
 ): Promise<PhotoAnalysis> {
   if (mocked()) {
     const quota = consumeMock('photo_scan');
@@ -186,6 +191,7 @@ export async function analyzeMealPhoto(
       meal_type: mealType,
       mode: 'meal',
       keep_photo: keep,
+      hint: hint?.trim() || undefined,
     },
     AnalyzeResponseSchema,
   );
@@ -195,6 +201,8 @@ export async function analyzeMealPhoto(
 export async function analyzeMealText(
   text: string,
   source: 'text' | 'voice' | 'recipe' = 'text',
+  /** Present → `text` corrects these items and the response is the full corrected list. */
+  previous?: PreviousItem[],
 ): Promise<AnalyzeResponse> {
   if (mocked()) {
     const quota = consumeMock('text_query');
@@ -203,7 +211,12 @@ export async function analyzeMealText(
   }
   return invokeFunction(
     'analyze-text',
-    { text, locale: currentLocale(), source },
+    {
+      text,
+      locale: currentLocale(),
+      source,
+      previous_items: previous?.length ? previous : undefined,
+    },
     AnalyzeResponseSchema,
   );
 }

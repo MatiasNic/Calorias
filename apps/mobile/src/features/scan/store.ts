@@ -17,6 +17,9 @@ interface ScanState {
   date: IsoDate | null;
   /** What the user typed or dictated (to edit it if the AI didn't recognise food). */
   inputText: string | null;
+  /** What the user says about the photo before taking it ("es de pollo, sin aceite"). */
+  hint: string | null;
+  setHint: (hint: string | null) => void;
   setPhoto: (p: CapturedPhoto, mealType?: MealType | null, date?: IsoDate | null) => void;
   setTextResult: (
     r: AnalyzeResponse,
@@ -34,6 +37,8 @@ export const useScanStore = create<ScanState>((set) => ({
   mealType: null,
   date: null,
   inputText: null,
+  hint: null,
+  setHint: (hint) => set({ hint }),
   setPhoto: (photo, mealType = null, date = null) =>
     set({ photo, result: null, source: 'photo', mealType, date, inputText: null }),
   setTextResult: (result, source, date = null, inputText = null) =>
@@ -46,5 +51,6 @@ export const useScanStore = create<ScanState>((set) => ({
       mealType: null,
       date: null,
       inputText: null,
+      hint: null,
     }),
 }));

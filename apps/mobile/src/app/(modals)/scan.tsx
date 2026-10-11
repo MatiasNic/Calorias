@@ -3,7 +3,16 @@ import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'ex
 import * as ImagePicker from 'expo-image-picker';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Linking, Pressable, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
@@ -19,7 +28,7 @@ import { aiAvailable, readNutritionLabel } from '@/services/ai';
 import { track } from '@/services/analytics';
 import { prepareMealImage } from '@/services/image';
 import { usePlan } from '@/services/purchases';
-import { radii, spacing, useTheme } from '@/theme';
+import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { useUiStore } from '@/stores/ui';
 import { haptic } from '@/utils/haptics';
 
@@ -39,6 +48,8 @@ export default function Scan() {
   // One photo per visit: a second capture/pick while leaving used to replace the first mid-analysis.
   const leaving = useRef(false);
   const [notFound, setNotFound] = useState<string | null>(null);
+  // Optional words about the photo ("es de pollo, sin aceite") that guide the AI.
+  const [hint, setHint] = useState('');
   const camera = useRef<CameraView>(null);
   const lastCode = useRef<string | null>(null);
   const quota = useQuotaStatus();
@@ -56,6 +67,7 @@ export default function Scan() {
     if (leaving.current) return;
     leaving.current = true;
     useScanStore.getState().setPhoto({ uri, width, height }, null, entryDate);
+    useScanStore.getState().setHint(hint.trim() || null);
     track('scan_started', { mode: 'photo' });
     router.replace('/scan-review');
   };
@@ -214,132 +226,153 @@ export default function Scan() {
         }
         onBarcodeScanned={mode === 'barcode' ? onBarcode : undefined}
       />
-      <SafeAreaView style={styles.overlay} edges={['top', 'bottom']}>
-        <View style={styles.top}>
-          <IconButton
-            icon="close"
-            rawWhite
-            accessibilityLabel={t('common.close')}
-            onPress={() => router.back()}
-          />
-          {mode === 'photo' && photoQuota ? (
-            <View style={styles.pill}>
-              <AppText variant="caption" style={styles.white}>
-                {plan === 'premium'
-                  ? t('scan.quotaUnlimited')
-                  : t('scan.quotaLeft', { count: photoQuota.remaining })}
-              </AppText>
-            </View>
-          ) : null}
-          <IconButton
-            icon={torch ? 'flash' : 'flash-off'}
-            rawWhite
-            accessibilityLabel={torch ? t('scan.flashOff') : t('scan.flashOn')}
-            onPress={() => setTorch(!torch)}
-          />
-        </View>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <SafeAreaView style={styles.overlay} edges={['top', 'bottom']}>
+          <View style={styles.top}>
+            <IconButton
+              icon="close"
+              rawWhite
+              accessibilityLabel={t('common.close')}
+              onPress={() => router.back()}
+            />
+            {mode === 'photo' && photoQuota ? (
+              <View style={styles.pill}>
+                <AppText variant="caption" style={styles.white}>
+                  {plan === 'premium'
+                    ? t('scan.quotaUnlimited')
+                    : t('scan.quotaLeft', { count: photoQuota.remaining })}
+                </AppText>
+              </View>
+            ) : null}
+            <IconButton
+              icon={torch ? 'flash' : 'flash-off'}
+              rawWhite
+              accessibilityLabel={torch ? t('scan.flashOff') : t('scan.flashOn')}
+              onPress={() => setTorch(!torch)}
+            />
+          </View>
 
-        <View style={styles.center} pointerEvents="none">
-          <View style={[styles.frame, mode === 'barcode' && styles.frameBarcode]} />
-          <AppText variant="label" align="center" style={[styles.white, styles.hint]}>
-            {guide}
-          </AppText>
-        </View>
-
-        {busy === 'barcode' || busy === 'label' ? (
-          <Card style={styles.sheet}>
-            <ActivityIndicator color={colors.primary} />
-            <AppText align="center">
-              {busy === 'barcode' ? t('scan.looking') : t('scan.labelReading')}
+          <View style={styles.center} pointerEvents="none">
+            <View style={[styles.frame, mode === 'barcode' && styles.frameBarcode]} />
+            <AppText variant="label" align="center" style={[styles.white, styles.hint]}>
+              {guide}
             </AppText>
-          </Card>
-        ) : null}
+          </View>
 
-        {notFound ? (
-          <Card style={styles.sheet}>
-            <AppText variant="subheading">{t('scan.barcodeNotFound')}</AppText>
-            <AppText color="textMuted">{t('scan.barcodeNotFoundBody')}</AppText>
-            <Button label={t('scan.scanLabel')} icon="camera" onPress={() => setMode('label')} />
-            <Button
-              label={t('scan.createProduct')}
-              variant="outline"
-              onPress={() =>
-                router.replace({ pathname: '/custom-food', params: { barcode: notFound } })
-              }
-            />
-            <Button
-              label={t('common.retry')}
-              variant="ghost"
-              size="md"
-              onPress={() => {
-                setNotFound(null);
-                lastCode.current = null;
-              }}
-            />
-          </Card>
-        ) : null}
+          {busy === 'barcode' || busy === 'label' ? (
+            <Card style={styles.sheet}>
+              <ActivityIndicator color={colors.primary} />
+              <AppText align="center">
+                {busy === 'barcode' ? t('scan.looking') : t('scan.labelReading')}
+              </AppText>
+            </Card>
+          ) : null}
 
-        <View style={[styles.bottom, { backgroundColor: colors.background }]}>
-          <View
-            style={[styles.modes, { backgroundColor: colors.surfaceAlt }]}
-            accessibilityRole="tablist"
-          >
-            {(['photo', 'barcode', 'label', 'text'] as const).map((m) => (
-              <Pressable
-                key={m}
-                accessibilityRole="tab"
-                accessibilityState={{ selected: mode === m }}
-                accessibilityLabel={t(`scan.modes.${m}`)}
+          {notFound ? (
+            <Card style={styles.sheet}>
+              <AppText variant="subheading">{t('scan.barcodeNotFound')}</AppText>
+              <AppText color="textMuted">{t('scan.barcodeNotFoundBody')}</AppText>
+              <Button label={t('scan.scanLabel')} icon="camera" onPress={() => setMode('label')} />
+              <Button
+                label={t('scan.createProduct')}
+                variant="outline"
+                onPress={() =>
+                  router.replace({ pathname: '/custom-food', params: { barcode: notFound } })
+                }
+              />
+              <Button
+                label={t('common.retry')}
+                variant="ghost"
+                size="md"
                 onPress={() => {
-                  haptic('selection');
                   setNotFound(null);
                   lastCode.current = null;
-                  setMode(m);
                 }}
-                style={[styles.mode, mode === m && { backgroundColor: colors.primary }]}
-                testID={`scan-mode-${m}`}
-              >
-                <AppText variant="label" color={mode === m ? 'onPrimary' : 'textMuted'}>
-                  {t(`scan.modes.${m}`)}
-                </AppText>
-              </Pressable>
-            ))}
-          </View>
-          <View style={styles.controls}>
-            <IconButton
-              icon="images-outline"
-              size={24}
-              background="surfaceAlt"
-              square
-              accessibilityLabel={t('scan.gallery')}
-              onPress={pickFromGallery}
-              disabled={mode === 'barcode' || !!busy}
-            />
-            {mode !== 'barcode' ? (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={t('scan.capture')}
-                onPress={capture}
-                disabled={!!busy}
-                accessibilityState={{ disabled: !!busy }}
-                style={[styles.shutter, { borderColor: colors.primary, opacity: busy ? 0.5 : 1 }]}
-                testID="scan-capture"
-              >
-                {busy === 'capture' ? (
-                  <ActivityIndicator color={colors.primary} />
-                ) : (
-                  <View style={[styles.shutterInner, { backgroundColor: colors.primary }]} />
-                )}
-              </Pressable>
-            ) : (
-              <View style={styles.shutterPlaceholder}>
-                <Icon name="barcode-outline" size={34} color="text" />
+              />
+            </Card>
+          ) : null}
+
+          <View style={[styles.bottom, { backgroundColor: colors.background }]}>
+            {mode === 'photo' ? (
+              <View style={[styles.hintField, { backgroundColor: colors.surfaceAlt }]}>
+                <Icon name="chatbubble-ellipses-outline" size={18} color="textMuted" />
+                <TextInput
+                  value={hint}
+                  onChangeText={setHint}
+                  placeholder={t('scan.hintPlaceholder')}
+                  placeholderTextColor={colors.textSubtle}
+                  maxLength={300}
+                  style={[styles.hintInput, { color: colors.text }]}
+                  accessibilityLabel={t('scan.hintLabel')}
+                  returnKeyType="done"
+                  testID="scan-hint"
+                />
               </View>
-            )}
-            <View style={styles.spacer} />
+            ) : null}
+            <View
+              style={[styles.modes, { backgroundColor: colors.surfaceAlt }]}
+              accessibilityRole="tablist"
+            >
+              {(['photo', 'barcode', 'label', 'text'] as const).map((m) => (
+                <Pressable
+                  key={m}
+                  accessibilityRole="tab"
+                  accessibilityState={{ selected: mode === m }}
+                  accessibilityLabel={t(`scan.modes.${m}`)}
+                  onPress={() => {
+                    haptic('selection');
+                    setNotFound(null);
+                    lastCode.current = null;
+                    setMode(m);
+                  }}
+                  style={[styles.mode, mode === m && { backgroundColor: colors.primary }]}
+                  testID={`scan-mode-${m}`}
+                >
+                  <AppText variant="label" color={mode === m ? 'onPrimary' : 'textMuted'}>
+                    {t(`scan.modes.${m}`)}
+                  </AppText>
+                </Pressable>
+              ))}
+            </View>
+            <View style={styles.controls}>
+              <IconButton
+                icon="images-outline"
+                size={24}
+                background="surfaceAlt"
+                square
+                accessibilityLabel={t('scan.gallery')}
+                onPress={pickFromGallery}
+                disabled={mode === 'barcode' || !!busy}
+              />
+              {mode !== 'barcode' ? (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={t('scan.capture')}
+                  onPress={capture}
+                  disabled={!!busy}
+                  accessibilityState={{ disabled: !!busy }}
+                  style={[styles.shutter, { borderColor: colors.primary, opacity: busy ? 0.5 : 1 }]}
+                  testID="scan-capture"
+                >
+                  {busy === 'capture' ? (
+                    <ActivityIndicator color={colors.primary} />
+                  ) : (
+                    <View style={[styles.shutterInner, { backgroundColor: colors.primary }]} />
+                  )}
+                </Pressable>
+              ) : (
+                <View style={styles.shutterPlaceholder}>
+                  <Icon name="barcode-outline" size={34} color="text" />
+                </View>
+              )}
+              <View style={styles.spacer} />
+            </View>
           </View>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -377,6 +410,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   sheet: { marginHorizontal: spacing.lg, gap: spacing.md },
+  hintField: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginHorizontal: spacing.lg,
+    paddingHorizontal: spacing.md,
+    borderRadius: radii.lg,
+    minHeight: 48,
+  },
+  hintInput: { flex: 1, fontFamily: fontFamily.regular, fontSize: 15, minHeight: 48 },
   bottom: {
     gap: spacing.lg,
     paddingTop: spacing.lg,

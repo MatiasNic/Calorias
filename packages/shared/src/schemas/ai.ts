@@ -34,6 +34,9 @@ export const AiItemSchema = z.object({
     })
     .optional()
     .describe('Approximate normalized bounding box of the item in the image'),
+  meal_type: MealTypeSchema.nullable().describe(
+    'Only when the user describes several meals at once ("desayuné… y almorcé…"): which meal this item belongs to. Otherwise null.',
+  ),
 });
 export type AiItem = z.infer<typeof AiItemSchema>;
 
@@ -42,6 +45,10 @@ export const AiAnalysisSchema = z.object({
   dish_name: z.string().max(120).nullable(),
   items: z.array(AiItemSchema).max(20),
   hidden_ingredients_question: z.string().max(200).nullable(),
+  quick_answers: z
+    .array(z.string().max(40))
+    .max(4)
+    .describe('2–4 short tappable answers to hidden_ingredients_question; [] when there is none'),
   notes: z.string().max(400).nullable(),
 });
 export type AiAnalysis = z.infer<typeof AiAnalysisSchema>;
@@ -76,13 +83,25 @@ export const AnalyzeMealRequestSchema = z.object({
   mode: z.enum(['meal', 'label']).default('meal'),
   /** false → the server deletes the photo right after analysis (user privacy setting). */
   keep_photo: z.boolean().default(true),
+  /** What the user says about the photo ("es de pollo, sin aceite"). Data, never instructions. */
+  hint: z.string().trim().max(300).optional(),
 });
 export type AnalyzeMealRequest = z.infer<typeof AnalyzeMealRequestSchema>;
 
+/** What the review screen currently shows, sent along with a spoken/typed correction. */
+export const PreviousItemSchema = z.object({
+  name: z.string().min(1).max(120),
+  grams: z.number().min(0).max(3000),
+  cooking_method: CookingMethodSchema.nullable().optional(),
+});
+export type PreviousItem = z.infer<typeof PreviousItemSchema>;
+
 export const AnalyzeTextRequestSchema = z.object({
-  text: z.string().trim().min(2).max(500),
+  text: z.string().trim().min(2).max(1000),
   locale: LocaleSchema.default('es-AR'),
   source: z.enum(['text', 'voice', 'recipe']).default('text'),
+  /** Present → `text` is a correction of these items ("era al horno y sin puré"). */
+  previous_items: z.array(PreviousItemSchema).min(1).max(20).optional(),
 });
 export type AnalyzeTextRequest = z.infer<typeof AnalyzeTextRequestSchema>;
 
@@ -97,6 +116,8 @@ export const EnrichedItemSchema = z.object({
   food_id: z.string().nullable(),
   per100g: AiPer100gSchema,
   bbox: AiItemSchema.shape.bbox,
+  /** Several meals in one description → the meal each item belongs to. */
+  meal_type: MealTypeSchema.nullable().optional(),
 });
 export type EnrichedItem = z.infer<typeof EnrichedItemSchema>;
 
@@ -107,6 +128,8 @@ export const AnalyzeResponseSchema = z.object({
   dish_name: z.string().nullable(),
   items: z.array(EnrichedItemSchema),
   hidden_ingredients_question: z.string().nullable(),
+  /** Tappable answers to the question (older cached results have none). */
+  quick_answers: z.array(z.string()).default([]),
   notes: z.string().nullable(),
   model: z.string(),
   quota: z.object({ used: z.number(), limit: z.number(), remaining: z.number() }),

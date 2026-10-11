@@ -11,7 +11,15 @@ import type { MealDraft } from '@/features/diary/draftStore';
 import { todayLocal } from '@/utils/dates';
 
 export function itemsFromAnalysis(r: AnalyzeResponse): MealItem[] {
-  return r.items.map((i) =>
+  return analysisToItems(r).items;
+}
+
+/** Items plus, when the description covered several meals, the meal of each item. */
+export function analysisToItems(r: AnalyzeResponse): {
+  items: MealItem[];
+  itemMeals: Record<string, MealType>;
+} {
+  const items = r.items.map((i) =>
     makeItem(
       { id: i.food_id, source: i.food_source, name: i.display_name, per100g: i.per100g },
       i.grams,
@@ -22,6 +30,14 @@ export function itemsFromAnalysis(r: AnalyzeResponse): MealItem[] {
       },
     ),
   );
+  const types = new Set(r.items.map((i) => i.meal_type).filter(Boolean));
+  const itemMeals: Record<string, MealType> = {};
+  if (types.size > 1)
+    r.items.forEach((i, idx) => {
+      const id = items[idx]?.id;
+      if (id && i.meal_type) itemMeals[id] = i.meal_type;
+    });
+  return { items, itemMeals };
 }
 
 export function draftFromAnalysis(
@@ -36,7 +52,7 @@ export function draftFromAnalysis(
   },
 ): MealDraft {
   const now = new Date();
-  const items = itemsFromAnalysis(r);
+  const { items, itemMeals } = analysisToItems(r);
   return {
     mealId: null,
     date: opts.date ?? todayLocal(),
@@ -49,6 +65,8 @@ export function draftFromAnalysis(
     aiScanId: r.scan_id,
     dishName: r.dish_name,
     hiddenQuestion: r.hidden_ingredients_question,
+    quickAnswers: r.quick_answers,
+    itemMeals,
     notes: r.notes,
     original: items,
   };

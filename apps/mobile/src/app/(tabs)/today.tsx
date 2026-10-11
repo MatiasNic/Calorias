@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import {
   AppText,
   Banner,
-  Button,
   ErrorState,
   Icon,
   IconButton,
@@ -18,9 +17,11 @@ import {
 } from '@/components';
 import { CaloriesCard } from '@/features/diary/components/CaloriesCard';
 import { InsightCard } from '@/features/diary/components/InsightCard';
+import { LogBar } from '@/features/diary/components/LogBar';
 import { MacrosCard } from '@/features/diary/components/MacrosCard';
 import { MealRow } from '@/features/diary/components/MealRow';
 import { QuickActions } from '@/features/diary/components/QuickActions';
+import { UsualMeals } from '@/features/diary/components/UsualMeals';
 import { WaterWeightRow } from '@/features/diary/components/WaterWeightRow';
 import { WeekStrip } from '@/features/diary/components/WeekStrip';
 import { repeatFromYesterday } from '@/features/diary/hooks';
@@ -131,6 +132,8 @@ export default function Today() {
       {showWeek ? (
         <WeekStrip value={date} onChange={setDate} loggedDates={new Set(logged.data ?? [])} />
       ) : null}
+      <LogBar date={date} />
+      <UsualMeals date={date} />
       {day.isError ? <ErrorState onRetry={() => day.refetch()} /> : null}
       {day.isLoading ? (
         <Skeleton height={260} radius={radii.xxl} />
@@ -192,7 +195,7 @@ export default function Today() {
       ) : day.isLoading ? null : (
         <View style={[styles.empty, { borderColor: colors.border }]}>
           <View style={[styles.emptyIcon, { backgroundColor: colors.surfaceAlt }]}>
-            <Icon name="camera-outline" size={26} color="text" />
+            <Icon name="mic-outline" size={26} color="text" />
           </View>
           <AppText variant="heading" align="center">
             {t('today.emptyTitle')}
@@ -200,23 +203,6 @@ export default function Today() {
           <AppText variant="label" color="textMuted" align="center">
             {t('today.emptyBody')}
           </AppText>
-          <View style={styles.emptyActions}>
-            <Button
-              label={t('today.photo')}
-              icon="camera"
-              size="sm"
-              fullWidth={false}
-              onPress={() => router.push('/scan')}
-            />
-            <Button
-              label={t('today.textVoice')}
-              icon="mic-outline"
-              size="sm"
-              variant="secondary"
-              fullWidth={false}
-              onPress={() => router.push({ pathname: '/text-log', params: { date } })}
-            />
-          </View>
         </View>
       )}
       <WaterWeightRow date={date} waterMl={day.waterMl} waterTarget={day.goal.water_ml} />
@@ -269,5 +255,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: spacing.xs,
   },
-  emptyActions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.sm },
 });

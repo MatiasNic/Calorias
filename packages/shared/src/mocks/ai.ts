@@ -29,6 +29,7 @@ const item = (
     fiber_g: per[4] ?? 0,
   },
   search_hints: hints,
+  meal_type: null,
 });
 
 export const MOCK_PLATES: readonly AiAnalysis[] = [
@@ -58,6 +59,7 @@ export const MOCK_PLATES: readonly AiAnalysis[] = [
       ),
     ],
     hidden_ingredients_question: '¿La milanesa fue frita o al horno?',
+    quick_answers: ['Frita', 'Al horno'],
     notes: 'Porción de puré estimada por el tamaño del plato.',
   },
   {
@@ -76,6 +78,7 @@ export const MOCK_PLATES: readonly AiAnalysis[] = [
       ),
     ],
     hidden_ingredients_question: null,
+    quick_answers: [],
     notes: null,
   },
   {
@@ -114,6 +117,7 @@ export const MOCK_PLATES: readonly AiAnalysis[] = [
       ),
     ],
     hidden_ingredients_question: '¿Le pusiste aceite o aderezo a la ensalada?',
+    quick_answers: ['Sin aceite', '1 cucharada', '2 cucharadas'],
     notes: null,
   },
   {
@@ -142,6 +146,7 @@ export const MOCK_PLATES: readonly AiAnalysis[] = [
       ),
     ],
     hidden_ingredients_question: null,
+    quick_answers: [],
     notes: null,
   },
 ];
@@ -327,31 +332,73 @@ export function mockAnalyzeImage(seed: string): AiAnalysis {
   return MOCK_PLATES[hash(seed) % MOCK_PLATES.length]!;
 }
 
+/** Spoken meal markers → meal type (demo parser for "desayuné… y a la noche cené…"). */
+const MEAL_MARKERS: { re: RegExp; meal: NonNullable<AiItem['meal_type']> }[] = [
+  { re: /\bdesayun|\bbreakfast/, meal: 'breakfast' },
+  { re: /\balmorz|\balmuerz|\blunch/, meal: 'lunch' },
+  { re: /\bmerend|\bmerienda|\bsnack|\bcolacion/, meal: 'snack' },
+  { re: /\bcen[ae]|\bdinner|\ba la noche/, meal: 'dinner' },
+];
+
+/** Household measures → multiplier of the dictionary's typical portion. */
+const MEASURES: { re: RegExp; factor: number; label: string }[] = [
+  { re: /\bmedia\b|\bmedio\b|\bmitad\b|\bhalf\b/, factor: 0.5, label: '1/2 porción' },
+  { re: /\bplato hondo\b|\bplato grande\b|\bbig\b/, factor: 1.4, label: '1 plato hondo' },
+  { re: /\bpu[nñ]ado\b|\bhandful\b/, factor: 0.25, label: '1 puñado' },
+  { re: /\bchic[oa]\b|\bsmall\b/, factor: 0.75, label: 'porción chica' },
+  { re: /\bgrande\b|\blarge\b/, factor: 1.35, label: 'porción grande' },
+];
+
 /** Very small text parser for demo mode: "dos empanadas y una coca zero". */
 export function mockAnalyzeText(text: string): AiAnalysis {
   const norm = normalizeText(text);
-  const parts = norm
-    .split(/ y | con |,| and /)
-    .map((p) => p.trim())
-    .filter(Boolean);
-  const items: AiItem[] = [];
-  for (const part of parts) {
-    const entry = TEXT_DICTIONARY.find((d) => d.keys.some((k) => part.includes(k)));
-    if (!entry) continue;
-    const words = part.split(' ');
-    const qty = Number(words.find((w) => /^\d+$/.test(w))) || NUMBER_WORDS[words[0] ?? ''] || 1;
-    items.push({
-      ...entry.item,
-      estimated_grams: entry.unitGrams * qty,
-      household_measure:
-        qty > 1 ? `${qty} × ${entry.item.household_measure}` : entry.item.household_measure,
-    });
+  // Split into meal sections first ("desayune cafe con leche y a la noche cene milanesa").
+  const sections: { meal: AiItem['meal_type']; text: string }[] = [];
+  let current: AiItem['meal_type'] = null;
+  for (const chunk of norm.split(
+    /(?=\bdesayun|\balmorz|\balmuerz|\bmerend|\bmerienda|\bcen[ae]\b|\ba la noche)/,
+  )) {
+    current = MEAL_MARKERS.find((m) => m.re.test(chunk))?.meal ?? current;
+    sections.push({ meal: current, text: chunk });
   }
+  const meals = new Set(sections.map((x) => x.meal).filter(Boolean));
+  const items: AiItem[] = [];
+  for (const section of sections) {
+    const parts = section.text
+      // "café con leche" is one food, not two.
+      .replace(/cafe con leche/g, 'cafe_con_leche')
+      .split(/ y | con |,| and /)
+      .map((p) => p.trim().replace(/_/g, ' '))
+      .filter(Boolean);
+    for (const part of parts) {
+      const entry = TEXT_DICTIONARY.find((d) => d.keys.some((k) => part.includes(k)));
+      if (!entry) continue;
+      const words = part.split(' ');
+      const measure = MEASURES.find((m) => m.re.test(part));
+      const qty =
+        Number(words.find((w) => /^\d+$/.test(w))) ||
+        NUMBER_WORDS[words.find((w) => NUMBER_WORDS[w] && w !== 'a') ?? ''] ||
+        1;
+      const factor = measure?.factor ?? qty;
+      items.push({
+        ...entry.item,
+        estimated_grams: Math.round(entry.unitGrams * factor),
+        household_measure: measure
+          ? measure.label
+          : qty > 1
+            ? `${qty} × ${entry.item.household_measure}`
+            : entry.item.household_measure,
+        meal_type: meals.size > 1 ? section.meal : null,
+      });
+    }
+  }
+  const milanesa = items.find((i) => i.name_en.includes('cutlet'));
   return {
     is_food: items.length > 0,
     dish_name: null,
     items,
-    hidden_ingredients_question: null,
+    hidden_ingredients_question: milanesa ? '¿La milanesa fue frita o al horno?' : null,
+    quick_answers: milanesa ? ['Frita', 'Al horno'] : [],
     notes: items.length ? null : 'Demo: no reconocimos alimentos en el texto.',
   };
 }

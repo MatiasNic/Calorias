@@ -16,6 +16,13 @@ export interface MealDraft {
   aiScanId: string | null;
   dishName: string | null;
   hiddenQuestion: string | null;
+  /** Tappable answers to hiddenQuestion (sent back to the AI as a correction). */
+  quickAnswers: string[];
+  /**
+   * Several meals in one description ("desayuné… y a la noche…"): meal of each item by item id.
+   * Empty for a single meal (then `mealType` applies to every item).
+   */
+  itemMeals: Record<string, MealType>;
   notes: string | null;
   /** Original AI result, kept for "Reportar error" feedback. */
   original: MealItem[] | null;

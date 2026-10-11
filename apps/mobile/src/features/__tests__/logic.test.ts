@@ -1,6 +1,8 @@
-import { dailySummary } from '@plato/shared';
+import { dailySummary, type AnalyzeResponse } from '@plato/shared';
 
 import { appendDictation } from '../scan/dictationText';
+import { applyLocalCorrection } from '../scan/localCorrection';
+import { analysisToItems } from '../scan/toDraft';
 import {
   applyCookingMethod,
   COOKING_CHOICES,
@@ -201,5 +203,93 @@ describe('appendDictation', () => {
   it('handles empty sides', () => {
     expect(appendDictation('', 'milanesa')).toBe('milanesa');
     expect(appendDictation('milanesa ', '')).toBe('milanesa');
+  });
+});
+
+describe('local (demo) correction', () => {
+  const per = { kcal: 250, protein_g: 18, carbs_g: 12, fat_g: 14 };
+  const milanesa = makeItem(
+    { id: null, source: 'ai', name: 'Milanesa de carne', per100g: per },
+    150,
+    {
+      cooking_method: 'fried',
+    },
+  );
+  const pure = makeItem(
+    { id: null, source: 'ai', name: 'Puré de papa', per100g: { ...per, kcal: 105, fat_g: 4 } },
+    200,
+    { cooking_method: 'boiled' },
+  );
+  const deps = { parse: () => [], oil: () => null };
+
+  it('removes, re-cooks and resizes what the user says', () => {
+    const out = applyLocalCorrection([milanesa, pure], 'era al horno y sin puré', deps);
+    expect(out.map((i) => i.display_name)).toEqual(['Milanesa de carne']);
+    expect(out[0]!.cooking_method).toBe('baked');
+    expect(out[0]!.nutrients.fat_g).toBeLessThan(milanesa.nutrients.fat_g);
+    const half = applyLocalCorrection([milanesa, pure], 'media milanesa', deps);
+    expect(half[0]!.grams).toBe(75);
+    expect(half[1]!.grams).toBe(200);
+  });
+
+  it('adds oil spoons and new foods', () => {
+    const oil = makeItem(
+      {
+        id: 'aceite',
+        source: 'regional',
+        name: 'Aceite',
+        per100g: { kcal: 884, protein_g: 0, carbs_g: 0, fat_g: 100 },
+      },
+      13,
+    );
+    const flan = makeItem({ id: null, source: 'ai', name: 'Flan', per100g: per }, 120);
+    const out = applyLocalCorrection([pure], '2 cucharadas de aceite', {
+      parse: () => [],
+      oil: () => oil,
+    });
+    expect(out[1]!.grams).toBe(26);
+    const more = applyLocalCorrection([pure], 'y también un flan', {
+      parse: () => [flan],
+      oil: () => null,
+    });
+    expect(more.map((i) => i.display_name)).toEqual(['Puré de papa', 'Flan']);
+  });
+});
+
+describe('several meals in one description', () => {
+  const enriched = (name: string, meal: 'breakfast' | 'dinner' | null) => ({
+    display_name: name,
+    name_en: name,
+    grams: 100,
+    household_measure: '1 porción',
+    cooking_method: 'unknown' as const,
+    confidence: 0.8,
+    food_source: 'ai' as const,
+    food_id: null,
+    per100g: { kcal: 100, protein_g: 1, carbs_g: 1, fat_g: 1 },
+    meal_type: meal,
+  });
+  const response = (items: ReturnType<typeof enriched>[]): AnalyzeResponse => ({
+    scan_id: null,
+    cached: false,
+    is_food: true,
+    dish_name: null,
+    items,
+    hidden_ingredients_question: null,
+    quick_answers: [],
+    notes: null,
+    model: 'test',
+    quota: { used: 1, limit: 5, remaining: 4 },
+  });
+
+  it('maps each item to its meal only when there are several', () => {
+    const two = analysisToItems(
+      response([enriched('Café', 'breakfast'), enriched('Pizza', 'dinner')]),
+    );
+    expect(Object.values(two.itemMeals)).toEqual(['breakfast', 'dinner']);
+    const one = analysisToItems(
+      response([enriched('Café', 'breakfast'), enriched('Tostada', 'breakfast')]),
+    );
+    expect(one.itemMeals).toEqual({});
   });
 });

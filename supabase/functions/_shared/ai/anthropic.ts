@@ -10,6 +10,8 @@ import {
   mealImageSystem,
   mealPlanSystem,
   mealTextSystem,
+  correctionPrompt,
+  photoHintText,
 } from './prompts.ts';
 import { AIError, type AIProvider, type AIResult, type AIUsage, type ImageInput } from './types.ts';
 
@@ -108,7 +110,7 @@ export class AnthropicProvider implements AIProvider {
     return { data: parsed.data, usage };
   }
 
-  analyzeMealImage: AIProvider['analyzeMealImage'] = ({ image, ctx, mealType }, model) =>
+  analyzeMealImage: AIProvider['analyzeMealImage'] = ({ image, ctx, mealType, hint }, model) =>
     this.structured(
       model,
       mealImageSystem(ctx),
@@ -116,20 +118,31 @@ export class AnthropicProvider implements AIProvider {
         imageBlock(image),
         {
           type: 'text',
-          text: mealType ? `Meal type: ${mealType}. Analyze this meal.` : 'Analyze this meal.',
+          text: [
+            mealType ? `Meal type: ${mealType}.` : '',
+            hint ? photoHintText(hint) : '',
+            'Analyze this meal.',
+          ]
+            .filter(Boolean)
+            .join('\n'),
         },
       ],
       AiAnalysisSchema,
       4096,
     );
 
-  analyzeMealText: AIProvider['analyzeMealText'] = ({ text, ctx }, model) =>
+  analyzeMealText: AIProvider['analyzeMealText'] = ({ text, ctx, previous }, model) =>
     this.structured(
       model,
       mealTextSystem(ctx),
-      [{ type: 'text', text: `What I ate: """${text}"""` }],
+      [
+        {
+          type: 'text',
+          text: previous?.length ? correctionPrompt(previous, text) : `What I ate: """${text}"""`,
+        },
+      ],
       AiAnalysisSchema,
-      3072,
+      4096,
     );
 
   readLabel: AIProvider['readLabel'] = ({ image, ctx }, model) =>

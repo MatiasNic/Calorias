@@ -58,7 +58,11 @@ export const ACHIEVEMENT_METRICS = {
   uniqueFoods: { category: 'exploration', icon: 'grid', tiers: [10, 25, 50, 100, 200, 500] },
   // training
   workouts: { category: 'training', icon: 'barbell', tiers: [1, 5, 10, 25, 50, 100, 200] },
-  activeMinutes: { category: 'training', icon: 'stopwatch', tiers: [60, 300, 600, 1500, 3000, 6000] },
+  activeMinutes: {
+    category: 'training',
+    icon: 'stopwatch',
+    tiers: [60, 300, 600, 1500, 3000, 6000],
+  },
   supplementDays: { category: 'training', icon: 'medkit', tiers: [1, 7, 30, 100] },
 } as const satisfies Record<
   string,

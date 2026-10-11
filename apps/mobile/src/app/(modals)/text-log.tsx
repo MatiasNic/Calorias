@@ -18,7 +18,7 @@ import { spacing, useTheme } from '@/theme';
 export default function TextLog() {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const params = useLocalSearchParams<{ date?: IsoDate; text?: string }>();
+  const params = useLocalSearchParams<{ date?: IsoDate; text?: string; voice?: string }>();
   const [text, setText] = useState(params.text ?? '');
   const [usedVoice, setUsedVoice] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -39,7 +39,17 @@ export default function TextLog() {
     },
   );
 
+  // Opened from the mic of "¿Qué comiste?": start listening right away (one tap to log).
+  const autoStarted = useRef(false);
+  useEffect(() => {
+    if (autoStarted.current || params.voice !== '1') return;
+    autoStarted.current = true;
+    if (features.voiceLogging && dictation.available) void dictation.start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const analyze = async () => {
+    if (dictation.listening) dictation.stop();
     if (aiAvailable() !== 'ok') {
       toast.info(t('profile.createAccount'));
       router.replace('/sign-up');
@@ -93,7 +103,7 @@ export default function TextLog() {
         onChangeText={setText}
         placeholder={t('textLog.placeholder')}
         multiline
-        maxLength={500}
+        maxLength={1000}
         style={styles.input}
         accessibilityLabel={t('textLog.title')}
         testID="text-log-input"

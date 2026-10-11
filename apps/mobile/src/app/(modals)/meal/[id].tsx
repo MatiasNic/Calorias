@@ -35,6 +35,8 @@ export default function MealEditor() {
       aiScanId: meal.data.ai_scan_id,
       dishName: null,
       hiddenQuestion: null,
+      quickAnswers: [],
+      itemMeals: {},
       notes: meal.data.note,
       original: null,
     });

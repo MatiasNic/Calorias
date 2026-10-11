@@ -18,6 +18,8 @@ export type AnalyticsEvent =
   | 'scan_completed'
   | 'scan_failed'
   | 'meal_saved'
+  | 'meal_corrected'
+  | 'usual_meal_logged'
   | 'paywall_viewed'
   | 'paywall_purchase'
   | 'paywall_dismissed'

@@ -32,7 +32,10 @@ export async function analyzeText(req: Request, deps: ServerDeps): Promise<Respo
   };
 
   try {
-    const { data, usage } = await deps.ai.analyzeMealText({ text: body.text, ctx }, model);
+    const { data, usage } = await deps.ai.analyzeMealText(
+      { text: body.text, ctx, previous: body.previous_items },
+      model,
+    );
     const items = data.is_food ? await enrichItems(data.items, foodLookup(deps)) : [];
     if (!data.is_food) await deps.db.refundQuota(user.id, 'text_query', ticket.day, ticket.bucket);
     const payload: Omit<AnalyzeResponse, 'scan_id' | 'cached'> = {
@@ -40,6 +43,7 @@ export async function analyzeText(req: Request, deps: ServerDeps): Promise<Respo
       dish_name: data.dish_name,
       items,
       hidden_ingredients_question: data.hidden_ingredients_question,
+      quick_answers: data.quick_answers,
       notes: data.notes,
       model: usage.model,
       quota: quotaPayload(data.is_food ? ticket : { ...ticket, used: ticket.used - 1 }),

@@ -1,5 +1,6 @@
 import type {
   AiAnalysis,
+  PreviousItem,
   AiLabel,
   AppLocale,
   MealPlan,
@@ -40,11 +41,11 @@ export type ChatTurn = { role: 'user' | 'assistant'; content: string };
  */
 export interface AIProvider {
   analyzeMealImage(
-    input: { image: ImageInput; ctx: UserContext; mealType?: MealType },
+    input: { image: ImageInput; ctx: UserContext; mealType?: MealType; hint?: string },
     model: string,
   ): Promise<AIResult<AiAnalysis>>;
   analyzeMealText(
-    input: { text: string; ctx: UserContext },
+    input: { text: string; ctx: UserContext; previous?: PreviousItem[] },
     model: string,
   ): Promise<AIResult<AiAnalysis>>;
   readLabel(

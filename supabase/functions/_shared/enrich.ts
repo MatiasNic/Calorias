@@ -75,6 +75,7 @@ export async function enrichItem(item: AiItem, lookup: FoodLookup): Promise<Enri
     cooking_method: item.cooking_method,
     confidence: item.confidence,
     bbox: item.bbox,
+    meal_type: item.meal_type ?? null,
   };
 
   // 1) Regional table
