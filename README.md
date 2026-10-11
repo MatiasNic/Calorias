@@ -8,12 +8,12 @@ incluidos.
 📲 **Probar la app (APK demo para Android):**
 https://github.com/MatiasNic/Calorias/releases/latest/download/bocado.apk
 
-| Carpeta           | Qué hay                                                                      |
-| ----------------- | ---------------------------------------------------------------------------- |
-| `apps/mobile`     | App Expo SDK 57 (Expo Router, TS estricto, Zustand, TanStack Query, SQLite)  |
-| `packages/shared` | Tipos, esquemas Zod, fórmulas de nutrición, planes/cuotas (con tests)        |
-| `supabase/`       | Migraciones Postgres + RLS, seed de 229 alimentos regionales, Edge Functions |
-| `docs/`           | ADRs, costos, release, ficha de tienda, privacidad, guía de testers          |
+| Carpeta           | Qué hay                                                                         |
+| ----------------- | ------------------------------------------------------------------------------- |
+| `apps/mobile`     | App Expo SDK 57 (Expo Router, TS estricto, Zustand, TanStack Query, SQLite)     |
+| `packages/shared` | Tipos, esquemas Zod, fórmulas de nutrición, planes/cuotas (con tests)           |
+| `supabase/`       | Migraciones Postgres + RLS, seed de ~1.500 alimentos regionales, Edge Functions |
+| `docs/`           | ADRs, costos, release, ficha de tienda, privacidad, guía de testers             |
 
 Documentos clave: [CLAUDE.md](CLAUDE.md) (convenciones) · [docs/adr](docs/adr) (decisiones) ·
 [docs/RELEASE.md](docs/RELEASE.md) (publicar) · [docs/COSTS.md](docs/COSTS.md) (costos de IA) ·

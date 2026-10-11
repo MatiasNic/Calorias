@@ -182,7 +182,7 @@ Pedile a un/a nutricionista matriculado/a que revise y firme:
       1200/1500 kcal, ritmo máximo, IMC objetivo mínimo, menores, embarazo/lactancia).
 - [ ] Textos de onboarding, advertencias, coach (prompt en `supabase/functions/_shared/ai/prompts.ts`)
       y el mensaje ante patrones restrictivos.
-- [ ] Los 229 alimentos regionales (`scripts/data/foods_regional_source.py`) — valores y porciones.
+- [ ] Los ~1.500 alimentos regionales (`scripts/data/foods_regional_source.py` y `foods_extra_*.py`, validados con `scripts/check-foods.py`) — valores y porciones.
 - [ ] Disclaimers ("no reemplaza consejo profesional", "las estimaciones de IA pueden tener error").
 
 ## 9. Checklist final antes de "Enviar a revisión"

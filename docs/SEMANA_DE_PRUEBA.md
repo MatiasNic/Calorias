@@ -30,7 +30,7 @@ es comida), cuenta propia y datos guardados en la nube, antes de publicar.
 ## 2. Lo que hace Claude Code con esas variables
 
 ```bash
-./scripts/deploy-backend.sh        # base + RLS + 229 alimentos + funciones + secretos
+./scripts/deploy-backend.sh        # base + RLS + ~1.500 alimentos + funciones + secretos
 ```
 
 > Si el entorno no llega al puerto de Postgres (sesiones en la nube con red restringida), usá el
