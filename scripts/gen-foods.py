@@ -20,7 +20,7 @@ for row in F:
     assert fid not in ids, fid; ids.add(fid)
     # sanity: energy from macros within 25% (alcohol/fiber explain the rest)
     calc = p*4 + c*4 + f*9
-    if kcal > 30 and abs(calc - kcal) / kcal > 0.25 and cat != 'bebidas':
+    if kcal > 30 and abs(calc - kcal) / kcal > 0.25 and cat not in ('bebidas', 'alcohol'):
         print(f'warning: {fid} kcal {kcal} vs macros {calc:.0f}', file=sys.stderr)
     out.append({
         'id': fid, 'name_es': es, 'name_en': en, 'name_pt': pt, 'aliases': aliases, 'category': cat,

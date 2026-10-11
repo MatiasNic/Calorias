@@ -51,7 +51,7 @@ def check(rows, label):
         if not isinstance(aliases, list):
             errors.append(f'{where}: aliases must be a list')
         calc = p * 4 + c * 4 + f * 9
-        if kcal > 30 and abs(calc - kcal) / kcal > 0.15 and cat != 'bebidas':
+        if kcal > 30 and abs(calc - kcal) / kcal > 0.15 and cat not in ('bebidas', 'alcohol'):
             warnings.append(f'{where}: kcal {kcal} vs macros {calc:.0f}')
     return errors, warnings
 
