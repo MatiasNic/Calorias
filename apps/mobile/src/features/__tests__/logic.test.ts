@@ -1,5 +1,6 @@
 import { dailySummary } from '@plato/shared';
 
+import { appendDictation } from '../scan/dictationText';
 import {
   applyCookingMethod,
   COOKING_CHOICES,
@@ -188,5 +189,17 @@ describe('Open Food Facts mapping', () => {
   });
   it('returns null without energy data', () => {
     expect(offToFood({ code: '1', nutriments: {} })).toBeNull();
+  });
+});
+
+describe('appendDictation', () => {
+  it('adds a new recording after the existing text', () => {
+    expect(appendDictation('dos empanadas de carne', ' y una coca zero ')).toBe(
+      'dos empanadas de carne y una coca zero',
+    );
+  });
+  it('handles empty sides', () => {
+    expect(appendDictation('', 'milanesa')).toBe('milanesa');
+    expect(appendDictation('milanesa ', '')).toBe('milanesa');
   });
 });

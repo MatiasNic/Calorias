@@ -1,6 +1,6 @@
 import type { IsoDate } from '@plato/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -26,10 +26,18 @@ export default function TextLog() {
   const aiError = useAiError();
   const quota = useQuotaStatus();
   const plan = usePlan();
-  const dictation = useDictation((value) => {
-    setUsedVoice(true);
-    setText(value);
-  });
+  const textRef = useRef(text);
+  useEffect(() => {
+    textRef.current = text;
+  }, [text]);
+  // New recordings add to what's already written instead of replacing it.
+  const dictation = useDictation(
+    () => textRef.current,
+    (value) => {
+      setUsedVoice(true);
+      setText(value);
+    },
+  );
 
   const analyze = async () => {
     if (aiAvailable() !== 'ok') {
