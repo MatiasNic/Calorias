@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -266,6 +266,14 @@ export default function Profile() {
           }
           testID="profile-theme"
         />
+        {Platform.OS === 'android' ? (
+          <ListRow
+            icon="widgets"
+            title={t('widgets.title')}
+            onPress={() => router.push('/settings/widgets')}
+            testID="profile-widgets"
+          />
+        ) : null}
         <ListRow
           icon="options-outline"
           title={t('profile.preferences')}

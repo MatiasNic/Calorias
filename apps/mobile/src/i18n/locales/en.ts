@@ -1354,4 +1354,33 @@ export const en: TranslationShape<Translation> = {
       nutrients: 'Calculating calories and macros',
     },
   },
+  widgets: {
+    title: 'Widgets',
+    intro: "Log without opening the app: add these to your phone's home screen.",
+    androidOnly: 'Widgets are available on Android.',
+    add: 'Add to home screen',
+    manual: 'You can also long-press your home screen → Widgets → Bocado.',
+    today: {
+      title: 'Today (4×2)',
+      body: 'Calories left plus buttons to talk, take a photo, type or add water.',
+    },
+    quick: {
+      title: 'Log (2×1)',
+      body: 'Mic, camera and keyboard in one place.',
+    },
+    voice: {
+      title: 'Talk (1×1)',
+      body: "One tap and you're telling what you ate.",
+    },
+    water: {
+      title: 'Water (1×1)',
+      body: 'Each tap adds a glass (250 ml) without opening the app.',
+      label: 'Water',
+    },
+    consumed: 'eaten',
+    goal: 'Goal',
+    talk: 'Talk',
+    photo: 'Photo',
+    write: 'Type',
+  },
 };

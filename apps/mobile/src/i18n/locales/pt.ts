@@ -1373,4 +1373,33 @@ export const pt: TranslationShape<Translation> = {
       nutrients: 'Calculando calorias e macros',
     },
   },
+  widgets: {
+    title: 'Widgets',
+    intro: 'Registre sem abrir o app: adicione estes atalhos à tela inicial do celular.',
+    androidOnly: 'Os widgets estão disponíveis no Android.',
+    add: 'Adicionar à tela inicial',
+    manual: 'Você também pode tocar e segurar a tela inicial → Widgets → Bocado.',
+    today: {
+      title: 'Hoje (4×2)',
+      body: 'Calorias restantes e botões para falar, tirar foto, escrever ou somar água.',
+    },
+    quick: {
+      title: 'Registrar (2×1)',
+      body: 'Microfone, câmera e teclado em um só lugar.',
+    },
+    voice: {
+      title: 'Falar (1×1)',
+      body: 'Um toque e você já está contando o que comeu.',
+    },
+    water: {
+      title: 'Água (1×1)',
+      body: 'Cada toque soma um copo (250 ml) sem abrir o app.',
+      label: 'Água',
+    },
+    consumed: 'consumidas',
+    goal: 'Meta',
+    talk: 'Falar',
+    photo: 'Foto',
+    write: 'Escrever',
+  },
 };

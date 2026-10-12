@@ -1381,6 +1381,35 @@ export const es = {
       nutrients: 'Calculando calorías y macros',
     },
   },
+  widgets: {
+    title: 'Widgets',
+    intro: 'Registrá sin abrir la app: agregá estos accesos a la pantalla de inicio del celular.',
+    androidOnly: 'Los widgets están disponibles en Android.',
+    add: 'Agregar a la pantalla de inicio',
+    manual: 'También podés mantener apretada la pantalla de inicio → Widgets → Bocado.',
+    today: {
+      title: 'Hoy (4×2)',
+      body: 'Las calorías que te quedan y botones para hablar, sacar una foto, escribir o sumar agua.',
+    },
+    quick: {
+      title: 'Registrar (2×1)',
+      body: 'Micrófono, cámara y teclado en un solo lugar.',
+    },
+    voice: {
+      title: 'Hablar (1×1)',
+      body: 'Un toque y ya estás contando lo que comiste.',
+    },
+    water: {
+      title: 'Agua (1×1)',
+      body: 'Cada toque suma un vaso (250 ml) sin abrir la app.',
+      label: 'Agua',
+    },
+    consumed: 'consumidas',
+    goal: 'Objetivo',
+    talk: 'Hablar',
+    photo: 'Foto',
+    write: 'Escribir',
+  },
 };
 
 export type Translation = typeof es;

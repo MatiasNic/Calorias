@@ -13,7 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: IS_DEV ? `${APP_NAME} (dev)` : APP_NAME,
   slug: 'bocado',
-  version: '0.4.0',
+  version: '0.4.1',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   scheme: 'bocado',
@@ -43,7 +43,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: IS_DEV ? `${BUNDLE_ID}.dev` : BUNDLE_ID,
     // Local/demo builds; EAS manages it remotely (appVersionSource: remote).
-    versionCode: 13,
+    versionCode: 14,
     adaptiveIcon: {
       backgroundColor: '#F2F2EE',
       foregroundImage: './assets/images/android-icon-foreground.png',
@@ -69,6 +69,60 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   web: { output: 'single', favicon: './assets/images/favicon.png' },
   plugins: [
     'expo-router',
+    [
+      'react-native-android-widget',
+      {
+        fonts: [
+          './assets/fonts/MaterialSymbolsRounded.ttf',
+          '../../node_modules/@expo-google-fonts/manrope/700Bold/Manrope_700Bold.ttf',
+          '../../node_modules/@expo-google-fonts/manrope/800ExtraBold/Manrope_800ExtraBold.ttf',
+        ],
+        // Home-screen widgets (src/features/widgets). Sizes follow the launcher grid: 1×1, 2×1, 4×2.
+        widgets: [
+          {
+            name: 'BocadoVoice',
+            label: 'Bocado · Hablar',
+            description: 'Contá lo que comiste con un toque',
+            minWidth: '40dp',
+            minHeight: '40dp',
+            targetCellWidth: 1,
+            targetCellHeight: 1,
+            resizeMode: 'none',
+          },
+          {
+            name: 'BocadoWater',
+            label: 'Bocado · Agua',
+            description: 'Sumá un vaso de agua sin abrir la app',
+            minWidth: '40dp',
+            minHeight: '40dp',
+            targetCellWidth: 1,
+            targetCellHeight: 1,
+            resizeMode: 'none',
+          },
+          {
+            name: 'BocadoQuickLog',
+            label: 'Bocado · Registrar',
+            description: 'Hablar, sacar una foto o escribir',
+            minWidth: '110dp',
+            minHeight: '40dp',
+            targetCellWidth: 2,
+            targetCellHeight: 1,
+            resizeMode: 'horizontal',
+          },
+          {
+            name: 'BocadoToday',
+            label: 'Bocado · Hoy',
+            description: 'Calorías que te quedan y registro rápido',
+            minWidth: '250dp',
+            minHeight: '110dp',
+            targetCellWidth: 4,
+            targetCellHeight: 2,
+            resizeMode: 'horizontal|vertical',
+            updatePeriodMillis: 1800000,
+          },
+        ],
+      },
+    ],
     [
       'expo-splash-screen',
       {

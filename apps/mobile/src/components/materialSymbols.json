@@ -7,6 +7,7 @@
   "add_a_photo": 58425,
   "add_circle": 57671,
   "add_circle_outline": 57671,
+  "add_to_home_screen": 57854,
   "alternate_email": 57574,
   "arrow_back": 58820,
   "arrow_downward": 58843,
@@ -137,6 +138,7 @@
   "mic": 57385,
   "mic_none": 57385,
   "mic_off": 57387,
+  "mobile_arrow_up_right": 57854,
   "mode": 57680,
   "mode_edit": 57680,
   "mode_edit_outline": 57680,
@@ -251,5 +253,6 @@
   "water_drop": 59288,
   "water_full": 63190,
   "wb_sunny": 58416,
+  "widgets": 57789,
   "workspace_premium": 59311
 }
