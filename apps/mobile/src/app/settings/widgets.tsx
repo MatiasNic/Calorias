@@ -9,14 +9,15 @@ import { todayLocal } from '@/utils/dates';
 
 const LIST: {
   name: WidgetName;
-  key: 'voice' | 'water' | 'quick' | 'today';
+  key: 'voice' | 'water' | 'quick' | 'usual' | 'today';
   w: number;
   h: number;
 }[] = [
-  { name: WIDGET_NAMES.today, key: 'today', w: 320, h: 170 },
+  { name: WIDGET_NAMES.today, key: 'today', w: 320, h: 180 },
+  { name: WIDGET_NAMES.usual, key: 'usual', w: 320, h: 180 },
+  { name: WIDGET_NAMES.water, key: 'water', w: 250, h: 76 },
   { name: WIDGET_NAMES.quick, key: 'quick', w: 170, h: 76 },
   { name: WIDGET_NAMES.voice, key: 'voice', w: 76, h: 76 },
-  { name: WIDGET_NAMES.water, key: 'water', w: 76, h: 76 },
 ];
 
 /** "Widgets": preview of each home-screen widget and a button to add it (Android launchers). */
@@ -81,7 +82,7 @@ function Preview({
   // Loaded lazily: the native preview only exists on Android.
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { WidgetPreview } = require('react-native-android-widget');
-  const drawn = renderWidget(name, snapshot, width) as { dark: React.JSX.Element };
+  const drawn = renderWidget(name, snapshot, width, height) as { dark: React.JSX.Element };
   return (
     <View style={[styles.preview, { width, height }]}>
       <WidgetPreview renderWidget={() => drawn.dark} width={width} height={height} />

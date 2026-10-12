@@ -1383,13 +1383,14 @@ export const es = {
   },
   widgets: {
     title: 'Widgets',
-    intro: 'Registrá sin abrir la app: agregá estos accesos a la pantalla de inicio del celular.',
+    intro:
+      'Registrá sin abrir la app: agregá estos widgets a la pantalla de inicio. El agua y «Lo de siempre» se anotan desde el mismo widget.',
     androidOnly: 'Los widgets están disponibles en Android.',
     add: 'Agregar a la pantalla de inicio',
     manual: 'También podés mantener apretada la pantalla de inicio → Widgets → Bocado.',
     today: {
       title: 'Hoy (4×2)',
-      body: 'Las calorías que te quedan y botones para hablar, sacar una foto, escribir o sumar agua.',
+      body: 'Las calorías que te quedan y tus macros. Hablar, foto o escribir abren la app; el botón de agua suma 250 ml ahí mismo.',
     },
     quick: {
       title: 'Registrar (2×1)',
@@ -1400,8 +1401,8 @@ export const es = {
       body: 'Un toque y ya estás contando lo que comiste.',
     },
     water: {
-      title: 'Agua (1×1)',
-      body: 'Cada toque suma un vaso (250 ml) sin abrir la app.',
+      title: 'Agua (1×1 o 2×1)',
+      body: 'Sumá agua sin abrir la app. Chico: cada toque suma 250 ml. Estirado: ves tu progreso y tenés +250, +500 y deshacer.',
       label: 'Agua',
     },
     consumed: 'consumidas',
@@ -1409,6 +1410,13 @@ export const es = {
     talk: 'Hablar',
     photo: 'Foto',
     write: 'Escribir',
+    usual: {
+      title: 'Lo de siempre',
+      body: 'Tus comidas que más repetís: tocá + y queda registrada sin abrir la app (tocá de nuevo para deshacer).',
+      empty: 'Registrá comidas y las que repitas aparecen acá.',
+    },
+    logged: 'Registrado',
+    undo: 'Deshacer',
   },
 };
 

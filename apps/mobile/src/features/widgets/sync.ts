@@ -11,7 +11,7 @@ export async function refreshWidgets(snapshot: WidgetSnapshot) {
     Object.values(WIDGET_NAMES).map((widgetName) =>
       requestWidgetUpdate({
         widgetName,
-        renderWidget: (info) => renderWidget(widgetName, snapshot, info.width),
+        renderWidget: (info) => renderWidget(widgetName, snapshot, info.width, info.height),
       }).catch(() => undefined),
     ),
   );

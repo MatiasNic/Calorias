@@ -1375,13 +1375,14 @@ export const pt: TranslationShape<Translation> = {
   },
   widgets: {
     title: 'Widgets',
-    intro: 'Registre sem abrir o app: adicione estes atalhos à tela inicial do celular.',
+    intro:
+      'Registre sem abrir o app: adicione estes widgets à tela inicial. Água e “O de sempre” são registrados no próprio widget.',
     androidOnly: 'Os widgets estão disponíveis no Android.',
     add: 'Adicionar à tela inicial',
     manual: 'Você também pode tocar e segurar a tela inicial → Widgets → Bocado.',
     today: {
       title: 'Hoje (4×2)',
-      body: 'Calorias restantes e botões para falar, tirar foto, escrever ou somar água.',
+      body: 'Calorias restantes e seus macros. Falar, foto ou escrever abrem o app; o botão de água soma 250 ml ali mesmo.',
     },
     quick: {
       title: 'Registrar (2×1)',
@@ -1392,8 +1393,8 @@ export const pt: TranslationShape<Translation> = {
       body: 'Um toque e você já está contando o que comeu.',
     },
     water: {
-      title: 'Água (1×1)',
-      body: 'Cada toque soma um copo (250 ml) sem abrir o app.',
+      title: 'Água (1×1 ou 2×1)',
+      body: 'Some água sem abrir o app. Pequeno: cada toque soma 250 ml. Esticado: veja seu progresso com +250, +500 e desfazer.',
       label: 'Água',
     },
     consumed: 'consumidas',
@@ -1401,5 +1402,12 @@ export const pt: TranslationShape<Translation> = {
     talk: 'Falar',
     photo: 'Foto',
     write: 'Escrever',
+    usual: {
+      title: 'O de sempre',
+      body: 'As refeições que você mais repete: toque + e fica registrada sem abrir o app (toque de novo para desfazer).',
+      empty: 'Registre refeições e as que você repetir aparecem aqui.',
+    },
+    logged: 'Registrado',
+    undo: 'Desfazer',
   },
 };

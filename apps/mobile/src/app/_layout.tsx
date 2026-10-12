@@ -20,6 +20,7 @@ import { MATERIAL_SYMBOLS_ASSET, MATERIAL_SYMBOLS_FONT } from '@/components/Icon
 import { OfflineBanner } from '@/components/OfflineBanner';
 import { useBootstrap } from '@/hooks/useBootstrap';
 import { useNotificationRouting } from '@/hooks/useNotificationRouting';
+import { useWidgetQueue } from '@/features/widgets/queue';
 import { initI18n } from '@/i18n';
 import { queryClient } from '@/services/queryClient';
 import { usePrefsStore } from '@/stores/prefs';
@@ -46,6 +47,7 @@ if (__DEV__ && Platform.OS === 'web') {
 function RootStack() {
   const theme = useTheme();
   useNotificationRouting();
+  useWidgetQueue();
   const modal = { presentation: 'modal' as const, animation: 'slide_from_bottom' as const };
   return (
     <>

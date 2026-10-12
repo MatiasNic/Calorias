@@ -13,7 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: IS_DEV ? `${APP_NAME} (dev)` : APP_NAME,
   slug: 'bocado',
-  version: '0.4.1',
+  version: '0.4.2',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   scheme: 'bocado',
@@ -43,7 +43,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: IS_DEV ? `${BUNDLE_ID}.dev` : BUNDLE_ID,
     // Local/demo builds; EAS manages it remotely (appVersionSource: remote).
-    versionCode: 14,
+    versionCode: 15,
     adaptiveIcon: {
       backgroundColor: '#F2F2EE',
       foregroundImage: './assets/images/android-icon-foreground.png',
@@ -78,6 +78,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           '../../node_modules/@expo-google-fonts/manrope/800ExtraBold/Manrope_800ExtraBold.ttf',
         ],
         // Home-screen widgets (src/features/widgets). Sizes follow the launcher grid: 1×1, 2×1, 4×2.
+        // previewImage = what the launcher's widget picker shows (assets/widgets, see README there).
         widgets: [
           {
             name: 'BocadoVoice',
@@ -88,16 +89,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             targetCellWidth: 1,
             targetCellHeight: 1,
             resizeMode: 'none',
+            previewImage: './assets/widgets/voice.png',
           },
           {
             name: 'BocadoWater',
             label: 'Bocado · Agua',
-            description: 'Sumá un vaso de agua sin abrir la app',
+            description: 'Sumá agua sin abrir la app y mirá cuánto llevás',
             minWidth: '40dp',
             minHeight: '40dp',
-            targetCellWidth: 1,
+            targetCellWidth: 2,
             targetCellHeight: 1,
-            resizeMode: 'none',
+            resizeMode: 'horizontal',
+            previewImage: './assets/widgets/water.png',
           },
           {
             name: 'BocadoQuickLog',
@@ -108,6 +111,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             targetCellWidth: 2,
             targetCellHeight: 1,
             resizeMode: 'horizontal',
+            previewImage: './assets/widgets/quick.png',
           },
           {
             name: 'BocadoToday',
@@ -119,6 +123,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             targetCellHeight: 2,
             resizeMode: 'horizontal|vertical',
             updatePeriodMillis: 1800000,
+            previewImage: './assets/widgets/today.png',
+          },
+          {
+            name: 'BocadoUsual',
+            label: 'Bocado · Lo de siempre',
+            description: 'Registrá tus comidas de siempre con un toque, sin abrir la app',
+            minWidth: '250dp',
+            minHeight: '110dp',
+            targetCellWidth: 4,
+            targetCellHeight: 2,
+            resizeMode: 'horizontal|vertical',
+            previewImage: './assets/widgets/usual.png',
           },
         ],
       },

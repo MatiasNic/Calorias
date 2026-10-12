@@ -1356,13 +1356,14 @@ export const en: TranslationShape<Translation> = {
   },
   widgets: {
     title: 'Widgets',
-    intro: "Log without opening the app: add these to your phone's home screen.",
+    intro:
+      'Log without opening the app: add these widgets to your home screen. Water and “Usual” are logged right from the widget.',
     androidOnly: 'Widgets are available on Android.',
     add: 'Add to home screen',
     manual: 'You can also long-press your home screen → Widgets → Bocado.',
     today: {
       title: 'Today (4×2)',
-      body: 'Calories left plus buttons to talk, take a photo, type or add water.',
+      body: 'Calories left and your macros. Talk, photo or type open the app; the water button adds 250 ml right there.',
     },
     quick: {
       title: 'Log (2×1)',
@@ -1373,8 +1374,8 @@ export const en: TranslationShape<Translation> = {
       body: "One tap and you're telling what you ate.",
     },
     water: {
-      title: 'Water (1×1)',
-      body: 'Each tap adds a glass (250 ml) without opening the app.',
+      title: 'Water (1×1 or 2×1)',
+      body: 'Add water without opening the app. Small: each tap adds 250 ml. Stretched: see your progress with +250, +500 and undo.',
       label: 'Water',
     },
     consumed: 'eaten',
@@ -1382,5 +1383,12 @@ export const en: TranslationShape<Translation> = {
     talk: 'Talk',
     photo: 'Photo',
     write: 'Type',
+    usual: {
+      title: 'Usual',
+      body: 'The meals you repeat most: tap + and it’s logged without opening the app (tap again to undo).',
+      empty: 'Log meals and the ones you repeat show up here.',
+    },
+    logged: 'Logged',
+    undo: 'Undo',
   },
 };

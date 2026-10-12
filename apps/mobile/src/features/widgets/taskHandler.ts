@@ -1,33 +1,33 @@
-import { WATER_QUICK_ADD_ML } from '@plato/shared';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
 
-import { addWater } from '@/features/body/hooks';
-import { useSessionStore } from '@/stores/session';
 import { todayLocal } from '@/utils/dates';
-import { readSnapshot, snapshotFor, writeSnapshot } from './snapshot';
+import { applyWidgetClick } from './actions';
+import { readQueue, readSnapshot, snapshotFor, writeQueue, writeSnapshot } from './snapshot';
 import { refreshWidgets } from './sync';
-import { renderWidget, WATER_ACTION } from './views';
+import { renderWidget } from './views';
 
 /**
  * Runs in the background (the app may be closed) when a widget is added, resized, refreshed by
- * the system or tapped. "Agua" is logged right here; everything else opens the app via deep link.
+ * the system or tapped. Taps like "+250 ml" or "log my usual breakfast" are done right here on the
+ * widget's numbers and queued; the app saves them to its database the next time it opens.
  */
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
-  const today = todayLocal();
-  let snapshot = snapshotFor(today, readSnapshot());
+  let snapshot = snapshotFor(todayLocal(), readSnapshot());
 
-  if (props.widgetAction === 'WIDGET_CLICK' && props.clickAction === WATER_ACTION) {
-    // The background task has no session: write the water under the account the app last used.
-    if (snapshot.userId && !useSessionStore.getState().userId)
-      useSessionStore.setState({ userId: snapshot.userId });
-    try {
-      await addWater(today);
-      snapshot = { ...snapshot, waterMl: snapshot.waterMl + WATER_QUICK_ADD_ML };
+  if (props.widgetAction === 'WIDGET_CLICK' && props.clickAction) {
+    const next = applyWidgetClick(
+      snapshot,
+      readQueue(),
+      props.clickAction,
+      props.clickActionData as Record<string, unknown> | undefined,
+      new Date(),
+    );
+    if (next.snapshot !== snapshot) {
+      snapshot = next.snapshot;
       writeSnapshot(snapshot);
-      // Other widgets showing water (e.g. "Hoy") update too.
-      await refreshWidgets(snapshot);
-    } catch {
-      // keep showing the previous numbers
+      writeQueue(next.queue);
+      // Other widgets showing the same numbers (e.g. "Hoy") update too.
+      await refreshWidgets(snapshot).catch(() => undefined);
     }
   }
 
@@ -37,7 +37,12 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     case 'WIDGET_RESIZED':
     case 'WIDGET_CLICK':
       props.renderWidget(
-        renderWidget(props.widgetInfo.widgetName, snapshot, props.widgetInfo.width),
+        renderWidget(
+          props.widgetInfo.widgetName,
+          snapshot,
+          props.widgetInfo.width,
+          props.widgetInfo.height,
+        ),
       );
       break;
     default:

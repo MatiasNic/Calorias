@@ -1,7 +1,7 @@
 import { MEAL_TYPE_ORDER, suggestMealType } from '@plato/shared';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -32,8 +32,7 @@ import { pickInsight } from '@/features/habits/insights';
 import { useProfile } from '@/features/profile/hooks';
 import { repos } from '@/services/db/repository';
 import { syncNow } from '@/services/sync/engine';
-import { updateWidgets } from '@/features/widgets/sync';
-import { useSessionStore } from '@/stores/session';
+import { useWidgetSync } from '@/features/widgets/useWidgetSync';
 import { useUiStore } from '@/stores/ui';
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { formatDay, todayLocal } from '@/utils/dates';
@@ -95,30 +94,13 @@ export default function Today() {
 
   const examples = [t('today.example1'), t('today.example2')];
 
-  // Home-screen widgets show today's numbers: refresh them whenever these change.
-  const consumedKcal = Math.round(day.summary.consumed.kcal);
-  const budgetKcal = Math.round(day.summary.consumed.kcal + day.summary.remainingKcal);
-  useEffect(() => {
-    if (!isToday || day.isLoading) return;
-    void updateWidgets({
-      date,
-      userId: useSessionStore.getState().userId,
-      targetKcal: budgetKcal,
-      consumedKcal,
-      waterMl: day.waterMl,
-      waterTargetMl: day.goal.water_ml ?? 2000,
-      labels: {
-        left: t('today.leftLabel'),
-        over: t('today.overLabel'),
-        consumed: t('widgets.consumed'),
-        goal: t('widgets.goal'),
-        talk: t('widgets.talk'),
-        photo: t('widgets.photo'),
-        write: t('widgets.write'),
-        water: t('widgets.water.label'),
-      },
-    });
-  }, [isToday, day.isLoading, date, budgetKcal, consumedKcal, day.waterMl, day.goal.water_ml, t]);
+  // Home-screen widgets show today's numbers (only while looking at today).
+  useWidgetSync({
+    isLoading: day.isLoading || !isToday,
+    summary: day.summary,
+    waterMl: day.waterMl,
+    waterTargetMl: day.goal.water_ml ?? 2000,
+  });
 
   return (
     <Screen onRefresh={pullToRefresh} refreshing={pulling} testID="today-screen">
