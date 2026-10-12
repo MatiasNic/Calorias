@@ -31,7 +31,7 @@ import {
   type StepId,
 } from '@/features/onboarding/store';
 import { PaywallContent } from '@/features/premium/PaywallContent';
-import { spacing } from '@/theme';
+import { fontFamily, spacing, useTheme } from '@/theme';
 
 function canContinue(step: StepId, a: OnboardingAnswers): boolean {
   switch (step) {
@@ -80,6 +80,7 @@ const STEP_VIEWS: Record<Exclude<StepId, 'paywall'>, () => React.JSX.Element> = 
 
 export default function Onboarding() {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const { answers, stepIndex, goTo, reset } = useOnboardingStore();
   const [saving, setSaving] = useState(false);
   const steps = stepsFor(answers.goal);
@@ -160,10 +161,12 @@ export default function Onboarding() {
         <View style={styles.flex}>
           <ProgressBar
             progress={(index + 1) / steps.length}
+            color={colors.text}
+            height={6}
             label={t('onboarding.progress', { current: index + 1, total: steps.length })}
           />
         </View>
-        <AppText variant="caption" color="textMuted" tabular>
+        <AppText variant="caption" color="textMuted" tabular style={styles.count}>
           {index + 1}/{steps.length}
         </AppText>
       </View>
@@ -173,6 +176,13 @@ export default function Onboarding() {
 }
 
 const styles = StyleSheet.create({
-  top: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  top: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    minHeight: 60,
+    marginLeft: -spacing.md,
+  },
+  count: { fontFamily: fontFamily.bold },
   flex: { flex: 1 },
 });

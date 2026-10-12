@@ -1,9 +1,10 @@
 import { useCameraPermissions } from 'expo-camera';
+import { ExpoSpeechRecognitionModule } from 'expo-speech-recognition';
 import { useState } from 'react';
-import { StyleSheet, Switch, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Button, Card, Icon, type IconName } from '@/components';
+import { AppText, Button, Card, Icon, type IconName, Toggle } from '@/components';
 import { features } from '@/config/features';
 import { initAnalytics } from '@/services/analytics';
 import { requestHealthPermissions } from '@/services/health';
@@ -29,8 +30,8 @@ function PermissionRow({
   const { colors } = useTheme();
   return (
     <Card style={styles.row}>
-      <View style={[styles.icon, { backgroundColor: colors.primarySoft }]}>
-        <Icon name={icon} color="primary" />
+      <View style={[styles.icon, { backgroundColor: colors.surfaceAlt }]}>
+        <Icon name={icon} color="text" />
       </View>
       <View style={styles.flex}>
         <AppText variant="bodyStrong">{title}</AppText>
@@ -39,7 +40,12 @@ function PermissionRow({
         </AppText>
       </View>
       {granted ? (
-        <Icon name="checkmark-circle" color="success" size={28} />
+        <View
+          style={[styles.granted, { backgroundColor: colors.primary }]}
+          accessibilityLabel={t('onboarding.permissions.granted')}
+        >
+          <Icon name="check" color="onPrimary" size={20} />
+        </View>
       ) : (
         <Button
           label={t('onboarding.permissions.allow')}
@@ -56,6 +62,7 @@ function PermissionRow({
 export function PermissionsStep() {
   const { t } = useTranslation();
   const [camera, requestCamera] = useCameraPermissions();
+  const [mic, setMic] = useState(false);
   const [notifications, setNotifications] = useState(false);
   const [health, setHealth] = useState(false);
   const prefs = usePrefsStore();
@@ -65,8 +72,24 @@ export function PermissionsStep() {
       title={t('onboarding.permissions.title')}
       subtitle={t('onboarding.permissions.subtitle')}
     >
+      {features.voiceLogging ? (
+        <PermissionRow
+          icon="mic"
+          title={t('onboarding.permissions.mic')}
+          body={t('onboarding.permissions.micBody')}
+          granted={mic}
+          onRequest={async () => {
+            try {
+              const res = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+              setMic(res.granted);
+            } catch {
+              setMic(false);
+            }
+          }}
+        />
+      ) : null}
       <PermissionRow
-        icon="camera"
+        icon="photo_camera"
         title={t('onboarding.permissions.camera')}
         body={t('onboarding.permissions.cameraBody')}
         granted={!!camera?.granted}
@@ -92,7 +115,7 @@ export function PermissionsStep() {
       <Card style={styles.consent}>
         <View style={styles.switchRow}>
           <AppText style={styles.flex}>{t('onboarding.permissions.analytics')}</AppText>
-          <Switch
+          <Toggle
             accessibilityLabel={t('onboarding.permissions.analytics')}
             value={!!prefs.analyticsConsent}
             onValueChange={(v) => {
@@ -103,7 +126,7 @@ export function PermissionsStep() {
         </View>
         <View style={styles.switchRow}>
           <AppText style={styles.flex}>{t('onboarding.permissions.crashes')}</AppText>
-          <Switch
+          <Toggle
             accessibilityLabel={t('onboarding.permissions.crashes')}
             value={!!prefs.crashReportingConsent}
             onValueChange={(v) => {
@@ -121,6 +144,13 @@ export function PermissionsStep() {
 }
 
 const styles = StyleSheet.create({
+  granted: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   icon: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   flex: { flex: 1 },

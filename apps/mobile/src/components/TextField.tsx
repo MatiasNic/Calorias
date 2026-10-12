@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
+import { Platform, StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { AppText } from './AppText';
@@ -34,7 +34,12 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
           placeholderTextColor={colors.textSubtle}
           accessibilityLabel={label}
           maxFontSizeMultiplier={1.6}
-          style={[styles.input, { color: colors.text }, style]}
+          style={[
+            styles.input,
+            { color: colors.text },
+            Platform.OS === 'web' && styles.noOutline,
+            style,
+          ]}
           {...rest}
         />
         {suffix ? (
@@ -66,5 +71,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     minHeight: 52,
   },
+  noOutline: { outlineStyle: 'none' } as object,
   input: { flex: 1, fontFamily: fontFamily.semibold, fontSize: 15, paddingVertical: spacing.sm },
 });

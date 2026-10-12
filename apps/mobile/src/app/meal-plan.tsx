@@ -1,6 +1,6 @@
 import { MealPlanPreferencesSchema, type MealPlan, type MealPlanPreferences } from '@plato/shared';
 import { useState } from 'react';
-import { Share, StyleSheet, Switch, View } from 'react-native';
+import { Share, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -13,6 +13,7 @@ import {
   SegmentedControl,
   Skeleton,
   TextField,
+  Toggle,
 } from '@/components';
 import { PremiumGate } from '@/features/premium/PremiumGate';
 import { useAiError } from '@/features/scan/useAiError';
@@ -139,7 +140,7 @@ export default function MealPlanScreen() {
               <AppText variant="label" style={styles.flex}>
                 {t('mealPlan.batchCooking')}
               </AppText>
-              <Switch
+              <Toggle
                 accessibilityLabel={t('mealPlan.batchCooking')}
                 value={prefs.batchCooking}
                 onValueChange={(batchCooking) => update({ batchCooking })}

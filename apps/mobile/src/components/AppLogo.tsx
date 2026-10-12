@@ -7,7 +7,8 @@ import { useTheme } from '@/theme';
 export function AppLogo({ size = 48 }: { size?: number }) {
   const theme = useTheme();
   const maskId = `bite-${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
-  const fill = theme.dark ? theme.colors.accent : theme.colors.primary;
+  // The isotype is always sage (design handoff v0.3), in light and dark themes.
+  const fill = theme.colors.accent;
   return (
     <Svg width={size} height={size} viewBox="4 8 48 48" accessibilityLabel="Bocado">
       <Defs>

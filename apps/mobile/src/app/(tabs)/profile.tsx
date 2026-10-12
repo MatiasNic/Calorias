@@ -32,7 +32,8 @@ import {
 } from '@/services/purchases';
 import { useSyncStatus } from '@/services/sync/engine';
 import { useSessionStore } from '@/stores/session';
-import { MIN_TOUCH, palette, radii, spacing, useTheme } from '@/theme';
+import { usePrefsStore } from '@/stores/prefs';
+import { MIN_TOUCH, radii, spacing, useTheme } from '@/theme';
 import { formatDay, todayLocal } from '@/utils/dates';
 
 export default function Profile() {
@@ -48,7 +49,7 @@ export default function Profile() {
   const premium = planState.plan === 'premium';
   const isGuest = session.status === 'guest';
   const streak = useStreak();
-  const onDark = theme.dark ? colors.text : colors.onPrimary;
+  const prefs = usePrefsStore();
   const name =
     profile.data?.display_name ||
     (isGuest
@@ -160,20 +161,20 @@ export default function Profile() {
           />
         </Card>
       ) : (
-        <View style={[styles.planCard, styles.upsell, { backgroundColor: colors.tabBar }]}>
+        <View style={[styles.planCard, styles.upsell, { backgroundColor: colors.surface }]}>
           {quota.data ? (
             <>
               <View style={styles.row}>
-                <AppText variant="bodyStrong" style={[styles.flex, { color: onDark }]}>
+                <AppText variant="bodyStrong" style={styles.flex}>
                   {t('profile.scansToday')}
                 </AppText>
-                <AppText variant="bodyStrong" tabular style={{ color: onDark }}>
+                <AppText variant="bodyStrong" tabular>
                   {quota.data.photo_scan.used} / {quota.data.photo_scan.limit}
                 </AppText>
               </View>
               <ProgressBar
                 progress={quota.data.photo_scan.used / Math.max(1, quota.data.photo_scan.limit)}
-                color={colors.accent}
+                color={colors.text}
               />
             </>
           ) : null}
@@ -184,11 +185,11 @@ export default function Profile() {
             testID="profile-upgrade"
             style={({ pressed }) => [
               styles.upgrade,
-              { backgroundColor: colors.accent, opacity: pressed ? 0.85 : 1 },
+              { backgroundColor: colors.primary, opacity: pressed ? 0.85 : 1 },
             ]}
           >
-            <Icon name="sparkles" size={18} rawColor={palette.ink800} />
-            <AppText variant="bodyStrong" style={{ color: palette.ink800 }}>
+            <Icon name="auto_awesome" size={18} color="onPrimary" />
+            <AppText variant="bodyStrong" color="onPrimary">
               {t('profile.upgrade')}
             </AppText>
           </Pressable>
@@ -246,6 +247,24 @@ export default function Profile() {
           icon="notifications-outline"
           title={t('profile.reminders')}
           onPress={() => router.push('/settings/reminders')}
+        />
+        <ListRow
+          icon={theme.dark ? 'dark_mode' : 'light_mode'}
+          title={t('settings.theme')}
+          value={t(
+            prefs.theme === 'dark'
+              ? 'settings.themeDark'
+              : prefs.theme === 'light'
+                ? 'settings.themeLight'
+                : 'settings.themeSystem',
+          )}
+          onPress={() =>
+            prefs.set({
+              theme:
+                prefs.theme === 'system' ? 'dark' : prefs.theme === 'dark' ? 'light' : 'system',
+            })
+          }
+          testID="profile-theme"
         />
         <ListRow
           icon="options-outline"

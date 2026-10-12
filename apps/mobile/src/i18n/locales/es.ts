@@ -119,11 +119,11 @@ export const es = {
     recipe: 'Receta',
   },
   welcome: {
-    title: 'Contá calorías con una foto',
+    title: 'Contá lo que comiste. Bocado hace las cuentas.',
     subtitle:
-      'Sacale una foto a tu plato y Bocado reconoce cada alimento, estima la porción y calcula calorías y nutrientes.',
-    point1: 'Foto → alimentos, porciones y calorías en segundos',
-    point2: 'Corregí todo fácil: vos tenés la última palabra',
+      'Hablá, sacá una foto o escribí. Separamos tus comidas, estimamos porciones y calculamos calorías y macros.',
+    point1: 'O sacale una foto al plato',
+    point2: 'Corregí hablando: vos tenés la última palabra',
     point3: 'Objetivos personalizados y progreso real, sin culpa',
     createAccount: 'Crear cuenta',
     haveAccount: 'Ya tengo cuenta',
@@ -131,6 +131,9 @@ export const es = {
     tryDemo: 'Modo demo',
     demoTitle: 'Modo demo',
     demoMessage: 'La IA y los pagos están simulados y tus datos quedan solo en este dispositivo.',
+    demoQuote: 'Desayuné café con leche y dos medialunas, y a la noche media milanesa con puré',
+    demoBreakfast: 'Desayuno · Café con leche, 2 medialunas',
+    demoDinner: 'Cena · ½ milanesa, puré',
   },
   auth: {
     signInTitle: 'Iniciá sesión',
@@ -301,6 +304,9 @@ export const es = {
       analytics: 'Compartir datos de uso anónimos para mejorar la app',
       crashes: 'Enviar reportes de errores',
       privacyNote: 'Nunca compartimos tus comidas, fotos ni datos de salud con anunciantes.',
+      mic: 'Micrófono',
+      micBody: 'Para dictar tus comidas. Solo escucha mientras mantenés abierto el dictado.',
+      granted: 'Permitido',
     },
   },
   goals: {
@@ -1281,6 +1287,9 @@ export const es = {
       enable: 'Activar notificaciones',
     },
     mockPremium: 'Simular cancelación (modo demo)',
+    listenStyle: 'Al tocar el micrófono',
+    listenSheet: 'Hoja inferior',
+    listenFull: 'Pantalla completa',
   },
   paywall: {
     title: {

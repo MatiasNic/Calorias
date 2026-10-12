@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { radii, spacing, useTheme } from '@/theme';
+import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { haptic } from '@/utils/haptics';
 import { AppText } from './AppText';
 import { Icon, type IconName } from './Icon';
@@ -40,49 +40,45 @@ export function OptionCard({
       style={({ pressed }) => [
         styles.card,
         {
-          borderColor: selected ? colors.primary : 'transparent',
+          borderColor: selected ? colors.text : 'transparent',
           backgroundColor: colors.surface,
           opacity: pressed ? 0.85 : 1,
         },
       ]}
     >
       {icon ? (
-        <View
-          style={[styles.icon, { backgroundColor: selected ? colors.primary : colors.surfaceAlt }]}
-        >
-          <Icon name={icon} size={22} color={selected ? 'onPrimary' : 'text'} />
+        <View style={[styles.icon, { backgroundColor: colors.surfaceAlt }]}>
+          <Icon name={icon} size={22} color="text" />
         </View>
       ) : null}
       <View style={styles.text}>
         <View style={styles.titleRow}>
-          <AppText variant="bodyStrong">{title}</AppText>
+          <AppText variant="subheading">{title}</AppText>
           {badge ? (
-            <View style={[styles.badge, { backgroundColor: colors.primarySoft }]}>
-              <AppText variant="caption" color="text">
+            <View style={[styles.badge, { backgroundColor: colors.surfaceAlt }]}>
+              <AppText variant="caption" color="text" style={styles.badgeText}>
                 {badge}
               </AppText>
             </View>
           ) : null}
         </View>
         {description ? (
-          <AppText variant="caption" color="textMuted">
+          <AppText variant="label" color="textMuted" style={styles.description}>
             {description}
           </AppText>
         ) : null}
       </View>
-      <Icon
-        name={
+      <View
+        style={[
+          styles.radio,
+          multi && styles.square,
           selected
-            ? multi
-              ? 'checkbox'
-              : 'checkmark-circle'
-            : multi
-              ? 'square-outline'
-              : 'ellipse-outline'
-        }
-        size={24}
-        color={selected ? 'primary' : 'border'}
-      />
+            ? { backgroundColor: colors.primary, borderColor: colors.primary }
+            : { borderColor: colors.textSubtle },
+        ]}
+      >
+        {selected ? <Icon name="check" size={16} color="onPrimary" /> : null}
+      </View>
     </Pressable>
   );
 }
@@ -91,11 +87,12 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.md,
-    padding: spacing.lg,
-    borderRadius: radii.xl,
-    borderWidth: 1.5,
-    minHeight: 64,
+    gap: 14,
+    paddingVertical: 14,
+    paddingHorizontal: spacing.lg,
+    borderRadius: 22,
+    borderWidth: 2,
+    minHeight: 72,
   },
   icon: {
     width: 44,
@@ -106,5 +103,16 @@ const styles = StyleSheet.create({
   },
   text: { flex: 1, gap: 2 },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flexWrap: 'wrap' },
-  badge: { paddingHorizontal: spacing.sm, borderRadius: radii.pill },
+  description: { fontFamily: fontFamily.medium },
+  badge: { paddingHorizontal: spacing.sm, paddingVertical: 2, borderRadius: radii.pill },
+  badgeText: { fontSize: 11, fontFamily: fontFamily.bold },
+  radio: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  square: { borderRadius: 7 },
 });

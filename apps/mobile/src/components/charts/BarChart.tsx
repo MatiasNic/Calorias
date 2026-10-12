@@ -73,8 +73,9 @@ export function BarChart({ data, height = 180, target, color, accessibilityLabel
                 width={barW}
                 height={Math.max(d.value > 0 ? 2 : 0, PAD.top + h - y(d.value))}
                 rx={4}
-                fill={d.highlight ? colors.primary : (color ?? colors.primary)}
-                opacity={d.value > 0 ? 1 : 0.3}
+                // Calorie bars are sage; today is solid, the other days slightly lighter.
+                fill={color ?? colors.kcal}
+                opacity={d.value > 0 ? (d.highlight ? 1 : 0.7) : 0.3}
               />
             );
           })}

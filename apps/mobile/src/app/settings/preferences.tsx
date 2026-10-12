@@ -1,12 +1,20 @@
 import type { AppLocale, UnitSystem } from '@plato/shared';
-import { StyleSheet, Switch, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Card, Screen, ScreenHeader, SectionHeader, SegmentedControl } from '@/components';
+import {
+  AppText,
+  Card,
+  Screen,
+  ScreenHeader,
+  SectionHeader,
+  SegmentedControl,
+  Toggle,
+} from '@/components';
 import { updateProfile } from '@/features/profile/hooks';
 import { rescheduleReminders } from '@/features/settings/useNotificationSettings';
 import { changeLocale, currentLocale } from '@/i18n';
-import { usePrefsStore, type ThemePreference } from '@/stores/prefs';
+import { usePrefsStore, type ThemePreference, type ListenStyle } from '@/stores/prefs';
 import { spacing } from '@/theme';
 
 export default function Preferences() {
@@ -53,10 +61,19 @@ export default function Preferences() {
           { value: 'dark', label: t('settings.themeDark') },
         ]}
       />
+      <SectionHeader title={t('settings.listenStyle')} />
+      <SegmentedControl<ListenStyle>
+        value={prefs.listenStyle}
+        onChange={(listenStyle) => prefs.set({ listenStyle })}
+        options={[
+          { value: 'sheet', label: t('settings.listenSheet') },
+          { value: 'full', label: t('settings.listenFull') },
+        ]}
+      />
       <Card style={styles.card}>
         <View style={styles.row}>
           <AppText style={styles.flex}>{t('settings.haptics')}</AppText>
-          <Switch
+          <Toggle
             accessibilityLabel={t('settings.haptics')}
             value={prefs.hapticsEnabled}
             onValueChange={(v) => prefs.set({ hapticsEnabled: v })}
@@ -69,7 +86,7 @@ export default function Preferences() {
               {t('settings.savePhotosHint')}
             </AppText>
           </View>
-          <Switch
+          <Toggle
             accessibilityLabel={t('settings.savePhotos')}
             value={prefs.savePhotos}
             onValueChange={(v) => {
@@ -85,7 +102,7 @@ export default function Preferences() {
               {t('settings.exerciseInBudgetHint')}
             </AppText>
           </View>
-          <Switch
+          <Toggle
             accessibilityLabel={t('settings.exerciseInBudget')}
             value={prefs.exerciseInBudget}
             onValueChange={(v) => prefs.set({ exerciseInBudget: v })}

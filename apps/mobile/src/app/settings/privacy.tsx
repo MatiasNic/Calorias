@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, StyleSheet, Switch, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -14,6 +14,7 @@ import {
   SectionHeader,
   TextField,
   toast,
+  Toggle,
 } from '@/components';
 import { updateProfile } from '@/features/profile/hooks';
 import { deleteMyAccount, exportMyData } from '@/services/account';
@@ -68,7 +69,7 @@ export default function Privacy() {
   const consent = (key: 'analyticsConsent' | 'crashReportingConsent', label: string) => (
     <View style={styles.row}>
       <AppText style={styles.flex}>{label}</AppText>
-      <Switch
+      <Toggle
         accessibilityLabel={label}
         value={!!prefs[key]}
         onValueChange={(v) => {

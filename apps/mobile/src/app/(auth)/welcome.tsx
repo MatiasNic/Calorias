@@ -14,9 +14,9 @@ export default function Welcome() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const points: { icon: IconName; text: string }[] = [
-    { icon: 'camera-outline', text: t('welcome.point1') },
-    { icon: 'create-outline', text: t('welcome.point2') },
-    { icon: 'trending-up-outline', text: t('welcome.point3') },
+    { icon: 'photo_camera', text: t('welcome.point1') },
+    { icon: 'record_voice_over', text: t('welcome.point2') },
+    { icon: 'trending_up', text: t('welcome.point3') },
   ];
 
   return (
@@ -66,10 +66,36 @@ export default function Welcome() {
     >
       <Animated.View entering={FadeInDown.duration(500)} style={styles.hero}>
         <AppLogo size={52} />
-        <AppText variant="display">{t('welcome.title')}</AppText>
+        <AppText variant="display" style={styles.title}>
+          {t('welcome.title')}
+        </AppText>
         <AppText variant="body" color="textMuted">
           {t('welcome.subtitle')}
         </AppText>
+      </Animated.View>
+      <Animated.View
+        entering={FadeInDown.delay(100).duration(500)}
+        style={[styles.demo, { backgroundColor: colors.surface }]}
+      >
+        <View style={styles.demoQuote}>
+          <View style={[styles.demoMic, { backgroundColor: colors.primary }]}>
+            <Icon name="mic" size={22} color="onPrimary" />
+          </View>
+          <AppText variant="bodyStrong" style={styles.flex}>
+            «{t('welcome.demoQuote')}»
+          </AppText>
+        </View>
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        {(['demoBreakfast', 'demoDinner'] as const).map((k, i) => (
+          <View key={k} style={styles.demoRow}>
+            <AppText variant="label" color="textMuted" style={styles.flex} numberOfLines={1}>
+              {t(`welcome.${k}`)}
+            </AppText>
+            <AppText variant="label" tabular>
+              {i === 0 ? 411 : 413}
+            </AppText>
+          </View>
+        ))}
       </Animated.View>
       <View style={styles.points}>
         {points.map((p, i) => (
@@ -78,9 +104,7 @@ export default function Welcome() {
             entering={FadeInDown.delay(150 + i * 100)}
             style={styles.point}
           >
-            <View style={[styles.pointIcon, { backgroundColor: colors.surfaceAlt }]}>
-              <Icon name={p.icon} size={20} color="text" />
-            </View>
+            <Icon name={p.icon} size={22} color="textMuted" />
             <AppText variant="label" style={styles.flex}>
               {p.text}
             </AppText>
@@ -92,9 +116,20 @@ export default function Welcome() {
 }
 
 const styles = StyleSheet.create({
-  hero: { alignItems: 'flex-start', gap: spacing.md, marginTop: spacing.xl },
+  hero: { alignItems: 'flex-start', gap: spacing.md, marginTop: spacing.lg },
+  demo: { borderRadius: 26, padding: spacing.lg, gap: spacing.md, marginTop: spacing.sm },
+  demoQuote: { flexDirection: 'row', gap: spacing.md, alignItems: 'flex-start' },
+  demoMic: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  divider: { height: 1 },
+  demoRow: { flexDirection: 'row', gap: spacing.md },
   row: { flexDirection: 'row', gap: spacing.sm },
-  points: { gap: spacing.md, marginTop: spacing.lg },
+  points: { gap: spacing.lg, marginTop: spacing.sm },
   point: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   pointIcon: {
     width: 44,
@@ -104,4 +139,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flex: { flex: 1 },
+  title: { lineHeight: 38 },
 });

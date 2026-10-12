@@ -121,11 +121,11 @@ export const pt: TranslationShape<Translation> = {
     recipe: 'Receita',
   },
   welcome: {
-    title: 'Conte calorias com uma foto',
+    title: 'Conte o que você comeu. O Bocado faz as contas.',
     subtitle:
-      'Tire uma foto do seu prato e o Bocado reconhece cada alimento, estima a porção e calcula calorias e nutrientes.',
-    point1: 'Foto → alimentos, porções e calorias em segundos',
-    point2: 'Correções fáceis: a palavra final é sua',
+      'Fale, tire uma foto ou escreva. Separamos suas refeições, estimamos porções e calculamos calorias e macros.',
+    point1: 'Ou tire uma foto do prato',
+    point2: 'Corrija falando: a última palavra é sua',
     point3: 'Metas personalizadas e progresso real, sem culpa',
     createAccount: 'Criar conta',
     haveAccount: 'Já tenho conta',
@@ -133,6 +133,10 @@ export const pt: TranslationShape<Translation> = {
     tryDemo: 'Modo demo',
     demoTitle: 'Modo demo',
     demoMessage: 'A IA e os pagamentos são simulados e seus dados ficam apenas neste dispositivo.',
+    demoQuote:
+      'No café da manhã café com leite e dois croissants, e no jantar meio bife à milanesa com purê',
+    demoBreakfast: 'Café da manhã · Café com leite, 2 croissants',
+    demoDinner: 'Jantar · ½ milanesa, purê',
   },
   auth: {
     signInTitle: 'Entrar',
@@ -304,6 +308,9 @@ export const pt: TranslationShape<Translation> = {
       analytics: 'Compartilhar dados de uso anônimos para melhorar o app',
       crashes: 'Enviar relatórios de erros',
       privacyNote: 'Nunca compartilhamos suas refeições, fotos ou dados de saúde com anunciantes.',
+      mic: 'Microfone',
+      micBody: 'Para ditar suas refeições. Só escuta enquanto o ditado estiver aberto.',
+      granted: 'Permitido',
     },
   },
   goals: {
@@ -1276,6 +1283,9 @@ export const pt: TranslationShape<Translation> = {
       enable: 'Ativar notificações',
     },
     mockPremium: 'Simular cancelamento (modo demo)',
+    listenStyle: 'Ao tocar no microfone',
+    listenSheet: 'Painel inferior',
+    listenFull: 'Tela cheia',
   },
   paywall: {
     title: {

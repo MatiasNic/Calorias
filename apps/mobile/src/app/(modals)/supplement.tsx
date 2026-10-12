@@ -6,7 +6,7 @@ import {
 } from '@plato/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, StyleSheet, Switch, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -21,6 +21,7 @@ import {
   SectionHeader,
   TextField,
   toast,
+  Toggle,
 } from '@/components';
 import { TimeStepper } from '@/features/diary/TimeStepper';
 import { rescheduleReminders } from '@/features/settings/useNotificationSettings';
@@ -156,7 +157,7 @@ function SupplementForm({ initial }: { initial: SupplementRecord | null }) {
           </AppText>
         ) : null}
       </View>
-      <Switch accessibilityLabel={label} value={value} onValueChange={onChange} />
+      <Toggle accessibilityLabel={label} value={value} onValueChange={onChange} />
     </View>
   );
 

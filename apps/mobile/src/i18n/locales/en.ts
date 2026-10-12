@@ -120,11 +120,11 @@ export const en: TranslationShape<Translation> = {
     recipe: 'Recipe',
   },
   welcome: {
-    title: 'Count calories with a photo',
+    title: 'Say what you ate. Bocado does the math.',
     subtitle:
-      'Snap your plate and Bocado recognizes each food, estimates the portion and calculates calories and nutrients.',
-    point1: 'Photo → foods, portions and calories in seconds',
-    point2: 'Easy corrections: you always have the final say',
+      'Talk, snap a photo or type. We split your meals, estimate portions and calculate calories and macros.',
+    point1: 'Or snap a photo of your plate',
+    point2: 'Correct by talking: you have the last word',
     point3: 'Personal goals and real progress, guilt-free',
     createAccount: 'Create account',
     haveAccount: 'I already have an account',
@@ -132,6 +132,10 @@ export const en: TranslationShape<Translation> = {
     tryDemo: 'Demo mode',
     demoTitle: 'Demo mode',
     demoMessage: 'AI and payments are simulated and your data stays on this device only.',
+    demoQuote:
+      'Coffee with milk and two croissants for breakfast, and half a schnitzel with mash for dinner',
+    demoBreakfast: 'Breakfast · Coffee with milk, 2 croissants',
+    demoDinner: 'Dinner · ½ schnitzel, mash',
   },
   auth: {
     signInTitle: 'Sign in',
@@ -294,6 +298,9 @@ export const en: TranslationShape<Translation> = {
       analytics: 'Share anonymous usage data to improve the app',
       crashes: 'Send crash reports',
       privacyNote: 'We never share your meals, photos or health data with advertisers.',
+      mic: 'Microphone',
+      micBody: 'To dictate your meals. It only listens while dictation is open.',
+      granted: 'Allowed',
     },
   },
   goals: {
@@ -1260,6 +1267,9 @@ export const en: TranslationShape<Translation> = {
       enable: 'Turn on notifications',
     },
     mockPremium: 'Simulate cancellation (demo mode)',
+    listenStyle: 'When you tap the mic',
+    listenSheet: 'Bottom sheet',
+    listenFull: 'Full screen',
   },
   paywall: {
     title: {

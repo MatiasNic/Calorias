@@ -62,8 +62,9 @@ export function CorrectionBar({
           onChangeText={setText}
           placeholder={dictation.listening ? t('listen.listening') : t('review.correctTitle')}
           placeholderTextColor={colors.textSubtle}
-          multiline
           maxLength={500}
+          returnKeyType="send"
+          onSubmitEditing={() => (hasText ? void send() : undefined)}
           style={[styles.input, { color: colors.text }]}
           accessibilityLabel={t('review.correctTitle')}
           testID="review-correct-input"

@@ -68,8 +68,9 @@ export default function WeightModal() {
         onChangeText={setText}
         unit={units === 'imperial' ? 'lb' : 'kg'}
         accessibilityLabel={t('weight.title')}
-        autoFocus
         testID="weight-modal-input"
+        placeholder={units === 'imperial' ? '160' : '70'}
+        step={units === 'imperial' ? 0.2 : 0.1}
       />
       <AppText variant="caption" color="textMuted" align="center">
         {t('weight.tip')}

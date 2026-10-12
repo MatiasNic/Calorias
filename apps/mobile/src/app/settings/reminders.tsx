@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { StyleSheet, Switch, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -12,6 +12,7 @@ import {
   ScreenHeader,
   SectionHeader,
   Stepper,
+  Toggle,
 } from '@/components';
 import {
   rescheduleReminders,
@@ -52,7 +53,7 @@ function Row({
           </AppText>
         ) : null}
       </View>
-      <Switch accessibilityLabel={label} value={value} onValueChange={onChange} />
+      <Toggle accessibilityLabel={label} value={value} onValueChange={onChange} />
     </View>
   );
 }

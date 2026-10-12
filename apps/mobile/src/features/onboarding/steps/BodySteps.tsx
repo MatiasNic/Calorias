@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 import { AppText, Banner, BigNumberInput, SegmentedControl, TextField } from '@/components';
 import { usePrefsStore } from '@/stores/prefs';
-import { spacing } from '@/theme';
+import { fontFamily, spacing } from '@/theme';
 import { formatNumber, parseDecimal } from '@/utils/format';
 import { birthDateIso, useOnboardingStore } from '../store';
 import { StepScaffold } from './StepScaffold';
@@ -52,6 +52,7 @@ export function BirthStep() {
             value={answers.birthDay}
             onChangeText={(v) => set({ birthDay: v.replace(/\D/g, '') })}
             testID="birth-day"
+            style={styles.birth}
           />
         </View>
         <View style={styles.small}>
@@ -62,6 +63,7 @@ export function BirthStep() {
             value={answers.birthMonth}
             onChangeText={(v) => set({ birthMonth: v.replace(/\D/g, '') })}
             testID="birth-month"
+            style={styles.birth}
           />
         </View>
         <View style={styles.large}>
@@ -72,6 +74,7 @@ export function BirthStep() {
             value={answers.birthYear}
             onChangeText={(v) => set({ birthYear: v.replace(/\D/g, '') })}
             testID="birth-year"
+            style={styles.birth}
           />
         </View>
       </View>
@@ -131,6 +134,7 @@ function HeightStepInner() {
           placeholder="170"
           maxLength={5}
           testID="height-input"
+          step={1}
         />
       ) : (
         <View style={styles.row}>
@@ -196,6 +200,7 @@ function WeightInputInner({ field, title, subtitle, testID }: WeightInputProps) 
         accessibilityLabel={title}
         placeholder={units === 'imperial' ? '160' : '70'}
         testID={testID}
+        step={units === 'imperial' ? 1 : 0.5}
       />
       {field === 'targetWeightKg' && kg && answers.heightCm ? (
         bmi(kg, answers.heightCm) < SAFETY.minHealthyBmi ? (
@@ -243,4 +248,5 @@ const styles = StyleSheet.create({
   small: { flex: 1 },
   large: { flex: 1.6 },
   half: { flex: 1 },
+  birth: { fontFamily: fontFamily.extrabold, fontSize: 22, textAlign: 'center', minHeight: 56 },
 });

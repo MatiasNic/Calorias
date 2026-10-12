@@ -46,7 +46,11 @@ export function DraftItemCard({
       ? (getRegionalFood(item.food_id)?.servings ?? [])
       : [];
   const unsure = showConfidence && confidenceLevel(item.ai_confidence) === 'low';
-  const cooked = isCookable(item) && item.cooking_method !== 'unknown';
+  // The cooking method is part of the line when it matters for the calories (or was changed).
+  const cooked =
+    !!item.cooking_method &&
+    (['fried', 'deep_fried', 'grilled', 'boiled'].includes(item.cooking_method) ||
+      (item.user_edited && isCookable(item) && item.cooking_method !== 'unknown'));
   const meta = [
     item.serving_unit,
     `${Math.round(item.grams)} g`,

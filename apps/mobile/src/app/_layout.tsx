@@ -32,6 +32,13 @@ export { ErrorBoundary } from '@/components/ErrorBoundary';
 
 // Dev-only hook so screenshot/QA scripts can navigate the web build without a full reload
 // (the web demo keeps its database in memory).
+// Web build (demo/screenshots): no browser focus ring around text fields; the app draws its own.
+if (Platform.OS === 'web' && typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = 'input, textarea { outline: none; }';
+  document.head.appendChild(style);
+}
+
 if (__DEV__ && Platform.OS === 'web') {
   (globalThis as { __platoRouter?: typeof router }).__platoRouter = router;
 }
