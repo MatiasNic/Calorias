@@ -7,7 +7,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { MIN_TOUCH, radii, spacing, useTheme } from '@/theme';
+import { fontFamily, MIN_TOUCH, radii, spacing, useTheme } from '@/theme';
 import { haptic } from '@/utils/haptics';
 import { AppText } from './AppText';
 import { Icon, type IconName } from './Icon';
@@ -70,7 +70,9 @@ export function Button({
       border: 'transparent',
     },
   }[variant];
-  const height = size === 'lg' ? 54 : size === 'md' ? MIN_TOUCH : 40;
+  const height = size === 'lg' ? 56 : size === 'md' ? MIN_TOUCH : 40;
+  // Disabled primary buttons turn flat (design: s2 background, ink3 text) instead of fading.
+  const flatDisabled = isDisabled && !loading && variant === 'primary';
 
   return (
     <Pressable
@@ -87,10 +89,14 @@ export function Button({
         styles.base,
         {
           height,
-          backgroundColor: pressed ? palette.pressed : palette.bg,
+          backgroundColor: flatDisabled
+            ? colors.surfaceAlt
+            : pressed
+              ? palette.pressed
+              : palette.bg,
           borderColor: palette.border,
           borderWidth: variant === 'outline' ? 1 : 0,
-          opacity: isDisabled ? 0.5 : 1,
+          opacity: isDisabled && !flatDisabled ? 0.5 : 1,
           alignSelf: fullWidth ? 'stretch' : 'flex-start',
           paddingHorizontal: size === 'sm' ? spacing.md : spacing.xl,
         },
@@ -102,10 +108,17 @@ export function Button({
         <ActivityIndicator color={colors[palette.fg]} />
       ) : (
         <View style={styles.row}>
-          {icon ? <Icon name={icon} size={size === 'sm' ? 18 : 20} color={palette.fg} /> : null}
+          {icon ? (
+            <Icon
+              name={icon}
+              size={size === 'sm' ? 18 : 20}
+              color={flatDisabled ? 'textSubtle' : palette.fg}
+            />
+          ) : null}
           <AppText
             variant={size === 'sm' ? 'label' : 'bodyStrong'}
-            color={palette.fg}
+            color={flatDisabled ? 'textSubtle' : palette.fg}
+            style={size === 'sm' ? undefined : styles.strong}
             numberOfLines={1}
           >
             {label}
@@ -117,6 +130,7 @@ export function Button({
 }
 
 const styles = StyleSheet.create({
-  base: { borderRadius: radii.lg, alignItems: 'center', justifyContent: 'center' },
+  base: { borderRadius: radii.xl, alignItems: 'center', justifyContent: 'center' },
+  strong: { fontFamily: fontFamily.extrabold },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
 });

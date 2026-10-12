@@ -7,11 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { AppText, Icon, toast } from '@/components';
 import { repos } from '@/services/db/repository';
 import { track } from '@/services/analytics';
-import { radii, spacing, useTheme } from '@/theme';
+import { fontFamily, spacing, useTheme } from '@/theme';
 import { todayLocal } from '@/utils/dates';
 import { formatKcal } from '@/utils/format';
 import { haptic } from '@/utils/haptics';
 import { duplicateMeal } from '../hooks';
+import { MEAL_ICONS } from '../mealIcons';
 
 /** Meals of the last weeks, for "Lo de siempre". */
 export function useUsualMeals() {
@@ -43,6 +44,8 @@ export function UsualMeals({ date }: { date: IsoDate }) {
   const { colors } = useTheme();
   const usual = useUsualMeals();
   const [busy, setBusy] = useState<string | null>(null);
+  // Meals added from here in this visit show a check (the card stays, for another serving).
+  const [added, setAdded] = useState<string[]>([]);
   if (!usual.data?.length) return null;
 
   const log = async (key: string) => {
@@ -52,6 +55,7 @@ export function UsualMeals({ date }: { date: IsoDate }) {
     try {
       await duplicateMeal(entry.record, date, entry.mealType);
       haptic('success');
+      setAdded((a) => [...a, key]);
       track('usual_meal_logged', { items: entry.record.items.length });
       toast.success(t('usual.logged', { meal: t(`mealTypes.${entry.mealType}`).toLowerCase() }));
     } catch {
@@ -63,20 +67,28 @@ export function UsualMeals({ date }: { date: IsoDate }) {
 
   return (
     <View style={styles.wrap}>
-      <AppText variant="label" color="textMuted" style={styles.title}>
-        {t('usual.title')}
-      </AppText>
+      <View style={styles.titleRow}>
+        <AppText variant="bodyStrong" style={styles.title}>
+          {t('usual.title')}
+        </AppText>
+        <AppText variant="caption" color="textSubtle">
+          {t('usual.subtitle')}
+        </AppText>
+      </View>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={styles.bleed}
         contentContainerStyle={styles.row}
       >
         {usual.data.map((u) => {
           const names = u.record.items.map((i) => i.display_name).join(', ');
+          const done = added.includes(u.key);
           return (
             <Pressable
               key={u.key}
               accessibilityRole="button"
+              accessibilityState={{ selected: done }}
               accessibilityLabel={t('usual.a11y', {
                 foods: names,
                 meal: t(`mealTypes.${u.mealType}`),
@@ -87,29 +99,39 @@ export function UsualMeals({ date }: { date: IsoDate }) {
               style={({ pressed }) => [
                 styles.card,
                 {
-                  backgroundColor: pressed ? colors.surfaceAlt : colors.surface,
-                  borderColor: colors.border,
-                  opacity: busy && busy !== u.key ? 0.5 : 1,
+                  backgroundColor: colors.surface,
+                  borderColor: done ? colors.text : 'transparent',
+                  opacity: pressed ? 0.8 : busy && busy !== u.key ? 0.5 : 1,
                 },
               ]}
               testID={`usual-${u.key}`}
             >
               <View style={styles.cardHead}>
-                <AppText variant="caption" color="textMuted">
+                <Icon name={MEAL_ICONS[u.mealType]} size={16} color="textMuted" />
+                <AppText variant="caption" color="textMuted" style={styles.meal}>
                   {t(`mealTypes.${u.mealType}`)}
                 </AppText>
-                <Icon
-                  name={busy === u.key ? 'hourglass-outline' : 'add-circle'}
-                  size={20}
-                  color="primary"
-                />
               </View>
-              <AppText variant="label" numberOfLines={2}>
+              <AppText variant="bodyStrong" numberOfLines={2} style={styles.name}>
                 {names}
               </AppText>
-              <AppText variant="caption" color="textMuted" tabular>
-                {formatKcal(u.record.totals.kcal)} kcal
-              </AppText>
+              <View style={styles.foot}>
+                <AppText variant="caption" color="textMuted" tabular>
+                  {formatKcal(u.record.totals.kcal)} kcal
+                </AppText>
+                <View
+                  style={[
+                    styles.add,
+                    { backgroundColor: done ? colors.primary : colors.surfaceAlt },
+                  ]}
+                >
+                  <Icon
+                    name={busy === u.key ? 'hourglass_empty' : done ? 'check' : 'add'}
+                    size={20}
+                    color={done ? 'onPrimary' : 'text'}
+                  />
+                </View>
+              </View>
             </Pressable>
           );
         })}
@@ -119,16 +141,22 @@ export function UsualMeals({ date }: { date: IsoDate }) {
 }
 
 const styles = StyleSheet.create({
-  wrap: { gap: spacing.sm },
-  title: { paddingHorizontal: spacing.xs },
-  row: { gap: spacing.sm, paddingRight: spacing.lg },
+  wrap: { gap: spacing.md },
+  titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
+  title: { fontFamily: fontFamily.extrabold },
+  // The carousel runs to the screen edges (the screen has 20 px side padding).
+  bleed: { marginHorizontal: -spacing.xl },
+  row: { gap: spacing.sm, paddingHorizontal: spacing.xl },
   card: {
     width: 168,
-    minHeight: 104,
-    gap: spacing.xs,
-    padding: spacing.md,
-    borderWidth: 1,
-    borderRadius: radii.xl,
+    gap: spacing.sm,
+    padding: 14,
+    borderWidth: 1.5,
+    borderRadius: 22,
   },
-  cardHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  cardHead: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  meal: { fontFamily: fontFamily.bold, fontSize: 12 },
+  name: { fontSize: 15, lineHeight: 19.5, minHeight: 39 },
+  foot: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  add: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
 });

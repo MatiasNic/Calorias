@@ -16,6 +16,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ToastHost } from '@/components';
+import { MATERIAL_SYMBOLS_ASSET, MATERIAL_SYMBOLS_FONT } from '@/components/Icon';
 import { OfflineBanner } from '@/components/OfflineBanner';
 import { useBootstrap } from '@/hooks/useBootstrap';
 import { useNotificationRouting } from '@/hooks/useNotificationRouting';
@@ -67,6 +68,18 @@ function RootStack() {
         <Stack.Screen name="(modals)/workout" options={modal} />
         <Stack.Screen name="(modals)/supplement" options={modal} />
         <Stack.Screen name="(modals)/text-log" options={modal} />
+        <Stack.Screen
+          name="(modals)/listen"
+          options={{
+            presentation: 'transparentModal',
+            animation: 'fade',
+            contentStyle: { backgroundColor: 'transparent' },
+          }}
+        />
+        <Stack.Screen
+          name="(modals)/analyzing"
+          options={{ presentation: 'fullScreenModal', animation: 'fade', gestureEnabled: false }}
+        />
         <Stack.Screen name="(modals)/custom-food" options={modal} />
         <Stack.Screen name="(modals)/recipe-editor" options={modal} />
         <Stack.Screen name="(modals)/coach" options={modal} />
@@ -84,6 +97,7 @@ export default function RootLayout() {
     Manrope_600SemiBold,
     Manrope_700Bold,
     Manrope_800ExtraBold,
+    [MATERIAL_SYMBOLS_FONT]: MATERIAL_SYMBOLS_ASSET,
   });
   const booted = useBootstrap();
   const ready = (fontsLoaded || !!fontError) && booted;

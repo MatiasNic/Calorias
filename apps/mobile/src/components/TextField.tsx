@@ -62,9 +62,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1.5,
-    borderRadius: radii.md,
-    paddingHorizontal: spacing.md,
+    borderRadius: radii.lg,
+    paddingHorizontal: spacing.lg,
     minHeight: 52,
   },
-  input: { flex: 1, fontFamily: fontFamily.regular, fontSize: 16, paddingVertical: spacing.sm },
+  input: { flex: 1, fontFamily: fontFamily.semibold, fontSize: 15, paddingVertical: spacing.sm },
 });

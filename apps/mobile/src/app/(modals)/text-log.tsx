@@ -1,141 +1,104 @@
 import type { IsoDate } from '@plato/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Banner, Button, Chip, IconButton, Screen, TextField, toast } from '@/components';
+import { AppText, Button, Chip, Icon, Screen, ScreenHeader } from '@/components';
 import { features } from '@/config/features';
-import { useScanStore } from '@/features/scan/store';
-import { useAiError } from '@/features/scan/useAiError';
-import { useDictation } from '@/features/scan/useDictation';
+import { MEAL_ICONS } from '@/features/diary/mealIcons';
+import { detectMeals } from '@/features/scan/detectMeals';
 import { useQuotaStatus } from '@/features/scan/useQuota';
-import { aiAvailable, analyzeMealText } from '@/services/ai';
 import { usePlan } from '@/services/purchases';
-import { queryClient } from '@/services/queryClient';
-import { spacing, useTheme } from '@/theme';
+import { fontFamily, radii, spacing, useTheme } from '@/theme';
 
+/** "Contá qué comiste": type (or paste) the description; the mic goes back to listening. */
 export default function TextLog() {
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const params = useLocalSearchParams<{ date?: IsoDate; text?: string; voice?: string }>();
+  const params = useLocalSearchParams<{ date?: IsoDate; text?: string }>();
   const [text, setText] = useState(params.text ?? '');
-  const [usedVoice, setUsedVoice] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const aiError = useAiError();
   const quota = useQuotaStatus();
   const plan = usePlan();
-  const textRef = useRef(text);
-  useEffect(() => {
-    textRef.current = text;
-  }, [text]);
-  // New recordings add to what's already written instead of replacing it.
-  const dictation = useDictation(
-    () => textRef.current,
-    (value) => {
-      setUsedVoice(true);
-      setText(value);
-    },
-  );
-
-  // Opened from the mic of "¿Qué comiste?": start listening right away (one tap to log).
-  const autoStarted = useRef(false);
-  useEffect(() => {
-    if (autoStarted.current || params.voice !== '1') return;
-    autoStarted.current = true;
-    if (features.voiceLogging && dictation.available) void dictation.start();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const analyze = async () => {
-    if (dictation.listening) dictation.stop();
-    if (aiAvailable() !== 'ok') {
-      toast.info(t('profile.createAccount'));
-      router.replace('/sign-up');
-      return;
-    }
-    setBusy(true);
-    setError(null);
-    try {
-      const result = await analyzeMealText(text.trim(), usedVoice ? 'voice' : 'text');
-      queryClient.invalidateQueries({ queryKey: ['quota'] });
-      useScanStore
-        .getState()
-        .setTextResult(result, usedVoice ? 'voice' : 'text', params.date ?? null, text.trim());
-      router.replace('/scan-review');
-    } catch (e) {
-      setError(aiError(e));
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const examples = [t('textLog.example1'), t('textLog.example2'), t('textLog.example3')];
+  const meals = detectMeals(text);
   const left = quota.data?.text_query.remaining;
+  const examples = [t('textLog.example1'), t('textLog.example2'), t('textLog.example3')];
+  const date = params.date ? { date: params.date } : {};
+
+  const analyze = () =>
+    router.replace({
+      pathname: '/analyzing',
+      params: { text: text.trim(), source: 'text', ...date },
+    });
 
   return (
     <Screen
       edges={['top', 'bottom', 'left', 'right']}
       keyboard
       footer={
-        <Button
-          label={t('textLog.analyze')}
-          icon="sparkles"
-          onPress={analyze}
-          loading={busy}
-          disabled={text.trim().length < 2}
-          testID="text-log-analyze"
-        />
+        <View style={styles.footer}>
+          {features.voiceLogging ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('textLog.listen')}
+              onPress={() => router.replace({ pathname: '/listen', params: { text, ...date } })}
+              style={[styles.mic, { backgroundColor: colors.surfaceAlt }]}
+              testID="text-log-mic"
+            >
+              <Icon name="mic" size={26} />
+            </Pressable>
+          ) : null}
+          <View style={styles.flex}>
+            <Button
+              label={t('textLog.analyze')}
+              icon="auto_awesome"
+              onPress={analyze}
+              disabled={text.trim().length < 2}
+              testID="text-log-analyze"
+            />
+          </View>
+        </View>
       }
     >
-      <View style={styles.header}>
-        <IconButton
-          icon="close"
-          accessibilityLabel={t('common.close')}
-          onPress={() => router.back()}
-        />
-        <AppText variant="heading">{t('textLog.title')}</AppText>
-      </View>
-      <AppText color="textMuted">{t('textLog.hint')}</AppText>
-      <TextField
+      <ScreenHeader title={t('textLog.title')} close />
+      <TextInput
         value={text}
         onChangeText={setText}
         placeholder={t('textLog.placeholder')}
+        placeholderTextColor={colors.textSubtle}
         multiline
         maxLength={1000}
-        style={styles.input}
+        autoFocus={!params.text}
+        style={[
+          styles.input,
+          { backgroundColor: colors.surface, borderColor: colors.border, color: colors.text },
+        ]}
         accessibilityLabel={t('textLog.title')}
         testID="text-log-input"
       />
-      {features.voiceLogging ? (
-        dictation.available ? (
-          <Button
-            label={dictation.listening ? t('textLog.stop') : t('textLog.listen')}
-            icon={dictation.listening ? 'stop-circle' : 'mic'}
-            variant={dictation.listening ? 'danger' : 'secondary'}
-            onPress={dictation.listening ? dictation.stop : dictation.start}
-          />
-        ) : (
-          <AppText variant="caption" color="textMuted">
-            {t('textLog.voiceUnavailable')}
+      {meals.length ? (
+        <View style={styles.row}>
+          <AppText variant="label" color="textMuted">
+            {t('textLog.willSplit')}
           </AppText>
-        )
+          {meals.map((m) => (
+            <View key={m.mealType} style={[styles.meal, { backgroundColor: colors.surfaceAlt }]}>
+              <Icon name={MEAL_ICONS[m.mealType]} size={16} />
+              <AppText variant="label">{t(`mealTypes.${m.mealType}`)}</AppText>
+            </View>
+          ))}
+        </View>
       ) : null}
-      {dictation.listening ? (
-        <AppText color="primary" accessibilityLiveRegion="polite">
-          {t('textLog.listening')}
-        </AppText>
-      ) : null}
-      {error ? <Banner tone="danger" message={error} /> : null}
-      <AppText variant="subheading">{t('textLog.examples')}</AppText>
-      <View style={styles.chips}>
+      <AppText variant="subheading" style={styles.examplesTitle}>
+        {t('textLog.examples')}
+      </AppText>
+      <View style={styles.examples}>
         {examples.map((e) => (
           <Chip key={e} label={e} onPress={() => setText(e)} />
         ))}
       </View>
       {plan === 'free' && left != null ? (
-        <AppText variant="caption" style={{ color: colors.textMuted }}>
+        <AppText variant="caption" color="textSubtle">
           {t('textLog.quotaLeft', { count: left })}
         </AppText>
       ) : null}
@@ -144,7 +107,34 @@ export default function TextLog() {
 }
 
 const styles = StyleSheet.create({
-  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  input: { minHeight: 110, textAlignVertical: 'top' },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  flex: { flex: 1 },
+  input: {
+    minHeight: 168,
+    borderWidth: 1.5,
+    borderRadius: radii.xxl,
+    padding: 18,
+    fontFamily: fontFamily.semibold,
+    fontSize: 20,
+    lineHeight: 28,
+    textAlignVertical: 'top',
+  },
+  row: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: spacing.sm },
+  meal: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    height: 36,
+    paddingHorizontal: spacing.md,
+    borderRadius: radii.pill,
+  },
+  examplesTitle: { fontSize: 15 },
+  examples: { alignItems: 'flex-start', gap: spacing.sm },
+  footer: { flexDirection: 'row', gap: spacing.sm, alignItems: 'center' },
+  mic: {
+    width: 56,
+    height: 56,
+    borderRadius: radii.xl,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

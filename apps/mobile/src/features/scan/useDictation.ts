@@ -1,5 +1,6 @@
 import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from 'expo-speech-recognition';
 import { useRef, useState } from 'react';
+import { useSharedValue } from 'react-native-reanimated';
 
 import { currentLocale } from '@/i18n';
 import { appendDictation } from './dictationText';
@@ -17,9 +18,18 @@ export function useDictation(getBase: () => string, onText: (text: string) => vo
   const [error, setError] = useState<string | null>(null);
   const base = useRef('');
   const committed = useRef('');
+  /** Microphone level 0–1 (for the voice wave), updated without re-rendering. */
+  const volume = useSharedValue(0);
 
   useSpeechRecognitionEvent('start', () => setListening(true));
-  useSpeechRecognitionEvent('end', () => setListening(false));
+  useSpeechRecognitionEvent('end', () => {
+    setListening(false);
+    volume.set(0);
+  });
+  // Reported between -2 and 10; below 0 is silence.
+  useSpeechRecognitionEvent('volumechange', (e) => {
+    volume.set(Math.max(0, Math.min(1, e.value / 10)));
+  });
   useSpeechRecognitionEvent('result', (e) => {
     const heard = e.results[0]?.transcript?.trim();
     if (!heard) return;
@@ -63,10 +73,17 @@ export function useDictation(getBase: () => string, onText: (text: string) => vo
         EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS: SILENCE_MS,
         EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS: SILENCE_MS,
       },
+      volumeChangeEventOptions: { enabled: true, intervalMillis: 120 },
     });
   };
 
   const stop = () => ExpoSpeechRecognitionModule.stop();
 
-  return { listening, error, available, start, stop };
+  /** Discards what was heard in this recording (the "De nuevo" button). */
+  const reset = () => {
+    committed.current = '';
+    base.current = '';
+  };
+
+  return { listening, error, available, start, stop, reset, volume };
 }

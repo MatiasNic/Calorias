@@ -37,6 +37,8 @@ export default function MealEditor() {
       hiddenQuestion: null,
       quickAnswers: [],
       itemMeals: {},
+      groupTimes: {},
+      lastCorrection: null,
       notes: meal.data.note,
       original: null,
     });

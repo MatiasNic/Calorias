@@ -31,9 +31,9 @@ export function timeForMealType(type: MealType, now: Date): { h: number; m: numb
 
 /** Quick portion sizes shown in the review ("chica / mediana / grande") as factors of the estimate. */
 export const PORTION_SIZES = [
-  { key: 'small', factor: 0.75 },
+  { key: 'small', factor: 0.67 },
   { key: 'medium', factor: 1 },
-  { key: 'large', factor: 1.35 },
+  { key: 'large', factor: 1.47 },
 ] as const;
 export type PortionSize = (typeof PORTION_SIZES)[number]['key'];
 

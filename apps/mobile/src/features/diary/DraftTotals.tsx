@@ -3,15 +3,24 @@ import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, Card } from '@/components';
-import { spacing, useTheme } from '@/theme';
+import { fontFamily, spacing, useTheme } from '@/theme';
 import { formatGrams, formatKcal } from '@/utils/format';
 import { mealTotals } from './mealMath';
 
-/** Live totals for the draft (always equal to the sum of the items). */
+/**
+ * Live totals for the draft (always the sum of the items): kcal, a stacked bar with the share
+ * of calories from each macro (P×4, C×4, G×9) and the grams.
+ */
 export function DraftTotals({ items }: { items: MealItem[] }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const totals = mealTotals(items);
+  const parts = [
+    { kcal: totals.protein_g * 4, color: colors.protein },
+    { kcal: totals.carbs_g * 4, color: colors.carbs },
+    { kcal: totals.fat_g * 9, color: colors.fat },
+  ];
+  const sum = parts.reduce((s, p) => s + p.kcal, 0);
   return (
     <Card
       style={styles.card}
@@ -21,37 +30,52 @@ export function DraftTotals({ items }: { items: MealItem[] }) {
         <AppText variant="label" color="textMuted">
           {t('review.total')}
         </AppText>
-        <AppText variant="title" tabular testID="draft-total-kcal">
-          {formatKcal(totals.kcal)} kcal
+        <AppText style={styles.kcal} tabular testID="draft-total-kcal">
+          {formatKcal(totals.kcal)}
+          <AppText variant="caption" color="textMuted">
+            {' '}
+            kcal
+          </AppText>
         </AppText>
       </View>
+      <View style={styles.bar}>
+        {sum > 0 ? (
+          parts.map((p, i) => (
+            <View
+              key={i}
+              style={{ flex: p.kcal / sum, backgroundColor: p.color, borderRadius: 3 }}
+            />
+          ))
+        ) : (
+          <View style={[styles.empty, { backgroundColor: colors.surfaceAlt }]} />
+        )}
+      </View>
       <View style={styles.row}>
-        <Macro label={t('macros.protein')} value={totals.protein_g} color={colors.protein} />
-        <Macro label={t('macros.carbs')} value={totals.carbs_g} color={colors.carbs} />
-        <Macro label={t('macros.fat')} value={totals.fat_g} color={colors.fat} />
+        <Macro label={t('macros.protein')} value={totals.protein_g} />
+        <Macro label={t('macros.carbs')} value={totals.carbs_g} />
+        <Macro label={t('macros.fat')} value={totals.fat_g} />
       </View>
     </Card>
   );
 }
 
-function Macro({ label, value, color }: { label: string; value: number; color: string }) {
+function Macro({ label, value }: { label: string; value: number }) {
   return (
-    <View style={styles.macro}>
-      <View style={[styles.dot, { backgroundColor: color }]} />
-      <AppText variant="caption" color="textMuted">
-        {label}
-      </AppText>
-      <AppText variant="bodyStrong" tabular>
+    <AppText variant="caption" color="textMuted">
+      {label}{' '}
+      <AppText variant="caption" color="text" style={styles.strong} tabular>
         {formatGrams(value)} g
       </AppText>
-    </View>
+    </AppText>
   );
 }
 
 const styles = StyleSheet.create({
   card: { gap: spacing.md },
   main: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' },
-  row: { flexDirection: 'row', gap: spacing.md },
-  macro: { flex: 1, gap: 2 },
-  dot: { width: 8, height: 8, borderRadius: 4 },
+  kcal: { fontFamily: fontFamily.extrabold, fontSize: 34, lineHeight: 38, letterSpacing: -1 },
+  bar: { flexDirection: 'row', height: 6, gap: 3 },
+  empty: { flex: 1, borderRadius: 3 },
+  row: { flexDirection: 'row', flexWrap: 'wrap', columnGap: spacing.lg, rowGap: spacing.xs },
+  strong: { fontFamily: fontFamily.extrabold },
 });

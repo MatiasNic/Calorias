@@ -9,6 +9,8 @@ export interface SegmentedControlProps<T extends string> {
   value: T;
   onChange: (value: T) => void;
   accessibilityLabel?: string;
+  /** "strong": the selected option is ink on paper (review sizes); default: a recessed tab. */
+  tone?: 'default' | 'strong';
 }
 
 export function SegmentedControl<T extends string>({
@@ -16,6 +18,7 @@ export function SegmentedControl<T extends string>({
   value,
   onChange,
   accessibilityLabel,
+  tone = 'default',
 }: SegmentedControlProps<T>) {
   const { colors } = useTheme();
   return (
@@ -36,9 +39,18 @@ export function SegmentedControl<T extends string>({
               haptic('selection');
               onChange(o.value);
             }}
-            style={[styles.item, selected && { backgroundColor: colors.surface }]}
+            style={[
+              styles.item,
+              selected && {
+                backgroundColor: tone === 'strong' ? colors.primary : colors.background,
+              },
+            ]}
           >
-            <AppText variant="label" color={selected ? 'text' : 'textMuted'} numberOfLines={1}>
+            <AppText
+              variant="label"
+              color={selected ? (tone === 'strong' ? 'onPrimary' : 'text') : 'textMuted'}
+              numberOfLines={1}
+            >
               {o.label}
             </AppText>
           </Pressable>
@@ -49,10 +61,10 @@ export function SegmentedControl<T extends string>({
 }
 
 const styles = StyleSheet.create({
-  wrap: { flexDirection: 'row', borderRadius: radii.md, padding: spacing.xxs + 1 },
+  wrap: { flexDirection: 'row', borderRadius: radii.md, padding: spacing.xs },
   item: {
     flex: 1,
-    minHeight: 40,
+    minHeight: 38,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radii.sm,

@@ -8,7 +8,9 @@ import {
   type MealType,
 } from '@plato/shared';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, BackHandler, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Alert, BackHandler, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -19,7 +21,6 @@ import {
   Chip,
   EmptyState,
   ErrorState,
-  Icon,
   IconButton,
   Screen,
   TextField,
@@ -28,12 +29,7 @@ import {
 import { DraftItemCard } from '@/features/diary/DraftItemCard';
 import { DraftTotals } from '@/features/diary/DraftTotals';
 import { useDraftStore } from '@/features/diary/draftStore';
-import {
-  applyCookingMethod,
-  cookingChoicesFor,
-  HIDDEN_EXTRAS,
-  isCookable,
-} from '@/features/diary/cooking';
+import { applyCookingMethod, HIDDEN_EXTRAS } from '@/features/diary/cooking';
 import { saveMeal } from '@/features/diary/hooks';
 import { makeItem } from '@/features/diary/mealMath';
 import { MealTypePicker } from '@/features/diary/MealTypePicker';
@@ -42,6 +38,14 @@ import { getRegionalFood } from '@/features/foods/search';
 import { checkAchievements } from '@/features/habits/hooks';
 import { AnalyzingView } from '@/features/scan/AnalyzingView';
 import { CorrectionBar } from '@/features/scan/CorrectionBar';
+import {
+  answerImpact,
+  CorrectionSummary,
+  GroupHeader,
+  methodForAnswer,
+  QuestionCard,
+  questionTarget,
+} from '@/features/scan/ReviewParts';
 import { useScanStore } from '@/features/scan/store';
 import { draftFromAnalysis } from '@/features/scan/toDraft';
 import { useAiError } from '@/features/scan/useAiError';
@@ -67,7 +71,7 @@ export default function ScanReview() {
   const { colors } = useTheme();
   const { draft, start, patch, addItem, removeItem, updateItem, clear } = useDraftStore();
   const correction = useMealCorrection();
-  const [editWhen, setEditWhen] = useState(false);
+  const insets = useSafeAreaInsets();
   const [groupEditing, setGroupEditing] = useState<MealType | null>(null);
   const savePhotos = usePrefsStore((s) => s.savePhotos);
   const plan = usePlan();
@@ -181,7 +185,10 @@ export default function ScanReview() {
       const now = new Date();
       for (const [i, group] of groups.entries()) {
         // One description with several meals → one meal each, at its usual time.
-        const time = groups.length > 1 ? timeForMealType(group.mealType, now) : draft.time;
+        const time =
+          groups.length > 1
+            ? (draft.groupTimes[group.mealType] ?? timeForMealType(group.mealType, now))
+            : draft.time;
         await saveMeal({
           date: draft.date,
           eatenAt: timestampFor(draft.date, time),
@@ -288,282 +295,259 @@ export default function ScanReview() {
   }
 
   if (!draft) return null;
-  const lowConfidence = draft.items.some((i) => (i.ai_confidence ?? 1) < 0.5);
-  const cookable = draft.items
-    .map((item, index) => ({ item, index }))
-    .filter(({ item }) => isCookable(item));
   const indexed = draft.items.map((item, index) => ({ item, index }));
   const groups = groupByMealType(indexed, ({ item }) => mealOf(item)).sort(
     (a, b) => MEAL_TYPE_ORDER.indexOf(a.mealType) - MEAL_TYPE_ORDER.indexOf(b.mealType),
   );
   const multiMeal = groups.length > 1;
-  const aiQuestion =
-    draft.hiddenQuestion && draft.quickAnswers.length ? draft.hiddenQuestion : null;
-  const pad = (n: number) => String(n).padStart(2, '0');
-  const whenLabel = [
-    t(`mealTypes.${draft.mealType}`),
-    `${pad(draft.time.h)}:${pad(draft.time.m)}`,
+  const question = draft.hiddenQuestion && draft.quickAnswers.length ? draft.hiddenQuestion : null;
+  const impact = question ? answerImpact(question, draft.quickAnswers, draft.items) : null;
+  const totalKcal = draft.items.reduce((s, i) => s + i.nutrients.kcal, 0);
+  const now = new Date();
+  const timeOf = (m: MealType) =>
+    multiMeal ? (draft.groupTimes[m] ?? timeForMealType(m, now)) : draft.time;
+  const subtitle = [
     draft.date === todayLocal() ? t('common.today') : formatDay(draft.date),
+    t('review.mealsCount', { count: groups.length }),
   ].join(' · ');
+
+  const answer = (a: string) => {
+    if (!question || correction.busy) return;
+    const method = methodForAnswer(a);
+    const target = questionTarget(question, draft.items);
+    // A cooking answer is applied right here (no AI call, no quota).
+    if (method && target >= 0) {
+      updateItem(target, {
+        ...applyCookingMethod(draft.items[target]!, method),
+        user_edited: true,
+      });
+      patch({ hiddenQuestion: null, quickAnswers: [] });
+      return;
+    }
+    void correction.correct(`${question} ${a}`);
+  };
 
   const setGroupMeal = (from: MealType, to: MealType) => {
     const itemMeals = { ...draft.itemMeals };
     for (const item of draft.items) if (item.id && mealOf(item) === from) itemMeals[item.id] = to;
     patch({ itemMeals });
-    setGroupEditing(null);
+    setGroupEditing(to);
   };
-
-  const renderItem = ({ item, index }: { item: MealItem; index: number }) => (
-    <DraftItemCard
-      key={item.id ?? index}
-      item={item}
-      index={index}
-      baseGrams={draft.original?.find((o) => o.id === item.id)?.grams}
-      showConfidence
-    />
-  );
+  const setGroupTime = (m: MealType, time: { h: number; m: number }) =>
+    multiMeal ? patch({ groupTimes: { ...draft.groupTimes, [m]: time } }) : patch({ time });
 
   return (
-    <Screen
-      edges={['top', 'bottom', 'left', 'right']}
-      keyboard
-      footer={
-        <Button
-          label={multiMeal ? t('review.saveMany', { count: groups.length }) : t('review.save')}
-          icon="checkmark"
-          onPress={save}
-          loading={saving}
-          disabled={!draft.items.length || correction.busy}
-          testID="review-save"
-        />
-      }
-    >
-      <View style={styles.header}>
-        <IconButton icon="close" accessibilityLabel={t('common.close')} onPress={discard} />
-        <View style={styles.flex}>
-          <AppText variant="heading" accessibilityRole="header" numberOfLines={2}>
-            {draft.dishName ?? t('review.title')}
-          </AppText>
-          {draft.date && draft.date !== todayLocal() ? (
-            <AppText variant="caption" color="warning">
-              {t('review.forDay', { day: formatDay(draft.date) })}
+    <View style={[styles.flex, { backgroundColor: colors.background }]}>
+      <Screen edges={['top', 'left', 'right']} padded={false}>
+        <View style={styles.header}>
+          <IconButton icon="close" accessibilityLabel={t('common.close')} onPress={discard} />
+          <View style={styles.flex}>
+            <AppText variant="heading" accessibilityRole="header" numberOfLines={1}>
+              {draft.dishName ?? t('review.title')}
             </AppText>
-          ) : null}
-        </View>
-      </View>
-      {scan.photo ? (
-        <Image
-          source={{ uri: scan.photo.uri }}
-          style={styles.photo}
-          contentFit="cover"
-          accessibilityIgnoresInvertColors
-        />
-      ) : null}
-      {env.useMocks && scan.photo ? (
-        <Banner
-          tone="warning"
-          icon="flask-outline"
-          title={t('review.demoTitle')}
-          message={t('review.demoMessage')}
-        />
-      ) : null}
-
-      {/* One short question with one-tap answers (sent back to the AI as a correction). */}
-      {aiQuestion ? (
-        <Card style={styles.card}>
-          <AppText variant="subheading">{aiQuestion}</AppText>
-          <View style={styles.chips}>
-            {draft.quickAnswers.map((a) => (
-              <Chip
-                key={a}
-                label={a}
-                onPress={() => {
-                  if (!correction.busy) void correction.correct(`${aiQuestion} ${a}`);
-                }}
-              />
-            ))}
+            <AppText
+              variant="caption"
+              color={draft.date !== todayLocal() ? 'warning' : 'textMuted'}
+            >
+              {subtitle}
+            </AppText>
           </View>
-        </Card>
-      ) : null}
-
-      <DraftTotals items={draft.items} />
-
-      {multiMeal ? (
-        groups.map((g) => {
-          const kcal = g.items.reduce((s, x) => s + x.item.nutrients.kcal, 0);
-          return (
-            <View key={g.mealType} style={styles.group}>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={t('review.changeMeal', { meal: t(`mealTypes.${g.mealType}`) })}
-                accessibilityState={{ expanded: groupEditing === g.mealType }}
-                onPress={() => setGroupEditing(groupEditing === g.mealType ? null : g.mealType)}
-                style={styles.groupHead}
-              >
-                <AppText variant="subheading">{t(`mealTypes.${g.mealType}`)}</AppText>
-                <Icon name="create-outline" size={16} color="textMuted" />
-                <View style={styles.flex} />
-                <AppText variant="caption" color="textMuted" tabular>
-                  {formatKcal(kcal)} kcal
-                </AppText>
-              </Pressable>
-              {groupEditing === g.mealType ? (
-                <MealTypePicker value={g.mealType} onChange={(m) => setGroupMeal(g.mealType, m)} />
-              ) : null}
-              {g.items.map(renderItem)}
-            </View>
-          );
-        })
-      ) : (
-        <View style={styles.group}>{indexed.map(renderItem)}</View>
-      )}
-      {lowConfidence ? (
-        <AppText variant="caption" color="textMuted">
-          {t('review.lowConfidenceHint')}
-        </AppText>
-      ) : null}
-      <Button
-        label={t('review.addItem')}
-        variant="ghost"
-        size="md"
-        icon="add"
-        onPress={() => router.push({ pathname: '/food-search', params: { target: 'draft' } })}
-        testID="review-add-item"
-      />
-
-      <CorrectionBar
-        onSubmit={correction.correct}
-        busy={correction.busy}
-        error={correction.error}
-      />
-
-      {!multiMeal ? (
-        <View style={[styles.when, { borderColor: colors.border }]}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityState={{ expanded: editWhen }}
-            accessibilityLabel={t('review.changeWhen', { when: whenLabel })}
-            onPress={() => setEditWhen(!editWhen)}
-            style={styles.whenHead}
-          >
-            <Icon name="time-outline" size={18} color="textMuted" />
-            <AppText variant="bodyStrong" style={styles.flex}>
-              {whenLabel}
-            </AppText>
-            <AppText variant="label" color="primary">
-              {editWhen ? t('common.done') : t('review.change')}
-            </AppText>
-          </Pressable>
-          {editWhen ? (
-            <View style={styles.card}>
-              <MealTypePicker value={draft.mealType} onChange={(m) => patch({ mealType: m })} />
-              <TimeStepper value={draft.time} onChange={(time) => patch({ time })} />
-            </View>
-          ) : null}
         </View>
-      ) : null}
+        <View style={styles.content}>
+          {scan.photo ? (
+            <Image
+              source={{ uri: scan.photo.uri }}
+              style={styles.photo}
+              contentFit="cover"
+              accessibilityIgnoresInvertColors
+            />
+          ) : null}
+          {env.useMocks && scan.photo ? (
+            <Banner
+              tone="warning"
+              icon="science"
+              title={t('review.demoTitle')}
+              message={t('review.demoMessage')}
+            />
+          ) : null}
+          {question ? (
+            <QuestionCard
+              question={question}
+              answers={draft.quickAnswers}
+              impact={impact}
+              onAnswer={answer}
+            />
+          ) : null}
+          {draft.lastCorrection ? (
+            <CorrectionSummary
+              text={draft.lastCorrection.text}
+              changes={draft.lastCorrection.changes}
+              onUndo={correction.undo}
+            />
+          ) : null}
+          <DraftTotals items={draft.items} />
 
-      <Card style={styles.card}>
-        {!aiQuestion && cookable.length ? (
-          <>
-            <AppText variant="subheading">{t('review.cookingTitle')}</AppText>
-            {cookable.map(({ item, index }) => (
-              <View key={item.id ?? index} style={styles.cookRow}>
-                <AppText variant="label" color="textMuted">
-                  {item.display_name}
-                </AppText>
-                <View style={styles.chips}>
-                  {cookingChoicesFor(item).map((m) => (
-                    <Chip
-                      key={m}
-                      label={t(`cooking.${m}`)}
-                      selected={item.cooking_method === m}
-                      onPress={() =>
-                        updateItem(index, { ...applyCookingMethod(item, m), user_edited: true })
+          {groups.map((g) => {
+            const kcal = g.items.reduce((s, x) => s + x.item.nutrients.kcal, 0);
+            const editing = groupEditing === g.mealType;
+            return (
+              <View key={g.mealType} style={styles.group}>
+                <GroupHeader
+                  mealType={g.mealType}
+                  time={timeOf(g.mealType)}
+                  kcal={kcal}
+                  editing={editing}
+                  onPress={() => setGroupEditing(editing ? null : g.mealType)}
+                />
+                {editing ? (
+                  <View style={[styles.editor, { backgroundColor: colors.surface }]}>
+                    <MealTypePicker
+                      value={g.mealType}
+                      onChange={(m) =>
+                        multiMeal
+                          ? setGroupMeal(g.mealType, m)
+                          : (patch({ mealType: m }), setGroupEditing(m))
                       }
                     />
-                  ))}
-                </View>
+                    <TimeStepper
+                      value={timeOf(g.mealType)}
+                      onChange={(time) => setGroupTime(g.mealType, time)}
+                    />
+                  </View>
+                ) : null}
+                {g.items.map(({ item, index }) => (
+                  <DraftItemCard
+                    key={item.id ?? index}
+                    item={item}
+                    index={index}
+                    baseGrams={draft.original?.find((o) => o.id === item.id)?.grams}
+                    showConfidence
+                  />
+                ))}
               </View>
-            ))}
-          </>
-        ) : null}
-        <AppText variant="label" color="textMuted">
-          {t('review.hiddenTitle')}
-        </AppText>
-        <View style={styles.chips}>
-          {HIDDEN_EXTRAS.map((x) => {
-            const food = getRegionalFood(x.id);
-            if (!food) return null;
-            const added = draft.items.findIndex((i) => i.food_id === x.id);
-            return (
-              <Chip
-                key={x.id}
-                icon={added >= 0 ? 'checkmark' : 'add'}
-                selected={added >= 0}
-                label={t(`review.extras.${x.key}`)}
-                onPress={() =>
-                  added >= 0
-                    ? removeItem(added)
-                    : addItem({ ...makeItem(food, x.grams), user_edited: true })
-                }
-              />
             );
           })}
+          <Button
+            label={t('review.addItem')}
+            variant="ghost"
+            size="md"
+            icon="add"
+            onPress={() => router.push({ pathname: '/food-search', params: { target: 'draft' } })}
+            testID="review-add-item"
+          />
+
+          <View style={styles.extras}>
+            <AppText variant="bodyStrong">{t('review.hiddenTitle')}</AppText>
+            <View style={styles.chips}>
+              {HIDDEN_EXTRAS.map((x) => {
+                const food = getRegionalFood(x.id);
+                if (!food) return null;
+                const added = draft.items.findIndex((i) => i.food_id === x.id);
+                return (
+                  <Chip
+                    key={x.id}
+                    icon={added >= 0 ? 'check' : 'add'}
+                    selected={added >= 0}
+                    label={t(`review.extras.${x.key}`)}
+                    onPress={() =>
+                      added >= 0
+                        ? removeItem(added)
+                        : addItem({ ...makeItem(food, x.grams), user_edited: true })
+                    }
+                  />
+                );
+              })}
+            </View>
+          </View>
+
+          {draft.notes ? <Banner tone="info" message={draft.notes} /> : null}
+          <AppText variant="caption" color="textSubtle">
+            {t('review.estimatedNote')}
+            {!savePhotos && scan.photo ? ` ${t('review.dontSavePhoto')}` : ''}
+          </AppText>
+
+          {reporting ? (
+            <Card style={styles.card}>
+              <TextField
+                label={t('review.reportTitle')}
+                placeholder={t('review.reportPlaceholder')}
+                value={report}
+                onChangeText={setReport}
+                multiline
+                maxLength={1000}
+              />
+              <Button
+                label={t('common.save')}
+                size="md"
+                onPress={sendReport}
+                disabled={!report.trim()}
+              />
+            </Card>
+          ) : (
+            <Button
+              label={t('review.report')}
+              variant="ghost"
+              size="sm"
+              icon="flag"
+              onPress={() => setReporting(true)}
+            />
+          )}
         </View>
-      </Card>
+      </Screen>
 
-      {draft.notes ? <Banner tone="info" message={draft.notes} /> : null}
-      <AppText variant="caption" color="textMuted">
-        {t('review.estimatedNote')}
-        {!savePhotos && scan.photo ? ` ${t('review.dontSavePhoto')}` : ''}
-      </AppText>
-
-      {reporting ? (
-        <Card style={styles.card}>
-          <TextField
-            label={t('review.reportTitle')}
-            placeholder={t('review.reportPlaceholder')}
-            value={report}
-            onChangeText={setReport}
-            multiline
-            maxLength={1000}
+      {/* Fixed footer: correct by voice/text and save, always reachable. */}
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <LinearGradient
+          colors={[`${colors.background}00`, colors.background]}
+          locations={[0, 0.28]}
+          style={[styles.footer, { paddingBottom: Math.max(insets.bottom, spacing.lg) }]}
+        >
+          <CorrectionBar
+            onSubmit={correction.correct}
+            busy={correction.busy}
+            error={correction.error}
           />
           <Button
-            label={t('common.save')}
-            size="md"
-            onPress={sendReport}
-            disabled={!report.trim()}
+            label={
+              multiMeal
+                ? t('review.saveManyKcal', { count: groups.length, kcal: formatKcal(totalKcal) })
+                : t('review.saveKcal', { kcal: formatKcal(totalKcal) })
+            }
+            icon="check"
+            onPress={save}
+            loading={saving}
+            disabled={!draft.items.length || correction.busy}
+            testID="review-save"
           />
-        </Card>
-      ) : (
-        <Button
-          label={t('review.report')}
-          variant="ghost"
-          size="md"
-          icon="flag-outline"
-          onPress={() => setReporting(true)}
-        />
-      )}
-    </Screen>
+        </LinearGradient>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: { flexDirection: 'row', alignItems: 'center' },
   flex: { flex: 1 },
-  photo: { width: '100%', height: 160, borderRadius: radii.xl },
-  group: { gap: spacing.sm },
-  groupHead: {
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
-    minHeight: 48,
-    paddingHorizontal: spacing.xs,
+    minHeight: 60,
+    paddingHorizontal: spacing.sm,
   },
-  when: { borderWidth: 1, borderRadius: radii.xl, padding: spacing.md, gap: spacing.md },
-  whenHead: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, minHeight: 48 },
+  content: { paddingHorizontal: spacing.lg, gap: 14, paddingBottom: 200 },
+  photo: { width: '100%', height: 140, borderRadius: radii.xxl },
   card: { gap: spacing.md },
+  group: { gap: spacing.sm },
+  editor: { gap: spacing.md, padding: spacing.md, borderRadius: radii.xl },
+  extras: { gap: spacing.sm, paddingTop: spacing.xs },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  cookRow: { gap: spacing.xs },
+  footer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingTop: 28,
+    paddingHorizontal: spacing.lg,
+    gap: 10,
+  },
 });

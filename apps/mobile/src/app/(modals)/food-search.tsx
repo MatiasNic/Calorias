@@ -2,7 +2,7 @@ import { suggestMealType, type IsoDate, type MealType } from '@plato/shared';
 import { FlashList } from '@shopify/flash-list';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
@@ -12,8 +12,8 @@ import {
   Icon,
   IconButton,
   SegmentedControl,
-  TextField,
   toast,
+  type SymbolName,
 } from '@/components';
 import { saveMeal } from '@/features/diary/hooks';
 import { useDraftStore } from '@/features/diary/draftStore';
@@ -25,13 +25,15 @@ import {
   useRecentFoods,
 } from '@/features/foods/hooks';
 import { usePickerStore, type PickTarget } from '@/features/foods/pickerStore';
-import type { FoodOption } from '@/features/foods/search';
+import { REGIONAL_COUNT, type FoodOption } from '@/features/foods/search';
 import type { FavoriteRecord } from '@/services/db/types';
-import { spacing, useTheme } from '@/theme';
+import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { todayLocal } from '@/utils/dates';
 import { formatKcal } from '@/utils/format';
 
 type Tab = 'search' | 'recent' | 'favorites' | 'mine';
+/** Rounded down to the hundred for the placeholder ("Buscá entre 1.500 alimentos"). */
+const FOOD_COUNT = (Math.floor(REGIONAL_COUNT / 100) * 100).toLocaleString('es-AR');
 
 export default function FoodSearch() {
   const { t } = useTranslation();
@@ -116,31 +118,46 @@ export default function FoodSearch() {
           accessibilityLabel={t('common.close')}
           onPress={() => router.back()}
         />
-        <AppText variant="heading" style={styles.flex}>
+        <AppText variant="heading" style={styles.flex} accessibilityRole="header">
           {params.target
             ? t('foodSearch.addFood')
             : t('foodSearch.titleFor', { meal: t(`mealTypes.${mealType}`) })}
         </AppText>
         <IconButton
-          icon="barcode"
+          icon="barcode_scanner"
           accessibilityLabel={t('quick.barcode')}
-          color="primary"
           onPress={() => router.push({ pathname: '/scan', params: { mode: 'barcode' } })}
         />
       </View>
       <View style={styles.controls}>
-        <TextField
-          placeholder={t('foodSearch.placeholder')}
-          value={query}
-          onChangeText={(v) => {
-            setQuery(v);
-            if (tab !== 'search') setTab('search');
-          }}
-          autoFocus={tab === 'search'}
-          returnKeyType="search"
-          accessibilityLabel={t('common.search')}
-          testID="food-search-input"
-        />
+        <View
+          style={[styles.search, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        >
+          <Icon name="search" size={22} color="textMuted" />
+          <TextInput
+            placeholder={t('foodSearch.placeholder', { count: FOOD_COUNT })}
+            placeholderTextColor={colors.textSubtle}
+            value={query}
+            onChangeText={(v) => {
+              setQuery(v);
+              if (tab !== 'search') setTab('search');
+            }}
+            autoFocus={tab === 'search'}
+            returnKeyType="search"
+            accessibilityLabel={t('common.search')}
+            style={[styles.searchInput, { color: colors.text }]}
+            testID="food-search-input"
+          />
+          {query ? (
+            <IconButton
+              icon="cancel"
+              size={20}
+              color="textSubtle"
+              accessibilityLabel={t('common.clear')}
+              onPress={() => setQuery('')}
+            />
+          ) : null}
+        </View>
         <SegmentedControl<Tab>
           value={tab}
           onChange={setTab}
@@ -240,23 +257,44 @@ export default function FoodSearch() {
           renderItem={({ item }) => (
             <ResultRow
               title={item.name}
-              subtitle={[item.brand, t(`foodSource.${item.source}`)].filter(Boolean).join(' · ')}
+              subtitle={[
+                item.brand,
+                item.kind ? t(`foodSearch.kind.${item.kind}`) : t(`foodSource.${item.source}`),
+                t('foodSearch.per100'),
+              ]
+                .filter(Boolean)
+                .join(' · ')}
               kcal={item.per100g.kcal}
               per100
+              tag={item.source === 'regional' ? (item.country ?? 'AR') : undefined}
               icon={
-                item.source === 'regional'
-                  ? 'flag'
-                  : item.source === 'custom'
-                    ? 'person'
-                    : item.source === 'off'
-                      ? 'barcode'
-                      : 'nutrition'
+                item.source === 'custom'
+                  ? 'person'
+                  : item.source === 'off'
+                    ? 'barcode_scanner'
+                    : 'nutrition'
               }
               onPress={() => pick(item)}
             />
           )}
         />
       )}
+      <View style={[styles.footer, { borderTopColor: colors.border }]}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            router.replace({
+              pathname: '/listen',
+              params: query.trim() ? { text: query.trim(), date } : { date },
+            })
+          }
+          style={[styles.voice, { backgroundColor: colors.surfaceAlt }]}
+          testID="food-search-voice"
+        >
+          <Icon name="mic" size={20} />
+          <AppText variant="bodyStrong">{t('foodSearch.sayIt')}</AppText>
+        </Pressable>
+      </View>
       {tab === 'search' && search.remoteError ? (
         <AppText variant="caption" color="textMuted" align="center" style={styles.note}>
           {t('foodSearch.remoteUnavailable')}
@@ -272,13 +310,16 @@ function ResultRow({
   kcal,
   per100,
   icon,
+  tag,
   onPress,
 }: {
   title: string;
   subtitle?: string;
   kcal: number;
   per100?: boolean;
-  icon: 'flag' | 'person' | 'barcode' | 'nutrition' | 'star' | 'restaurant';
+  icon: SymbolName;
+  /** Short code shown in the tile instead of the icon (country of a regional dish). */
+  tag?: string;
   onPress: () => void;
 }) {
   const { t } = useTranslation();
@@ -291,48 +332,84 @@ function ResultRow({
       style={({ pressed }) => [
         styles.row,
         {
-          backgroundColor: pressed ? colors.surfaceAlt : 'transparent',
+          backgroundColor: pressed ? colors.surface : 'transparent',
           borderBottomColor: colors.border,
         },
       ]}
     >
-      <Icon name={icon} color="textMuted" size={18} />
+      <View style={[styles.tile, { backgroundColor: colors.surfaceAlt }]}>
+        {tag ? (
+          <AppText variant="caption" style={styles.tag}>
+            {tag}
+          </AppText>
+        ) : (
+          <Icon name={icon} color="textMuted" size={20} />
+        )}
+      </View>
       <View style={styles.flex}>
-        <AppText numberOfLines={2}>{title}</AppText>
+        <AppText variant="bodyStrong" numberOfLines={2}>
+          {title}
+        </AppText>
         {subtitle ? (
           <AppText variant="caption" color="textMuted" numberOfLines={1}>
             {subtitle}
           </AppText>
         ) : null}
       </View>
-      <View style={styles.kcal}>
-        <AppText variant="bodyStrong" tabular>
-          {formatKcal(kcal)}
-        </AppText>
-        <AppText variant="caption" color="textMuted">
-          {per100 ? t('foodSearch.per100') : 'kcal'}
-        </AppText>
+      <AppText style={styles.kcal} tabular>
+        {formatKcal(kcal)}
+      </AppText>
+      <View style={[styles.add, { backgroundColor: colors.surfaceAlt }]}>
+        <Icon name="add" size={22} />
       </View>
-      <Icon name="add-circle" color="primary" />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.xs },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.sm,
+    minHeight: 60,
+  },
   controls: { paddingHorizontal: spacing.lg, gap: spacing.md, paddingBottom: spacing.sm },
-  list: { paddingBottom: spacing.huge },
+  search: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    height: 52,
+    borderWidth: 1.5,
+    borderRadius: radii.lg,
+    paddingLeft: spacing.lg,
+    paddingRight: spacing.xs,
+  },
+  searchInput: { flex: 1, fontFamily: fontFamily.semibold, fontSize: 16, height: 48 },
+  list: { paddingBottom: 96 },
   loader: { margin: spacing.md },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    minHeight: 60,
+    paddingLeft: spacing.lg,
+    paddingRight: spacing.md,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    minHeight: 64,
   },
-  kcal: { alignItems: 'flex-end' },
+  tile: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  tag: { fontFamily: fontFamily.extrabold, fontSize: 11 },
+  kcal: { fontFamily: fontFamily.extrabold, fontSize: 16 },
+  add: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+  footer: { paddingHorizontal: spacing.lg, paddingTop: spacing.sm, paddingBottom: spacing.sm },
+  voice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    height: 52,
+    borderRadius: radii.lg,
+  },
   note: { padding: spacing.sm },
 });

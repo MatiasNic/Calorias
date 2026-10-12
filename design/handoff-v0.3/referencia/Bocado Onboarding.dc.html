@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="position:absolute;inset:0;font-family:'Manrope',system-ui,sans-serif;color:var(--ink);background:var(--bg)">
+
+<sc-if value="{{ isWelcome }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:16px 20px 20px;box-sizing:border-box;gap:22px;overflow-y:auto">
+  <div style="position:relative;width:52px;height:52px;border-radius:50%;background:var(--sage);overflow:hidden;flex-shrink:0;margin-top:8px"><span style="position:absolute;right:-10px;top:-10px;width:26px;height:26px;border-radius:50%;background:var(--bg)"></span></div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:36px;font-weight:800;letter-spacing:-0.035em;line-height:1.05;text-wrap:balance">Contá lo que comiste. Bocado hace las cuentas.</span>
+    <span style="font-size:16px;color:var(--ink2);line-height:1.45">Hablá, sacá una foto o escribí. Separamos tus comidas, estimamos porciones y calculamos calorías y macros.</span>
+  </div>
+  <div style="background:var(--s1);border-radius:26px;padding:16px;display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--inv);display:grid;place-items:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">mic</span></div>
+      <span style="font-size:15px;font-weight:700;line-height:1.4;padding-top:2px">«Desayuné café con leche y dos medialunas, y a la noche media milanesa con puré»</span>
+    </div>
+    <div style="height:1px;background:var(--line)"></div>
+    <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700"><span><span style="color:var(--ink2)">Desayuno · </span>Café con leche, 2 medialunas</span><span style="font-variant-numeric:tabular-nums">411</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700"><span><span style="color:var(--ink2)">Cena · </span>½ milanesa, puré</span><span style="font-variant-numeric:tabular-nums">413</span></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;gap:12px;align-items:center;font-size:15px;font-weight:600"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400;color:var(--ink2)">photo_camera</span>O sacale una foto al plato</div>
+    <div style="display:flex;gap:12px;align-items:center;font-size:15px;font-weight:600"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400;color:var(--ink2)">record_voice_over</span>Corregí hablando: vos tenés la última palabra</div>
+    <div style="display:flex;gap:12px;align-items:center;font-size:15px;font-weight:600"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400;color:var(--ink2)">trending_up</span>Objetivos personalizados y progreso real, sin culpa</div>
+  </div>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:10px;align-items:flex-start;background:var(--warnBg);color:var(--warnT);border-radius:18px;padding:12px 14px;font-size:13px;font-weight:600;line-height:1.4"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">science</span><span>Modo demo: la IA y los pagos están simulados y tus datos quedan solo en este dispositivo.</span></div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <button onClick="{{ next }}" style="height:56px;border-radius:20px;border:none;background:var(--ink);color:var(--inv);font:inherit;font-size:16px;font-weight:800;cursor:pointer">Crear cuenta</button>
+    <div style="display:flex;gap:10px">
+      <button onClick="{{ toHoy }}" style="flex:1;height:52px;border-radius:20px;border:1.5px solid var(--line);background:none;color:var(--ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer">Ya tengo cuenta</button>
+      <button onClick="{{ next }}" style="flex:1;height:52px;border-radius:20px;border:none;background:var(--s2);color:var(--ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer">Modo demo</button>
+    </div>
+    <span style="font-size:12px;color:var(--ink3);text-align:center;line-height:1.4">Al continuar aceptás los <a href="#">Términos</a> y la <a href="#">Política de privacidad</a>.</span>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isStep }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column">
+  <div style="height:60px;display:flex;align-items:center;gap:8px;padding:0 20px 0 8px;flex-shrink:0">
+    <button onClick="{{ back }}" aria-label="Volver" style="width:48px;height:48px;border-radius:50%;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">arrow_back</span></button>
+    <div style="flex:1;height:6px;border-radius:9px;background:var(--s2);overflow:hidden"><div style="height:100%;width:{{ progress }};background:var(--ink);border-radius:9px;transition:width .3s"></div></div>
+    <span style="font-size:13px;font-weight:700;color:var(--ink2);font-variant-numeric:tabular-nums;min-width:34px;text-align:right">{{ count }}</span>
+  </div>
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:12px 20px 24px;display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:30px;font-weight:800;letter-spacing:-0.03em;line-height:1.1">{{ title }}</span>
+      <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}"><span style="font-size:16px;color:var(--ink2);line-height:1.45">{{ sub }}</span></sc-if>
+    </div>
+
+    <sc-if value="{{ kOptions }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ options }}" as="o" hint-placeholder-count="4">
+          <button onClick="{{ o.pick }}" aria-pressed="{{ o.on }}" style="min-height:72px;border-radius:22px;border:2px solid {{ o.border }};background:var(--s1);color:var(--ink);font:inherit;cursor:pointer;display:flex;align-items:center;gap:14px;padding:12px 16px;text-align:left">
+            <sc-if value="{{ o.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:44px;height:44px;border-radius:14px;background:var(--s2);display:grid;place-items:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">{{ o.icon }}</span></span></sc-if>
+            <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+              <span style="font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap">{{ o.title }}<sc-if value="{{ o.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="height:24px;padding:0 9px;border-radius:999px;background:var(--s2);font-size:12px;font-weight:700;display:inline-flex;align-items:center;color:var(--ink2)">{{ o.badge }}</span></sc-if></span>
+              <sc-if value="{{ o.hasSub }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;color:var(--ink2);font-weight:500">{{ o.sub }}</span></sc-if>
+            </span>
+            <span style="width:24px;height:24px;border-radius:50%;border:2px solid {{ o.radioBorder }};background:{{ o.radioBg }};color:var(--inv);display:grid;place-items:center;flex-shrink:0;box-sizing:border-box"><span style="font-family:'Material Symbols Rounded';font-size:16px;line-height:1;font-weight:600;opacity:{{ o.checkO }}">check</span></span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ kNumber }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:2px;background:var(--s1);border-radius:14px;padding:4px">
+        <sc-for list="{{ units }}" as="u" hint-placeholder-count="2">
+          <button onClick="{{ u.pick }}" style="flex:1;height:40px;border-radius:10px;border:none;background:{{ u.bg }};color:{{ u.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer">{{ u.label }}</button>
+        </sc-for>
+      </div>
+      <div style="background:var(--s1);border-radius:28px;padding:30px 16px 22px;display:flex;flex-direction:column;align-items:center;gap:20px">
+        <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:76px;font-weight:800;letter-spacing:-0.045em;line-height:1;font-variant-numeric:tabular-nums">{{ numDisplay }}</span><span style="font-size:22px;font-weight:700;color:var(--ink2)">{{ numUnit }}</span></div>
+        <div style="display:flex;gap:14px">
+          <button onClick="{{ numDec }}" aria-label="Menos" style="width:60px;height:60px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:26px;line-height:1;font-weight:400">remove</span></button>
+          <button onClick="{{ numInc }}" aria-label="Más" style="width:60px;height:60px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:26px;line-height:1;font-weight:400">add</span></button>
+        </div>
+        <sc-if value="{{ hasHelper }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;color:var(--ink2);font-weight:600">{{ helper }}</span></sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ kDate }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:10px">
+        <sc-for list="{{ dateFields }}" as="df" hint-placeholder-count="3">
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600;color:var(--ink2)">{{ df.label }}
+            <input value="{{ df.value }}" onChange="{{ df.onChange }}" inputMode="numeric" placeholder="{{ df.ph }}" style="height:60px;border-radius:18px;border:1.5px solid var(--line);background:var(--s1);color:var(--ink);font:inherit;font-size:22px;font-weight:800;text-align:center;outline:none;min-width:0;box-sizing:border-box">
+          </label>
+        </sc-for>
+      </div>
+      <span style="font-size:15px;color:var(--ink2);font-weight:600">{{ ageText }}</span>
+    </sc-if>
+
+    <sc-if value="{{ kPrefs }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ prefs }}" as="pf" hint-placeholder-count="9">
+          <button onClick="{{ pf.toggle }}" aria-pressed="{{ pf.on }}" style="height:44px;padding:0 16px;border-radius:999px;border:none;background:{{ pf.bg }};color:{{ pf.color }};font:inherit;font-size:15px;font-weight:700;cursor:pointer">{{ pf.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:17px;font-weight:800">Alergias o intolerancias</span>
+        <input value="{{ allergyText }}" onChange="{{ onAllergy }}" onKeyDown="{{ onAllergyKey }}" placeholder="Ej.: maní, mariscos (Enter para agregar)" style="height:52px;border-radius:18px;border:1.5px solid var(--line);background:var(--s1);color:var(--ink);font:inherit;font-size:15px;font-weight:600;padding:0 16px;outline:none">
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <sc-for list="{{ allergies }}" as="al" hint-placeholder-count="1">
+            <button onClick="{{ al.remove }}" aria-label="Quitar {{ al.label }}" style="height:36px;padding:0 8px 0 14px;border-radius:999px;border:none;background:var(--s2);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">{{ al.label }}<span style="font-family:'Material Symbols Rounded';font-size:18px;line-height:1;font-weight:400">close</span></button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ kPlan }}" hint-placeholder-val="{{ false }}">
+      <div style="background:var(--s1);border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:68px;font-weight:800;letter-spacing:-0.05em;line-height:.9;font-variant-numeric:tabular-nums">2.150</span><span style="font-size:17px;font-weight:700;color:var(--ink2)">kcal por día</span></div>
+        <div style="height:10px;border-radius:9px;background:var(--sage)"></div>
+        <div style="display:flex;height:6px;gap:3px"><div style="flex:656;background:var(--p);border-radius:9px"></div><div style="flex:892;background:var(--c);border-radius:9px"></div><div style="flex:603;background:var(--f);border-radius:9px"></div></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;color:var(--ink2);font-weight:600;display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--p)"></span>Proteínas</span><span style="font-size:22px;font-weight:800">164 g</span></div>
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;color:var(--ink2);font-weight:600;display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--c)"></span>Carbos</span><span style="font-size:22px;font-weight:800">223 g</span></div>
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;color:var(--ink2);font-weight:600;display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--f)"></span>Grasas</span><span style="font-size:22px;font-weight:800">67 g</span></div>
+        </div>
+        <span style="font-size:13px;color:var(--ink2);font-weight:600;border-top:1px solid var(--line);padding-top:12px">Basal 1.739 · Gasto 2.695 kcal · Agua 2.850 ml</span>
+      </div>
+      <div style="background:var(--s1);border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:17px;font-weight:800">Tu proyección</span>
+        <span style="font-size:15px;color:var(--ink2);line-height:1.45">A este ritmo llegarías a 76 kg cerca del 24 de enero de 2027 (unas 15 semanas).</span>
+        <svg viewBox="0 0 300 110" style="width:100%;height:110px" aria-label="Proyección de peso">
+          <line x1="0" y1="20" x2="300" y2="20" stroke="var(--line)"></line><line x1="0" y1="60" x2="300" y2="60" stroke="var(--line)"></line><line x1="0" y1="100" x2="300" y2="100" stroke="var(--line)" stroke-dasharray="4 4"></line>
+          <polyline points="6,12 46,26 86,39 126,52 166,64 206,76 246,88 294,98" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+          <circle cx="6" cy="12" r="4" fill="var(--ink)"></circle><circle cx="294" cy="98" r="4" fill="var(--ink)"></circle>
+        </svg>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);font-weight:600"><span>Hoy · 82 kg</span><span>Semana 15 · 76 kg</span></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--sageBg);border-radius:18px;padding:14px;font-size:14px;font-weight:600;line-height:1.45"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">info</span><span>Bocado no reemplaza el consejo médico o nutricional profesional. Ante cualquier duda, consultá con un profesional de la salud.</span></div>
+    </sc-if>
+
+    <sc-if value="{{ kPerms }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ perms }}" as="pm" hint-placeholder-count="3">
+          <div style="background:var(--s1);border-radius:22px;padding:16px;display:flex;gap:14px;align-items:center">
+            <span style="width:44px;height:44px;border-radius:50%;background:var(--s2);display:grid;place-items:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">{{ pm.icon }}</span></span>
+            <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font-size:16px;font-weight:800">{{ pm.title }}</span><span style="font-size:13px;color:var(--ink2);line-height:1.4">{{ pm.sub }}</span></span>
+            <button onClick="{{ pm.toggle }}" aria-label="{{ pm.aria }}" style="height:40px;min-width:40px;padding:{{ pm.pad }};border-radius:999px;border:none;background:{{ pm.bg }};color:{{ pm.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:grid;place-items:center">{{ pm.label }}</button>
+          </div>
+        </sc-for>
+      </div>
+      <span style="font-size:17px;font-weight:800;margin-top:4px">Tu privacidad</span>
+      <div style="background:var(--s1);border-radius:22px;padding:6px 16px;display:flex;flex-direction:column">
+        <sc-for list="{{ priv }}" as="pv" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:12px;min-height:56px">
+            <span style="flex:1;font-size:15px;font-weight:600">{{ pv.label }}</span>
+            <button onClick="{{ pv.toggle }}" role="switch" aria-checked="{{ pv.on }}" aria-label="{{ pv.label }}" style="width:52px;height:32px;border-radius:999px;border:none;background:{{ pv.track }};position:relative;cursor:pointer;flex-shrink:0;padding:0"><span style="position:absolute;top:4px;left:{{ pv.x }};width:24px;height:24px;border-radius:50%;background:{{ pv.knob }};transition:left .18s"></span></button>
+          </div>
+        </sc-for>
+        <span style="font-size:13px;color:var(--ink2);padding:4px 0 12px;line-height:1.4">Nunca compartimos tus comidas, audios, fotos ni datos de salud con anunciantes.</span>
+      </div>
+    </sc-if>
+  </div>
+  <div style="padding:12px 20px 20px">
+    <button onClick="{{ next }}" disabled="{{ disabled }}" style="width:100%;height:56px;border-radius:20px;border:none;background:{{ ctaBg }};color:{{ ctaInk }};font:inherit;font-size:16px;font-weight:800;cursor:pointer">{{ ctaLabel }}</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPremium }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;padding:8px 20px 24px;box-sizing:border-box;display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div style="position:relative;width:40px;height:40px;border-radius:50%;background:var(--sage);overflow:hidden"><span style="position:absolute;right:-8px;top:-8px;width:20px;height:20px;border-radius:50%;background:var(--bg)"></span></div>
+    <button onClick="{{ toHoyVacio }}" aria-label="Cerrar" style="width:48px;height:48px;border-radius:50%;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">close</span></button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:32px;font-weight:800;letter-spacing:-0.03em;line-height:1.1">Desbloqueá todo Bocado</span><span style="font-size:16px;color:var(--ink2)">Probalo gratis y cancelá cuando quieras.</span></div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <sc-for list="{{ benefits }}" as="bf" hint-placeholder-count="6">
+      <div style="display:flex;gap:12px;align-items:flex-start;font-size:15px;font-weight:600;line-height:1.35"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">check</span>{{ bf }}</div>
+    </sc-for>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <sc-for list="{{ plans }}" as="pl" hint-placeholder-count="2">
+      <button onClick="{{ pl.pick }}" style="border-radius:22px;border:2px solid {{ pl.border }};background:var(--s1);color:var(--ink);font:inherit;cursor:pointer;display:flex;align-items:center;gap:14px;padding:16px;text-align:left">
+        <span style="width:24px;height:24px;border-radius:50%;border:2px solid {{ pl.radioBorder }};display:grid;place-items:center;box-sizing:border-box;flex-shrink:0"><span style="width:12px;height:12px;border-radius:50%;background:{{ pl.dot }}"></span></span>
+        <span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px">{{ pl.name }}<sc-if value="{{ pl.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="height:24px;padding:0 9px;border-radius:999px;background:var(--s2);font-size:12px;font-weight:700;display:inline-flex;align-items:center">{{ pl.badge }}</span></sc-if></span><span style="font-size:13px;color:var(--ink2)">{{ pl.sub }}</span></span>
+        <span style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span style="font-size:17px;font-weight:800">{{ pl.price }}</span><span style="font-size:13px;color:var(--ink2)">{{ pl.per }}</span></span>
+      </button>
+    </sc-for>
+  </div>
+  <span style="font-size:13px;color:var(--ink2);text-align:center;line-height:1.45">{{ planNote }}</span>
+  <button onClick="{{ toHoyVacio }}" style="height:56px;border-radius:20px;border:none;background:var(--ink);color:var(--inv);font:inherit;font-size:16px;font-weight:800;cursor:pointer;flex-shrink:0">{{ planCta }}</button>
+  <div style="display:flex;justify-content:center;gap:8px">
+    <button onClick="{{ toHoyVacio }}" style="height:44px;padding:0 14px;border:none;background:none;color:var(--ink2);font:inherit;font-size:15px;font-weight:700;cursor:pointer">Continuar gratis</button>
+    <button style="height:44px;padding:0 14px;border:none;background:none;color:var(--ink2);font:inherit;font-size:15px;font-weight:700;cursor:pointer">Restaurar compras</button>
+  </div>
+  <div style="display:flex;gap:10px;align-items:flex-start;background:var(--warnBg);color:var(--warnT);border-radius:18px;padding:12px 14px;font-size:13px;font-weight:600;line-height:1.4"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">info</span><span>Modo demo: las compras son simuladas y no se cobra nada.</span></div>
+  <span style="font-size:12px;color:var(--ink3);text-align:center">Pago a través de la tienda. Ver <a href="#">Términos</a> y <a href="#">Privacidad</a>.</span>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;screen&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;bienvenida&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;go&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(s:string)=&gt;void&quot;}}">
+const ORDER=['bienvenida','ob-objetivo','ob-sexo','ob-nacimiento','ob-altura','ob-peso','ob-pesoobj','ob-actividad','ob-ritmo','ob-preferencias','ob-plan','ob-permisos','premium'];
+const STEPS={
+ 'ob-objetivo':{kind:'options',key:'obj',title:'¿Cuál es tu objetivo?',sub:'Lo usamos para calcular tus calorías y macros. Lo podés cambiar cuando quieras.',options:[['trending_down','Bajar de peso','Déficit moderado y sostenible'],['sync_alt','Mantener mi peso','Comer acorde a lo que gastás'],['trending_up','Subir de peso','Superávit gradual'],['fitness_center','Ganar músculo','Más proteína y un pequeño superávit'],['eco','Comer más sano','Foco en calidad, sin cambiar el peso']]},
+ 'ob-sexo':{kind:'options',key:'sexo',title:'Sexo biológico',sub:'Las fórmulas de gasto energético usan el sexo biológico. No lo compartimos con nadie.',options:[[null,'Femenino'],[null,'Masculino']]},
+ 'ob-nacimiento':{kind:'date',title:'¿Cuándo naciste?',sub:'La edad influye en tu metabolismo basal.'},
+ 'ob-altura':{kind:'number',key:'altura',title:'¿Cuánto medís?',sub:''},
+ 'ob-peso':{kind:'number',key:'peso',title:'¿Cuánto pesás hoy?',sub:'Un número aproximado está bien; después vas a ver tu tendencia real.'},
+ 'ob-pesoobj':{kind:'number',key:'pesoobj',title:'¿Cuál es tu peso objetivo?',sub:'Elegí una meta realista; siempre la podés ajustar.'},
+ 'ob-actividad':{kind:'options',key:'act',title:'¿Qué tan activo/a sos?',sub:'Pensá en una semana típica, incluyendo trabajo y ejercicio.',options:[['desktop_windows','Sedentario','Trabajo sentado, poco movimiento'],['directions_walk','Poco activo','Caminatas o ejercicio liviano 1–3 días'],['directions_bike','Moderado','Ejercicio 3–5 días por semana'],['monitor_heart','Activo','Ejercicio intenso 6–7 días'],['local_fire_department','Muy activo','Trabajo físico o entrenamiento doble']]},
+ 'ob-ritmo':{kind:'options',key:'ritmo',title:'¿A qué ritmo?',sub:'Un ritmo gradual es más fácil de sostener y protege tu masa muscular.',options:[[null,'0,25 kg por semana','Suave y muy sostenible'],[null,'0,5 kg por semana','Equilibrio entre resultados y comodidad','Recomendado'],[null,'0,75 kg por semana','Exigente: requiere más disciplina'],[null,'1 kg por semana','Muy exigente: mejor por poco tiempo']]},
+ 'ob-preferencias':{kind:'prefs',title:'Preferencias y alergias',sub:'Las usamos para sugerencias y para el coach. Es opcional.'},
+ 'ob-plan':{kind:'plan',title:'Tu plan está listo',sub:'Calculado con la fórmula de Mifflin-St Jeor y tu nivel de actividad.',cta:'Empezar'},
+ 'ob-permisos':{kind:'perms',title:'Permisos',sub:'Te explicamos para qué es cada uno. Podés cambiarlos después en Ajustes.'}
+};
+const PREFS=['Vegetariano','Vegano','Sin TACC','Sin lactosa','Keto','Bajo en carbohidratos','Pescetariano','Halal','Kosher'];
+const BENEFITS=['Análisis con IA ilimitados y más precisos (voz, foto y texto)','Coach nutricional IA (50 mensajes por día)','Objetivo adaptativo según tu peso real','Micronutrientes y alertas de déficit','Plan de comidas semanal con lista de compras','Historial completo, exportación y sincronización con Salud'];
+const tog=(on)=>({track:on?'var(--ink)':'var(--s2)',knob:on?'var(--bg)':'var(--ink3)',x:on?'24px':'4px'});
+class Component extends DCLogic {
+  state={sel:{},nums:{altura:170,peso:82,pesoobj:76},imperial:false,dob:{d:'14',m:'03',y:'1992'},prefs:[],allergies:['Maní'],allergyText:'',perms:{mic:false,cam:true,notif:false},priv:{uso:false,err:true},plan:'anual'};
+  go(s){this.props.go&&this.props.go(s);}
+  renderVals(){
+    const s=this.props.screen, st=this.state, idx=ORDER.indexOf(s), step=STEPS[s]||{};
+    const next=()=>this.go(ORDER[Math.min(idx+1,ORDER.length-1)]);
+    const back=()=>this.go(ORDER[Math.max(idx-1,0)]);
+    const kind=step.kind;
+    const options=(step.options||[]).map(([icon,title,sub,badge])=>{const on=st.sel[step.key]===title;return {icon,title,sub,badge,hasIcon:!!icon,hasSub:!!sub,hasBadge:!!badge,on,border:on?'var(--ink)':'transparent',radioBorder:on?'var(--ink)':'var(--ink3)',radioBg:on?'var(--ink)':'transparent',checkO:on?1:0,pick:()=>this.setState(x=>({sel:{...x.sel,[step.key]:title}}))};});
+    const can=kind==='options'?!!st.sel[step.key]:true;
+    // number
+    const key=step.key, v=st.nums[key];
+    let numDisplay='',numUnit='';
+    if(kind==='number'){
+      if(key==='altura'){ if(st.imperial){const inch=Math.round(v/2.54);numDisplay=Math.floor(inch/12)+"′"+(inch%12)+"″";numUnit='';} else {numDisplay=String(v);numUnit='cm';} }
+      else { numDisplay=st.imperial?String(Math.round(v*2.2046)):String(v); numUnit=st.imperial?'lb':'kg'; }
+    }
+    const diff=st.nums.peso-st.nums.pesoobj;
+    const helper=key==='pesoobj'?(diff>0?`${diff} kg menos que hoy`:diff<0?`${-diff} kg más que hoy`:'Igual que hoy'):'';
+    const setD=(k)=>e=>this.setState(x=>({dob:{...x.dob,[k]:e.target.value.replace(/\D/g,'').slice(0,k==='y'?4:2)}}));
+    const age=st.dob.y.length===4?2026-Number(st.dob.y)-((Number(st.dob.m)>10||(Number(st.dob.m)===10&&Number(st.dob.d)>11))?1:0):null;
+    const permDefs=[['mic','mic','Micrófono','Para dictar tus comidas. Solo escucha mientras mantenés abierto el dictado.'],['cam','photo_camera','Cámara','Para sacar fotos de tus platos y escanear códigos de barras.'],['notif','notifications','Recordatorios','Para recordarte registrar comidas, tomar agua y tu resumen semanal.']];
+    const plans=[['anual','Anual','7 días gratis','US$ 39,99','US$ 3,33/mes','Ahorrá 58 %'],['mensual','Mensual','Sin prueba gratis','US$ 7,99','por mes','']].map(([id,name,sub,price,per,badge])=>{const on=st.plan===id;return {name,sub,price,per,badge,hasBadge:!!badge,border:on?'var(--ink)':'transparent',radioBorder:on?'var(--ink)':'var(--ink3)',dot:on?'var(--ink)':'transparent',pick:()=>this.setState({plan:id})};});
+    return {
+      isWelcome:s==='bienvenida', isPremium:s==='premium', isStep:!!STEPS[s],
+      next, back, toHoy:()=>this.go('hoy'), toHoyVacio:()=>this.go('hoy-vacio'),
+      progress:(idx/12*100)+'%', count:idx+'/12', title:step.title, sub:step.sub, hasSub:!!step.sub,
+      kOptions:kind==='options',kNumber:kind==='number',kDate:kind==='date',kPrefs:kind==='prefs',kPlan:kind==='plan',kPerms:kind==='perms',
+      options, disabled:!can, ctaBg:can?'var(--ink)':'var(--s2)', ctaInk:can?'var(--inv)':'var(--ink3)', ctaLabel:step.cta||'Continuar',
+      units:[['Métrico (kg, cm)',false],['Imperial (lb, ft)',true]].map(([label,imp])=>{const on=st.imperial===imp;return {label,bg:on?'var(--bg)':'transparent',color:on?'var(--ink)':'var(--ink2)',pick:()=>this.setState({imperial:imp})};}),
+      numDisplay,numUnit,helper,hasHelper:!!helper,
+      numDec:()=>this.setState(x=>({nums:{...x.nums,[key]:x.nums[key]-1}})),numInc:()=>this.setState(x=>({nums:{...x.nums,[key]:x.nums[key]+1}})),
+      dateFields:[['Día','d','DD'],['Mes','m','MM'],['Año','y','AAAA']].map(([label,k,ph])=>({label,ph,value:st.dob[k],onChange:setD(k)})),
+      ageText:age!==null&&age>0&&age<120?`Tenés ${age} años.`:'',
+      prefs:PREFS.map(label=>{const on=st.prefs.includes(label);return {label,on,bg:on?'var(--ink)':'var(--s1)',color:on?'var(--inv)':'var(--ink)',toggle:()=>this.setState(x=>({prefs:on?x.prefs.filter(p=>p!==label):[...x.prefs,label]}))};}),
+      allergyText:st.allergyText,onAllergy:e=>this.setState({allergyText:e.target.value}),
+      onAllergyKey:e=>{if(e.key==='Enter'&&st.allergyText.trim()){this.setState(x=>({allergies:[...x.allergies,x.allergyText.trim()],allergyText:''}));}},
+      allergies:st.allergies.map(label=>({label,remove:()=>this.setState(x=>({allergies:x.allergies.filter(a=>a!==label)}))})),
+      perms:permDefs.map(([k,icon,title,sub])=>{const on=st.perms[k];return {icon,title,sub,label:on?'✓':'Permitir',aria:on?title+' permitido':'Permitir '+title,pad:on?'0':'0 16px',bg:on?'var(--ink)':'var(--s2)',color:on?'var(--inv)':'var(--ink)',toggle:()=>this.setState(x=>({perms:{...x.perms,[k]:!on}}))};}),
+      priv:[['uso','Compartir datos de uso anónimos para mejorar la app'],['err','Enviar reportes de errores']].map(([k,label])=>{const on=st.priv[k];return {label,on,...tog(on),toggle:()=>this.setState(x=>({priv:{...x.priv,[k]:!on}}))};}),
+      benefits:BENEFITS, plans,
+      planNote:st.plan==='anual'?'Gratis por 7 días, después US$ 39,99 por año. Se renueva automáticamente; cancelá cuando quieras desde la tienda, al menos 24 h antes del cobro.':'US$ 7,99 por mes. Se renueva automáticamente; cancelá cuando quieras desde la tienda.',
+      planCta:st.plan==='anual'?'Empezar 7 días gratis':'Suscribirme'
+    };
+  }
+}
+</script>
+</body>
+</html>

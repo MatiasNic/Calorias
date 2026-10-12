@@ -25,11 +25,7 @@ export function CaloriesCard({ summary, steps }: { summary: DailySummary; steps:
         {over ? t('today.overLabel') : t('today.leftLabel')}
       </AppText>
       <View style={styles.hero}>
-        <AppText
-          variant="numberHero"
-          testID="today-remaining"
-          style={over ? { color: colors.warning } : undefined}
-        >
+        <AppText variant="numberHero" testID="today-remaining">
           {formatKcal(Math.abs(summary.remainingKcal))}
         </AppText>
         <AppText variant="heading" color="textMuted" style={styles.unit}>
@@ -38,8 +34,9 @@ export function CaloriesCard({ summary, steps }: { summary: DailySummary; steps:
       </View>
       <ProgressBar
         progress={Math.min(1, summary.progress.kcal)}
-        color={over ? colors.warning : colors.kcal}
-        height={8}
+        // Going over is information, not an alarm: same calm color.
+        color={colors.kcal}
+        height={10}
       />
       <View style={styles.footer}>
         <AppText variant="caption" color="textMuted" style={styles.flex} numberOfLines={1}>
@@ -60,9 +57,9 @@ export function CaloriesCard({ summary, steps }: { summary: DailySummary; steps:
 }
 
 const styles = StyleSheet.create({
-  wrap: { gap: spacing.sm, paddingHorizontal: spacing.xs },
+  wrap: { gap: spacing.md },
   hero: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm },
-  unit: { marginBottom: spacing.sm },
+  unit: { marginBottom: spacing.sm, fontSize: 20 },
   footer: { flexDirection: 'row', gap: spacing.sm },
   flex: { flex: 1 },
 });

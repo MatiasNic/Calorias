@@ -67,6 +67,8 @@ export function draftFromAnalysis(
     hiddenQuestion: r.hidden_ingredients_question,
     quickAnswers: r.quick_answers,
     itemMeals,
+    groupTimes: {},
+    lastCorrection: null,
     notes: r.notes,
     original: items,
   };

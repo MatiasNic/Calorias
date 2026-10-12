@@ -5,6 +5,8 @@ import { persist } from 'zustand/middleware';
 import { kvJSONStorage } from './kv';
 
 export type ThemePreference = 'system' | 'light' | 'dark';
+/** How "Escuchando" opens: a sheet over Today (default) or the whole screen. */
+export type ListenStyle = 'sheet' | 'full';
 
 export interface TrainingReminder {
   enabled: boolean;
@@ -27,6 +29,7 @@ export interface PrefsState {
   exerciseInBudget: boolean;
   /** Workout reminder (device-local, like the notification schedule itself). */
   trainingReminder: TrainingReminder;
+  listenStyle: ListenStyle;
   set: (patch: Partial<Omit<PrefsState, 'set' | 'reset'>>) => void;
   reset: () => void;
 }
@@ -42,6 +45,7 @@ const defaults = {
   seenScanTips: false,
   exerciseInBudget: true,
   trainingReminder: { enabled: false, days: [1, 3, 5], time: '18:00' } as TrainingReminder,
+  listenStyle: 'sheet' as ListenStyle,
 };
 
 export const usePrefsStore = create<PrefsState>()(

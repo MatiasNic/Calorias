@@ -22,6 +22,8 @@ interface RegionalRow {
   sat_fat_g: number;
   servings: Serving[];
   source: string;
+  country?: string;
+  kind?: 'home' | 'market' | 'basic';
 }
 
 export interface FoodOption extends Food {
@@ -30,6 +32,9 @@ export interface FoodOption extends Food {
   servings: Serving[];
   /** Last grams used (for recents). */
   lastGrams?: number;
+  /** Regional table: country where the dish is typical ("AR", "PE"…) and what kind of food it is. */
+  country?: string;
+  kind?: 'home' | 'market' | 'basic';
 }
 
 export const normalize = normalizeText;
@@ -59,6 +64,8 @@ function regionalToFood(r: RegionalRow): FoodOption {
     servings: r.servings,
     category: r.category,
     attribution: r.source,
+    country: r.country,
+    kind: r.kind,
   };
 }
 

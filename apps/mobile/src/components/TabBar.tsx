@@ -4,57 +4,58 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import { MIN_TOUCH, palette, radii, spacing, useTheme } from '@/theme';
+import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { haptic } from '@/utils/haptics';
-import { Icon, type IconName } from './Icon';
+import { AppText } from './AppText';
+import { Icon, type SymbolName } from './Icon';
 
-const ICONS: Record<string, { on: IconName; off: IconName }> = {
-  today: { on: 'calendar', off: 'calendar-outline' },
-  diary: { on: 'book', off: 'book-outline' },
-  progress: { on: 'trending-up', off: 'trending-up-outline' },
-  profile: { on: 'person', off: 'person-outline' },
+const ICONS: Record<string, SymbolName> = {
+  today: 'today',
+  diary: 'calendar_month',
+  progress: 'trending_up',
+  profile: 'person',
 };
 
-/** Floating tab bar (icons only): Hoy · Diario · [Escanear] · Progreso · Perfil. */
+/**
+ * Floating tab bar: Hoy · Diario · [micrófono] · Progreso · Perfil. The central button always
+ * opens "Escuchando" (voice logging), the app's main action.
+ */
 export function TabBar({ state, navigation }: BottomTabBarProps) {
-  const theme = useTheme();
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { colors } = theme;
 
   return (
     <View
-      style={[
-        styles.wrap,
-        { paddingBottom: Math.max(insets.bottom, spacing.md), backgroundColor: colors.background },
-      ]}
+      pointerEvents="box-none"
+      style={[styles.wrap, { bottom: Math.max(insets.bottom, spacing.md) }]}
     >
-      <View style={[styles.bar, { backgroundColor: colors.tabBar }]}>
+      <View style={[styles.bar, { backgroundColor: colors.tabBar, borderColor: colors.border }]}>
         {state.routes.map((route, index) => {
           const focused = state.index === index;
           if (route.name === 'scan-tab') {
             return (
               <View key={route.key} style={styles.item}>
                 <Pressable
-                  testID="tab-scan"
+                  testID="tab-voice"
                   accessibilityRole="button"
-                  accessibilityLabel={t('tabs.scanA11y')}
+                  accessibilityLabel={t('tabs.voiceA11y')}
                   onPress={() => {
                     haptic('medium');
-                    router.push('/scan');
+                    router.push('/listen');
                   }}
                   style={({ pressed }) => [
-                    styles.scan,
-                    { backgroundColor: colors.accent, opacity: pressed ? 0.85 : 1 },
+                    styles.mic,
+                    { backgroundColor: colors.primary, opacity: pressed ? 0.85 : 1 },
                   ]}
                 >
-                  <Icon name="scan-outline" size={26} rawColor={palette.ink800} />
+                  <Icon name="mic" size={28} color="onPrimary" />
                 </Pressable>
               </View>
             );
           }
-          const icon = ICONS[route.name] ?? { on: 'ellipse', off: 'ellipse-outline' };
           const label = t(`tabs.${route.name as 'today' | 'diary' | 'progress' | 'profile'}`);
+          const tint = focused ? 'text' : 'textSubtle';
           return (
             <Pressable
               key={route.key}
@@ -75,12 +76,10 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
               }}
               style={styles.item}
             >
-              <View style={{ opacity: focused ? 1 : 0.55 }}>
-                <Icon
-                  name={focused ? icon.on : icon.off}
-                  color={theme.dark ? (focused ? 'text' : 'textMuted') : 'onPrimary'}
-                />
-              </View>
+              <Icon name={ICONS[route.name] ?? 'today'} size={24} color={tint} />
+              <AppText variant="caption" color={tint} style={styles.label} numberOfLines={1}>
+                {label}
+              </AppText>
             </Pressable>
           );
         })}
@@ -90,19 +89,20 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
 }
 
 const styles = StyleSheet.create({
-  wrap: { paddingHorizontal: spacing.md, paddingTop: spacing.xs },
+  wrap: { position: 'absolute', left: spacing.md, right: spacing.md },
   bar: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: radii.xxl,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.xs,
+    height: 72,
+    borderRadius: radii.xxxl,
+    borderWidth: 1,
   },
-  item: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: MIN_TOUCH },
-  scan: {
-    width: 46,
-    height: 46,
-    borderRadius: radii.lg,
+  item: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 3, height: 64 },
+  label: { fontSize: 11, lineHeight: 14, fontFamily: fontFamily.bold },
+  mic: {
+    width: 60,
+    height: 60,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },

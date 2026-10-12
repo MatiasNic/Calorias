@@ -3,13 +3,14 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Icon, IconButton } from '@/components';
+import { AppText, Icon } from '@/components';
 import { features } from '@/config/features';
 import { radii, spacing, useTheme } from '@/theme';
+import { haptic } from '@/utils/haptics';
 
 /**
- * "¿Qué comiste?": the main way to log. The mic opens the dictation already listening, the
- * camera takes a photo and the bar itself opens the keyboard. One step from Today to the review.
+ * "¿Qué comiste?": the main way to log. The mic opens "Escuchando", the camera takes a photo and
+ * the text side opens the keyboard. One step from Today to the review.
  */
 export function LogBar({ date }: { date: IsoDate }) {
   const { t } = useTranslation();
@@ -26,27 +27,35 @@ export function LogBar({ date }: { date: IsoDate }) {
         style={styles.main}
         testID="log-bar-text"
       >
-        <AppText variant="bodyStrong">{t('logBar.title')}</AppText>
+        <AppText variant="heading">{t('logBar.title')}</AppText>
         <AppText variant="caption" color="textMuted" numberOfLines={1}>
           {t('logBar.hint')}
         </AppText>
       </Pressable>
-      <IconButton
-        icon="camera-outline"
+      <Pressable
+        accessibilityRole="button"
         accessibilityLabel={t('logBar.photo')}
-        background="surfaceAlt"
         onPress={() => router.push('/scan')}
+        style={[styles.camera, { backgroundColor: colors.surfaceAlt }]}
         testID="log-bar-photo"
-      />
+      >
+        <Icon name="photo_camera" size={22} />
+      </Pressable>
       {features.voiceLogging ? (
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t('logBar.voice')}
-          onPress={() => router.push({ pathname: '/text-log', params: { date, voice: '1' } })}
-          style={[styles.mic, { backgroundColor: colors.primary }]}
+          onPress={() => {
+            haptic('medium');
+            router.push({ pathname: '/listen', params: { date } });
+          }}
+          style={({ pressed }) => [
+            styles.mic,
+            { backgroundColor: colors.primary, opacity: pressed ? 0.85 : 1 },
+          ]}
           testID="log-bar-voice"
         >
-          <Icon name="mic" size={26} color="onPrimary" />
+          <Icon name="mic" size={30} color="onPrimary" />
         </Pressable>
       ) : null}
     </View>
@@ -59,17 +68,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
     borderWidth: 1,
-    borderRadius: radii.xxl,
-    paddingLeft: spacing.lg,
+    borderRadius: 30,
+    paddingLeft: spacing.xl,
     paddingRight: spacing.sm,
     paddingVertical: spacing.sm,
   },
   main: { flex: 1, minHeight: 48, justifyContent: 'center', gap: 2 },
-  mic: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+  camera: {
+    width: 48,
+    height: 48,
+    borderRadius: radii.pill,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  mic: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center' },
 });

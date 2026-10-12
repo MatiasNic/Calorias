@@ -1,6 +1,8 @@
 import type { IsoDate, MealItem, MealSource, MealType } from '@plato/shared';
 import { create } from 'zustand';
 
+import type { CorrectionChange } from '@/features/scan/correctionDiff';
+
 import { withGrams } from './mealMath';
 
 /** Editable meal draft shared by the scan review screen and the meal editor. */
@@ -24,6 +26,14 @@ export interface MealDraft {
    */
   itemMeals: Record<string, MealType>;
   notes: string | null;
+  /** Time chosen for each meal when one description had several (else their usual time). */
+  groupTimes: Partial<Record<MealType, { h: number; m: number }>>;
+  /** Last spoken/typed correction, so the review can show what changed and undo it. */
+  lastCorrection: {
+    text: string;
+    changes: CorrectionChange[];
+    previous: Pick<MealDraft, 'items' | 'itemMeals' | 'hiddenQuestion' | 'quickAnswers'>;
+  } | null;
   /** Original AI result, kept for "Reportar error" feedback. */
   original: MealItem[] | null;
 }

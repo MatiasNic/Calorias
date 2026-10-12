@@ -33,6 +33,12 @@ export function ScreenHeader({
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginLeft: -spacing.sm },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    minHeight: 60,
+    marginLeft: -spacing.md,
+  },
   title: { flex: 1 },
 });

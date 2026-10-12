@@ -9,6 +9,7 @@ import { getRegionalFood } from '@/features/foods/search';
 import { analyzeMealText } from '@/services/ai';
 import { track } from '@/services/analytics';
 import { queryClient } from '@/services/queryClient';
+import { diffItems } from './correctionDiff';
 import { applyLocalCorrection } from './localCorrection';
 import { analysisToItems } from './toDraft';
 import { useAiError } from './useAiError';
@@ -31,6 +32,19 @@ export function useMealCorrection() {
     if (!draft || clean.length < 2) return false;
     setBusy(true);
     setError(null);
+    const previous = {
+      items: draft.items,
+      itemMeals: draft.itemMeals,
+      hiddenQuestion: draft.hiddenQuestion,
+      quickAnswers: draft.quickAnswers,
+    };
+    const remember = () => {
+      const now = useDraftStore.getState().draft;
+      if (!now) return;
+      useDraftStore.getState().patch({
+        lastCorrection: { text: clean, changes: diffItems(previous.items, now.items), previous },
+      });
+    };
     try {
       if (env.useMocks) {
         await sleep(600);
@@ -42,6 +56,7 @@ export function useMealCorrection() {
           },
         });
         useDraftStore.getState().patch({ items, hiddenQuestion: null, quickAnswers: [] });
+        remember();
       } else {
         const result = await analyzeMealText(
           clean,
@@ -64,6 +79,7 @@ export function useMealCorrection() {
           hiddenQuestion: result.hidden_ingredients_question,
           quickAnswers: result.quick_answers,
         });
+        remember();
       }
       track('meal_corrected', { source });
       return true;
@@ -75,7 +91,14 @@ export function useMealCorrection() {
     }
   };
 
-  return { correct, busy, error };
+  /** Puts back the list as it was before the last correction. */
+  const undo = () => {
+    const last = useDraftStore.getState().draft?.lastCorrection;
+    if (!last) return;
+    useDraftStore.getState().patch({ ...last.previous, lastCorrection: null });
+  };
+
+  return { correct, undo, busy, error };
 }
 
 /** Demo parser → draft items (the AI's own estimate, no network). */

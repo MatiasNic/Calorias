@@ -9,6 +9,7 @@ import {
   Linking,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   TextInput,
   View,
@@ -23,17 +24,22 @@ import { usePickerStore } from '@/features/foods/pickerStore';
 import { lookupBarcode } from '@/features/foods/remote';
 import { useScanStore } from '@/features/scan/store';
 import { useAiError } from '@/features/scan/useAiError';
+import { useDictation } from '@/features/scan/useDictation';
 import { useQuotaStatus } from '@/features/scan/useQuota';
 import { aiAvailable, readNutritionLabel } from '@/services/ai';
 import { track } from '@/services/analytics';
 import { prepareMealImage } from '@/services/image';
 import { usePlan } from '@/services/purchases';
-import { fontFamily, radii, spacing, useTheme } from '@/theme';
+import { fontFamily, palette, radii, spacing, useTheme } from '@/theme';
 import { useUiStore } from '@/stores/ui';
 import { haptic } from '@/utils/haptics';
 
 type Mode = 'photo' | 'barcode' | 'label' | 'text';
 const BARCODE_TYPES = ['ean13', 'ean8', 'upc_a', 'upc_e'] as const;
+/** The camera is always dark, whatever the app theme (design handoff). */
+const CAMERA_ACTIVE = '#ECEEE9';
+const CAMERA_TEXT_MUTED = '#C9CDCA';
+const QUICK_HINTS = ['noOil', 'homemade', 'small', 'shared'] as const;
 
 export default function Scan() {
   const { t } = useTranslation();
@@ -50,6 +56,13 @@ export default function Scan() {
   const [notFound, setNotFound] = useState<string | null>(null);
   // Optional words about the photo ("es de pollo, sin aceite") that guide the AI.
   const [hint, setHint] = useState('');
+  const hintRef = useRef('');
+  useEffect(() => {
+    hintRef.current = hint;
+  }, [hint]);
+  const hintDictation = useDictation(() => hintRef.current, setHint);
+  const addHint = (words: string) =>
+    setHint((h) => (h.trim() ? `${h.trim().replace(/[,.]$/, '')}, ${words.toLowerCase()}` : words));
   const camera = useRef<CameraView>(null);
   const lastCode = useRef<string | null>(null);
   const quota = useQuotaStatus();
@@ -172,7 +185,7 @@ export default function Scan() {
   }, [params.code]);
 
   if (mode === 'text')
-    return <Redirect href={{ pathname: '/text-log', params: { date: entryDate } }} />;
+    return <Redirect href={{ pathname: '/listen', params: { date: entryDate } }} />;
 
   if (!permission) return <View style={[styles.flex, { backgroundColor: '#000' }]} />;
   if (!permission.granted) {
@@ -256,8 +269,13 @@ export default function Scan() {
           </View>
 
           <View style={styles.center} pointerEvents="none">
-            <View style={[styles.frame, mode === 'barcode' && styles.frameBarcode]} />
-            <AppText variant="label" align="center" style={[styles.white, styles.hint]}>
+            <View style={[styles.frame, mode === 'barcode' && styles.frameBarcode]}>
+              <View style={[styles.corner, styles.tl]} />
+              <View style={[styles.corner, styles.tr]} />
+              <View style={[styles.corner, styles.bl]} />
+              <View style={[styles.corner, styles.br]} />
+            </View>
+            <AppText align="center" style={[styles.white, styles.hint]}>
               {guide}
             </AppText>
           </View>
@@ -295,25 +313,66 @@ export default function Scan() {
             </Card>
           ) : null}
 
-          <View style={[styles.bottom, { backgroundColor: colors.background }]}>
+          <View style={[styles.bottom, { backgroundColor: palette.cameraSheet }]}>
             {mode === 'photo' ? (
-              <View style={[styles.hintField, { backgroundColor: colors.surfaceAlt }]}>
-                <Icon name="chatbubble-ellipses-outline" size={18} color="textMuted" />
-                <TextInput
-                  value={hint}
-                  onChangeText={setHint}
-                  placeholder={t('scan.hintPlaceholder')}
-                  placeholderTextColor={colors.textSubtle}
-                  maxLength={300}
-                  style={[styles.hintInput, { color: colors.text }]}
-                  accessibilityLabel={t('scan.hintLabel')}
-                  returnKeyType="done"
-                  testID="scan-hint"
-                />
-              </View>
+              <>
+                <View style={[styles.hintField, { backgroundColor: palette.cameraField }]}>
+                  <Icon name="chat_bubble" size={20} rawColor={CAMERA_TEXT_MUTED} />
+                  <TextInput
+                    value={hint}
+                    onChangeText={setHint}
+                    placeholder={t('scan.hintPlaceholder')}
+                    placeholderTextColor={CAMERA_TEXT_MUTED}
+                    maxLength={300}
+                    style={styles.hintInput}
+                    accessibilityLabel={t('scan.hintLabel')}
+                    returnKeyType="done"
+                    testID="scan-hint"
+                  />
+                  {hintDictation.available ? (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={t('scan.hintVoice')}
+                      onPress={hintDictation.listening ? hintDictation.stop : hintDictation.start}
+                      style={[
+                        styles.hintMic,
+                        {
+                          backgroundColor: hintDictation.listening
+                            ? CAMERA_ACTIVE
+                            : palette.cameraButton,
+                        },
+                      ]}
+                    >
+                      <Icon
+                        name={hintDictation.listening ? 'stop_circle' : 'mic'}
+                        size={20}
+                        rawColor={hintDictation.listening ? palette.bgDark : '#FFFFFF'}
+                      />
+                    </Pressable>
+                  ) : null}
+                </View>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.quickHints}
+                >
+                  {QUICK_HINTS.map((k) => (
+                    <Pressable
+                      key={k}
+                      accessibilityRole="button"
+                      onPress={() => addHint(t(`scan.quickHints.${k}`))}
+                      style={[styles.quickHint, { backgroundColor: palette.cameraField }]}
+                    >
+                      <AppText variant="label" style={styles.cameraText}>
+                        + {t(`scan.quickHints.${k}`)}
+                      </AppText>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+              </>
             ) : null}
             <View
-              style={[styles.modes, { backgroundColor: colors.surfaceAlt }]}
+              style={[styles.modes, { backgroundColor: palette.cameraField }]}
               accessibilityRole="tablist"
             >
               {(['photo', 'barcode', 'label', 'text'] as const).map((m) => (
@@ -328,25 +387,34 @@ export default function Scan() {
                     lastCode.current = null;
                     setMode(m);
                   }}
-                  style={[styles.mode, mode === m && { backgroundColor: colors.primary }]}
+                  style={[styles.mode, mode === m && { backgroundColor: CAMERA_ACTIVE }]}
                   testID={`scan-mode-${m}`}
                 >
-                  <AppText variant="label" color={mode === m ? 'onPrimary' : 'textMuted'}>
+                  <AppText
+                    variant="label"
+                    style={{ color: mode === m ? palette.bgDark : CAMERA_TEXT_MUTED }}
+                  >
                     {t(`scan.modes.${m}`)}
                   </AppText>
                 </Pressable>
               ))}
             </View>
             <View style={styles.controls}>
-              <IconButton
-                icon="images-outline"
-                size={24}
-                background="surfaceAlt"
-                square
+              <Pressable
+                accessibilityRole="button"
                 accessibilityLabel={t('scan.gallery')}
                 onPress={pickFromGallery}
                 disabled={mode === 'barcode' || !!busy}
-              />
+                style={[
+                  styles.gallery,
+                  {
+                    backgroundColor: palette.cameraButton,
+                    opacity: mode === 'barcode' || busy ? 0.4 : 1,
+                  },
+                ]}
+              >
+                <Icon name="photo_library" size={24} rawColor="#FFFFFF" />
+              </Pressable>
               {mode !== 'barcode' ? (
                 <Pressable
                   accessibilityRole="button"
@@ -354,18 +422,18 @@ export default function Scan() {
                   onPress={capture}
                   disabled={!!busy}
                   accessibilityState={{ disabled: !!busy }}
-                  style={[styles.shutter, { borderColor: colors.primary, opacity: busy ? 0.5 : 1 }]}
+                  style={[styles.shutter, { opacity: busy ? 0.5 : 1 }]}
                   testID="scan-capture"
                 >
                   {busy === 'capture' ? (
-                    <ActivityIndicator color={colors.primary} />
+                    <ActivityIndicator color="#FFFFFF" />
                   ) : (
-                    <View style={[styles.shutterInner, { backgroundColor: colors.primary }]} />
+                    <View style={[styles.shutterInner, { backgroundColor: CAMERA_ACTIVE }]} />
                   )}
                 </Pressable>
               ) : (
                 <View style={styles.shutterPlaceholder}>
-                  <Icon name="barcode-outline" size={34} color="text" />
+                  <Icon name="barcode_scanner" size={34} rawColor="#FFFFFF" />
                 </View>
               )}
               <View style={styles.spacer} />
@@ -377,6 +445,7 @@ export default function Scan() {
   );
 }
 
+const CORNER = 40;
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   overlay: { flex: 1, justifyContent: 'space-between' },
@@ -387,27 +456,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
   },
   pill: {
-    backgroundColor: 'rgba(0,0,0,0.55)',
+    backgroundColor: 'rgba(255,255,255,0.12)',
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
+    height: 32,
+    justifyContent: 'center',
     borderRadius: radii.pill,
   },
   white: { color: '#fff' },
-  center: { alignItems: 'center', gap: spacing.md },
-  frame: {
-    width: '82%',
-    aspectRatio: 1,
-    borderWidth: 3,
-    borderColor: 'rgba(255,255,255,0.9)',
-    borderRadius: radii.xxl,
+  cameraText: { color: '#E5E7E3' },
+  center: { alignItems: 'center', gap: spacing.lg },
+  frame: { width: 300, height: 300 },
+  frameBarcode: { height: 170 },
+  corner: { position: 'absolute', width: CORNER, height: CORNER, borderColor: '#FFFFFF' },
+  tl: { top: 0, left: 0, borderTopWidth: 3, borderLeftWidth: 3, borderTopLeftRadius: 22 },
+  tr: { top: 0, right: 0, borderTopWidth: 3, borderRightWidth: 3, borderTopRightRadius: 22 },
+  bl: { bottom: 0, left: 0, borderBottomWidth: 3, borderLeftWidth: 3, borderBottomLeftRadius: 22 },
+  br: {
+    bottom: 0,
+    right: 0,
+    borderBottomWidth: 3,
+    borderRightWidth: 3,
+    borderBottomRightRadius: 22,
   },
-  frameBarcode: { aspectRatio: 1.8 },
   hint: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    fontFamily: fontFamily.bold,
+    fontSize: 15,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    borderRadius: radii.pill,
-    overflow: 'hidden',
   },
   sheet: { marginHorizontal: spacing.lg, gap: spacing.md },
   hintField: {
@@ -415,17 +489,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
     marginHorizontal: spacing.lg,
-    paddingHorizontal: spacing.md,
-    borderRadius: radii.lg,
-    minHeight: 48,
+    paddingLeft: spacing.lg,
+    paddingRight: 6,
+    borderRadius: 22,
+    minHeight: 56,
   },
-  hintInput: { flex: 1, fontFamily: fontFamily.regular, fontSize: 15, minHeight: 48 },
+  hintInput: {
+    flex: 1,
+    fontFamily: fontFamily.semibold,
+    fontSize: 15,
+    minHeight: 48,
+    color: '#FFFFFF',
+  },
+  hintMic: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quickHints: { gap: spacing.sm, paddingHorizontal: spacing.lg },
+  quickHint: {
+    height: 36,
+    borderRadius: radii.pill,
+    paddingHorizontal: spacing.md,
+    justifyContent: 'center',
+  },
   bottom: {
-    gap: spacing.lg,
+    gap: spacing.md,
     paddingTop: spacing.lg,
-    paddingBottom: spacing.lg,
-    borderTopLeftRadius: radii.xxl + 6,
-    borderTopRightRadius: radii.xxl + 6,
+    paddingBottom: spacing.xl,
+    borderTopLeftRadius: radii.xxxl,
+    borderTopRightRadius: radii.xxxl,
   },
   modes: {
     flexDirection: 'row',
@@ -443,21 +538,29 @@ const styles = StyleSheet.create({
   },
   permissionActions: { padding: spacing.lg, gap: spacing.xs },
   mode: {
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.md + 2,
     minHeight: 40,
     justifyContent: 'center',
     borderRadius: radii.pill,
   },
   controls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
-  shutter: {
-    width: 78,
-    height: 78,
-    borderRadius: 39,
-    borderWidth: 4,
+  gallery: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  shutterInner: { width: 60, height: 60, borderRadius: 30 },
-  shutterPlaceholder: { width: 78, height: 78, alignItems: 'center', justifyContent: 'center' },
-  spacer: { width: 48 },
+  shutter: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 4,
+    borderColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  shutterInner: { width: 62, height: 62, borderRadius: 31 },
+  shutterPlaceholder: { width: 80, height: 80, alignItems: 'center', justifyContent: 'center' },
+  spacer: { width: 52 },
 });

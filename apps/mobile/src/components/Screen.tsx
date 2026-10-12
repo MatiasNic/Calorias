@@ -83,10 +83,11 @@ export function Screen({
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  padded: { paddingHorizontal: spacing.lg, paddingTop: spacing.sm },
-  scrollContent: { paddingBottom: spacing.huge * 2, gap: spacing.lg },
+  padded: { paddingHorizontal: spacing.xl, paddingTop: spacing.sm },
+  // Leaves room for the floating tab bar (72 + 12 margin) on tab screens.
+  scrollContent: { paddingBottom: 120, gap: spacing.lg },
   footer: {
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.xl,
     paddingBottom: spacing.lg,
     paddingTop: spacing.sm,
     gap: spacing.sm,

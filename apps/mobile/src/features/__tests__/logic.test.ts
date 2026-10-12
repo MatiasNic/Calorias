@@ -2,6 +2,7 @@ import { dailySummary, type AnalyzeResponse } from '@plato/shared';
 
 import { appendDictation } from '../scan/dictationText';
 import { applyLocalCorrection } from '../scan/localCorrection';
+import { detectMeals } from '../scan/detectMeals';
 import { analysisToItems } from '../scan/toDraft';
 import {
   applyCookingMethod,
@@ -291,5 +292,24 @@ describe('several meals in one description', () => {
       response([enriched('Café', 'breakfast'), enriched('Tostada', 'breakfast')]),
     );
     expect(one.itemMeals).toEqual({});
+  });
+});
+
+describe('detectMeals (live preview)', () => {
+  it('splits meals and lists what was said for each', () => {
+    expect(
+      detectMeals(
+        'Desayuné café con leche y dos medialunas, y a la noche cené media milanesa con puré',
+      ),
+    ).toEqual([
+      { mealType: 'breakfast', foods: 'café con leche, 2 medialunas' },
+      { mealType: 'dinner', foods: 'media milanesa con puré' },
+    ]);
+  });
+  it('returns nothing when no meal is named', () => {
+    expect(detectMeals('un plato hondo de fideos')).toEqual([]);
+  });
+  it('shows a meal as soon as its word is said', () => {
+    expect(detectMeals('almorcé')).toEqual([{ mealType: 'lunch', foods: '' }]);
   });
 });

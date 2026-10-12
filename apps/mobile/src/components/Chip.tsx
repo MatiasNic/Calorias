@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.xs,
     minHeight: 40,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.md + 2,
     borderRadius: radii.pill,
   },
 });

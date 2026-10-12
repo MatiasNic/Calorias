@@ -4,22 +4,15 @@ import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Icon, toast, type IconName } from '@/components';
+import { AppText, Icon, toast } from '@/components';
 import { deleteMeal, duplicateMeal } from '@/features/diary/hooks';
+import { MEAL_ICONS } from '@/features/diary/mealIcons';
 import type { MealRecord } from '@/services/db/types';
 import { usePhotoUri } from '@/services/photos';
-import { radii, spacing, useTheme } from '@/theme';
+import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { formatTime, todayLocal } from '@/utils/dates';
 import { formatKcal } from '@/utils/format';
 import { haptic } from '@/utils/haptics';
-
-const MEAL_ICONS: Record<MealRecord['meal_type'], IconName> = {
-  breakfast: 'cafe-outline',
-  lunch: 'restaurant-outline',
-  snack: 'nutrition-outline',
-  dinner: 'moon-outline',
-  other: 'fast-food-outline',
-};
 
 /** A logged meal. `card` renders it as a standalone card titled with the meal type (Today). */
 export function MealRow({ meal, card }: { meal: MealRecord; card?: boolean }) {
@@ -108,6 +101,10 @@ export function MealRow({ meal, card }: { meal: MealRecord; card?: boolean }) {
             <>
               <AppText variant="bodyStrong" numberOfLines={1}>
                 {t(`mealTypes.${meal.meal_type}`)}
+                <AppText variant="caption" color="textMuted">
+                  {' · '}
+                  {formatTime(meal.eaten_at)}
+                </AppText>
               </AppText>
               <AppText variant="caption" color="textMuted" numberOfLines={1}>
                 {names}
@@ -125,7 +122,7 @@ export function MealRow({ meal, card }: { meal: MealRecord; card?: boolean }) {
             </>
           )}
         </View>
-        <AppText variant="bodyStrong" tabular>
+        <AppText variant="bodyStrong" tabular style={styles.kcal}>
           {formatKcal(meal.totals.kcal)}
         </AppText>
       </Pressable>
@@ -168,9 +165,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     minHeight: 64,
   },
-  card: { borderRadius: radii.xl, paddingHorizontal: spacing.md },
+  card: { borderRadius: radii.xl, paddingHorizontal: 14, minHeight: 72 },
   cardContainer: { borderRadius: radii.xl, overflow: 'hidden' },
   thumb: { width: 44, height: 44, borderRadius: radii.md },
+  kcal: { fontFamily: fontFamily.extrabold },
   placeholder: { alignItems: 'center', justifyContent: 'center' },
   text: { flex: 1, gap: 2 },
   actions: { flexDirection: 'row' },

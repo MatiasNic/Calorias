@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import {
   AppText,
   Banner,
+  Chip,
   ErrorState,
   Icon,
   IconButton,
@@ -20,7 +21,6 @@ import { InsightCard } from '@/features/diary/components/InsightCard';
 import { LogBar } from '@/features/diary/components/LogBar';
 import { MacrosCard } from '@/features/diary/components/MacrosCard';
 import { MealRow } from '@/features/diary/components/MealRow';
-import { QuickActions } from '@/features/diary/components/QuickActions';
 import { UsualMeals } from '@/features/diary/components/UsualMeals';
 import { WaterWeightRow } from '@/features/diary/components/WaterWeightRow';
 import { WeekStrip } from '@/features/diary/components/WeekStrip';
@@ -33,7 +33,7 @@ import { useProfile } from '@/features/profile/hooks';
 import { repos } from '@/services/db/repository';
 import { syncNow } from '@/services/sync/engine';
 import { useUiStore } from '@/stores/ui';
-import { radii, spacing, useTheme } from '@/theme';
+import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { formatDay, todayLocal } from '@/utils/dates';
 import { formatKcal } from '@/utils/format';
 
@@ -91,168 +91,213 @@ export default function Today() {
     else toast.info(t('diary.nothingYesterday'));
   };
 
+  const examples = [t('today.example1'), t('today.example2')];
+
   return (
     <Screen onRefresh={pullToRefresh} refreshing={pulling} testID="today-screen">
-      <View style={styles.header}>
-        <Pressable
-          style={styles.flex}
-          accessibilityRole="button"
-          accessibilityLabel={t('today.changeDay')}
-          accessibilityState={{ expanded: showWeek }}
-          onPress={() => setShowWeek((v) => !v)}
-        >
-          <AppText variant="caption" color="textMuted">
-            {greeting + (profile.data?.display_name ? `, ${profile.data.display_name}` : '')}
-          </AppText>
-          <View style={styles.titleRow}>
-            <AppText variant="heading" accessibilityRole="header" numberOfLines={1}>
-              {title}
-            </AppText>
-            <Icon name={showWeek ? 'chevron-up' : 'chevron-down'} size={18} color="textMuted" />
-          </View>
-        </Pressable>
-        {streak.data && streak.data.current > 0 ? (
-          <View
-            style={[styles.streak, { backgroundColor: colors.surfaceAlt }]}
-            accessible
-            accessibilityLabel={t('today.streakA11y', { count: streak.data.current })}
+      <View style={styles.page}>
+        <View style={styles.header}>
+          <Pressable
+            style={styles.flex}
+            accessibilityRole="button"
+            accessibilityLabel={t('today.changeDay')}
+            accessibilityState={{ expanded: showWeek }}
+            onPress={() => setShowWeek((v) => !v)}
           >
-            <Icon name="flame-outline" size={18} color="text" />
-            <AppText variant="label">{streak.data.current}</AppText>
-          </View>
-        ) : null}
-        <IconButton
-          icon="sparkles-outline"
-          accessibilityLabel={t('coach.title')}
-          background="surfaceAlt"
-          square
-          onPress={() => router.push('/coach')}
-        />
-      </View>
-      {showWeek ? (
-        <WeekStrip value={date} onChange={setDate} loggedDates={new Set(logged.data ?? [])} />
-      ) : null}
-      <LogBar date={date} />
-      <UsualMeals date={date} />
-      {day.isError ? <ErrorState onRetry={() => day.refetch()} /> : null}
-      {day.isLoading ? (
-        <Skeleton height={260} radius={radii.xxl} />
-      ) : (
-        <>
-          <CaloriesCard summary={day.summary} steps={isToday ? day.steps : null} />
-          <MacrosCard summary={day.summary} />
-        </>
-      )}
-      {restriction.data ? (
-        <Banner
-          tone="info"
-          title={t('support.title')}
-          message={t('support.message')}
-          icon="heart"
-        />
-      ) : null}
-      {meals.length ? (
-        <>
-          <QuickActions date={date} />
-          <View style={styles.sectionHeader}>
-            <AppText variant="heading" accessibilityRole="header">
-              {t('today.meals')}
-            </AppText>
             <AppText variant="caption" color="textMuted">
-              {formatKcal(totalKcal)} kcal
+              {greeting + (profile.data?.display_name ? `, ${profile.data.display_name}` : '')}
             </AppText>
-          </View>
-          <View style={styles.meals}>
-            {meals.map((m) => (
-              <MealRow key={m.id} meal={m} card />
-            ))}
-          </View>
-          <View style={[styles.addRow, { borderColor: colors.border }]}>
-            <Pressable
-              testID={`add-${nextType}`}
-              accessibilityRole="button"
-              accessibilityLabel={t('diary.addTo', { meal: nextLabel })}
-              onPress={() =>
-                router.push({ pathname: '/food-search', params: { mealType: nextType, date } })
-              }
-              style={styles.addMain}
-            >
-              <Icon name="add" color="textMuted" />
-              <AppText variant="bodyStrong" color="textMuted">
-                {t('today.addMeal', { meal: nextLabel.toLowerCase() })}
+            <View style={styles.titleRow}>
+              <AppText style={styles.title} accessibilityRole="header" numberOfLines={1}>
+                {title}
               </AppText>
-            </Pressable>
-            <IconButton
-              icon="repeat"
-              size={20}
-              color="textMuted"
-              accessibilityLabel={t('diary.repeatYesterday', { meal: nextLabel })}
-              onPress={repeat}
-            />
-          </View>
-          <InsightCard insight={insight} />
-        </>
-      ) : day.isLoading ? null : (
-        <View style={[styles.empty, { borderColor: colors.border }]}>
-          <View style={[styles.emptyIcon, { backgroundColor: colors.surfaceAlt }]}>
-            <Icon name="mic-outline" size={26} color="text" />
-          </View>
-          <AppText variant="heading" align="center">
-            {t('today.emptyTitle')}
-          </AppText>
-          <AppText variant="label" color="textMuted" align="center">
-            {t('today.emptyBody')}
-          </AppText>
+              <Icon name={showWeek ? 'expand_less' : 'expand_more'} size={22} color="textMuted" />
+            </View>
+          </Pressable>
+          {meals.length && streak.data && streak.data.current > 0 ? (
+            <View
+              style={[styles.streak, { backgroundColor: colors.surface }]}
+              accessible
+              accessibilityLabel={t('today.streakA11y', { count: streak.data.current })}
+            >
+              <Icon name="local_fire_department" size={20} color="carbs" />
+              <AppText variant="bodyStrong">{streak.data.current}</AppText>
+            </View>
+          ) : null}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('coach.title')}
+            onPress={() => router.push('/coach')}
+            style={[styles.coach, { backgroundColor: colors.surface }]}
+          >
+            <Icon name="auto_awesome" size={22} />
+          </Pressable>
         </View>
-      )}
-      <WaterWeightRow date={date} waterMl={day.waterMl} waterTarget={day.goal.water_ml} />
-      <ActivityRow date={date} workouts={day.workouts} burnedKcal={day.burnedKcal} />
+        {showWeek ? (
+          <WeekStrip value={date} onChange={setDate} loggedDates={new Set(logged.data ?? [])} />
+        ) : null}
+
+        <LogBar date={date} />
+        {meals.length ? <UsualMeals date={date} /> : null}
+
+        {day.isError ? <ErrorState onRetry={() => day.refetch()} /> : null}
+        {day.isLoading ? (
+          <Skeleton height={260} radius={radii.xxl} />
+        ) : (
+          <>
+            <CaloriesCard summary={day.summary} steps={isToday ? day.steps : null} />
+            <MacrosCard summary={day.summary} />
+          </>
+        )}
+        {restriction.data ? (
+          <Banner
+            tone="info"
+            title={t('support.title')}
+            message={t('support.message')}
+            icon="favorite"
+          />
+        ) : null}
+        {meals.length ? (
+          <>
+            <View style={styles.sectionHeader}>
+              <AppText style={styles.section} accessibilityRole="header">
+                {t('today.meals')}
+              </AppText>
+              <AppText variant="caption" color="textMuted" tabular>
+                {formatKcal(totalKcal)} kcal
+              </AppText>
+            </View>
+            <View style={styles.meals}>
+              {meals.map((m) => (
+                <MealRow key={m.id} meal={m} card />
+              ))}
+              <View style={[styles.addRow, { borderColor: colors.border }]}>
+                <Pressable
+                  testID={`add-${nextType}`}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('diary.addTo', { meal: nextLabel })}
+                  onPress={() =>
+                    router.push({ pathname: '/food-search', params: { mealType: nextType, date } })
+                  }
+                  style={styles.addMain}
+                >
+                  <Icon name="add" color="textMuted" />
+                  <AppText variant="bodyStrong" color="textMuted">
+                    {t('today.addMeal', { meal: nextLabel.toLowerCase() })}
+                  </AppText>
+                </Pressable>
+                <IconButton
+                  icon="repeat"
+                  size={20}
+                  color="textSubtle"
+                  accessibilityLabel={t('diary.repeatYesterday', { meal: nextLabel })}
+                  onPress={repeat}
+                />
+                <IconButton
+                  icon="mic"
+                  size={22}
+                  color="textMuted"
+                  accessibilityLabel={t('logBar.voice')}
+                  onPress={() => router.push({ pathname: '/listen', params: { date } })}
+                />
+              </View>
+            </View>
+            <InsightCard insight={insight} />
+          </>
+        ) : day.isLoading ? null : (
+          <View style={[styles.empty, { borderColor: colors.border }]}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('logBar.voice')}
+              onPress={() => router.push({ pathname: '/listen', params: { date } })}
+              style={[styles.emptyMic, { backgroundColor: colors.surfaceAlt }]}
+            >
+              <Icon name="mic" size={30} />
+            </Pressable>
+            <AppText style={styles.emptyTitle} align="center">
+              {t('today.emptyTitle')}
+            </AppText>
+            <AppText color="textMuted" align="center">
+              {t('today.emptyBody')}
+            </AppText>
+            <View style={styles.examples}>
+              {examples.map((e) => (
+                <Chip
+                  key={e}
+                  label={`«${e}»`}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/analyzing',
+                      params: { text: e, source: 'text', date },
+                    })
+                  }
+                />
+              ))}
+            </View>
+          </View>
+        )}
+        <WaterWeightRow date={date} waterMl={day.waterMl} waterTarget={day.goal.water_ml} />
+        <ActivityRow date={date} workouts={day.workouts} burnedKcal={day.burnedKcal} />
+      </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  page: { gap: 22, paddingTop: 6 },
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  title: { fontFamily: fontFamily.extrabold, fontSize: 22, lineHeight: 28, letterSpacing: -0.4 },
   flex: { flex: 1 },
   streak: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
     paddingHorizontal: spacing.md,
-    minHeight: 48,
-    borderRadius: radii.lg,
+    height: 44,
+    borderRadius: 16,
+  },
+  coach: {
+    width: 44,
+    height: 44,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'baseline',
-    paddingHorizontal: spacing.xs,
+    marginBottom: -spacing.sm,
   },
+  section: { fontFamily: fontFamily.extrabold, fontSize: 20, lineHeight: 26 },
   meals: { gap: spacing.sm },
   addRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderStyle: 'dashed',
     borderRadius: radii.xl,
     paddingLeft: spacing.lg,
+    minHeight: 56,
   },
   addMain: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 56 },
   empty: {
     alignItems: 'center',
     gap: spacing.sm,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderStyle: 'dashed',
-    borderRadius: radii.xxl,
+    borderRadius: radii.xxxl,
     padding: spacing.xxl,
   },
-  emptyIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: radii.lg,
+  emptyMic: {
+    width: 64,
+    height: 64,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.xs,
   },
+  emptyTitle: { fontFamily: fontFamily.extrabold, fontSize: 20, lineHeight: 26 },
+  examples: { gap: spacing.sm, alignItems: 'center', marginTop: spacing.sm },
 });
