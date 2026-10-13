@@ -3,7 +3,7 @@ appId: ${APP_ID}
 env:
   APP_ID: com.bocadoapp.bocado
 ---
-- runFlow: _onboarding.yaml
+- runFlow: subflows/onboarding.yaml
 - openLink: 'bocado://scan?mode=barcode&code=7790000000017'
 - runFlow:
     when:

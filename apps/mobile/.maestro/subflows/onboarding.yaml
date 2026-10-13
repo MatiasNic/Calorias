@@ -3,6 +3,11 @@ appId: ${APP_ID}
 ---
 - launchApp:
     clearState: true
+# Cold start of a release build on a software-rendered emulator can take a while.
+- extendedWaitUntil:
+    visible:
+      id: welcome-guest
+    timeout: 60000
 - tapOn:
     id: welcome-guest
 - tapOn:

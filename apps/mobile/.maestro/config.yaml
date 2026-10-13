@@ -2,6 +2,4 @@
 #   maestro test .maestro/
 flows:
   - '*.yaml'
-excludeFlows:
-  - config.yaml
-  - _*.yaml
+# Reusable steps live in subflows/ (only top-level files are test flows).
