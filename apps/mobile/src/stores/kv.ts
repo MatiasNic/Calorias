@@ -1,5 +1,13 @@
 import Storage from 'expo-sqlite/kv-store';
 import { createJSONStorage, type StateStorage } from 'zustand/middleware';
+import { migrateLegacyKeys } from './storageKeys';
+
+// Before any store reads its persisted state: values saved under the app's old key names.
+try {
+  migrateLegacyKeys(Storage);
+} catch {
+  // storage unavailable: nothing to migrate (stores fall back to defaults)
+}
 
 /** Synchronous SQLite-backed storage for small preferences (no flash of default theme). */
 const syncStorage: StateStorage = {

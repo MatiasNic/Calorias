@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { kvJSONStorage } from '@/stores/kv';
+import { STORAGE_KEYS } from '@/stores/storageKeys';
 
 export type StepId =
   | 'goal'
@@ -65,7 +66,7 @@ export const useOnboardingStore = create<OnboardingState>()(
       goTo: (stepIndex) => set({ stepIndex }),
       reset: () => set({ answers: initial, stepIndex: 0 }),
     }),
-    { name: 'plato.onboarding', storage: kvJSONStorage },
+    { name: STORAGE_KEYS.onboarding, storage: kvJSONStorage },
   ),
 );
 

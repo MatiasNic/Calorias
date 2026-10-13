@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { kvJSONStorage } from './kv';
+import { STORAGE_KEYS } from './storageKeys';
 
 export type ThemePreference = 'system' | 'light' | 'dark';
 /** How "Escuchando" opens: a sheet over Today (default) or the whole screen. */
@@ -55,6 +56,6 @@ export const usePrefsStore = create<PrefsState>()(
       set: (patch) => set(patch),
       reset: () => set(defaults),
     }),
-    { name: 'plato.prefs', storage: kvJSONStorage, version: 1 },
+    { name: STORAGE_KEYS.prefs, storage: kvJSONStorage, version: 1 },
   ),
 );

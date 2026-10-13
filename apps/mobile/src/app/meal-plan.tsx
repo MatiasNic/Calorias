@@ -21,9 +21,10 @@ import { generateMealPlan } from '@/services/ai';
 import { kv } from '@/stores/kv';
 import { spacing } from '@/theme';
 import { formatKcal } from '@/utils/format';
+import { STORAGE_KEYS } from '@/stores/storageKeys';
 
-const KEY = 'plato.mealPlan';
-const PREFS_KEY = 'plato.mealPlanPrefs';
+const KEY = STORAGE_KEYS.mealPlan;
+const PREFS_KEY = STORAGE_KEYS.mealPlanPrefs;
 
 function loadPrefs(): MealPlanPreferences {
   try {

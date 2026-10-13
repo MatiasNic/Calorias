@@ -14,6 +14,7 @@ import { usePrefsStore } from '@/stores/prefs';
 import { currentUserId } from '@/stores/session';
 import { todayLocal } from '@/utils/dates';
 import { birthDateIso, type OnboardingAnswers } from './store';
+import { STORAGE_KEYS } from '@/stores/storageKeys';
 
 export async function finishOnboarding(a: OnboardingAnswers, plan: GoalPlan) {
   const userId = currentUserId();
@@ -22,7 +23,7 @@ export async function finishOnboarding(a: OnboardingAnswers, plan: GoalPlan) {
     version: LEGAL_VERSION,
   };
   try {
-    const stored = kv.get('plato.termsAcceptedAt');
+    const stored = kv.get(STORAGE_KEYS.termsAcceptedAt);
     if (stored) terms = JSON.parse(stored);
   } catch {
     // keep default (acceptance by continuing, shown on the welcome screen)

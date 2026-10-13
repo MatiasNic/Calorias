@@ -15,6 +15,7 @@ import { features } from '@/config/features';
 import { getSupabase } from '@/services/supabase/client';
 import { kvJSONStorage } from '@/stores/kv';
 import { useSessionStore } from '@/stores/session';
+import { STORAGE_KEYS } from '@/stores/storageKeys';
 
 /**
  * Payments via RevenueCat (Google Play Billing + StoreKit). The **server** (subscriptions table,
@@ -54,7 +55,7 @@ export const usePlanStore = create<PlanState>()(
       isTrial: false,
       setPlan: (p) => set(p),
     }),
-    { name: 'plato.plan', storage: kvJSONStorage },
+    { name: STORAGE_KEYS.plan, storage: kvJSONStorage },
   ),
 );
 

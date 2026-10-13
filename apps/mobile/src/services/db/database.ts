@@ -42,6 +42,8 @@ export function getDb(): Promise<SQLite.SQLiteDatabase> {
   if (!dbPromise) {
     dbPromise = (async () => {
       // Web is only used for previews: keep data in memory (avoids OPFS file locking).
+      // "plato.db" is the file name from before the app was renamed. It stays: renaming a live
+      // SQLite file (with its WAL) on every device risks data for no visible gain.
       const db = await SQLite.openDatabaseAsync(Platform.OS === 'web' ? ':memory:' : 'plato.db');
       // WAL is not supported by the OPFS-backed web build (used only for previews).
       if (Platform.OS !== 'web') await db.execAsync('PRAGMA journal_mode = WAL;');

@@ -7,9 +7,10 @@ import { kv } from '@/stores/kv';
 import { useSessionStore } from '@/stores/session';
 import { todayLocal } from '@/utils/dates';
 import { mocked } from './mode';
+import { STORAGE_KEYS } from '@/stores/storageKeys';
 
 // ── demo-mode quota emulation (locally enforced daily quotas so the paywall can be tested) ──
-const MOCK_QUOTA_KEY = 'plato.mockQuota';
+const MOCK_QUOTA_KEY = STORAGE_KEYS.mockQuota;
 type MockUsage = Record<string, Record<QuotaKind, number>>;
 
 function mockUsage(): MockUsage {
@@ -22,7 +23,7 @@ function mockUsage(): MockUsage {
 }
 
 /** Lifetime trials (e.g. the free coach message) are counted once, not per day. */
-const MOCK_TRIAL_KEY = 'plato.mockTrials';
+const MOCK_TRIAL_KEY = STORAGE_KEYS.mockTrials;
 function mockTrialsUsed(kind: QuotaKind): number {
   try {
     return (

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { kvJSONStorage } from './kv';
+import { STORAGE_KEYS } from './storageKeys';
 
 export const GUEST_USER_ID = 'local-guest';
 
@@ -36,7 +37,7 @@ export const useSessionStore = create<SessionState>()(
       acceptTerms: () => set({ termsAccepted: true }),
     }),
     {
-      name: 'plato.session',
+      name: STORAGE_KEYS.session,
       storage: kvJSONStorage,
       version: 1,
       // The real Supabase session lives in encrypted storage; this only remembers guest/demo mode.

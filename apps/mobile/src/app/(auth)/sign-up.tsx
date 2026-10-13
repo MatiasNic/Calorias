@@ -24,6 +24,7 @@ import { auth } from '@/services/auth';
 import { useSessionStore } from '@/stores/session';
 import { kv } from '@/stores/kv';
 import { spacing } from '@/theme';
+import { STORAGE_KEYS } from '@/stores/storageKeys';
 
 export default function SignUp() {
   const { t } = useTranslation();
@@ -40,7 +41,7 @@ export default function SignUp() {
     try {
       // Legal acceptance (date + version) is stored with the profile during onboarding.
       kv.set(
-        'plato.termsAcceptedAt',
+        STORAGE_KEYS.termsAcceptedAt,
         JSON.stringify({ at: new Date().toISOString(), version: LEGAL_VERSION }),
       );
       useSessionStore.getState().acceptTerms();

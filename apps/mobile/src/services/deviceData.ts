@@ -8,9 +8,10 @@ import { cancelAllNotifications } from '@/services/notifications';
 import { resetPurchases } from '@/services/purchases';
 import { kv } from '@/stores/kv';
 import { todayLocal } from '@/utils/dates';
+import { USER_DATA_KEYS } from '@/stores/storageKeys';
 
 /** Device keys that belong to the signed-in person (not device preferences like theme). */
-const USER_KEYS = ['plato.mockQuota', 'plato.mockTrials', 'plato.mealPlan', 'plato.mealPlanPrefs'];
+const USER_KEYS = USER_DATA_KEYS;
 
 /**
  * Removes everything personal from the device: diary, photos, widget numbers, reminders, meal
