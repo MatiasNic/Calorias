@@ -3,6 +3,12 @@ appId: ${APP_ID}
 ---
 - launchApp:
     clearState: true
+# A slow CI emulator sometimes shows "System UI isn't responding" over the app: wait it out.
+- runFlow:
+    when:
+      visible: '(IU del sistema no responde|System UI isn.t responding)'
+    commands:
+      - tapOn: '(Esperar|Wait)'
 # Cold start of a release build on a software-rendered emulator can take a while.
 - extendedWaitUntil:
     visible:
