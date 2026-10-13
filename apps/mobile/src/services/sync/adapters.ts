@@ -25,6 +25,7 @@ export interface Adapter<C extends CollectionName> {
     sb: TypedSupabaseClient,
     userId: string,
     since: string | null,
+    page: number,
   ): Promise<RemoteRow<CollectionMap[C]>[]>;
 }
 
@@ -65,8 +66,25 @@ function nutrientsFrom(row: Record<string, unknown>): Nutrients {
   };
 }
 
-const sinceFilter = <Q extends { gt: (c: string, v: string) => Q }>(q: Q, since: string | null) =>
-  since ? q.gt('updated_at', since) : q;
+/** Rows per pull request (the API returns at most 1000; the engine asks for pages until short). */
+export const PULL_PAGE = 500;
+
+/** Rows changed after `since`, in a stable order, one page at a time. */
+const sinceFilter = <
+  Q extends {
+    gt: (c: string, v: string) => Q;
+    order: (c: string) => Q;
+    range: (from: number, to: number) => Q;
+  },
+>(
+  q: Q,
+  since: string | null,
+  page: number,
+) =>
+  (since ? q.gt('updated_at', since) : q)
+    .order('updated_at')
+    .order('id')
+    .range(page * PULL_PAGE, (page + 1) * PULL_PAGE - 1);
 
 export const adapters: { [C in CollectionName]: Adapter<C> } = {
   profile: {
@@ -74,9 +92,9 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
       const { id: _id, ...rest } = r;
       check(await sb.from('profiles').upsert({ ...rest, id: userId }));
     },
-    async pull(sb, userId, since) {
+    async pull(sb, userId, since, page) {
       const rows = check(
-        await sinceFilter(sb.from('profiles').select('*').eq('id', userId), since),
+        await sinceFilter(sb.from('profiles').select('*').eq('id', userId), since, page),
       );
       return rows.map((row) => ({
         record: {
@@ -94,8 +112,8 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
     async push(sb, userId, r, deletedAt) {
       check(await sb.from('goals').upsert({ ...r, user_id: userId, deleted_at: deletedAt }));
     },
-    async pull(sb, _userId, since) {
-      const rows = check(await sinceFilter(sb.from('goals').select('*'), since));
+    async pull(sb, _userId, since, page) {
+      const rows = check(await sinceFilter(sb.from('goals').select('*'), since, page));
       return rows.map((row) => ({
         record: {
           id: row.id,
@@ -130,8 +148,10 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
       };
       check(await sb.rpc('upsert_meal', { p: json(payload) }));
     },
-    async pull(sb, _userId, since) {
-      const rows = check(await sinceFilter(sb.from('meals').select('*, meal_items(*)'), since));
+    async pull(sb, _userId, since, page) {
+      const rows = check(
+        await sinceFilter(sb.from('meals').select('*, meal_items(*)'), since, page),
+      );
       return rows.map((row) => {
         const items: MealItem[] = [...(row.meal_items ?? [])]
           .sort((a, b) => a.position - b.position)
@@ -174,8 +194,8 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
     async push(sb, userId, r, deletedAt) {
       check(await sb.from('water_logs').upsert({ ...r, user_id: userId, deleted_at: deletedAt }));
     },
-    async pull(sb, _u, since) {
-      const rows = check(await sinceFilter(sb.from('water_logs').select('*'), since));
+    async pull(sb, _u, since, page) {
+      const rows = check(await sinceFilter(sb.from('water_logs').select('*'), since, page));
       return rows.map((row) => ({
         record: { id: row.id, logged_at: row.logged_at, local_date: row.local_date, ml: row.ml },
         updatedAt: row.updated_at,
@@ -187,8 +207,8 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
     async push(sb, userId, r, deletedAt) {
       check(await sb.from('weight_logs').upsert({ ...r, user_id: userId, deleted_at: deletedAt }));
     },
-    async pull(sb, _u, since) {
-      const rows = check(await sinceFilter(sb.from('weight_logs').select('*'), since));
+    async pull(sb, _u, since, page) {
+      const rows = check(await sinceFilter(sb.from('weight_logs').select('*'), since, page));
       return rows.map((row) => ({
         record: {
           id: row.id,
@@ -208,8 +228,8 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
         await sb.from('body_measurements').upsert({ ...r, user_id: userId, deleted_at: deletedAt }),
       );
     },
-    async pull(sb, _u, since) {
-      const rows = check(await sinceFilter(sb.from('body_measurements').select('*'), since));
+    async pull(sb, _u, since, page) {
+      const rows = check(await sinceFilter(sb.from('body_measurements').select('*'), since, page));
       return rows.map((row) => ({
         record: {
           id: row.id,
@@ -243,8 +263,8 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
         }),
       );
     },
-    async pull(sb, _u, since) {
-      const rows = check(await sinceFilter(sb.from('foods_custom').select('*'), since));
+    async pull(sb, _u, since, page) {
+      const rows = check(await sinceFilter(sb.from('foods_custom').select('*'), since, page));
       return rows.map((row) => ({
         record: {
           id: row.id,
@@ -281,8 +301,8 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
         }),
       );
     },
-    async pull(sb, _u, since) {
-      const rows = check(await sinceFilter(sb.from('recipes').select('*'), since));
+    async pull(sb, _u, since, page) {
+      const rows = check(await sinceFilter(sb.from('recipes').select('*'), since, page));
       return rows.map((row) => ({
         record: {
           id: row.id,
@@ -311,8 +331,8 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
         }),
       );
     },
-    async pull(sb, _u, since) {
-      const rows = check(await sinceFilter(sb.from('favorites').select('*'), since));
+    async pull(sb, _u, since, page) {
+      const rows = check(await sinceFilter(sb.from('favorites').select('*'), since, page));
       return rows.map((row) => ({
         record: {
           id: row.id,
@@ -336,7 +356,9 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
           ),
       );
     },
-    async pull(sb) {
+    async pull(sb, _u, _since, page) {
+      // Small and append-only: read whole, once.
+      if (page > 0) return [];
       const rows = check(await sb.from('achievements').select('*'));
       return rows.map((row) => ({
         record: { id: row.achievement_id, unlocked_at: row.unlocked_at },
@@ -358,11 +380,12 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
         }),
       );
     },
-    async pull(sb, userId, since) {
+    async pull(sb, userId, since, page) {
       const rows = check(
         await sinceFilter(
           sb.from('notification_settings').select('*').eq('user_id', userId),
           since,
+          page,
         ),
       );
       return rows.map((row) => ({
@@ -387,9 +410,9 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
       const { id: _id, ...rest } = r;
       check(await sb.from('streaks').upsert({ ...rest, user_id: userId }));
     },
-    async pull(sb, userId, since) {
+    async pull(sb, userId, since, page) {
       const rows = check(
-        await sinceFilter(sb.from('streaks').select('*').eq('user_id', userId), since),
+        await sinceFilter(sb.from('streaks').select('*').eq('user_id', userId), since, page),
       );
       return rows.map((row) => ({
         record: {
@@ -414,8 +437,8 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
         }),
       );
     },
-    async pull(sb, _u, since) {
-      const rows = check(await sinceFilter(sb.from('workouts').select('*'), since));
+    async pull(sb, _u, since, page) {
+      const rows = check(await sinceFilter(sb.from('workouts').select('*'), since, page));
       return rows.map((row) => ({
         record: {
           id: row.id,
@@ -448,8 +471,8 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
         }),
       );
     },
-    async pull(sb, _u, since) {
-      const rows = check(await sinceFilter(sb.from('supplements').select('*'), since));
+    async pull(sb, _u, since, page) {
+      const rows = check(await sinceFilter(sb.from('supplements').select('*'), since, page));
       return rows.map((row) => ({
         record: {
           id: row.id,
@@ -481,8 +504,8 @@ export const adapters: { [C in CollectionName]: Adapter<C> } = {
           .upsert({ ...r, user_id: userId, deleted_at: deletedAt }),
       );
     },
-    async pull(sb, _u, since) {
-      const rows = check(await sinceFilter(sb.from('supplement_intakes').select('*'), since));
+    async pull(sb, _u, since, page) {
+      const rows = check(await sinceFilter(sb.from('supplement_intakes').select('*'), since, page));
       return rows.map((row) => ({
         record: {
           id: row.id,

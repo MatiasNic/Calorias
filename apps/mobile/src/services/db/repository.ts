@@ -168,9 +168,16 @@ export function collection<C extends CollectionName>(name: C) {
       );
     },
 
-    /** Applies a server row unless there is a pending local change (local wins until pushed). */
-    async applyRemote(record: T, deletedAt: string | null, serverUpdatedAt: string): Promise<void> {
-      await (
+    /**
+     * Applies a server row unless there is a pending local change (local wins until pushed) or
+     * it is the version already stored. Returns whether anything changed.
+     */
+    async applyRemote(
+      record: T,
+      deletedAt: string | null,
+      serverUpdatedAt: string,
+    ): Promise<boolean> {
+      const r = await (
         await getDb()
       ).runAsync(
         `INSERT INTO records (collection, id, user_id, local_date, data, updated_at, deleted_at, dirty)
@@ -178,7 +185,9 @@ export function collection<C extends CollectionName>(name: C) {
          ON CONFLICT (collection, id) DO UPDATE SET
            local_date = excluded.local_date, data = excluded.data, updated_at = excluded.updated_at,
            deleted_at = excluded.deleted_at, dirty = 0
-         WHERE records.dirty = 0`,
+         WHERE records.dirty = 0
+           AND (records.updated_at IS NOT excluded.updated_at
+             OR records.deleted_at IS NOT excluded.deleted_at)`,
         [
           name,
           record.id,
@@ -189,6 +198,7 @@ export function collection<C extends CollectionName>(name: C) {
           deletedAt,
         ],
       );
+      return r.changes > 0;
     },
   };
 }

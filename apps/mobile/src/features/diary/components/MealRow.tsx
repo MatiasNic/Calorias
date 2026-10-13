@@ -85,7 +85,8 @@ export function MealRow({ meal, card }: { meal: MealRecord; card?: boolean }) {
       >
         {photo ? (
           <Image
-            source={{ uri: photo }}
+            // Signed URLs change every few minutes: cache by the stored path instead.
+            source={{ uri: photo, cacheKey: meal.photo_path ?? undefined }}
             style={styles.thumb}
             contentFit="cover"
             transition={150}

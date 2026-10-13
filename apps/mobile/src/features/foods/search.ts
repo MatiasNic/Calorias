@@ -1,9 +1,9 @@
-import { matchScore, normalizeText, type Food, type Nutrients } from '@plato/shared';
-import regionalData from '@plato/shared/data/foods-regional.json';
+import { addDays, matchScore, normalizeText, type Food, type Nutrients } from '@plato/shared';
 
 import { currentLocale } from '@/i18n';
 import { repos } from '@/services/db/repository';
 import type { Serving } from '@/services/db/types';
+import { todayLocal } from '@/utils/dates';
 
 interface RegionalRow {
   id: string;
@@ -69,19 +69,37 @@ function regionalToFood(r: RegionalRow): FoodOption {
   };
 }
 
-const REGIONAL = regionalData as RegionalRow[];
-const REGIONAL_INDEX = REGIONAL.map((r) => ({
-  row: r,
-  haystack: [r.name_es, r.name_en, r.name_pt, ...r.aliases].map(normalize),
-}));
+/**
+ * The regional table (~1,500 foods, ~700 KB) is loaded and indexed on first use, not at startup:
+ * most screens that import this module never search.
+ */
+let regional: { rows: RegionalRow[]; byId: Map<string, RegionalRow> } | null = null;
+let regionalIndex: { row: RegionalRow; haystack: string[] }[] | null = null;
+
+function regionalTable() {
+  if (!regional) {
+    const rows = require('@plato/shared/data/foods-regional.json') as RegionalRow[];
+    regional = { rows, byId: new Map(rows.map((r) => [r.id, r])) };
+  }
+  return regional;
+}
+
+function searchIndex() {
+  regionalIndex ??= regionalTable().rows.map((r) => ({
+    row: r,
+    haystack: [r.name_es, r.name_en, r.name_pt, ...r.aliases].map(normalize),
+  }));
+  return regionalIndex;
+}
 
 export function getRegionalFood(id: string): FoodOption | null {
-  const r = REGIONAL.find((x) => x.id === id);
+  const r = regionalTable().byId.get(id);
   return r ? regionalToFood(r) : null;
 }
 
 export function searchRegional(query: string, limit = 25): FoodOption[] {
-  return REGIONAL_INDEX.map((x) => ({ x, score: matchScore(query, x.haystack) }))
+  return searchIndex()
+    .map((x) => ({ x, score: matchScore(query, x.haystack) }))
     .filter((r) => r.score > 0)
     .sort((a, b) => b.score - a.score || a.x.row.name_es.length - b.x.row.name_es.length)
     .slice(0, limit)
@@ -107,9 +125,13 @@ export async function searchCustom(query: string): Promise<FoodOption[]> {
     }));
 }
 
+/** How far back "recent foods" look (reading the whole diary got slower every month). */
+const RECENT_WINDOW_DAYS = 60;
+
 /** Most recently used foods, derived from the local diary (works offline). */
 export async function recentFoods(limit = 20): Promise<FoodOption[]> {
-  const meals = await repos.meals.list();
+  const today = todayLocal();
+  const meals = await repos.meals.list({ from: addDays(today, -RECENT_WINDOW_DAYS), to: today });
   const seen = new Map<string, FoodOption>();
   for (const meal of [...meals].reverse()) {
     for (const item of meal.items) {
@@ -139,4 +161,4 @@ export function dedupeFoods(lists: readonly FoodOption[][]): FoodOption[] {
 }
 
 export { matchScore };
-export const REGIONAL_COUNT = REGIONAL.length;
+export const regionalCount = () => regionalTable().rows.length;

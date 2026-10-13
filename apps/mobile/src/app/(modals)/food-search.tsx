@@ -25,7 +25,7 @@ import {
   useRecentFoods,
 } from '@/features/foods/hooks';
 import { usePickerStore, type PickTarget } from '@/features/foods/pickerStore';
-import { REGIONAL_COUNT, type FoodOption } from '@/features/foods/search';
+import { regionalCount, type FoodOption } from '@/features/foods/search';
 import type { FavoriteRecord } from '@/services/db/types';
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { todayLocal } from '@/utils/dates';
@@ -33,7 +33,7 @@ import { formatKcal } from '@/utils/format';
 
 type Tab = 'search' | 'recent' | 'favorites' | 'mine';
 /** Rounded down to the hundred for the placeholder ("Buscá entre 1.500 alimentos"). */
-const FOOD_COUNT = (Math.floor(REGIONAL_COUNT / 100) * 100).toLocaleString('es-AR');
+const foodCount = () => (Math.floor(regionalCount() / 100) * 100).toLocaleString('es-AR');
 
 export default function FoodSearch() {
   const { t } = useTranslation();
@@ -135,7 +135,7 @@ export default function FoodSearch() {
         >
           <Icon name="search" size={22} color="textMuted" />
           <TextInput
-            placeholder={t('foodSearch.placeholder', { count: FOOD_COUNT })}
+            placeholder={t('foodSearch.placeholder', { count: foodCount() })}
             placeholderTextColor={colors.textSubtle}
             value={query}
             onChangeText={(v) => {

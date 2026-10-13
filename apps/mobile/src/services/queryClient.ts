@@ -15,7 +15,6 @@ export const queryClient = new QueryClient({
 /** Local DB queries are keyed by collection name first, so any write invalidates them. */
 dbEvents.subscribe((collection) => {
   queryClient.invalidateQueries({ queryKey: ['db', collection] });
-  queryClient.invalidateQueries({ queryKey: ['derived'] });
   // Progress, weekly summary, adaptive goal and the diary calendar are keyed under 'meals' but
   // also read weights and goals.
   if (collection === 'weight' || collection === 'goals' || collection === 'profile')

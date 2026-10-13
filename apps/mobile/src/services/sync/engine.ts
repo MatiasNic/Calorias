@@ -2,12 +2,13 @@ import NetInfo from '@react-native-community/netinfo';
 import { AppState } from 'react-native';
 import { create } from 'zustand';
 
+import { captureError } from '@/services/analytics';
 import { getDb } from '@/services/db/database';
 import { collection, dbEvents } from '@/services/db/repository';
 import type { CollectionName } from '@/services/db/types';
 import { getSupabase } from '@/services/supabase/client';
 import { useSessionStore } from '@/stores/session';
-import { adapters, SYNC_ORDER } from './adapters';
+import { adapters, PULL_PAGE, SYNC_ORDER } from './adapters';
 
 /** Overlap when pulling, to tolerate transactions that committed slightly out of order. */
 const PULL_OVERLAP_MS = 60_000;
@@ -47,14 +48,85 @@ async function setLastPulled(c: CollectionName, ts: string) {
 }
 
 let running: Promise<void> | null = null;
+let rerun = false;
+let lastReported = '';
 
-/** Pushes dirty local records, then pulls remote changes. Safe to call often. */
+/**
+ * Pushes dirty local records, then pulls remote changes. Safe to call often: a call made while a
+ * sync is running schedules one more pass, so writes made meanwhile aren't left waiting.
+ */
 export function syncNow(): Promise<void> {
-  if (running) return running;
-  running = doSync().finally(() => {
+  if (running) {
+    rerun = true;
+    return running;
+  }
+  running = (async () => {
+    do {
+      rerun = false;
+      await doSync();
+    } while (rerun);
+  })().finally(() => {
     running = null;
   });
   return running;
+}
+
+type AnyRepo = {
+  dirty(): Promise<{ record: { id: string }; updatedAt: string; deletedAt: string | null }[]>;
+  markClean(id: string, updatedAt: string): Promise<void>;
+  applyRemote(record: unknown, deletedAt: string | null, updatedAt: string): Promise<boolean>;
+};
+type AnyAdapter = {
+  push(sb: unknown, userId: string, record: unknown, deletedAt: string | null): Promise<void>;
+  pull(
+    sb: unknown,
+    userId: string,
+    since: string | null,
+    page: number,
+  ): Promise<{ record: unknown; updatedAt: string; deletedAt: string | null }[]>;
+};
+
+/** Uploads every dirty record; one failing record doesn't block the others. */
+async function pushCollection(sb: unknown, userId: string, repo: AnyRepo, adapter: AnyAdapter) {
+  const errors: string[] = [];
+  for (const item of await repo.dirty()) {
+    try {
+      await adapter.push(sb, userId, item.record, item.deletedAt);
+      await repo.markClean(item.record.id, item.updatedAt);
+    } catch (e) {
+      errors.push(e instanceof Error ? e.message : String(e));
+    }
+  }
+  return errors;
+}
+
+/** Pulls every page changed since the last pull. Returns whether any local row changed. */
+async function pullCollection(
+  name: CollectionName,
+  sb: unknown,
+  userId: string,
+  repo: AnyRepo,
+  adapter: AnyAdapter,
+) {
+  const last = await getLastPulled(name);
+  const since = last ? new Date(new Date(last).getTime() - PULL_OVERLAP_MS).toISOString() : null;
+  const db = await getDb();
+  let maxTs = last;
+  let changed = false;
+  for (let page = 0; ; page++) {
+    const rows = await adapter.pull(sb, userId, since, page);
+    // One transaction per page: a single commit instead of one per row.
+    await db.withTransactionAsync(async () => {
+      for (const row of rows) {
+        if (await repo.applyRemote(row.record, row.deletedAt, row.updatedAt)) changed = true;
+        if (!maxTs || row.updatedAt > maxTs) maxTs = row.updatedAt;
+      }
+    });
+    if (rows.length < PULL_PAGE) break;
+  }
+  // The cursor only moves once every page is stored, so an interrupted pull is retried whole.
+  if (maxTs && maxTs !== last) await setLastPulled(name, maxTs);
+  return changed;
 }
 
 async function doSync() {
@@ -66,37 +138,26 @@ async function doSync() {
   const userId = session.userId;
   useSyncStatus.setState({ syncing: true, lastError: null });
   const errors: string[] = [];
+  const changed: CollectionName[] = [];
 
   for (const name of SYNC_ORDER) {
-    const repo = collection(name);
-    const adapter = adapters[name];
+    const repo = collection(name) as unknown as AnyRepo;
+    const adapter = adapters[name] as unknown as AnyAdapter;
     try {
-      for (const item of await repo.dirty()) {
-        await (
-          adapter.push as (s: typeof sb, u: string, r: unknown, d: string | null) => Promise<void>
-        )(sb, userId, item.record, item.deletedAt);
-        await repo.markClean(item.record.id, item.updatedAt);
-      }
-      const last = await getLastPulled(name);
-      const since = last
-        ? new Date(new Date(last).getTime() - PULL_OVERLAP_MS).toISOString()
-        : null;
-      const rows = await adapter.pull(sb, userId, since);
-      let maxTs = last;
-      for (const row of rows) {
-        await (repo.applyRemote as (r: unknown, d: string | null, u: string) => Promise<void>)(
-          row.record,
-          row.deletedAt,
-          row.updatedAt,
-        );
-        if (!maxTs || row.updatedAt > maxTs) maxTs = row.updatedAt;
-      }
-      if (maxTs) await setLastPulled(name, maxTs);
-      if (rows.length) dbEvents.emit(name, 'remote');
+      for (const e of await pushCollection(sb, userId, repo, adapter))
+        errors.push(`${name} push: ${e}`);
+      if (await pullCollection(name, sb, userId, repo, adapter)) changed.push(name);
     } catch (e) {
       errors.push(`${name}: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
+
+  // Screens refresh once per changed collection, and only when something really changed.
+  for (const name of changed) dbEvents.emit(name, 'remote');
+  // Reported once per distinct failure, not on every foreground while it lasts.
+  const report = errors.slice(0, 10).join('\n');
+  if (report && report !== lastReported) captureError(new Error('sync failed'), { errors: report });
+  lastReported = report;
 
   useSyncStatus.setState({
     syncing: false,

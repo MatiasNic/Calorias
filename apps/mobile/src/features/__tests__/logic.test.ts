@@ -17,7 +17,7 @@ import {
   normalize,
   searchRegional,
   getRegionalFood,
-  REGIONAL_COUNT,
+  regionalCount,
 } from '../foods/search';
 import { goalForDate, DEFAULT_GOAL } from '../goals/hooks';
 import { pickInsight } from '../habits/insights';
@@ -25,7 +25,7 @@ import { offToFood } from '../foods/openFoodFacts';
 
 describe('regional food search', () => {
   it('ships at least 150 regional foods', () => {
-    expect(REGIONAL_COUNT).toBeGreaterThanOrEqual(150);
+    expect(regionalCount()).toBeGreaterThanOrEqual(150);
   });
   it('normalizes accents and case', () => {
     expect(normalize('Ñoquis de PAPÁ')).toBe('noquis de papa');
