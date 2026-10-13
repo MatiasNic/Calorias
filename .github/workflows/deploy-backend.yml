@@ -172,7 +172,12 @@ jobs:
             # The R8 test variant joins the release without replacing the notes of the main APK.
             if [ "$ANDROID_MINIFY" != true ]; then gh release edit "$tag" --notes "$notes"; fi
           else
-            gh release create "$tag" "$apk" --target "$GITHUB_SHA" --prerelease --latest=false \
-              --title "Bocado ${version} (prueba real)" --notes "$notes"
+            create() {
+              gh release create "$tag" "$apk" "$@" --prerelease --latest=false \
+                --title "Bocado ${version} (prueba real)" --notes "$notes"
+            }
+            # The workflow token may not create a tag on a commit that changes workflow files
+            # (HTTP 403): the release then gets its tag on the default branch instead.
+            create --target "$GITHUB_SHA" || create
           fi
           echo "APK: https://github.com/${GITHUB_REPOSITORY}/releases/download/${tag}/${apk}" >> "$GITHUB_STEP_SUMMARY"
