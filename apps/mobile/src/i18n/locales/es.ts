@@ -446,6 +446,13 @@ export const es = {
     customFood: 'Crear alimento',
     prevDay: 'Día anterior',
     nextDay: 'Día siguiente',
+    monthLogged: 'Días registrados',
+    monthInRange: 'En rango',
+    monthAvg: 'Promedio',
+    legendUnder: 'Debajo',
+    legendOver: 'Encima',
+    mealCount_one: '{{count}} comida · {{kcal}} kcal',
+    mealCount_other: '{{count}} comidas · {{kcal}} kcal',
   },
   foodSearch: {
     titleFor: 'Agregar a {{meal}}',

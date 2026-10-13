@@ -38,6 +38,12 @@ export const palette = {
   brick600: '#B4413A',
   olive400: '#A9B86A',
   olive500: '#8F9F4E',
+  apricotLight: '#C7722E',
+  apricotDark: '#EBA66B',
+  plumLight: '#A0598A',
+  plumDark: '#D59AC3',
+  indigoLight: '#5E62A8',
+  indigoDark: '#A3A6DE',
   // Camera UI is always dark, whatever the theme.
   cameraSheet: '#151716',
   cameraField: '#232726',

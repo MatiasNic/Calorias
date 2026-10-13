@@ -37,6 +37,15 @@ export interface ThemeColors {
   ringTrack: string;
   tabBar: string;
   skeleton: string;
+  // meal-type tints (diary icons); never used for macros
+  mealBreakfast: string;
+  mealLunch: string;
+  mealSnack: string;
+  mealDinner: string;
+  mealOther: string;
+  // calendar day vs goal (on target uses success)
+  dayUnder: string;
+  dayOver: string;
 }
 
 export interface Theme {
@@ -82,6 +91,13 @@ export const lightTheme: Theme = {
     ringTrack: palette.s2Light,
     tabBar: 'rgba(255,255,255,0.96)',
     skeleton: palette.s2Light,
+    mealBreakfast: palette.apricotLight,
+    mealLunch: palette.olive500,
+    mealSnack: palette.plumLight,
+    mealDinner: palette.indigoLight,
+    mealOther: palette.ink3Light,
+    dayUnder: palette.carbsLight,
+    dayOver: palette.indigoLight,
   },
 };
 
@@ -123,6 +139,13 @@ export const darkTheme: Theme = {
     ringTrack: palette.s2Dark,
     tabBar: 'rgba(29,32,31,0.94)',
     skeleton: palette.s1Dark,
+    mealBreakfast: palette.apricotDark,
+    mealLunch: palette.olive400,
+    mealSnack: palette.plumDark,
+    mealDinner: palette.indigoDark,
+    mealOther: palette.ink3Dark,
+    dayUnder: palette.carbsDark,
+    dayOver: palette.indigoDark,
   },
 };
 

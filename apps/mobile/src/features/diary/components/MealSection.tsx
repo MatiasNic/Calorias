@@ -3,11 +3,12 @@ import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Card, IconButton, toast } from '@/components';
+import { AppText, Card, Icon, IconButton, toast } from '@/components';
 import { repeatFromYesterday } from '@/features/diary/hooks';
 import type { MealRecord } from '@/services/db/types';
-import { spacing, useTheme } from '@/theme';
+import { radii, spacing, useTheme } from '@/theme';
 import { formatKcal } from '@/utils/format';
+import { MEAL_ICONS, MEAL_TINTS } from '../mealIcons';
 import { MealRow } from './MealRow';
 
 export function MealSection({
@@ -23,6 +24,7 @@ export function MealSection({
   const { colors } = useTheme();
   const kcal = meals.reduce((s, m) => s + m.totals.kcal, 0);
   const label = t(`mealTypes.${type}`);
+  const tint = colors[MEAL_TINTS[type]];
 
   const repeat = async () => {
     const n = await repeatFromYesterday(date, type);
@@ -33,12 +35,17 @@ export function MealSection({
   return (
     <Card padded={false} style={styles.card}>
       <View style={styles.header}>
+        <View style={[styles.tile, { backgroundColor: `${tint}22` }]}>
+          <Icon name={MEAL_ICONS[type]} size={22} rawColor={tint} />
+        </View>
         <View style={styles.flex}>
           <AppText variant="subheading" accessibilityRole="header">
             {label}
           </AppText>
           <AppText variant="caption" color="textMuted">
-            {meals.length ? `${formatKcal(kcal)} kcal` : t('diary.empty')}
+            {meals.length
+              ? t('diary.mealCount', { count: meals.length, kcal: formatKcal(kcal) })
+              : t('diary.empty')}
           </AppText>
         </View>
         {!meals.length ? (
@@ -75,10 +82,18 @@ export function MealSection({
 
 const styles = StyleSheet.create({
   card: { overflow: 'hidden' },
+  tile: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: spacing.lg,
+    gap: spacing.md,
+    paddingLeft: spacing.md,
     paddingRight: spacing.xs,
     paddingVertical: spacing.sm,
   },

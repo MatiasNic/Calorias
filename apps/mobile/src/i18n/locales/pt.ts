@@ -442,6 +442,13 @@ export const pt: TranslationShape<Translation> = {
     customFood: 'Criar alimento',
     prevDay: 'Dia anterior',
     nextDay: 'Próximo dia',
+    monthLogged: 'Dias registrados',
+    monthInRange: 'Na meta',
+    monthAvg: 'Média',
+    legendUnder: 'Abaixo',
+    legendOver: 'Acima',
+    mealCount_one: '{{count}} refeição · {{kcal}} kcal',
+    mealCount_other: '{{count}} refeições · {{kcal}} kcal',
   },
   foodSearch: {
     titleFor: 'Adicionar a {{meal}}',
