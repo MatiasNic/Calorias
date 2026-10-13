@@ -7,6 +7,7 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
 const APP_NAME = process.env.APP_NAME ?? 'Bocado';
 const BUNDLE_ID = process.env.APP_BUNDLE_ID ?? 'com.bocadoapp.bocado';
 const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID;
+const ANDROID_MINIFY = process.env.ANDROID_MINIFY === 'true';
 const IS_DEV = process.env.APP_VARIANT === 'development';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
@@ -172,7 +173,24 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-build-properties',
       {
-        android: { compileSdkVersion: 36, targetSdkVersion: 36, minSdkVersion: 26 },
+        android: {
+          compileSdkVersion: 36,
+          targetSdkVersion: 36,
+          minSdkVersion: 26,
+          // R8 + resource shrinking (smaller, harder to reverse APK). Opt-in per build while it is
+          // verified on devices: ANDROID_MINIFY=true (workflow input "minify").
+          ...(ANDROID_MINIFY && {
+            enableMinifyInReleaseBuilds: true,
+            enableShrinkResourcesInReleaseBuilds: true,
+            // Libraries that reach classes by reflection and don't ship complete keep rules.
+            extraProguardRules: [
+              '-keep class com.reactnativeandroidwidget.** { *; }',
+              '-keep class com.revenuecat.purchases.** { *; }',
+              '-keep class dev.matinzd.healthconnect.** { *; }',
+              '-keep class androidx.health.connect.client.** { *; }',
+            ].join('\n'),
+          }),
+        },
         ios: { deploymentTarget: '16.4' },
       },
     ],
