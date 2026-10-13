@@ -51,6 +51,10 @@ export default function Micros() {
     <Screen edges={['top', 'bottom', 'left', 'right']}>
       <ScreenHeader title={t('micros.title')} />
       <AppText color="textMuted">{t('micros.subtitle')}</AppText>
+      <Card style={styles.card}>
+        <AppText variant="subheading">{t('micros.whatTitle')}</AppText>
+        <AppText color="textMuted">{t('micros.whatBody')}</AppText>
+      </Card>
       <PremiumGate title={t('micros.title')}>
         {!q.data?.covered ? <Banner tone="info" message={t('micros.unavailable')} /> : null}
         <Card style={styles.card}>

@@ -973,7 +973,8 @@ export const es = {
   },
   mealPlan: {
     prefsTitle: 'Contanos qué te gusta',
-    prefsHint: 'Todo es opcional. Tus alergias y preferencias del perfil ya se tienen en cuenta.',
+    prefsHint:
+      'Todo es opcional. Podés escribir o dictar. Tus alergias y preferencias del perfil ya se tienen en cuenta.',
     liked: 'Comidas que te gustan',
     likedPlaceholder: 'Ej.: milanesas, pollo, tartas, frutas de estación',
     disliked: 'Cosas que preferís evitar',
@@ -997,6 +998,12 @@ export const es = {
     generating: 'Armando tu plan…',
     empty: 'Generá un plan según tus objetivos, preferencias y comidas regionales.',
     share: 'Compartir lista',
+    days: '¿Para cuántos días?',
+    daysN_one: '{{count}} día',
+    daysN_other: '{{count}} días',
+    people: 'Personas en la lista de compras',
+    notes: 'Algo más que tengamos en cuenta',
+    notesPlaceholder: 'Ej.: llevo vianda al trabajo, entreno a la tarde, no tengo horno',
   },
   adaptive: {
     title: 'Objetivo adaptativo',
@@ -1019,6 +1026,9 @@ export const es = {
     unavailable:
       'Por ahora solo los alimentos de la búsqueda online (USDA) traen vitaminas y minerales. Las fotos, el dictado y la base local cuentan calorías y macros, no micronutrientes.',
     deficit: 'Podría faltarte {{name}}: considerá {{foods}}.',
+    whatTitle: '¿Qué estoy viendo?',
+    whatBody:
+      'Las vitaminas y minerales que sumaste por día, en promedio de la última semana, comparados con lo recomendado para vos. Cada barra llena es 100 %. Si alguno queda muy bajo, te sugerimos alimentos que lo tienen. Es orientativo, no un análisis médico.',
   },
   training: {
     title: 'Entrenamiento',
@@ -1474,6 +1484,10 @@ export const es = {
     discardBody_other: 'Tenés {{count}} ingredientes sin guardar.',
     discard: 'Descartar',
     quickAdd: 'Agregar {{name}} al plato',
+  },
+  dictate: {
+    start: 'Dictar con la voz',
+    stop: 'Dejar de dictar',
   },
 };
 

@@ -204,6 +204,12 @@ export const MealPlanPreferencesSchema = z.object({
   mealsPerDay: z.number().int().min(3).max(5).default(4),
   /** Repeat dishes to cook in batches (leftovers for the next day). */
   batchCooking: z.boolean().default(false),
+  /** How many people the shopping list is for (portions in the plan stay per person). */
+  people: z.number().int().min(1).max(6).default(1),
+  /** How many days to plan. */
+  days: z.number().int().min(1).max(7).default(7),
+  /** Free text: routine, packed lunches, training time, kitchen limits… Data, never instructions. */
+  notes: z.string().trim().max(300).default(''),
 });
 export type MealPlanPreferences = z.infer<typeof MealPlanPreferencesSchema>;
 

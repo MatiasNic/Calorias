@@ -8,6 +8,9 @@ import { appendDictation } from './dictationText';
 /** Pauses this long (ms) still count as the same dictation, so describing a meal can breathe. */
 const SILENCE_MS = 6000;
 
+/** The field currently dictating: recognition events are global, only its owner uses them. */
+let activeOwner: object | null = null;
+
 /**
  * On-device speech-to-text (expo-speech-recognition). Each new recording is appended to the
  * text already in the field (`getBase`), and finished phrases accumulate during continuous
@@ -20,17 +23,24 @@ export function useDictation(getBase: () => string, onText: (text: string) => vo
   const committed = useRef('');
   /** Microphone level 0–1 (for the voice wave), updated without re-rendering. */
   const volume = useSharedValue(0);
+  const [me] = useState(() => ({}));
+  const mine = () => activeOwner === me;
 
-  useSpeechRecognitionEvent('start', () => setListening(true));
+  useSpeechRecognitionEvent('start', () => {
+    if (mine()) setListening(true);
+  });
   useSpeechRecognitionEvent('end', () => {
+    // Every field stops showing "listening"; only the owner releases the recognizer.
     setListening(false);
     volume.set(0);
+    if (mine()) activeOwner = null;
   });
   // Reported between -2 and 10; below 0 is silence.
   useSpeechRecognitionEvent('volumechange', (e) => {
-    volume.set(Math.max(0, Math.min(1, e.value / 10)));
+    if (mine()) volume.set(Math.max(0, Math.min(1, e.value / 10)));
   });
   useSpeechRecognitionEvent('result', (e) => {
+    if (!mine()) return;
     const heard = e.results[0]?.transcript?.trim();
     if (!heard) return;
     if (e.isFinal) {
@@ -41,6 +51,7 @@ export function useDictation(getBase: () => string, onText: (text: string) => vo
     }
   });
   useSpeechRecognitionEvent('error', (e) => {
+    if (!mine()) return;
     // "no-speech" just means silence: keep what was heard, without an error message.
     if (e.error !== 'no-speech') setError(e.error);
     setListening(false);
@@ -64,6 +75,8 @@ export function useDictation(getBase: () => string, onText: (text: string) => vo
     }
     base.current = getBase();
     committed.current = '';
+    if (activeOwner && activeOwner !== me) ExpoSpeechRecognitionModule.abort();
+    activeOwner = me;
     ExpoSpeechRecognitionModule.start({
       lang: currentLocale(),
       interimResults: true,

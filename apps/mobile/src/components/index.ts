@@ -20,6 +20,7 @@ export * from './TextField';
 export * from './Toast';
 export * from './AppLogo';
 export * from './Checkbox';
+export * from './DictateButton';
 export * from './BigNumberInput';
 export * from './OptionCard';
 export * from './ScreenHeader';

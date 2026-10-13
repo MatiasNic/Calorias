@@ -968,7 +968,8 @@ export const pt: TranslationShape<Translation> = {
   },
   mealPlan: {
     prefsTitle: 'Conte o que você gosta',
-    prefsHint: 'Tudo é opcional. Alergias e preferências do perfil já são consideradas.',
+    prefsHint:
+      'Tudo é opcional. Escreva ou dite. Suas alergias e preferências do perfil já são consideradas.',
     liked: 'Comidas que você gosta',
     likedPlaceholder: 'Ex.: frango, massas, saladas, frutas da estação',
     disliked: 'Coisas para evitar',
@@ -992,6 +993,12 @@ export const pt: TranslationShape<Translation> = {
     generating: 'Montando seu plano…',
     empty: 'Gere um plano de acordo com suas metas, preferências e comidas regionais.',
     share: 'Compartilhar lista',
+    days: 'Para quantos dias?',
+    daysN_one: '{{count}} dia',
+    daysN_other: '{{count}} dias',
+    people: 'Pessoas na lista de compras',
+    notes: 'Algo mais que devemos considerar',
+    notesPlaceholder: 'Ex.: levo marmita pro trabalho, treino à tarde, não tenho forno',
   },
   adaptive: {
     title: 'Meta adaptativa',
@@ -1014,6 +1021,9 @@ export const pt: TranslationShape<Translation> = {
     unavailable:
       'Por enquanto só os alimentos da busca online (USDA) trazem vitaminas e minerais. Fotos, voz e a base local contam calorias e macros, não micronutrientes.',
     deficit: 'Pode estar faltando {{name}}: considere {{foods}}.',
+    whatTitle: 'O que estou vendo?',
+    whatBody:
+      'As vitaminas e minerais que você somou por dia, em média na última semana, comparados com o recomendado para você. Cada barra cheia é 100 %. Se algum ficar muito baixo, sugerimos alimentos que o têm. É orientativo, não um exame médico.',
   },
   training: {
     title: 'Treino',
@@ -1466,5 +1476,9 @@ export const pt: TranslationShape<Translation> = {
     discardBody_other: 'Você tem {{count}} ingredientes não salvos.',
     discard: 'Descartar',
     quickAdd: 'Adicionar {{name}} ao prato',
+  },
+  dictate: {
+    start: 'Ditar com a voz',
+    stop: 'Parar de ditar',
   },
 };

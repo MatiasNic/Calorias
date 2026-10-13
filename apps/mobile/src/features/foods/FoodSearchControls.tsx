@@ -1,7 +1,7 @@
 import { StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { Icon, IconButton, SegmentedControl } from '@/components';
+import { DictateButton, Icon, IconButton, SegmentedControl } from '@/components';
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { regionalCount } from './search';
 import type { FoodSearchTab } from './useFoodSearchScreen';
@@ -51,6 +51,7 @@ export function FoodSearchControls({
             onPress={onClear}
           />
         ) : null}
+        <DictateButton value={query} onChangeText={onChangeQuery} size={36} />
       </View>
       <SegmentedControl<FoodSearchTab>
         value={tab}

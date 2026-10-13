@@ -953,7 +953,8 @@ export const en: TranslationShape<Translation> = {
   },
   mealPlan: {
     prefsTitle: 'Tell us what you like',
-    prefsHint: 'Everything is optional. Allergies and profile preferences are already included.',
+    prefsHint:
+      'Everything is optional. Type or dictate. Your allergies and profile preferences are already included.',
     liked: 'Foods you like',
     likedPlaceholder: 'E.g. chicken, pasta, salads, seasonal fruit',
     disliked: 'Things to avoid',
@@ -977,6 +978,12 @@ export const en: TranslationShape<Translation> = {
     generating: 'Building your plan…',
     empty: 'Generate a plan based on your goals, preferences and regional foods.',
     share: 'Share list',
+    days: 'How many days?',
+    daysN_one: '{{count}} day',
+    daysN_other: '{{count}} days',
+    people: 'People for the shopping list',
+    notes: 'Anything else we should know',
+    notesPlaceholder: 'E.g. I pack lunch for work, I train in the afternoon, no oven',
   },
   adaptive: {
     title: 'Adaptive goal',
@@ -999,6 +1006,9 @@ export const en: TranslationShape<Translation> = {
     unavailable:
       'For now only foods from the online search (USDA) include vitamins and minerals. Photos, voice and the local food base count calories and macros, not micronutrients.',
     deficit: 'You may be low on {{name}}: consider {{foods}}.',
+    whatTitle: 'What am I looking at?',
+    whatBody:
+      "The vitamins and minerals you got per day, averaged over the last week, compared with what's recommended for you. A full bar is 100%. If one is very low, we suggest foods that have it. It's a guide, not a medical test.",
   },
   training: {
     title: 'Training',
@@ -1447,5 +1457,9 @@ export const en: TranslationShape<Translation> = {
     discardBody_other: 'You have {{count}} unsaved items.',
     discard: 'Discard',
     quickAdd: 'Add {{name}} to the plate',
+  },
+  dictate: {
+    start: 'Dictate',
+    stop: 'Stop dictating',
   },
 };

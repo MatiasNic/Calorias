@@ -9,7 +9,7 @@ import {
   MealPlanSchema,
 } from '../shared/index.ts';
 import {
-  coachSystem,
+  coachChatSystem,
   fridgePrompt,
   labelSystem,
   mealImageSystem,
@@ -186,6 +186,6 @@ export class AnthropicProvider implements AIProvider {
       }
       return { role: m.role, content: m.content };
     });
-    return this.structured(model, coachSystem(ctx, context), history, AiCoachReplySchema, 4000);
+    return this.structured(model, coachChatSystem(ctx, context), history, AiCoachReplySchema, 4000);
   };
 }

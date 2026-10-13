@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Button, Icon, type SymbolName } from '@/components';
+import { AppText, Button, DictateButton, Icon, type SymbolName } from '@/components';
 import { useDaySummary } from '@/features/diary/useDaySummary';
 import { usePlan } from '@/services/purchases';
 import { fontFamily, radii, spacing, useTheme, type ThemeColors } from '@/theme';
@@ -123,6 +123,12 @@ export function CoachHome({
           style={[styles.pantryInput, { color: colors.text, backgroundColor: colors.surfaceAlt }]}
         />
         <View style={styles.pantryActions}>
+          <DictateButton
+            value={pantry}
+            onChangeText={setPantry}
+            size={48}
+            testID="coach-pantry-mic"
+          />
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={t('coach.fridgePhoto')}
@@ -133,6 +139,7 @@ export function CoachHome({
             <Icon name="photo_camera" size={20} />
             <AppText variant="label">{t('coach.fridgeShort')}</AppText>
           </Pressable>
+          <View style={styles.flex} />
           <Button
             label={t('coach.pantryGo')}
             icon="auto_awesome"
@@ -233,7 +240,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlignVertical: 'top',
   },
-  pantryActions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  pantryActions: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   photoBtn: {
     flexDirection: 'row',
     alignItems: 'center',

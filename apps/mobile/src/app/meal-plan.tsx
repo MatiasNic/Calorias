@@ -12,6 +12,7 @@ import {
   ScreenHeader,
   SegmentedControl,
   Skeleton,
+  Stepper,
   TextField,
   Toggle,
 } from '@/components';
@@ -62,7 +63,7 @@ export default function MealPlanScreen() {
     setBusy(true);
     setError(null);
     try {
-      const p = await generateMealPlan(budget, 7, prefs);
+      const p = await generateMealPlan(budget, prefs.days, prefs);
       setShowPrefs(false);
       setPlan(p);
       kv.set(KEY, JSON.stringify(p));
@@ -139,6 +140,33 @@ export default function MealPlanScreen() {
                 { value: '4', label: '4' },
                 { value: '5', label: '5' },
               ]}
+            />
+            <AppText variant="label" color="textMuted">
+              {t('mealPlan.days')}
+            </AppText>
+            <SegmentedControl
+              value={String(prefs.days) as '3' | '5' | '7'}
+              onChange={(v) => update({ days: Number(v) })}
+              options={[
+                { value: '3', label: t('mealPlan.daysN', { count: 3 }) },
+                { value: '5', label: t('mealPlan.daysN', { count: 5 }) },
+                { value: '7', label: t('mealPlan.daysN', { count: 7 }) },
+              ]}
+            />
+            <Stepper
+              label={t('mealPlan.people')}
+              value={prefs.people}
+              onChange={(people) => update({ people })}
+              step={1}
+              min={1}
+              max={6}
+            />
+            <TextField
+              label={t('mealPlan.notes')}
+              placeholder={t('mealPlan.notesPlaceholder')}
+              value={prefs.notes}
+              onChangeText={(notes) => update({ notes: notes.slice(0, 300) })}
+              multiline
             />
             <View style={styles.switchRow}>
               <AppText variant="label" style={styles.flex}>

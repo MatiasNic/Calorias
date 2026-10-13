@@ -3,19 +3,31 @@ import { Platform, StyleSheet, TextInput, View, type TextInputProps } from 'reac
 
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { AppText } from './AppText';
+import { DictateButton } from './DictateButton';
 
 export interface TextFieldProps extends TextInputProps {
   label?: string;
   error?: string | null;
   hint?: string;
   suffix?: string;
+  /** Mic to dictate into the field. Defaults to on for free text (not numbers, email, passwords). */
+  dictation?: boolean;
 }
 
+const NO_DICTATION = /email|password|username|tel|postal|cc-|one-time-code/;
+
 export const TextField = forwardRef<TextInput, TextFieldProps>(function TextField(
-  { label, error, hint, suffix, style, ...rest },
+  { label, error, hint, suffix, style, dictation, ...rest },
   ref,
 ) {
   const { colors } = useTheme();
+  const freeText =
+    !rest.secureTextEntry &&
+    (rest.keyboardType == null || rest.keyboardType === 'default') &&
+    !NO_DICTATION.test(rest.autoComplete ?? '') &&
+    !NO_DICTATION.test(rest.textContentType ?? '');
+  const canDictate =
+    (dictation ?? freeText) && typeof rest.value === 'string' && !!rest.onChangeText;
   return (
     <View style={styles.wrap}>
       {label ? (
@@ -47,6 +59,9 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
             {suffix}
           </AppText>
         ) : null}
+        {canDictate ? (
+          <DictateButton value={rest.value ?? ''} onChangeText={rest.onChangeText!} size={36} />
+        ) : null}
       </View>
       {error ? (
         <AppText variant="caption" color="danger" accessibilityLiveRegion="polite">
@@ -68,7 +83,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1.5,
     borderRadius: radii.lg,
-    paddingHorizontal: spacing.lg,
+    paddingLeft: spacing.lg,
+    paddingRight: spacing.sm,
+    gap: spacing.xs,
     minHeight: 52,
   },
   noOutline: { outlineStyle: 'none' } as object,

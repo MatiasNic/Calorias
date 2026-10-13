@@ -14,7 +14,7 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Banner, IconButton } from '@/components';
+import { AppText, Banner, DictateButton, IconButton } from '@/components';
 import { TAB_BAR_HEIGHT } from '@/components/TabBar';
 import { CoachHome } from '@/features/coach/CoachHome';
 import { CoachText } from '@/features/coach/CoachText';
@@ -247,6 +247,9 @@ export default function Coach() {
             testID="coach-input"
             style={[styles.input, { color: colors.text, backgroundColor: colors.surfaceAlt }]}
           />
+          {input.trim() ? null : (
+            <DictateButton value={input} onChangeText={setInput} size={44} testID="coach-mic" />
+          )}
           <IconButton
             icon="send"
             accessibilityLabel={t('coach.send')}
