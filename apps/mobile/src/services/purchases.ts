@@ -10,6 +10,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { env } from '@/config/env';
+import { captureError } from '@/services/analytics';
 import { features } from '@/config/features';
 import { getSupabase } from '@/services/supabase/client';
 import { kvJSONStorage } from '@/stores/kv';
@@ -241,6 +242,7 @@ export async function purchase(pkg: PlanPackage): Promise<PurchaseOutcome> {
     return customerInfo.entitlements.active[ENTITLEMENT_PREMIUM] ? 'purchased' : 'error';
   } catch (e) {
     if ((e as { userCancelled?: boolean }).userCancelled) return 'cancelled';
+    captureError(e, { where: 'purchase', product: pkg.kind });
     return 'error';
   }
 }
