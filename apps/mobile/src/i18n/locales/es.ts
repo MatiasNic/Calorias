@@ -1421,6 +1421,20 @@ export const es = {
     logged: 'Registrado',
     undo: 'Deshacer',
   },
+  plate: {
+    title: 'Tu plato',
+    summary_one: '{{count}} ingrediente · {{kcal}} kcal',
+    summary_other: '{{count}} ingredientes · {{kcal}} kcal',
+    review: 'Revisar',
+    reviewTitle: 'Revisá tu plato',
+    addToPlate: 'Agregar al plato',
+    added: '{{name}} agregado al plato',
+    discardTitle: '¿Descartar el plato?',
+    discardBody_one: 'Tenés {{count}} ingrediente sin guardar.',
+    discardBody_other: 'Tenés {{count}} ingredientes sin guardar.',
+    discard: 'Descartar',
+    quickAdd: 'Agregar {{name}} al plato',
+  },
 };
 
 export type Translation = typeof es;

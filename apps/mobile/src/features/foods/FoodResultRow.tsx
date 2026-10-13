@@ -14,6 +14,8 @@ export function FoodResultRow({
   icon,
   tag,
   onPress,
+  onQuickAdd,
+  quickAddLabel,
 }: {
   title: string;
   subtitle?: string;
@@ -23,6 +25,9 @@ export function FoodResultRow({
   /** Short code shown in the tile instead of the icon (country of a regional dish). */
   tag?: string;
   onPress: () => void;
+  /** The "+" adds right away (default portion) instead of opening the food. */
+  onQuickAdd?: () => void;
+  quickAddLabel?: string;
 }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -61,9 +66,24 @@ export function FoodResultRow({
       <AppText style={styles.kcal} tabular>
         {formatKcal(kcal)}
       </AppText>
-      <View style={[styles.add, { backgroundColor: colors.surfaceAlt }]}>
-        <Icon name="add" size={22} />
-      </View>
+      {onQuickAdd ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={quickAddLabel}
+          onPress={onQuickAdd}
+          hitSlop={4}
+          style={({ pressed }) => [
+            styles.add,
+            { backgroundColor: pressed ? colors.primary : colors.surfaceAlt },
+          ]}
+        >
+          {({ pressed }) => <Icon name="add" size={22} color={pressed ? 'onPrimary' : 'text'} />}
+        </Pressable>
+      ) : (
+        <View style={[styles.add, { backgroundColor: colors.surfaceAlt }]}>
+          <Icon name="add" size={22} />
+        </View>
+      )}
     </Pressable>
   );
 }

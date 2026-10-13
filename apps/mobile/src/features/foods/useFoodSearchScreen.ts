@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { toast } from '@/components';
-import { saveMeal } from '@/features/diary/hooks';
 import { useDraftStore } from '@/features/diary/draftStore';
-import { checkAchievements } from '@/features/habits/hooks';
-import { captureError } from '@/services/analytics';
+import { makeItem } from '@/features/diary/mealMath';
+import { haptic } from '@/utils/haptics';
 import type { FavoriteRecord } from '@/services/db/types';
 import { todayLocal } from '@/utils/dates';
 import { useCustomFoods, useFavorites, useFoodSearch, useRecentFoods } from './hooks';
 import { usePickerStore, type PickTarget } from './pickerStore';
+import { usePlateStore } from './plateStore';
 import type { FoodOption } from './search';
 
 export type FoodSearchTab = 'search' | 'recent' | 'favorites' | 'mine';
@@ -48,11 +48,15 @@ export function useFoodSearchScreen() {
         ? { kind: 'draft' }
         : params.target === 'recipe'
           ? { kind: 'recipe' }
-          : { kind: 'diary', date, mealType };
+          : { kind: 'diary', date, mealType, plate: true };
     picker.open(target, params.replace != null ? Number(params.replace) : null);
     // Leaving the search (X / back) must not leave a stale target for the next barcode scan or
     // custom food, which would send the food to an old draft, date or recipe.
-    return () => usePickerStore.getState().clear();
+    return () => {
+      usePickerStore.getState().clear();
+      // A plate left behind (e.g. switching to voice) must not reappear in the next search.
+      usePlateStore.getState().clear();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -67,16 +71,26 @@ export function useFoodSearchScreen() {
     router.push('/food-detail');
   };
 
+  /** Plate mode: "+" adds the food with its usual (or last used) portion. */
+  const quickAdd =
+    params.target == null
+      ? (food: FoodOption) => {
+          const grams = food.lastGrams ?? food.servings[0]?.grams ?? 100;
+          usePlateStore.getState().add(makeItem(food, grams), date, mealType);
+          haptic('success');
+          toast.success(t('plate.added', { name: food.name }));
+        }
+      : undefined;
+
   const logFavoriteMeal = async (fav: FavoriteRecord) => {
     if (params.target === 'draft') {
       fav.payload.items.forEach((i) => useDraftStore.getState().addItem(i));
       router.back();
       return;
     }
-    await saveMeal({ date, mealType, source: 'favorite', items: fav.payload.items });
-    checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
-    toast.success(t('foodSearch.loggedFavorite'));
-    router.back();
+    // A saved meal joins the plate like any other food (it can be combined and adjusted).
+    fav.payload.items.forEach((i) => usePlateStore.getState().add(i, date, mealType));
+    toast.success(t('plate.added', { name: fav.label }));
   };
 
   const customOptions: FoodOption[] = (custom.data ?? []).map((f) => ({
@@ -112,6 +126,7 @@ export function useFoodSearchScreen() {
     date,
     mealType,
     pick,
+    quickAdd,
     logFavoriteMeal,
   };
 }

@@ -1,11 +1,13 @@
 import { router } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, Icon, IconButton } from '@/components';
 import { FoodSearchControls } from '@/features/foods/FoodSearchControls';
 import { FavoritesList, FoodOptionsList } from '@/features/foods/FoodSearchLists';
+import { PlateBar } from '@/features/foods/PlateBar';
+import { usePlateStore } from '@/features/foods/plateStore';
 import { useFoodSearchScreen } from '@/features/foods/useFoodSearchScreen';
 import { radii, spacing, useTheme } from '@/theme';
 
@@ -25,8 +27,26 @@ export default function FoodSearch() {
     date,
     mealType,
     pick,
+    quickAdd,
     logFavoriteMeal,
   } = useFoodSearchScreen();
+  const plateCount = usePlateStore((s) => s.items.length);
+
+  // Leaving with foods on the plate asks first (they would be lost).
+  const close = () => {
+    if (!plateCount) return router.back();
+    Alert.alert(t('plate.discardTitle'), t('plate.discardBody', { count: plateCount }), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('plate.discard'),
+        style: 'destructive',
+        onPress: () => {
+          usePlateStore.getState().clear();
+          router.back();
+        },
+      },
+    ]);
+  };
 
   return (
     <SafeAreaView
@@ -34,11 +54,7 @@ export default function FoodSearch() {
       edges={['top', 'bottom']}
     >
       <View style={styles.header}>
-        <IconButton
-          icon="close"
-          accessibilityLabel={t('common.close')}
-          onPress={() => router.back()}
-        />
+        <IconButton icon="close" accessibilityLabel={t('common.close')} onPress={close} />
         <AppText variant="heading" style={styles.flex} accessibilityRole="header">
           {params.target
             ? t('foodSearch.addFood')
@@ -66,9 +82,11 @@ export default function FoodSearch() {
           data={data}
           loadingRemote={search.loadingRemote}
           onPick={pick}
+          onQuickAdd={quickAdd}
         />
       )}
       <View style={[styles.footer, { borderTopColor: colors.border }]}>
+        <PlateBar fallbackMealType={mealType} />
         <Pressable
           accessibilityRole="button"
           onPress={() =>
@@ -101,7 +119,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     minHeight: 60,
   },
-  footer: { paddingHorizontal: spacing.lg, paddingTop: spacing.sm, paddingBottom: spacing.sm },
+  footer: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.sm,
+    gap: spacing.sm,
+  },
   voice: {
     flexDirection: 'row',
     alignItems: 'center',

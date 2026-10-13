@@ -14,6 +14,7 @@ import { favoriteKeyForFood, toggleFoodFavorite, useFavorites } from '@/features
 import { NutrientTable } from '@/features/foods/NutrientTable';
 import { usePickerStore } from '@/features/foods/pickerStore';
 import { PortionEditor } from '@/features/foods/PortionEditor';
+import { usePlateStore } from '@/features/foods/plateStore';
 import { useRecipeDraftStore } from '@/features/foods/recipeDraft';
 import { captureError } from '@/services/analytics';
 import { spacing } from '@/theme';
@@ -44,6 +45,15 @@ export default function FoodDetail() {
 
   const add = async () => {
     const item = makeItem(food, grams);
+    if (target.kind === 'diary' && target.plate) {
+      // Back to the search to keep adding; the plate is reviewed and saved as one meal.
+      usePlateStore.getState().add(item, target.date, mealType);
+      haptic('success');
+      toast.success(t('plate.added', { name: food.name }));
+      usePickerStore.getState().drop();
+      router.back();
+      return;
+    }
     if (target.kind === 'draft') {
       const draft = useDraftStore.getState();
       if (replaceIndex != null) draft.replaceItem(replaceIndex, { ...item, user_edited: true });
@@ -84,7 +94,9 @@ export default function FoodDetail() {
         <Button
           label={
             target.kind === 'diary'
-              ? t('foodDetail.addTo', { meal: t(`mealTypes.${mealType}`) })
+              ? target.plate
+                ? t('plate.addToPlate')
+                : t('foodDetail.addTo', { meal: t(`mealTypes.${mealType}`) })
               : t('common.add')
           }
           icon="add"

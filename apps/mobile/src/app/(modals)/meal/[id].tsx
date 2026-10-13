@@ -11,17 +11,22 @@ import { deleteMeal, saveMeal, useMeal } from '@/features/diary/hooks';
 import { MealTypePicker } from '@/features/diary/MealTypePicker';
 import { TimeStepper } from '@/features/diary/TimeStepper';
 import { saveMealAsFavorite } from '@/features/foods/hooks';
+import { usePlateStore } from '@/features/foods/plateStore';
+import { checkAchievements } from '@/features/habits/hooks';
+import { captureError } from '@/services/analytics';
 import { spacing } from '@/theme';
 import { formatDay, timestampFor } from '@/utils/dates';
 
 export default function MealEditor() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const meal = useMeal(id);
+  // 'new': a plate built in the food search (the draft is already started).
+  const isNew = id === 'new';
+  const meal = useMeal(isNew ? '' : id);
   const { draft, start, patch, clear } = useDraftStore();
 
   useEffect(() => {
-    if (!meal.data) return;
+    if (isNew || !meal.data) return;
     const d = new Date(meal.data.eaten_at);
     start({
       mealId: meal.data.id,
@@ -42,9 +47,9 @@ export default function MealEditor() {
       notes: meal.data.note,
       original: null,
     });
-  }, [meal.data, start]);
+  }, [isNew, meal.data, start]);
 
-  if (!draft || meal.isLoading) {
+  if (!draft || (!isNew && meal.isLoading)) {
     return (
       <Screen>
         <Skeleton height={200} />
@@ -54,7 +59,7 @@ export default function MealEditor() {
 
   const save = async () => {
     if (!draft.items.length) {
-      await deleteMeal(draft.mealId!);
+      if (draft.mealId) await deleteMeal(draft.mealId);
     } else {
       await saveMeal({
         id: draft.mealId ?? undefined,
@@ -68,7 +73,12 @@ export default function MealEditor() {
     }
     toast.success(t('diary.saved'));
     clear();
-    router.back();
+    if (isNew) {
+      // Saved plate: close the editor and the food search behind it.
+      usePlateStore.getState().clear();
+      checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
+      router.dismiss(2);
+    } else router.back();
   };
 
   const remove = () =>
@@ -101,7 +111,7 @@ export default function MealEditor() {
           }}
         />
         <AppText variant="heading" style={styles.flex}>
-          {t('diary.editMeal')}
+          {isNew ? t('plate.reviewTitle') : t('diary.editMeal')}
         </AppText>
         <IconButton
           icon="star-outline"
@@ -117,12 +127,14 @@ export default function MealEditor() {
             toast.success(t('diary.favoriteSaved'));
           }}
         />
-        <IconButton
-          icon="trash"
-          color="danger"
-          accessibilityLabel={t('common.delete')}
-          onPress={remove}
-        />
+        {isNew ? null : (
+          <IconButton
+            icon="trash"
+            color="danger"
+            accessibilityLabel={t('common.delete')}
+            onPress={remove}
+          />
+        )}
       </View>
       <AppText color="textMuted">{formatDay(draft.date)}</AppText>
       <MealTypePicker value={draft.mealType} onChange={(m) => patch({ mealType: m })} />

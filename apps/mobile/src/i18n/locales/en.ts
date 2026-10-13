@@ -1394,4 +1394,18 @@ export const en: TranslationShape<Translation> = {
     logged: 'Logged',
     undo: 'Undo',
   },
+  plate: {
+    title: 'Your plate',
+    summary_one: '{{count}} item · {{kcal}} kcal',
+    summary_other: '{{count}} items · {{kcal}} kcal',
+    review: 'Review',
+    reviewTitle: 'Review your plate',
+    addToPlate: 'Add to plate',
+    added: '{{name}} added to your plate',
+    discardTitle: 'Discard the plate?',
+    discardBody_one: 'You have {{count}} unsaved item.',
+    discardBody_other: 'You have {{count}} unsaved items.',
+    discard: 'Discard',
+    quickAdd: 'Add {{name}} to the plate',
+  },
 };

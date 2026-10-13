@@ -1413,4 +1413,18 @@ export const pt: TranslationShape<Translation> = {
     logged: 'Registrado',
     undo: 'Desfazer',
   },
+  plate: {
+    title: 'Seu prato',
+    summary_one: '{{count}} ingrediente · {{kcal}} kcal',
+    summary_other: '{{count}} ingredientes · {{kcal}} kcal',
+    review: 'Revisar',
+    reviewTitle: 'Revise seu prato',
+    addToPlate: 'Adicionar ao prato',
+    added: '{{name}} adicionado ao prato',
+    discardTitle: 'Descartar o prato?',
+    discardBody_one: 'Você tem {{count}} ingrediente não salvo.',
+    discardBody_other: 'Você tem {{count}} ingredientes não salvos.',
+    discard: 'Descartar',
+    quickAdd: 'Adicionar {{name}} ao prato',
+  },
 };

@@ -75,12 +75,15 @@ export function FoodOptionsList({
   data,
   loadingRemote,
   onPick,
+  onQuickAdd,
 }: {
   tab: Exclude<FoodSearchTab, 'favorites'>;
   query: string;
   data: FoodOption[];
   loadingRemote: boolean;
   onPick: (food: FoodOption) => void;
+  /** Building a plate: "+" adds the food with its usual portion without leaving the list. */
+  onQuickAdd?: (food: FoodOption) => void;
 }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
@@ -144,6 +147,8 @@ export function FoodOptionsList({
                 : 'nutrition'
           }
           onPress={() => onPick(item)}
+          onQuickAdd={onQuickAdd ? () => onQuickAdd(item) : undefined}
+          quickAddLabel={t('plate.quickAdd', { name: item.name })}
         />
       )}
     />
