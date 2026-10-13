@@ -5,8 +5,8 @@ env:
 ---
 - runFlow: _onboarding.yaml
 # Photo path: grant camera, capture (demo fixtures return a plate).
-- tapOn:
-    id: tab-scan
+# The center tab opens voice logging; the camera is reached by link.
+- openLink: 'bocado://scan'
 - runFlow:
     when:
       visible: 'Permitir cámara'

@@ -7,8 +7,8 @@ env:
 - repeat:
     times: 3
     commands:
-      - tapOn:
-          id: tab-scan
+      # The center tab opens voice logging; the camera is reached by link.
+      - openLink: 'bocado://scan'
       - runFlow:
           when:
             visible: 'Permitir cámara'
@@ -25,8 +25,8 @@ env:
           timeout: 15000
       - tapOn:
           id: review-save
-- tapOn:
-    id: tab-scan
+# The center tab opens voice logging; the camera is reached by link.
+- openLink: 'bocado://scan'
 - tapOn:
     id: scan-capture
 - extendedWaitUntil:

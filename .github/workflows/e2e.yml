@@ -1,0 +1,78 @@
+name: E2E (Maestro, Android emulator)
+
+# Builds the demo app (simulated AI, purchases and backend) and runs apps/mobile/.maestro on an
+# Android emulator. Manual, plus automatically when the flows or this workflow change.
+on:
+  workflow_dispatch:
+  push:
+    paths: ['apps/mobile/.maestro/**', '.github/workflows/e2e.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  maestro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      EXPO_PUBLIC_USE_MOCKS: 'true'
+      EXPO_NO_TELEMETRY: '1'
+      SENTRY_DISABLE_AUTO_UPLOAD: 'true'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: pnpm install --frozen-lockfile
+      - name: Prebuild Android project
+        working-directory: apps/mobile
+        run: |
+          npx expo prebuild -p android --clean --no-install
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+          sed -i '/^org.gradle.jvmargs=/d' android/gradle.properties
+          printf '\norg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g\n' >> android/gradle.properties
+      - uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4
+      - name: Build demo APK (x86_64 for the emulator)
+        working-directory: apps/mobile/android
+        timeout-minutes: 45
+        run: ./gradlew assembleRelease --no-daemon --console=plain -PreactNativeArchitectures=x86_64
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run flows on the emulator
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated
+          script: |
+            adb install -r apps/mobile/android/app/build/outputs/apk/release/app-release.apk
+            cd apps/mobile && maestro test .maestro/ --format junit --output "$RUNNER_TEMP/maestro-report.xml" --debug-output "$RUNNER_TEMP/maestro-debug"
+      - name: Upload Maestro results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: maestro-results
+          path: |
+            ${{ runner.temp }}/maestro-report.xml
+            ${{ runner.temp }}/maestro-debug
+          if-no-files-found: ignore
