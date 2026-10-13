@@ -30,8 +30,10 @@ on:
 permissions:
   contents: read
 
+# Backend deploys run one at a time; APK-only builds (e.g. regular + R8 variant) run in parallel
+# (GitHub keeps a single pending run per group and cancels the others).
 concurrency:
-  group: deploy-backend
+  group: ${{ inputs.deploy_backend && 'deploy-backend' || format('apk-{0}', github.run_id) }}
   cancel-in-progress: false
 
 jobs:
