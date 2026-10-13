@@ -16,6 +16,13 @@ import { fakeAi, makeDeps, post, REGIONAL, SHA, USER, type AiBehavior } from './
 const mealBody = { photo_path: `${USER}/p1.jpg`, image_sha256: SHA, locale: 'es-AR' };
 const call = (fn: (r: Request) => Promise<Response>, req: Request) => handle(fn)(req);
 
+/** A distinct photo in the fake bucket (the server hashes the real bytes). */
+function addPhoto(state: { photos: Map<string, Uint8Array> }, i: number) {
+  const path = `${USER}/photo-${i}.jpg`;
+  state.photos.set(path, new Uint8Array([0xff, 0xd8, i, i + 1]));
+  return path;
+}
+
 async function body(res: Response) {
   return (await res.json()) as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
@@ -75,17 +82,17 @@ describe('analyze-meal', () => {
   });
 
   it('returns 402 QUOTA_EXCEEDED after 3 free scans', async () => {
-    const { deps } = makeDeps(fakeAi(() => 'ok'));
+    const { deps, state } = makeDeps(fakeAi(() => 'ok'));
     for (let i = 0; i < 3; i++) {
       const res = await call(
         (r) => analyzeMeal(r, deps),
-        post({ ...mealBody, image_sha256: String(i).repeat(64) }),
+        post({ ...mealBody, photo_path: addPhoto(state, i) }),
       );
       expect(res.status).toBe(200);
     }
     const res = await call(
       (r) => analyzeMeal(r, deps),
-      post({ ...mealBody, image_sha256: 'f'.repeat(64) }),
+      post({ ...mealBody, photo_path: addPhoto(state, 9) }),
     );
     expect(res.status).toBe(402);
     expect((await body(res)).error).toMatchObject({
@@ -126,6 +133,16 @@ describe('analyze-meal', () => {
     expect(state.scans[0]?.status).toBe('not_food');
   });
 
+  it('dedups by the hash of the real photo, not the one the client sends', async () => {
+    const { deps, state } = makeDeps(fakeAi(() => 'ok'));
+    await call((r) => analyzeMeal(r, deps), post({ ...mealBody, image_sha256: 'a'.repeat(64) }));
+    const again = await body(
+      await call((r) => analyzeMeal(r, deps), post({ ...mealBody, image_sha256: 'b'.repeat(64) })),
+    );
+    expect(again.cached).toBe(true);
+    expect([...state.usage.values()][0]!.photo_scans).toBe(1);
+  });
+
   it('refunds only a few "not food" answers per day (each one still costs AI tokens)', async () => {
     const { deps, state } = makeDeps(
       fakeAi(() => 'not_food'),
@@ -134,7 +151,7 @@ describe('analyze-meal', () => {
     for (let i = 0; i < NOT_FOOD_REFUNDS_PER_DAY + 2; i++)
       await call(
         (r) => analyzeMeal(r, deps),
-        post({ ...mealBody, image_sha256: `${i}`.padEnd(64, 'a') }),
+        post({ ...mealBody, photo_path: addPhoto(state, i) }),
       );
     expect([...state.usage.values()][0]!.photo_scans).toBe(2);
   });
@@ -317,6 +334,31 @@ describe('revenuecat webhook', () => {
     );
     expect(res.ignored).toBe('sandbox');
     expect(state.subscriptions).toHaveLength(0);
+  });
+  it('moves a transferred purchase to the new account', async () => {
+    const { deps, state } = makeDeps(fakeAi(() => 'ok'));
+    const other = '00000000-0000-4000-8000-000000000002';
+    deps.db.userExists = async () => true;
+    await call(
+      (r) => revenuecatWebhook(r, deps),
+      post(
+        {
+          event: { id: 'e5', type: 'TRANSFER', transferred_from: [USER], transferred_to: [other] },
+        },
+        null,
+        auth,
+      ),
+    );
+    expect(state.transfers).toEqual([[USER, other]]);
+  });
+  it('rejects oversized payloads', async () => {
+    const { deps } = makeDeps(fakeAi(() => 'ok'));
+    const aliases = Array.from({ length: 50 }, (_, i) => `alias-${i}`);
+    const res = await call(
+      (r) => revenuecatWebhook(r, deps),
+      post(event({ id: 'e6', aliases }), null, auth),
+    );
+    expect(res.status).toBe(400);
   });
   it('ignores unknown users', async () => {
     const { deps, state } = makeDeps(fakeAi(() => 'ok'));

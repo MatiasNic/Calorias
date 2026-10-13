@@ -131,6 +131,7 @@ export interface FakeState {
   removed: string[];
   events: Set<string>;
   subscriptions: SubscriptionUpsert[];
+  transfers: [string, string][];
   audit: string[];
   deletedUsers: string[];
   rateAllowed: boolean;
@@ -153,6 +154,7 @@ export function makeDeps(
     removed: [],
     events: new Set(),
     subscriptions: [],
+    transfers: [],
     audit: [],
     deletedUsers: [],
     rateAllowed: true,
@@ -254,6 +256,7 @@ export function makeDeps(
       },
       upsertSubscription: async (s) => void state.subscriptions.push(s),
       forgetBillingEvents: async () => undefined,
+      transferSubscription: async (from, to) => void state.transfers.push([from, to]),
     },
     storage: {
       download: async (_b, path) =>

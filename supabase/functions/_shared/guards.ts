@@ -129,5 +129,11 @@ export function toBase64(bytes: Uint8Array): string {
   return btoa(binary);
 }
 
+/** Hex SHA-256 of a file (Web Crypto: same in Deno and in the Node test runner). */
+export async function sha256Hex(bytes: Uint8Array): Promise<string> {
+  const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', new Uint8Array(bytes)));
+  return Array.from(digest, (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 export const DEDUP_WINDOW_DAYS = 30;

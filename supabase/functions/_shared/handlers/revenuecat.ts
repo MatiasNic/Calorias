@@ -1,24 +1,35 @@
+import { z } from 'zod';
+
 import { ENTITLEMENT_PREMIUM, PRODUCT_IDS, SCAN_PACK_SIZE } from '../shared/index.ts';
 import type { ServerDeps, SubscriptionUpsert } from '../deps.ts';
-import { HttpError, json } from '../http.ts';
+import { HttpError, json, parseBody } from '../http.ts';
 
-/** Subset of the RevenueCat webhook payload we rely on (v1 events). */
-export interface RevenueCatEvent {
-  id: string;
-  type: string;
-  app_user_id?: string;
-  original_app_user_id?: string;
-  aliases?: string[];
-  transferred_to?: string[];
-  product_id?: string;
-  entitlement_ids?: string[] | null;
-  period_type?: 'TRIAL' | 'INTRO' | 'NORMAL' | 'PREPAID';
-  expiration_at_ms?: number | null;
-  event_timestamp_ms?: number;
-  store?: string;
-  environment?: 'SANDBOX' | 'PRODUCTION';
-  original_transaction_id?: string;
-}
+const ids = z.array(z.string().max(200)).max(20);
+
+/**
+ * Subset of the RevenueCat webhook payload we rely on (v1 events), with bounded sizes: each
+ * candidate user id costs an auth lookup. Unknown fields are kept (the payload is stored as is).
+ */
+const RevenueCatEventSchema = z.looseObject({
+  id: z.string().min(1).max(200),
+  type: z.string().min(1).max(60),
+  app_user_id: z.string().max(200).optional(),
+  original_app_user_id: z.string().max(200).optional(),
+  aliases: ids.optional(),
+  transferred_from: ids.optional(),
+  transferred_to: ids.optional(),
+  product_id: z.string().max(200).optional(),
+  entitlement_ids: z.array(z.string().max(100)).max(20).nullable().optional(),
+  period_type: z.enum(['TRIAL', 'INTRO', 'NORMAL', 'PREPAID']).optional(),
+  expiration_at_ms: z.number().nullable().optional(),
+  event_timestamp_ms: z.number().optional(),
+  store: z.string().max(40).optional(),
+  environment: z.enum(['SANDBOX', 'PRODUCTION']).optional(),
+  original_transaction_id: z.string().max(200).optional(),
+});
+const WebhookBodySchema = z.looseObject({ event: RevenueCatEventSchema });
+
+export type RevenueCatEvent = z.infer<typeof RevenueCatEventSchema>;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -82,28 +93,30 @@ export async function revenuecatWebhook(req: Request, deps: ServerDeps): Promise
   const header = req.headers.get('Authorization') ?? '';
   if (!secret || !safeEqual(header, `Bearer ${secret}`)) throw new HttpError(401, 'UNAUTHORIZED');
 
-  let body: { event?: RevenueCatEvent };
-  try {
-    body = await req.json();
-  } catch {
-    throw new HttpError(400, 'INVALID_INPUT');
-  }
+  const body = await parseBody(req, WebhookBodySchema);
   const e = body.event;
-  if (!e?.id || !e.type) throw new HttpError(400, 'INVALID_INPUT');
+  const firstUser = async (list: readonly (string | undefined)[]) => {
+    for (const c of list) if (c && UUID.test(c) && (await deps.db.userExists(c))) return c;
+    return null;
+  };
 
-  const candidates = [
+  // A purchase moved to another account (e.g. "restore purchases" while signed in elsewhere).
+  if (e.type === 'TRANSFER') {
+    const from = await firstUser(e.transferred_from ?? []);
+    const to = await firstUser(e.transferred_to ?? []);
+    if (!(await deps.db.recordWebhookEvent(e.id, to, e.type, body)))
+      return json({ ok: true, duplicate: true });
+    if (!from || !to) return json({ ok: true, ignored: true });
+    await deps.db.transferSubscription(from, to);
+    return json({ ok: true });
+  }
+
+  const userId = await firstUser([
     e.app_user_id,
     e.original_app_user_id,
     ...(e.aliases ?? []),
     ...(e.transferred_to ?? []),
-  ].filter((x): x is string => !!x && UUID.test(x));
-  let userId: string | null = null;
-  for (const c of candidates) {
-    if (await deps.db.userExists(c)) {
-      userId = c;
-      break;
-    }
-  }
+  ]);
 
   const isNew = await deps.db.recordWebhookEvent(e.id, userId, e.type, body);
   if (!isNew) return json({ ok: true, duplicate: true });

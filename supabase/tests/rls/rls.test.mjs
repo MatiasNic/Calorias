@@ -513,6 +513,45 @@ describe('hardening', () => {
   });
 });
 
+describe('timezone and transfers', () => {
+  it('timezone can change once a day', async () => {
+    await q(`update public.profiles set timezone_changed_at = null where id = $1`, [B]);
+    await as(B, () =>
+      q(`update public.profiles set timezone = 'Europe/Madrid' where id = $1`, [B]),
+    );
+    await as(B, () =>
+      q(`update public.profiles set timezone = 'Pacific/Kiritimati' where id = $1`, [B]),
+    );
+    const r = await q('select timezone from public.profiles where id = $1', [B]);
+    assert.equal(r.rows[0].timezone, 'Europe/Madrid');
+  });
+
+  it('a transferred subscription moves to the new account', async () => {
+    await as('service', () =>
+      q('select public.apply_subscription_event($1::jsonb)', [
+        JSON.stringify({
+          user_id: A,
+          status: 'active',
+          is_trial: false,
+          will_renew: true,
+          last_event_type: 'X',
+          last_event_at: '2026-10-10T00:00:00Z',
+        }),
+      ]),
+    );
+    await assert.rejects(as(A, () => q('select public.transfer_subscription($1, $2)', [A, B])));
+    await as('service', () => q('select public.transfer_subscription($1, $2)', [A, B]));
+    const r = await q(
+      'select user_id, status from public.subscriptions where user_id in ($1, $2)',
+      [A, B],
+    );
+    const by = Object.fromEntries(r.rows.map((x) => [x.user_id, x.status]));
+    assert.equal(by[A], 'expired');
+    assert.equal(by[B], 'active');
+    await q('delete from public.subscriptions where user_id in ($1, $2)', [A, B]);
+  });
+});
+
 describe('batch meal upload', () => {
   it('saves several meals in one call, all or nothing', async () => {
     const a = randomUUID();

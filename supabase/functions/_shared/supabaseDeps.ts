@@ -312,6 +312,9 @@ export function createDeps(config: ServerConfig = loadConfig((k) => Deno.env.get
         // One statement that skips out-of-order (older) events: see apply_subscription_event.
         must(await sb.rpc('apply_subscription_event', { p: s }));
       },
+      async transferSubscription(fromUser, toUser) {
+        must(await sb.rpc('transfer_subscription', { p_from: fromUser, p_to: toUser }));
+      },
       async forgetBillingEvents(userId) {
         // Webhook ids stay (idempotency); who and what is removed.
         must(

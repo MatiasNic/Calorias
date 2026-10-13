@@ -93,6 +93,8 @@ export interface ServerDeps {
       payload: unknown,
     ): Promise<boolean>;
     upsertSubscription(s: SubscriptionUpsert): Promise<void>;
+    /** Moves the subscription of `fromUser` to `toUser` (RevenueCat TRANSFER). */
+    transferSubscription(fromUser: string, toUser: string): Promise<void>;
     /** Account deletion: strips the user from stored billing webhooks. */
     forgetBillingEvents(userId: string): Promise<void>;
   };

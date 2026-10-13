@@ -22,6 +22,7 @@ import {
   RATE_LIMITS,
   refundNotFood,
   requireUser,
+  sha256Hex,
   toBase64,
 } from '../guards.ts';
 import { HttpError, json, parseBody } from '../http.ts';
@@ -59,12 +60,20 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
       await deps.storage.remove(MEAL_PHOTOS_BUCKET, [body.photo_path]).catch(() => undefined);
   };
 
+  // The photo is read first: its hash is computed here (the client's value is not trusted) and
+  // size problems cost no quota.
+  const file = await deps.storage.download(MEAL_PHOTOS_BUCKET, body.photo_path);
+  if (!file) throw new HttpError(404, 'NOT_FOUND', { reason: 'photo' });
+  if (file.bytes.byteLength > MAX_IMAGE_BYTES) {
+    await cleanup();
+    throw new HttpError(400, 'INVALID_INPUT', { reason: 'image_too_large' });
+  }
+  const imageSha = await sha256Hex(file.bytes);
+
   // Dedup: the same image analyzed before is returned without consuming quota (unless the user
   // added a hint this time, which can change the answer).
   const since = new Date(deps.now().getTime() - DEDUP_WINDOW_DAYS * 86_400_000).toISOString();
-  const cached = body.hint
-    ? null
-    : await deps.db.findScanByHash(user.id, body.image_sha256, kind, since);
+  const cached = body.hint ? null : await deps.db.findScanByHash(user.id, imageSha, kind, since);
   if (cached) {
     await cleanup();
     return json({ ...(cached.result as object), scan_id: cached.id, cached: true });
@@ -74,15 +83,6 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
   await aiDailyCeiling(deps, user.id, plan);
   const ticket = await consumeQuota(deps, user.id, plan, 'photo_scan', profile.timezone);
 
-  const file = await deps.storage.download(MEAL_PHOTOS_BUCKET, body.photo_path);
-  if (!file) {
-    await deps.db.refundQuota(user.id, 'photo_scan', ticket.day, ticket.bucket);
-    throw new HttpError(404, 'NOT_FOUND', { reason: 'photo' });
-  }
-  if (file.bytes.byteLength > MAX_IMAGE_BYTES) {
-    await deps.db.refundQuota(user.id, 'photo_scan', ticket.day, ticket.bucket);
-    throw new HttpError(400, 'INVALID_INPUT', { reason: 'image_too_large' });
-  }
   const mediaType = (
     ['image/jpeg', 'image/png', 'image/webp'].includes(file.mediaType)
       ? file.mediaType
@@ -131,7 +131,7 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
             ? 'invalid_response'
             : 'error',
       error: `${err.kind}: ${err.message}`.slice(0, 500),
-      image_sha256: body.image_sha256,
+      image_sha256: imageSha,
       result: null,
     });
     await cleanup();
@@ -158,7 +158,7 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
       latency_ms: usage.latencyMs,
       status: label.is_label ? 'ok' : 'not_food',
       error: null,
-      image_sha256: body.image_sha256,
+      image_sha256: imageSha,
       result: { label },
     });
     const refunded = !label.is_label && (await refundNotFood(deps, user.id, ticket));
@@ -196,7 +196,7 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
     latency_ms: usage.latencyMs,
     status: analysis.is_food ? 'ok' : 'not_food',
     error: null,
-    image_sha256: body.image_sha256,
+    image_sha256: imageSha,
     result: payload,
   });
   await cleanup();
