@@ -9,6 +9,7 @@ name: Deploy backend + real APK
 #   optional: USDA_FDC_API_KEY, REVENUECAT_WEBHOOK_SECRET, AI_ALERT_WEBHOOK_URL
 #   APK signing (recommended; without them the APK is signed with the public debug key):
 #   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
+#   Readable crash reports (optional): SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT
 on:
   workflow_dispatch:
     inputs:
@@ -70,7 +71,10 @@ jobs:
       EXPO_PUBLIC_USE_MOCKS: 'false'
       ANDROID_MINIFY: ${{ inputs.minify }}
       EXPO_NO_TELEMETRY: '1'
-      SENTRY_DISABLE_AUTO_UPLOAD: 'true'
+      # Source maps go to Sentry only when its token is configured (see docs/PENDIENTES.md).
+      SENTRY_DISABLE_AUTO_UPLOAD: ${{ secrets.SENTRY_AUTH_TOKEN == '' && 'true' || 'false' }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
@@ -111,6 +115,7 @@ jobs:
         timeout-minutes: 45
         # 64-bit only: covers practically every phone from recent years and halves native build time.
         env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
