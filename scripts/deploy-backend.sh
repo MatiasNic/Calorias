@@ -11,7 +11,7 @@
 #                          auth and is not passed to commands: use BOCADO_ANTHROPIC_API_KEY instead.
 # Optional:
 #   USDA_FDC_API_KEY, REVENUECAT_WEBHOOK_SECRET, AI_DAILY_BUDGET_USD (default 20),
-#   AI_MODEL_FREE, AI_MODEL_PREMIUM, AI_ALERT_WEBHOOK_URL
+#   AI_MODEL_FREE, AI_MODEL_PREMIUM, AI_ALERT_WEBHOOK_URL, REVENUECAT_ACCEPT_SANDBOX (default false)
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -40,6 +40,8 @@ trap 'rm -f "$SECRETS_FILE"' EXIT
   [ -n "${USDA_FDC_API_KEY:-}" ] && echo "USDA_FDC_API_KEY=$USDA_FDC_API_KEY"
   [ -n "${REVENUECAT_WEBHOOK_SECRET:-}" ] && echo "REVENUECAT_WEBHOOK_SECRET=$REVENUECAT_WEBHOOK_SECRET"
   [ -n "${AI_ALERT_WEBHOOK_URL:-}" ] && echo "AI_ALERT_WEBHOOK_URL=$AI_ALERT_WEBHOOK_URL"
+  # Store test purchases (TestFlight / Play license testers) grant premium only when "true".
+  echo "REVENUECAT_ACCEPT_SANDBOX=${REVENUECAT_ACCEPT_SANDBOX:-false}"
 } > "$SECRETS_FILE"
 $SB secrets set --env-file "$SECRETS_FILE" --project-ref "$SUPABASE_PROJECT_REF"
 

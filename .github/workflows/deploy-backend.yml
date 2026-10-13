@@ -7,6 +7,8 @@ name: Deploy backend + real APK
 # Repository secrets (Settings → Secrets and variables → Actions):
 #   SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_REF, SUPABASE_DB_PASSWORD, BOCADO_ANTHROPIC_API_KEY
 #   optional: USDA_FDC_API_KEY, REVENUECAT_WEBHOOK_SECRET, AI_ALERT_WEBHOOK_URL
+#   APK signing (recommended; without them the APK is signed with the public debug key):
+#   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
 on:
   workflow_dispatch:
     inputs:
@@ -19,8 +21,9 @@ on:
         type: boolean
         default: true
 
+# Least privilege: only the job that publishes the release can write.
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: deploy-backend
@@ -30,14 +33,6 @@ jobs:
   deploy:
     name: Deploy Supabase backend
     runs-on: ubuntu-latest
-    env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-      BOCADO_ANTHROPIC_API_KEY: ${{ secrets.BOCADO_ANTHROPIC_API_KEY }}
-      USDA_FDC_API_KEY: ${{ secrets.USDA_FDC_API_KEY }}
-      REVENUECAT_WEBHOOK_SECRET: ${{ secrets.REVENUECAT_WEBHOOK_SECRET }}
-      AI_ALERT_WEBHOOK_URL: ${{ secrets.AI_ALERT_WEBHOOK_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -46,8 +41,18 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Secrets only reach this step (never `pnpm install`, whose package scripts could read them).
       - name: Deploy (migrations, seed, secrets, Edge Functions)
         if: ${{ inputs.deploy_backend }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          BOCADO_ANTHROPIC_API_KEY: ${{ secrets.BOCADO_ANTHROPIC_API_KEY }}
+          USDA_FDC_API_KEY: ${{ secrets.USDA_FDC_API_KEY }}
+          REVENUECAT_WEBHOOK_SECRET: ${{ secrets.REVENUECAT_WEBHOOK_SECRET }}
+          REVENUECAT_ACCEPT_SANDBOX: ${{ secrets.REVENUECAT_ACCEPT_SANDBOX }}
+          AI_ALERT_WEBHOOK_URL: ${{ secrets.AI_ALERT_WEBHOOK_URL }}
         run: ./scripts/deploy-backend.sh
   apk:
     name: Build real-mode APK and publish release
@@ -55,6 +60,8 @@ jobs:
     if: ${{ inputs.build_apk }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    permissions:
+      contents: write
     env:
       EXPO_PUBLIC_USE_MOCKS: 'false'
       EXPO_NO_TELEMETRY: '1'
@@ -98,7 +105,32 @@ jobs:
         working-directory: apps/mobile/android
         timeout-minutes: 45
         # 64-bit only: covers practically every phone from recent years and halves native build time.
-        run: ./gradlew assembleRelease --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          signing=()
+          if [ -n "${KEYSTORE_B64:-}" ]; then
+            # Private release key (the template's debug key is public: anyone could sign an
+            # "update" of the app with it). Written to the runner's temp dir, never committed.
+            ks="$RUNNER_TEMP/release.keystore"
+            echo "$KEYSTORE_B64" | base64 -d > "$ks"
+            signing=(
+              "-Pandroid.injected.signing.store.file=$ks"
+              "-Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD"
+              "-Pandroid.injected.signing.key.alias=$KEY_ALIAS"
+              "-Pandroid.injected.signing.key.password=$KEY_PASSWORD"
+            )
+            echo "SIGNED_WITH=release" >> "$GITHUB_ENV"
+          else
+            echo "::warning::ANDROID_KEYSTORE_BASE64 not set: the APK is signed with the public debug key"
+            echo "SIGNED_WITH=debug" >> "$GITHUB_ENV"
+          fi
+          ./gradlew assembleRelease --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a "${signing[@]}"
+          rm -f "$RUNNER_TEMP/release.keystore"
       - name: Check the APK talks to the real backend
         env:
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
@@ -120,7 +152,7 @@ jobs:
           apk="bocado-real-${version}.apk"
           cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk "$apk"
           sha=$(sha256sum "$apk" | cut -d' ' -f1)
-          notes="APK de prueba con **IA real** y cuenta en la nube (no es la demo). Android 8+ (64 bits). Firmado con la clave de debug: solo para pruebas. SHA-256: \`${sha}\`. Guía: docs/SEMANA_DE_PRUEBA.md"
+          notes="APK de prueba con **IA real** y cuenta en la nube (no es la demo). Android 8+ (64 bits). $( [ "$SIGNED_WITH" = release ] && echo 'Firmado con la clave de release.' || echo 'Firmado con la clave de debug: solo para pruebas.' ) SHA-256: \`${sha}\`. Guía: docs/SEMANA_DE_PRUEBA.md"
           if gh release view "$tag" >/dev/null 2>&1; then
             gh release upload "$tag" "$apk" --clobber
             gh release edit "$tag" --notes "$notes"

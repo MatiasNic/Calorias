@@ -4,6 +4,7 @@ name: Publish APK release
 # stable, phone-friendly download link (served as an attachment).
 on:
   push:
+    branches: [main]
     paths: ['releases/*.apk', '.github/workflows/release-apk.yml']
   workflow_dispatch:
 
