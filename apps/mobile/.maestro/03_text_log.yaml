@@ -4,8 +4,9 @@ env:
   APP_ID: com.bocadoapp.bocado
 ---
 - runFlow: subflows/onboarding.yaml
+# Today's "¿Qué comiste?" bar: its text side opens the text log (QuickActions is no longer on Today).
 - tapOn:
-    id: quick-text
+    id: log-bar-text
 - tapOn:
     id: text-log-input
 - inputText: 'dos empanadas y una coca zero'

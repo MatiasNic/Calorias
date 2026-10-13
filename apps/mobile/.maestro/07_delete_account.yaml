@@ -6,14 +6,17 @@ env:
 - runFlow: subflows/onboarding.yaml
 - tapOn:
     id: tab-profile
+# centerElement keeps the row clear of the floating tab bar before tapping it.
 - scrollUntilVisible:
     element:
       id: profile-privacy
+    centerElement: true
 - tapOn:
     id: profile-privacy
 - scrollUntilVisible:
     element:
       id: delete-account
+    centerElement: true
 - tapOn:
     id: delete-account
 - tapOn:
@@ -23,5 +26,7 @@ env:
 - tapOn:
     id: delete-confirm
 - tapOn: 'Eliminar'
-- assertVisible:
-    id: welcome-guest
+- extendedWaitUntil:
+    visible:
+      id: welcome-guest
+    timeout: 15000

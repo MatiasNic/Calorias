@@ -64,7 +64,16 @@ jobs:
           profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated
+          # The flows assert es-AR copy (the source locale) and number formats, but the emulator
+          # boots in en-US and the app follows the device locale. Switch the system locale to es-AR
+          # (needs root, which google_apis images allow) and reboot so it applies everywhere.
+          # Each script line runs in its own shell, so every command is a one-liner.
           script: |
+            adb root && adb wait-for-device
+            adb shell setprop persist.sys.locale es-AR
+            adb reboot && adb wait-for-disconnect && adb wait-for-device shell 'while [ "$(getprop sys.boot_completed)" != "1" ]; do sleep 2; done'
+            adb shell 'echo "Device locale: $(getprop persist.sys.locale)"; test "$(getprop persist.sys.locale)" = es-AR'
+            adb shell input keyevent 82
             adb install -r apps/mobile/android/app/build/outputs/apk/release/app-release.apk
             cd apps/mobile && maestro test .maestro/ --format junit --output "$RUNNER_TEMP/maestro-report.xml" --debug-output "$RUNNER_TEMP/maestro-debug" || (echo "::group::Screen at failure"; adb shell uiautomator dump /sdcard/ui.xml >/dev/null; adb shell cat /sdcard/ui.xml | grep -oE '(resource-id|text|content-desc)="[^"]+"' | head -120; echo "::endgroup::"; echo "::group::App log"; adb logcat -d -s ReactNativeJS:V AndroidRuntime:E ReactNative:W '*:F' | tail -150; echo "::endgroup::"; exit 1)
       - name: Upload Maestro results
