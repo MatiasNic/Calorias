@@ -7,6 +7,8 @@
  * MET values: Compendium of Physical Activities (Ainsworth et al., 2011 / 2024 update).
  */
 
+import { lbToKg, miToKm } from './units.ts';
+
 export const WORKOUT_INTENSITIES = ['light', 'moderate', 'vigorous'] as const;
 export type WorkoutIntensity = (typeof WORKOUT_INTENSITIES)[number];
 
@@ -227,4 +229,57 @@ export function trainingStats(
  */
 export function dailyExerciseKcal(loggedKcal: number, healthActiveKcal: number | null): number {
   return Math.round(loggedKcal > 0 ? loggedKcal : (healthActiveKcal ?? 0));
+}
+
+// ── Form input ──────────────────────────────────────────────────────────────
+
+/** Precision of user-entered values: loads to 0.1 kg, distances to 0.01 km. */
+export const WORKOUT_PRECISION = { kgDecimals: 1, kmDecimals: 2 } as const;
+
+/** Granularity of a new workout's default start time (matches the time stepper). */
+export const WORKOUT_TIME_STEP_MIN = 15;
+
+const roundTo = (value: number, decimals: number) => {
+  const factor = 10 ** decimals;
+  return Math.round(value * factor) / factor;
+};
+
+/** Load typed by the user (kg or lb) → stored kg: 0 when empty/negative, capped and rounded. */
+export function loadInputToKg(value: number | null, imperial: boolean): number {
+  if (value == null || value < 0) return 0;
+  const kg = imperial ? lbToKg(value) : value;
+  return Math.min(WORKOUT_LIMITS.maxKg, roundTo(kg, WORKOUT_PRECISION.kgDecimals));
+}
+
+/** Distance typed by the user (km or mi) → stored km, or null when empty or not positive. */
+export function distanceInputToKm(value: number | null, imperial: boolean): number | null {
+  if (value == null || !(value > 0)) return null;
+  return roundTo(imperial ? miToKm(value) : value, WORKOUT_PRECISION.kmDecimals);
+}
+
+/** Calories to store: the manual value when given, else the estimate; rounded and bounded. */
+export function workoutKcalToSave(manual: number | null, estimate: number): number {
+  return Math.min(WORKOUT_LIMITS.maxKcal, Math.max(0, Math.round(manual ?? estimate)));
+}
+
+/** Default start minute for a new workout: the current minute floored to the stepper's step. */
+export function floorToTimeStep(minute: number, step: number = WORKOUT_TIME_STEP_MIN): number {
+  return Math.floor(minute / step) * step;
+}
+
+/**
+ * Strength sets as typed (reps may be unparsable → null) → clean exercises: reps rounded, sets
+ * without reps dropped, exercises without sets dropped.
+ */
+export function compactStrengthExercises(
+  exercises: readonly { key: string; sets: readonly { reps: number | null; kg: number }[] }[],
+): StrengthExercise[] {
+  return exercises
+    .map((e) => ({
+      key: e.key,
+      sets: e.sets
+        .map((s) => ({ reps: Math.round(s.reps ?? 0), kg: s.kg }))
+        .filter((s) => s.reps > 0),
+    }))
+    .filter((e) => e.sets.length > 0);
 }

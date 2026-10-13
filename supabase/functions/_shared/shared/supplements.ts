@@ -143,3 +143,66 @@ function nextDay(date: string): string {
   d.setUTCDate(d.getUTCDate() + 1);
   return d.toISOString().slice(0, 10);
 }
+
+// ── Form input ──────────────────────────────────────────────────────────────
+
+/** Form defaults and bounds for a supplement's schedule. */
+export const SUPPLEMENT_FORM = {
+  /** Time given to a new supplement ("HH:MM"). */
+  defaultTime: '09:00',
+  /** Most reminder times per supplement. */
+  maxTimes: 6,
+  /** Hours after the last time when adding another one. */
+  addTimeGapHours: 4,
+} as const;
+
+/** Presets that usually carry calories/macros, so the nutrition section starts enabled. */
+export const SUPPLEMENT_PRESETS_WITH_NUTRITION: readonly string[] = ['whey', 'collagen'];
+
+export const presetHasNutrition = (key: string) => SUPPLEMENT_PRESETS_WITH_NUTRITION.includes(key);
+
+export interface TimeOfDay {
+  h: number;
+  m: number;
+}
+
+const LAST_HOUR = 23;
+const DEFAULT_HOUR = 9;
+const ALL_WEEKDAYS = 7;
+
+const pad2 = (n: number) => String(n).padStart(2, '0');
+
+/** { h: 8, m: 5 } → "08:05". */
+export const formatTimeOfDay = (v: TimeOfDay) => `${pad2(v.h)}:${pad2(v.m)}`;
+
+/** "08:05" → { h: 8, m: 5 }; missing parts fall back to 09 h / 00 min. */
+export function parseTimeOfDay(s: string): TimeOfDay {
+  const [h, m] = s.split(':').map(Number);
+  return { h: h ?? DEFAULT_HOUR, m: m ?? 0 };
+}
+
+/** Next time to offer after `last` ("HH:MM"): a few hours later, never past 23 h. */
+export function nextScheduleTime(last: string | undefined): string {
+  const t = parseTimeOfDay(last ?? SUPPLEMENT_FORM.defaultTime);
+  return formatTimeOfDay({ h: Math.min(LAST_HOUR, t.h + SUPPLEMENT_FORM.addTimeGapHours), m: t.m });
+}
+
+/** Times as stored: unique and sorted. */
+export const normalizeScheduleTimes = (times: readonly string[]) => [...new Set(times)].sort();
+
+/**
+ * Toggles a weekday (0 = Sunday … 6 = Saturday) in a schedule where empty means every day.
+ * Selecting all seven (or none) collapses back to "every day" (empty).
+ */
+export function toggleScheduleDay(days: readonly number[], day: number): number[] {
+  const base = days.length === 0 ? Array.from({ length: ALL_WEEKDAYS }, (_, i) => i) : days;
+  const next = base.includes(day) ? base.filter((x) => x !== day) : [...base, day];
+  return next.length === ALL_WEEKDAYS || next.length === 0 ? [] : next.sort();
+}
+
+/** Optional count (stock, threshold): null when empty or negative, else rounded. */
+export const optionalCount = (value: number | null) =>
+  value == null || value < 0 ? null : Math.round(value);
+
+/** Nutrition amount: empty or negative → 0. */
+export const nonNegative = (value: number | null) => Math.max(0, value ?? 0);
