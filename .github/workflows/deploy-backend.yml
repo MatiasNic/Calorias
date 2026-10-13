@@ -159,7 +159,9 @@ jobs:
           set -euo pipefail
           version=$(sed -nE "s/^\s*version: '([^']+)'.*/\1/p" apps/mobile/app.config.ts | head -1)
           tag="v${version}-real"
-          apk="bocado-real-${version}$( [ "$ANDROID_MINIFY" = true ] && echo -min ).apk"
+          suffix=""
+          if [ "$ANDROID_MINIFY" = true ]; then suffix="-min"; fi
+          apk="bocado-real-${version}${suffix}.apk"
           cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk "$apk"
           sha=$(sha256sum "$apk" | cut -d' ' -f1)
           notes="APK de prueba con **IA real** y cuenta en la nube (no es la demo). Android 8+ (64 bits). $( [ "$SIGNED_WITH" = release ] && echo 'Firmado con la clave de release.' || echo 'Firmado con la clave de debug: solo para pruebas.' ) SHA-256: \`${sha}\`. Guía: docs/SEMANA_DE_PRUEBA.md"
