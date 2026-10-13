@@ -106,24 +106,50 @@ export function useAchievementStats() {
   });
 }
 
-/** Evaluates achievements after a relevant action and celebrates new ones. */
-export async function checkAchievements(): Promise<AchievementId[]> {
+/** Several actions in a row (a meal plus water plus weight) are checked once. */
+const CHECK_DEBOUNCE_MS = 1500;
+let pendingCheck: Promise<AchievementId[]> | null = null;
+
+/**
+ * Evaluates achievements after a relevant action and celebrates new ones. Reading the whole
+ * history is the expensive part, so calls made close together share one evaluation.
+ */
+export function checkAchievements(): Promise<AchievementId[]> {
+  pendingCheck ??= new Promise<AchievementId[]>((resolve, reject) => {
+    setTimeout(() => {
+      pendingCheck = null;
+      runAchievementCheck().then(resolve, reject);
+    }, CHECK_DEBOUNCE_MS);
+  });
+  return pendingCheck;
+}
+
+async function runAchievementCheck(): Promise<AchievementId[]> {
   const today = todayLocal();
-  const [{ stats, streak }, unlocked, todayMeals] = await Promise.all([
+  const [{ stats, streak }, unlocked, todayMeals, storedStreak] = await Promise.all([
     loadAchievementStats(),
     repos.achievements.list(),
     repos.meals.list({ from: today, to: today }),
+    repos.streaks.get(currentUserId()),
   ]);
   const fresh = evaluateAchievements(stats, new Set(unlocked.map((a) => a.id)));
-  for (const id of fresh) {
-    await repos.achievements.upsert({ id, unlocked_at: new Date().toISOString() });
-  }
-  await repos.streaks.upsert({
+  const unlockedAt = new Date().toISOString();
+  for (const id of fresh) await repos.achievements.upsert({ id, unlocked_at: unlockedAt });
+  // Only write the streak when it changed: every local write is queued for upload and refreshes
+  // the screens that read it.
+  const nextStreak = {
     id: currentUserId(),
     current_streak: streak.current,
     longest_streak: streak.longest,
-    last_logged_date: todayMeals.length ? today : null,
-  });
+    last_logged_date: todayMeals.length ? today : (storedStreak?.last_logged_date ?? null),
+  };
+  if (
+    !storedStreak ||
+    storedStreak.current_streak !== nextStreak.current_streak ||
+    storedStreak.longest_streak !== nextStreak.longest_streak ||
+    storedStreak.last_logged_date !== nextStreak.last_logged_date
+  )
+    await repos.streaks.upsert(nextStreak);
   if (fresh.length) {
     haptic('success');
     toast.success(i18next.t('achievements.unlocked', { name: achievementTitle(fresh[0]!) }));

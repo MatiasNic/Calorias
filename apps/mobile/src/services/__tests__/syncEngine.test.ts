@@ -41,6 +41,7 @@ jest.mock('@/services/db/repository', () => ({
     emit: (name: string) => void mockState.emitted.push(name),
     subscribe: () => () => {},
   },
+  purgeTombstones: async () => 0,
 }));
 
 jest.mock('@/services/sync/adapters', () => {
@@ -123,6 +124,28 @@ describe('sync engine', () => {
     expect(mockState.applied).toContain('meals:x');
     const { useSyncStatus } = engine();
     expect(useSyncStatus.getState().lastError).toContain('bad');
+  });
+
+  it('waits longer and longer before retrying a rejected record', async () => {
+    mockState.dirty.set('meals', [row('bad', 't1')]);
+    mockState.pushFails.add('bad');
+    const { syncNow, useSyncStatus } = engine();
+    const now = jest.spyOn(Date, 'now');
+    let t = 1_000_000;
+    now.mockImplementation(() => t);
+    await syncNow(); // attempt 1 fails
+    await syncNow(); // within the wait: skipped
+    expect(mockState.pushRequests).toEqual([1]);
+    t += 31_000;
+    await syncNow(); // attempt 2 fails
+    t += 31_000;
+    await syncNow(); // wait doubled to 60 s: still skipped
+    expect(mockState.pushRequests).toEqual([1, 1]);
+    t += 60_000;
+    await syncNow(); // attempt 3 fails → reported as stuck
+    expect(mockState.pushRequests).toEqual([1, 1, 1]);
+    expect(useSyncStatus.getState().stuck).toBe(1);
+    now.mockRestore();
   });
 
   it('uploads dirty records in batches, not one request each', async () => {

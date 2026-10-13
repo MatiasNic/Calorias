@@ -4,7 +4,7 @@ import { create } from 'zustand';
 
 import { captureError } from '@/services/analytics';
 import { getDb } from '@/services/db/database';
-import { collection, dbEvents } from '@/services/db/repository';
+import { collection, dbEvents, purgeTombstones } from '@/services/db/repository';
 import type { CollectionName } from '@/services/db/types';
 import { getSupabase } from '@/services/supabase/client';
 import { useSessionStore } from '@/stores/session';
@@ -20,6 +20,8 @@ interface SyncStatus {
   lastSyncedAt: string | null;
   lastError: string | null;
   online: boolean;
+  /** Local changes the server keeps rejecting (retried less and less often). */
+  stuck: number;
 }
 
 export const useSyncStatus = create<SyncStatus>(() => ({
@@ -27,7 +29,29 @@ export const useSyncStatus = create<SyncStatus>(() => ({
   lastSyncedAt: null,
   lastError: null,
   online: true,
+  stuck: 0,
 }));
+
+/** Retry policy for records the server rejects: exponential wait, capped. */
+export const PUSH_RETRY = { baseMs: 30_000, maxMs: 6 * 3_600_000, stuckAfter: 3 } as const;
+
+/**
+ * Failures per record version (`collection:id:updatedAt`): editing the record again starts over.
+ * Kept in memory: an app restart retries everything once, which is what a user would expect.
+ */
+const failures = new Map<string, { count: number; retryAt: number }>();
+const failureKey = (name: string, id: string, updatedAt: string) => `${name}:${id}:${updatedAt}`;
+
+function recordFailure(key: string, now: number) {
+  const count = (failures.get(key)?.count ?? 0) + 1;
+  const wait = Math.min(PUSH_RETRY.baseMs * 2 ** (count - 1), PUSH_RETRY.maxMs);
+  failures.set(key, { count, retryAt: now + wait });
+}
+
+/** Test helper: forget retry state between tests. */
+export function resetPushRetries() {
+  failures.clear();
+}
 
 async function getLastPulled(c: CollectionName): Promise<string | null> {
   const row = await (
@@ -98,9 +122,19 @@ export const PUSH_BATCH = 100;
  * Uploads every dirty record, a batch per request. A batch the server rejects is retried one
  * record at a time, so one bad record doesn't block the others.
  */
-async function pushCollection(sb: unknown, userId: string, repo: AnyRepo, adapter: AnyAdapter) {
+async function pushCollection(
+  name: CollectionName,
+  sb: unknown,
+  userId: string,
+  repo: AnyRepo,
+  adapter: AnyAdapter,
+) {
   const errors: string[] = [];
-  const dirty = await repo.dirty();
+  const now = Date.now();
+  const keyOf = (i: { record: { id: string }; updatedAt: string }) =>
+    failureKey(name, i.record.id, i.updatedAt);
+  // Records still waiting after a rejection are left for a later sync.
+  const dirty = (await repo.dirty()).filter((i) => (failures.get(keyOf(i))?.retryAt ?? 0) <= now);
   const send = async (items: typeof dirty) => {
     await adapter.push(
       sb,
@@ -111,6 +145,11 @@ async function pushCollection(sb: unknown, userId: string, repo: AnyRepo, adapte
     await db.withTransactionAsync(async () => {
       for (const i of items) await repo.markClean(i.record.id, i.updatedAt);
     });
+    for (const i of items) failures.delete(keyOf(i));
+  };
+  const fail = (item: (typeof dirty)[number], e: unknown) => {
+    recordFailure(keyOf(item), now);
+    errors.push(e instanceof Error ? e.message : String(e));
   };
   for (let i = 0; i < dirty.length; i += PUSH_BATCH) {
     const batch = dirty.slice(i, i + PUSH_BATCH);
@@ -118,14 +157,14 @@ async function pushCollection(sb: unknown, userId: string, repo: AnyRepo, adapte
       await send(batch);
     } catch (e) {
       if (batch.length === 1) {
-        errors.push(e instanceof Error ? e.message : String(e));
+        fail(batch[0]!, e);
         continue;
       }
       for (const item of batch) {
         try {
           await send([item]);
         } catch (err) {
-          errors.push(err instanceof Error ? err.message : String(err));
+          fail(item, err);
         }
       }
     }
@@ -188,7 +227,7 @@ async function doSync() {
     const repo = collection(name) as unknown as AnyRepo;
     const adapter = adapters[name] as unknown as AnyAdapter;
     try {
-      for (const e of await pushCollection(sb, userId, repo, adapter))
+      for (const e of await pushCollection(name, sb, userId, repo, adapter))
         errors.push(`${name} push: ${e}`);
       if (await pullCollection(name, sb, userId, repo, adapter)) changed.push(name);
     } catch (e) {
@@ -203,10 +242,14 @@ async function doSync() {
   if (report && report !== lastReported) captureError(new Error('sync failed'), { errors: report });
   lastReported = report;
 
+  // Deleted rows the server already has are no longer needed on the device.
+  if (!errors.length) await purgeTombstones().catch(() => undefined); // retried next sync
+
   useSyncStatus.setState({
     syncing: false,
     lastSyncedAt: errors.length ? useSyncStatus.getState().lastSyncedAt : new Date().toISOString(),
     lastError: errors.length ? errors.join('\n') : null,
+    stuck: [...failures.values()].filter((f) => f.count >= PUSH_RETRY.stuckAfter).length,
   });
 }
 

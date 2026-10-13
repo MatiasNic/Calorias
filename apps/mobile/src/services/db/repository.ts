@@ -231,6 +231,21 @@ export const SINGLETONS: readonly CollectionName[] = [
   'streaks',
 ];
 
+/** Days a synced deletion is kept locally (so a late pull of the same row still sees it gone). */
+export const TOMBSTONE_RETENTION_DAYS = 30;
+
+/** Removes deletions that the server already has and are older than the retention window. */
+export async function purgeTombstones(now: Date = new Date()): Promise<number> {
+  const cutoff = new Date(now.getTime() - TOMBSTONE_RETENTION_DAYS * 86_400_000).toISOString();
+  const r = await (
+    await getDb()
+  ).runAsync(
+    'DELETE FROM records WHERE deleted_at IS NOT NULL AND dirty = 0 AND deleted_at < ? AND user_id = ?',
+    [cutoff, currentUserId()],
+  );
+  return r.changes;
+}
+
 export async function pendingChangesCount(): Promise<number> {
   const r = await (
     await getDb()
