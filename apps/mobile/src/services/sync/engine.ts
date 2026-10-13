@@ -257,7 +257,7 @@ let timer: ReturnType<typeof setTimeout> | null = null;
 function scheduleSync() {
   if (timer) clearTimeout(timer);
   timer = setTimeout(() => {
-    syncNow().catch(() => undefined);
+    syncNow().catch(() => undefined); // doSync reports its own failures
   }, DEBOUNCE_MS);
 }
 

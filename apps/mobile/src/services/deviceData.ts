@@ -25,7 +25,7 @@ export async function wipeDeviceUserData() {
   const snapshot = snapshotFor(todayLocal(), null);
   if (labels) snapshot.labels = labels;
   writeSnapshot(snapshot);
-  await refreshWidgets(snapshot).catch(() => undefined);
+  await refreshWidgets(snapshot).catch(() => undefined); // no widget on the home screen is fine
   try {
     deleteLocalPhotos();
   } catch {

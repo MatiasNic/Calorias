@@ -8,11 +8,12 @@ export async function refreshWidgets(snapshot: WidgetSnapshot) {
   if (Platform.OS !== 'android') return;
   const { requestWidgetUpdate } = await import('react-native-android-widget');
   await Promise.all(
-    Object.values(WIDGET_NAMES).map((widgetName) =>
-      requestWidgetUpdate({
-        widgetName,
-        renderWidget: (info) => renderWidget(widgetName, snapshot, info.width, info.height),
-      }).catch(() => undefined),
+    Object.values(WIDGET_NAMES).map(
+      (widgetName) =>
+        requestWidgetUpdate({
+          widgetName,
+          renderWidget: (info) => renderWidget(widgetName, snapshot, info.width, info.height),
+        }).catch(() => undefined), // that widget isn't on the home screen
     ),
   );
 }

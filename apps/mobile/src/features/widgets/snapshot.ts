@@ -74,6 +74,7 @@ function read<T>(key: string): T | null {
     const raw = kvStorage.getItemSync(key);
     return raw ? (JSON.parse(raw) as T) : null;
   } catch {
+    // unreadable or corrupt value: the widgets start from an empty day
     return null;
   }
 }

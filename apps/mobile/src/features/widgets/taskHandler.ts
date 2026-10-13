@@ -27,7 +27,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       writeSnapshot(snapshot);
       writeQueue(next.queue);
       // Other widgets showing the same numbers (e.g. "Hoy") update too.
-      await refreshWidgets(snapshot).catch(() => undefined);
+      await refreshWidgets(snapshot).catch(() => undefined); // the tapped widget redraws below anyway
     }
   }
 

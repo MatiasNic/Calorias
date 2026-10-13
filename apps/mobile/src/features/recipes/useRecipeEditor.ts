@@ -10,6 +10,7 @@ import { logRecipe, recipeTotals, saveRecipe } from '@/features/foods/recipes';
 import { checkAchievements } from '@/features/habits/hooks';
 import { repos } from '@/services/db/repository';
 import { todayLocal } from '@/utils/dates';
+import { captureError } from '@/services/analytics';
 
 /**
  * Recipe editor state: loads the recipe `id` into the draft (and clears it on close), computes
@@ -45,7 +46,7 @@ export function useRecipeEditor(id: string | undefined) {
       items: draft.items,
     });
     useRecipeDraftStore.getState().set({ id: r.id });
-    checkAchievements().catch(() => undefined);
+    checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
     toast.success(t('recipes.saved'));
   };
 

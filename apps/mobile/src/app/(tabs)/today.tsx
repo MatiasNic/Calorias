@@ -34,7 +34,7 @@ export default function Today() {
   const pullToRefresh = () => {
     setPulling(true);
     syncNow()
-      .catch(() => undefined)
+      .catch(() => undefined) // the engine reports sync failures itself
       .finally(() => setPulling(false));
   };
   const isToday = date === todayLocal();

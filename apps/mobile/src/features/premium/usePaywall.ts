@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { toast } from '@/components';
-import { track } from '@/services/analytics';
+import { captureError, track } from '@/services/analytics';
 import { getPackages, purchase, restorePurchases } from '@/services/purchases';
 import { haptic } from '@/utils/haptics';
 
@@ -57,7 +57,8 @@ export function usePaywall(context: PaywallContext, onClose: (purchased: boolean
       const ok = await restorePurchases();
       toast[ok ? 'success' : 'info'](t(ok ? 'paywall.restored' : 'paywall.nothingToRestore'));
       if (ok) onClose(true);
-    } catch {
+    } catch (e) {
+      captureError(e, { where: 'restorePurchases' });
       toast.error(t('common.errorMessage'));
     } finally {
       setBusy(null);
