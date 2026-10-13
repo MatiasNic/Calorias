@@ -426,6 +426,8 @@ export const en: TranslationShape<Translation> = {
     lockedMessage: 'The free plan shows the last {{days}} days. Your data is still stored.',
     recipes: 'Recipes',
     customFood: 'Create food',
+    prevDay: 'Previous day',
+    nextDay: 'Next day',
   },
   foodSearch: {
     titleFor: 'Add to {{meal}}',

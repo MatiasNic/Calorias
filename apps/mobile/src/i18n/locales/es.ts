@@ -444,6 +444,8 @@ export const es = {
     lockedMessage: 'El plan gratis muestra los últimos {{days}} días. Tus datos siguen guardados.',
     recipes: 'Recetas',
     customFood: 'Crear alimento',
+    prevDay: 'Día anterior',
+    nextDay: 'Día siguiente',
   },
   foodSearch: {
     titleFor: 'Agregar a {{meal}}',

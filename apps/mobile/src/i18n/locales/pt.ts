@@ -440,6 +440,8 @@ export const pt: TranslationShape<Translation> = {
     lockedMessage: 'O plano grátis mostra os últimos {{days}} dias. Seus dados continuam salvos.',
     recipes: 'Receitas',
     customFood: 'Criar alimento',
+    prevDay: 'Dia anterior',
+    nextDay: 'Próximo dia',
   },
   foodSearch: {
     titleFor: 'Adicionar a {{meal}}',
