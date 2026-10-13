@@ -1290,6 +1290,7 @@ export type Database = {
         };
       };
       upsert_meal: { Args: { p: Json }; Returns: string };
+      upsert_meals: { Args: { p: Json }; Returns: number };
     };
     Enums: {
       [_ in never]: never;

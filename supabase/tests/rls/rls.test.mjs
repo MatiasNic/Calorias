@@ -513,6 +513,34 @@ describe('hardening', () => {
   });
 });
 
+describe('batch meal upload', () => {
+  it('saves several meals in one call, all or nothing', async () => {
+    const a = randomUUID();
+    const b = randomUUID();
+    const r = await as(A, () =>
+      q('select public.upsert_meals($1::jsonb) n', [
+        JSON.stringify([mealPayload(a, 1), mealPayload(b, 2)]),
+      ]),
+    );
+    assert.equal(r.rows[0].n, 2);
+    const c = await as(A, () =>
+      q('select count(*)::int n from public.meals where id = any($1)', [[a, b]]),
+    );
+    assert.equal(c.rows[0].n, 2);
+    // A meal of another user in the batch rejects the whole batch.
+    const fresh = randomUUID();
+    await assert.rejects(
+      as(B, () =>
+        q('select public.upsert_meals($1::jsonb)', [
+          JSON.stringify([mealPayload(fresh, 1), mealPayload(a, 1)]),
+        ]),
+      ),
+    );
+    const none = await q('select count(*)::int n from public.meals where id = $1', [fresh]);
+    assert.equal(none.rows[0].n, 0);
+  });
+});
+
 describe('account deletion', () => {
   it('deleting the auth user cascades to all personal data', async () => {
     await q('delete from auth.users where id = $1', [A]);

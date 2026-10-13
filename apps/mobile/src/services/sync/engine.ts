@@ -77,7 +77,11 @@ type AnyRepo = {
   applyRemote(record: unknown, deletedAt: string | null, updatedAt: string): Promise<boolean>;
 };
 type AnyAdapter = {
-  push(sb: unknown, userId: string, record: unknown, deletedAt: string | null): Promise<void>;
+  push(
+    sb: unknown,
+    userId: string,
+    items: { record: unknown; deletedAt: string | null }[],
+  ): Promise<void>;
   pull(
     sb: unknown,
     userId: string,
@@ -86,15 +90,43 @@ type AnyAdapter = {
   ): Promise<{ record: unknown; updatedAt: string; deletedAt: string | null }[]>;
 };
 
-/** Uploads every dirty record; one failing record doesn't block the others. */
+/** Records per upload request. */
+export const PUSH_BATCH = 100;
+
+/**
+ * Uploads every dirty record, a batch per request. A batch the server rejects is retried one
+ * record at a time, so one bad record doesn't block the others.
+ */
 async function pushCollection(sb: unknown, userId: string, repo: AnyRepo, adapter: AnyAdapter) {
   const errors: string[] = [];
-  for (const item of await repo.dirty()) {
+  const dirty = await repo.dirty();
+  const send = async (items: typeof dirty) => {
+    await adapter.push(
+      sb,
+      userId,
+      items.map((i) => ({ record: i.record, deletedAt: i.deletedAt })),
+    );
+    const db = await getDb();
+    await db.withTransactionAsync(async () => {
+      for (const i of items) await repo.markClean(i.record.id, i.updatedAt);
+    });
+  };
+  for (let i = 0; i < dirty.length; i += PUSH_BATCH) {
+    const batch = dirty.slice(i, i + PUSH_BATCH);
     try {
-      await adapter.push(sb, userId, item.record, item.deletedAt);
-      await repo.markClean(item.record.id, item.updatedAt);
+      await send(batch);
     } catch (e) {
-      errors.push(e instanceof Error ? e.message : String(e));
+      if (batch.length === 1) {
+        errors.push(e instanceof Error ? e.message : String(e));
+        continue;
+      }
+      for (const item of batch) {
+        try {
+          await send([item]);
+        } catch (err) {
+          errors.push(err instanceof Error ? err.message : String(err));
+        }
+      }
     }
   }
   return errors;

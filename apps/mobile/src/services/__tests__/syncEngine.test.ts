@@ -13,6 +13,7 @@ const mockState = {
   server: new Map<string, Row[]>(),
   pushFails: new Set<string>(),
   pullCalls: [] as { name: string; since: string | null; page: number }[],
+  pushRequests: [] as number[],
   emitted: [] as string[],
 };
 
@@ -45,8 +46,10 @@ jest.mock('@/services/db/repository', () => ({
 jest.mock('@/services/sync/adapters', () => {
   const PULL_PAGE = 2;
   const adapter = (name: string) => ({
-    push: async (_sb: unknown, _u: string, r: { id: string }) => {
-      if (mockState.pushFails.has(r.id)) throw new Error(`bad ${r.id}`);
+    push: async (_sb: unknown, _u: string, items: { record: { id: string } }[]) => {
+      mockState.pushRequests.push(items.length);
+      const bad = items.find((i) => mockState.pushFails.has(i.record.id));
+      if (bad) throw new Error(`bad ${bad.record.id}`);
     },
     pull: async (_sb: unknown, _u: string, since: string | null, page: number) => {
       mockState.pullCalls.push({ name, since, page });
@@ -79,6 +82,7 @@ beforeEach(() => {
   mockState.applied = [];
   mockState.cleaned = [];
   mockState.pullCalls = [];
+  mockState.pushRequests = [];
   mockState.emitted = [];
   const { useSessionStore } = require('@/stores/session');
   useSessionStore.setState({ status: 'authenticated', userId: 'u1' });
@@ -111,9 +115,19 @@ describe('sync engine', () => {
     mockState.server.set('meals', [row('x', '2026-10-01T00:00:00Z')]);
     await engine().syncNow();
     expect(mockState.cleaned).toEqual(['meals:ok']);
+    // The batch failed, then each record was retried on its own.
+    expect(mockState.pushRequests).toEqual([2, 1, 1]);
     expect(mockState.applied).toContain('meals:x');
     const { useSyncStatus } = engine();
     expect(useSyncStatus.getState().lastError).toContain('bad');
+  });
+
+  it('uploads dirty records in batches, not one request each', async () => {
+    const many = Array.from({ length: 150 }, (_, i) => row(`m${i}`, `t${i}`));
+    mockState.dirty.set('meals', many);
+    await engine().syncNow();
+    expect(mockState.pushRequests).toEqual([100, 50]);
+    expect(mockState.cleaned).toHaveLength(150);
   });
 
   it('pulls with an overlap before the last cursor', async () => {
