@@ -105,6 +105,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             targetCellWidth: 2,
             targetCellHeight: 1,
             resizeMode: 'horizontal',
+            // Redraw at least every 30 min (Android's minimum) so a new day shows up without opening the app.
+            updatePeriodMillis: 1800000,
             previewImage: './assets/widgets/water.png',
           },
           {
@@ -139,6 +141,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             targetCellWidth: 4,
             targetCellHeight: 2,
             resizeMode: 'horizontal|vertical',
+            // Redraw at least every 30 min (Android's minimum) so a new day shows up without opening the app.
+            updatePeriodMillis: 1800000,
             previewImage: './assets/widgets/usual.png',
           },
         ],

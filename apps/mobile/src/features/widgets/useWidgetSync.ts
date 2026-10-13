@@ -24,6 +24,7 @@ export function useWidgetSync(day: {
   const targetKcal = Math.round(consumed.kcal + day.summary.remainingKcal);
   const round = (n: number) => Math.round(n);
   const key = JSON.stringify([
+    todayLocal(),
     consumedKcal,
     targetKcal,
     round(consumed.protein_g),

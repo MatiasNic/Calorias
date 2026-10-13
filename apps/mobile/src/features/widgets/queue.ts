@@ -5,6 +5,7 @@ import { addWater, undoLastWater } from '@/features/body/hooks';
 import { duplicateMeal } from '@/features/diary/hooks';
 import { repos } from '@/services/db/repository';
 import { readQueue, writeQueue, type WidgetAction } from './snapshot';
+import { refreshWidgetsForToday } from './sync';
 
 let running: Promise<void> | null = null;
 
@@ -54,7 +55,10 @@ export function useWidgetQueue() {
     if (Platform.OS !== 'android') return;
     void applyWidgetQueue();
     const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') void applyWidgetQueue();
+      if (state !== 'active') return;
+      void applyWidgetQueue();
+      // A new day may have started since the widgets were last drawn.
+      refreshWidgetsForToday().catch(() => undefined); // no widget on the home screen is fine
     });
     return () => sub.remove();
   }, []);

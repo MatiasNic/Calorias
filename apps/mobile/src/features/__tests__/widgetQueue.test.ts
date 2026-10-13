@@ -8,6 +8,7 @@ jest.mock('react-native', () => ({
   Platform: { OS: 'android' },
   AppState: { addEventListener: () => ({ remove: () => {} }) },
 }));
+jest.mock('@/features/widgets/sync', () => ({ refreshWidgetsForToday: async () => undefined }));
 jest.mock('@/features/body/hooks', () => ({
   addWater: async (date: string, ml: number) => {
     if (mockFail.has('water')) throw new Error('db');
