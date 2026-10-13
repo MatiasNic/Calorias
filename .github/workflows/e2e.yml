@@ -85,4 +85,5 @@ jobs:
             ${{ runner.temp }}/maestro-report.xml
             ${{ runner.temp }}/maestro-debug
             ~/.maestro/tests
+            apps/mobile/*.png
           if-no-files-found: ignore
