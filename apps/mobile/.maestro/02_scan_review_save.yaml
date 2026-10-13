@@ -21,10 +21,13 @@ env:
     visible:
       id: review-save
     timeout: 15000
-- assertVisible: 'Confianza.*'
+# The review lists each food as a collapsed line (no confidence badge any more; low-confidence
+# items only get a dot). Open the first one and pick a size: Chica / Mediana / Grande.
+- assertVisible:
+    id: draft-item-0
 - tapOn:
     id: draft-item-0
-- tapOn: '1,5×'
+- tapOn: 'Grande'
 - tapOn:
     id: review-save
 - assertVisible:
