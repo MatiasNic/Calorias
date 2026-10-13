@@ -1,5 +1,8 @@
 import { redirectParams } from '../auth';
 
+// The device wipe pulls in native store SDKs that Jest can't load; it isn't used here.
+jest.mock('../deviceData', () => ({ localDataOwners: jest.fn(), wipeDeviceUserData: jest.fn() }));
+
 describe('redirectParams', () => {
   it('reads the PKCE code from the query', () => {
     expect(redirectParams('bocado://auth/callback?code=abc123').code).toBe('abc123');

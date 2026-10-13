@@ -67,16 +67,16 @@ export function collection<C extends CollectionName>(name: C) {
       const row = await (
         await getDb()
       ).getFirstAsync<Row>(
-        'SELECT * FROM records WHERE collection = ? AND id = ? AND deleted_at IS NULL',
-        [name, id],
+        'SELECT * FROM records WHERE collection = ? AND id = ? AND user_id = ? AND deleted_at IS NULL',
+        [name, id, currentUserId()],
       );
       return row ? (JSON.parse(row.data) as T) : null;
     },
 
     /** Records ordered by local date (if the collection has one) then id. */
     async list(range?: { from?: string; to?: string }): Promise<T[]> {
-      const where = ['collection = ?', 'deleted_at IS NULL'];
-      const params: string[] = [name];
+      const where = ['collection = ?', 'user_id = ?', 'deleted_at IS NULL'];
+      const params: string[] = [name, currentUserId()];
       if (range?.from) {
         where.push('local_date >= ?');
         params.push(range.from);
@@ -98,8 +98,8 @@ export function collection<C extends CollectionName>(name: C) {
       const r = await (
         await getDb()
       ).getFirstAsync<{ n: number }>(
-        'SELECT COUNT(*) as n FROM records WHERE collection = ? AND deleted_at IS NULL',
-        [name],
+        'SELECT COUNT(*) as n FROM records WHERE collection = ? AND user_id = ? AND deleted_at IS NULL',
+        [name, currentUserId()],
       );
       return r?.n ?? 0;
     },
@@ -109,8 +109,8 @@ export function collection<C extends CollectionName>(name: C) {
       const rows = await (
         await getDb()
       ).getAllAsync<{ d: string }>(
-        'SELECT DISTINCT local_date as d FROM records WHERE collection = ? AND deleted_at IS NULL AND local_date IS NOT NULL ORDER BY d',
-        [name],
+        'SELECT DISTINCT local_date as d FROM records WHERE collection = ? AND user_id = ? AND deleted_at IS NULL AND local_date IS NOT NULL ORDER BY d',
+        [name, currentUserId()],
       );
       return rows.map((r) => r.d);
     },
@@ -133,11 +133,12 @@ export function collection<C extends CollectionName>(name: C) {
 
     /** Soft delete (propagated to the server as deleted_at). */
     async remove(id: string): Promise<void> {
+      const now = nowIso();
       await (
         await getDb()
       ).runAsync(
-        'UPDATE records SET deleted_at = ?, updated_at = ?, dirty = 1 WHERE collection = ? AND id = ?',
-        [nowIso(), nowIso(), name, id],
+        'UPDATE records SET deleted_at = ?, updated_at = ?, dirty = 1 WHERE collection = ? AND id = ? AND user_id = ?',
+        [now, now, name, id, currentUserId()],
       );
       dbEvents.emit(name);
     },
@@ -146,7 +147,10 @@ export function collection<C extends CollectionName>(name: C) {
     async dirty(): Promise<StoredRecord<T>[]> {
       const rows = await (
         await getDb()
-      ).getAllAsync<Row>('SELECT * FROM records WHERE collection = ? AND dirty = 1', [name]);
+      ).getAllAsync<Row>(
+        'SELECT * FROM records WHERE collection = ? AND dirty = 1 AND user_id = ?',
+        [name, currentUserId()],
+      );
       return rows.map((r) => ({
         record: JSON.parse(r.data) as T,
         updatedAt: r.updated_at,
@@ -203,7 +207,10 @@ export async function adoptGuestData(newUserId: string, guestId: string) {
         [newUserId, newUserId, c, guestId],
       );
     }
-    await db.runAsync('UPDATE records SET user_id = ?, dirty = 1', [newUserId]);
+    await db.runAsync('UPDATE records SET user_id = ?, dirty = 1 WHERE user_id = ?', [
+      newUserId,
+      guestId,
+    ]);
   });
 }
 
@@ -217,7 +224,10 @@ export const SINGLETONS: readonly CollectionName[] = [
 export async function pendingChangesCount(): Promise<number> {
   const r = await (
     await getDb()
-  ).getFirstAsync<{ n: number }>('SELECT COUNT(*) as n FROM records WHERE dirty = 1');
+  ).getFirstAsync<{ n: number }>(
+    'SELECT COUNT(*) as n FROM records WHERE dirty = 1 AND user_id = ?',
+    [currentUserId()],
+  );
   return r?.n ?? 0;
 }
 

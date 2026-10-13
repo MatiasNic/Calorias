@@ -5,8 +5,8 @@ import * as WebBrowser from 'expo-web-browser';
 
 import { env } from '@/config/env';
 import { currentLocale } from '@/i18n';
-import { resetLocalDatabase } from '@/services/db/database';
 import { adoptGuestData, pendingChangesCount } from '@/services/db/repository';
+import { localDataOwners, wipeDeviceUserData } from '@/services/deviceData';
 import { getSupabase } from '@/services/supabase/client';
 import { syncNow } from '@/services/sync/engine';
 import { GUEST_USER_ID, useSessionStore } from '@/stores/session';
@@ -77,14 +77,19 @@ export function redirectParams(url: string): Record<string, string | undefined> 
   return out;
 }
 
-/** When a guest creates an account, their local data is attached to it and uploaded. */
+/**
+ * Makes sure the device only holds data of `userId` before it becomes the signed-in account: a
+ * guest's data is attached to the new account; anything left by another account (e.g. after an
+ * expired session) is wiped so it is never shown to, or uploaded into, someone else's account.
+ */
+async function claimLocalData(userId: string) {
+  if (useSessionStore.getState().status === 'guest') await adoptGuestData(userId, GUEST_USER_ID);
+  const owners = await localDataOwners();
+  if (owners.some((o) => o !== userId)) await wipeDeviceUserData();
+}
+
 async function onAuthenticated(userId: string, email: string | null) {
-  const prev = useSessionStore.getState();
-  if (prev.status === 'guest') {
-    await adoptGuestData(userId, GUEST_USER_ID);
-  } else if (prev.userId && prev.userId !== userId) {
-    await resetLocalDatabase();
-  }
+  await claimLocalData(userId);
   useSessionStore.getState().setAuthenticated(userId, email);
   syncNow().catch(() => undefined);
 }
@@ -92,6 +97,8 @@ async function onAuthenticated(userId: string, email: string | null) {
 export const auth = {
   /** Demo/guest: local-only data. In mock mode every sign-in path lands here. */
   async continueAsGuest() {
+    const owners = await localDataOwners();
+    if (owners.some((o) => o !== GUEST_USER_ID)) await wipeDeviceUserData();
     useSessionStore.getState().setGuest(env.useMocks);
   },
 
@@ -236,14 +243,16 @@ export const auth = {
     }
     const { data } = await sb.auth.getSession();
     const user = data.session?.user;
-    if (user) store.setAuthenticated(user.id, user.email ?? null);
+    if (user) await onAuthenticated(user.id, user.email ?? null);
+    // Session expired or revoked: the data stays (it may hold unsynced changes) but only the same
+    // account can see it again (claimLocalData wipes it for anyone else).
     else if (store.status === 'authenticated') store.setSignedOut();
     sb.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') useSessionStore.getState().setSignedOut();
       if ((event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') && session?.user) {
         const s = useSessionStore.getState();
-        if (s.status !== 'authenticated')
-          s.setAuthenticated(session.user.id, session.user.email ?? null);
+        if (s.status !== 'authenticated' || s.userId !== session.user.id)
+          void onAuthenticated(session.user.id, session.user.email ?? null);
       }
     });
   },
@@ -251,13 +260,21 @@ export const auth = {
   /** Number of local changes that would be lost on sign-out (unsynced). */
   pendingChanges: pendingChangesCount,
 
-  async signOut() {
+  /**
+   * Uploads pending changes, then signs out and wipes the device. If some changes could not be
+   * uploaded it stops and returns how many (pass `force` to sign out and lose them anyway).
+   */
+  async signOut({ force = false }: { force?: boolean } = {}): Promise<{ unsynced: number }> {
     const sb = getSupabase();
     if (sb) {
       await syncNow().catch(() => undefined);
-      await sb.auth.signOut();
+      const unsynced =
+        useSessionStore.getState().status === 'authenticated' ? await pendingChangesCount() : 0;
+      if (unsynced && !force) return { unsynced };
+      await sb.auth.signOut().catch(() => undefined);
     }
-    await resetLocalDatabase();
+    await wipeDeviceUserData();
     useSessionStore.getState().setSignedOut();
+    return { unsynced: 0 };
   },
 };

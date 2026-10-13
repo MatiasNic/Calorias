@@ -28,6 +28,11 @@ const MIGRATIONS: readonly string[] = [
     expires_at TEXT
   );
   `,
+  // v2: every read filters by the signed-in user
+  `
+  DROP INDEX IF EXISTS records_by_date;
+  CREATE INDEX IF NOT EXISTS records_by_user_date ON records (collection, user_id, local_date);
+  `,
 ];
 
 let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;

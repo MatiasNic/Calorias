@@ -58,6 +58,20 @@ export default function Profile() {
         : t('profile.guest')
       : (session.email?.split('@')[0] ?? t('profile.title')));
 
+  const doSignOut = async (force: boolean) => {
+    const { unsynced } = await auth.signOut({ force });
+    if (!unsynced) return router.replace('/welcome');
+    // Some changes could not be uploaded: never lose them without asking.
+    Alert.alert(t('profile.signOutTitle'), t('profile.signOutUnsynced', { count: unsynced }), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('profile.signOutAnyway'),
+        style: 'destructive',
+        onPress: () => void doSignOut(true),
+      },
+    ]);
+  };
+
   const signOut = () => {
     const count = pending.data ?? 0;
     Alert.alert(
@@ -68,7 +82,7 @@ export default function Profile() {
         {
           text: t('profile.signOut'),
           style: 'destructive',
-          onPress: () => auth.signOut().then(() => router.replace('/welcome')),
+          onPress: () => void doSignOut(false),
         },
       ],
     );

@@ -36,8 +36,23 @@ export function initAnalytics() {
       tracesSampleRate: 0.1,
       sendDefaultPii: false,
       enabled: !__DEV__,
+      // Request breadcrumbs carry URLs with signed-photo tokens, filters and user ids: keep only
+      // the path, without ids.
+      beforeBreadcrumb(crumb) {
+        if (crumb.category === 'fetch' || crumb.category === 'xhr') {
+          const url = typeof crumb.data?.url === 'string' ? crumb.data.url : '';
+          const clean = (url.split(/[?#]/)[0] ?? '').replace(/[0-9a-f-]{36}/gi, '…');
+          return { ...crumb, data: { ...crumb.data, url: clean } };
+        }
+        return crumb;
+      },
     });
     sentryStarted = true;
+  }
+  // Consent withdrawn: stop sending right away, not at the next start.
+  if (!crashReportingConsent && sentryStarted) {
+    void Sentry.close();
+    sentryStarted = false;
   }
   if (analyticsConsent && env.posthogKey && !posthog) {
     posthog = new PostHog(env.posthogKey, {

@@ -1233,6 +1233,9 @@ export const es = {
     micros: 'Micronutrientes',
     export: 'Exportar mis datos',
     healthSync: 'Conectar con Salud',
+    signOutUnsynced:
+      '{{count}} cambios no se pudieron subir a tu cuenta. Si cerrás sesión ahora se pierden. Probá de nuevo con conexión o exportá tus datos antes.',
+    signOutAnyway: 'Cerrar sesión igual',
   },
   settings: {
     title: 'Ajustes',

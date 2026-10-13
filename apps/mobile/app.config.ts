@@ -51,6 +51,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       monochromeImage: './assets/images/android-icon-monochrome.png',
     },
     predictiveBackGestureEnabled: false,
+    // Health data and the session must not travel in Google backups or device transfers: the
+    // account syncs through our backend instead.
+    allowBackup: false,
     permissions: [
       'android.permission.CAMERA',
       'android.permission.RECORD_AUDIO',
@@ -64,6 +67,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'android.permission.READ_EXTERNAL_STORAGE',
       'android.permission.WRITE_EXTERNAL_STORAGE',
       'android.permission.ACCESS_FINE_LOCATION',
+      'android.permission.SYSTEM_ALERT_WINDOW',
     ],
   },
   web: { output: 'single', favicon: './assets/images/favicon.png' },

@@ -11,6 +11,8 @@ import { detectMeals } from '@/features/scan/detectMeals';
 import { useQuotaStatus } from '@/features/scan/useQuota';
 import { usePlan } from '@/services/purchases';
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
+import { openTextAnalysis } from '@/features/scan/textRequest';
+import { dateParam } from '@/utils/dates';
 
 /** "Contá qué comiste": type (or paste) the description; the mic goes back to listening. */
 export default function TextLog() {
@@ -23,13 +25,11 @@ export default function TextLog() {
   const meals = detectMeals(text);
   const left = quota.data?.text_query.remaining;
   const examples = [t('textLog.example1'), t('textLog.example2'), t('textLog.example3')];
-  const date = params.date ? { date: params.date } : {};
+  const validDate = dateParam(params.date);
+  const date = validDate ? { date: validDate } : {};
 
   const analyze = () =>
-    router.replace({
-      pathname: '/analyzing',
-      params: { text: text.trim(), source: 'text', ...date },
-    });
+    openTextAnalysis({ text: text.trim(), source: 'text', date: validDate ?? null });
 
   return (
     <Screen

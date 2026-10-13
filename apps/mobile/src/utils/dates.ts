@@ -40,3 +40,10 @@ export function formatTime(iso: string) {
 export function weekdayShort(d: IsoDate) {
   return new Intl.DateTimeFormat(currentLocale(), { weekday: 'narrow' }).format(isoDateToDate(d));
 }
+
+/** A `date` route param as an IsoDate, or undefined when missing or malformed (deep links). */
+export function dateParam(v: unknown): IsoDate | undefined {
+  return typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && !isNaN(Date.parse(v))
+    ? (v as IsoDate)
+    : undefined;
+}

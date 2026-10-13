@@ -9,7 +9,9 @@ export function useNotificationRouting() {
     if (Platform.OS === 'web') return;
     const open = (n: Notifications.Notification) => {
       const url = n.request.content.data?.url;
-      if (typeof url === 'string') router.push(url as never);
+      // Only in-app paths (our own reminders use them); never external or scheme URLs.
+      if (typeof url === 'string' && !url.startsWith('//') && /^\/[a-z0-9\-/?=&_]*$/i.test(url))
+        router.push(url as never);
     };
     const last = Notifications.getLastNotificationResponse();
     if (last) open(last.notification);

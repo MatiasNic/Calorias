@@ -1213,6 +1213,9 @@ export const en: TranslationShape<Translation> = {
     micros: 'Micronutrients',
     export: 'Export my data',
     healthSync: 'Connect to Health',
+    signOutUnsynced:
+      '{{count}} changes couldn’t be uploaded to your account. If you sign out now they’ll be lost. Try again when online or export your data first.',
+    signOutAnyway: 'Sign out anyway',
   },
   settings: {
     title: 'Settings',

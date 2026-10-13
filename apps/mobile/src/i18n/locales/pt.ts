@@ -1229,6 +1229,9 @@ export const pt: TranslationShape<Translation> = {
     micros: 'Micronutrientes',
     export: 'Exportar meus dados',
     healthSync: 'Conectar com Saúde',
+    signOutUnsynced:
+      '{{count}} alterações não puderam ser enviadas para sua conta. Se sair agora, elas serão perdidas. Tente de novo com conexão ou exporte seus dados antes.',
+    signOutAnyway: 'Sair mesmo assim',
   },
   settings: {
     title: 'Ajustes',

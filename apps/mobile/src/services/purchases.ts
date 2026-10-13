@@ -101,6 +101,14 @@ export async function initPurchases(appUserId: string) {
   await refreshPlan();
 }
 
+/** Sign-out / account switch: the store identity and plan of the previous user must not carry over. */
+export async function resetPurchases() {
+  usePlanStore
+    .getState()
+    .setPlan({ plan: 'free', source: 'default', expiresAt: null, isTrial: false });
+  if (configured && !mockPurchasesEnabled()) await Purchases.logOut().catch(() => undefined); // already anonymous → throws, fine
+}
+
 /** Reads the plan from the server (truth). Falls back to the store entitlement. */
 export async function refreshPlan(): Promise<Plan> {
   const sb = getSupabase();

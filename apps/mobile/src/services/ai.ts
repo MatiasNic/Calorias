@@ -33,7 +33,7 @@ import { currentLocale } from '@/i18n';
 import { invokeFunction } from '@/services/api/client';
 import { ApiError } from '@/services/api/errors';
 import { newId } from '@/services/db/repository';
-import { MEAL_PHOTOS_BUCKET } from '@/services/photos';
+import { deletePhoto, MEAL_PHOTOS_BUCKET } from '@/services/photos';
 import { usePlanStore } from '@/services/purchases';
 import { requireSupabase } from '@/services/supabase/client';
 import { kv } from '@/stores/kv';
@@ -166,6 +166,17 @@ async function uploadPhoto(img: PreparedImage): Promise<string> {
   return path;
 }
 
+/** Uploads the photo for one AI call and removes it again if the call fails (no orphan files). */
+async function withUploadedPhoto<T>(img: PreparedImage, call: (path: string) => Promise<T>) {
+  const path = await uploadPhoto(img);
+  try {
+    return await call(path);
+  } catch (e) {
+    deletePhoto(path).catch(() => undefined);
+    throw e;
+  }
+}
+
 export interface PhotoAnalysis {
   result: AnalyzeResponse;
   photoPath: string | null;
@@ -182,22 +193,23 @@ export async function analyzeMealPhoto(
     await sleep(MOCK_DELAY_MS);
     return { result: mockResponse(mockAnalyzeImage(img.sha256), quota), photoPath: null };
   }
-  const photoPath = await uploadPhoto(img);
   const keep = usePrefsStore.getState().savePhotos;
-  const result = await invokeFunction(
-    'analyze-meal',
-    {
-      photo_path: photoPath,
-      image_sha256: img.sha256,
-      locale: currentLocale(),
-      meal_type: mealType,
-      mode: 'meal',
-      keep_photo: keep,
-      hint: hint?.trim() || undefined,
-    },
-    AnalyzeResponseSchema,
-  );
-  return { result, photoPath: keep ? photoPath : null };
+  return withUploadedPhoto(img, async (photoPath) => {
+    const result = await invokeFunction(
+      'analyze-meal',
+      {
+        photo_path: photoPath,
+        image_sha256: img.sha256,
+        locale: currentLocale(),
+        meal_type: mealType,
+        mode: 'meal',
+        keep_photo: keep,
+        hint: hint?.trim() || undefined,
+      },
+      AnalyzeResponseSchema,
+    );
+    return { result, photoPath: keep ? photoPath : null };
+  });
 }
 
 export async function analyzeMealText(
@@ -229,17 +241,18 @@ export async function readNutritionLabel(img: PreparedImage): Promise<LabelRespo
     await sleep(MOCK_DELAY_MS);
     return { scan_id: null, label: mockReadLabel(), quota };
   }
-  const photoPath = await uploadPhoto(img);
-  return invokeFunction(
-    'analyze-meal',
-    {
-      photo_path: photoPath,
-      image_sha256: img.sha256,
-      locale: currentLocale(),
-      mode: 'label',
-      keep_photo: false,
-    },
-    LabelResponseSchema,
+  return withUploadedPhoto(img, (photoPath) =>
+    invokeFunction(
+      'analyze-meal',
+      {
+        photo_path: photoPath,
+        image_sha256: img.sha256,
+        locale: currentLocale(),
+        mode: 'label',
+        keep_photo: false,
+      },
+      LabelResponseSchema,
+    ),
   );
 }
 

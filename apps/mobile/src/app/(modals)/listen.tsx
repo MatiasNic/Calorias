@@ -26,6 +26,8 @@ import { usePrefsStore } from '@/stores/prefs';
 import { useUiStore } from '@/stores/ui';
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { haptic } from '@/utils/haptics';
+import { openTextAnalysis } from '@/features/scan/textRequest';
+import { dateParam } from '@/utils/dates';
 
 /** Demo mode without a speech engine (web, emulators): "dictates" the example word by word. */
 const DEMO_WORD_MS = 240;
@@ -71,7 +73,9 @@ export default function Listen() {
   const insets = useSafeAreaInsets();
   const full = usePrefsStore((s) => s.listenStyle) === 'full';
   const params = useLocalSearchParams<{ date?: IsoDate; text?: string }>();
-  const [date] = useState<IsoDate>(() => params.date ?? useUiStore.getState().selectedDate);
+  const [date] = useState<IsoDate>(
+    () => dateParam(params.date) ?? useUiStore.getState().selectedDate,
+  );
   // Coming back from the keyboard keeps what was written; new words are added after it.
   const [text, setText] = useState(params.text ?? '');
   const [seconds, setSeconds] = useState(0);
@@ -137,7 +141,7 @@ export default function Listen() {
     const said = textRef.current.trim();
     if (said.length < 2) return write();
     haptic('success');
-    router.replace({ pathname: '/analyzing', params: { text: said, source: 'voice', date } });
+    openTextAnalysis({ text: said, source: 'voice', date });
   };
 
   const meals = detectMeals(text);

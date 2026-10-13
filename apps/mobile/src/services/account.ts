@@ -5,13 +5,11 @@ import { z } from 'zod';
 import { track } from '@/services/analytics';
 import { invokeFunction } from '@/services/api/client';
 import { auth } from '@/services/auth';
-import { getDb, resetLocalDatabase } from '@/services/db/database';
-import { useSessionStore } from '@/stores/session';
-import { kv } from '@/stores/kv';
+import { getDb } from '@/services/db/database';
+import { deleteExportFiles, EXPORT_PREFIX, wipeDeviceUserData } from '@/services/deviceData';
+import { currentUserId, useSessionStore } from '@/stores/session';
 import { usePrefsStore } from '@/stores/prefs';
 import type { MealRecord } from '@/services/db/types';
-import { cancelAllNotifications } from '@/services/notifications';
-import { usePlanStore } from '@/services/purchases';
 
 const isAccount = () => useSessionStore.getState().status === 'authenticated';
 
@@ -20,7 +18,8 @@ async function localExport(): Promise<Record<string, unknown[]>> {
   const rows = await (
     await getDb()
   ).getAllAsync<{ collection: string; data: string }>(
-    'SELECT collection, data FROM records WHERE deleted_at IS NULL',
+    'SELECT collection, data FROM records WHERE deleted_at IS NULL AND user_id = ?',
+    [currentUserId()],
   );
   const out: Record<string, unknown[]> = {};
   for (const r of rows) (out[r.collection] ??= []).push(JSON.parse(r.data));
@@ -78,9 +77,11 @@ export async function exportMyData(format: 'json' | 'csv') {
         ? localCsv(local.meals ?? [])
         : JSON.stringify({ exported_at: new Date().toISOString(), ...local }, null, 2);
   }
+  // The receiving app may still be reading the last one: older dumps are removed here instead.
+  deleteExportFiles();
   const file = new File(
     Paths.cache,
-    `bocado-export-${new Date().toISOString().slice(0, 10)}.${format}`,
+    `${EXPORT_PREFIX}${new Date().toISOString().slice(0, 10)}.${format}`,
   );
   if (file.exists) file.delete();
   file.create();
@@ -90,27 +91,15 @@ export async function exportMyData(format: 'json' | 'csv') {
       mimeType: format === 'csv' ? 'text/csv' : 'application/json',
     });
   }
-  return file.uri;
 }
 
 /** Deletes the account on the server (data + photos, cascade) and wipes the device. */
 export async function deleteMyAccount() {
   if (isAccount()) await invokeFunction('delete-account', { confirm: true });
   track('account_deleted');
-  await resetLocalDatabase();
   usePrefsStore.getState().reset();
-  // Nothing of the old account may survive on the device: reminders, plan, demo counters.
-  await cancelAllNotifications();
-  usePlanStore
-    .getState()
-    .setPlan({ plan: 'free', source: 'default', expiresAt: null, isTrial: false });
-  for (const key of [
-    'plato.mockQuota',
-    'plato.mockTrials',
-    'plato.mealPlan',
-    'plato.mealPlanPrefs',
-  ])
-    kv.remove(key);
-  await auth.signOut().catch(() => undefined);
+  // Nothing of the old account may survive on the device (the server data is already gone).
+  await auth.signOut({ force: true }).catch(() => undefined);
+  await wipeDeviceUserData();
   useSessionStore.getState().setSignedOut();
 }

@@ -1,4 +1,3 @@
-import type { IsoDate } from '@plato/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -7,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, ErrorState, IconButton, Screen, toast } from '@/components';
 import { AnalyzingView } from '@/features/scan/AnalyzingView';
 import { useScanStore } from '@/features/scan/store';
+import { textAnalysisFor } from '@/features/scan/textRequest';
 import { useAiError } from '@/features/scan/useAiError';
 import { aiAvailable, analyzeMealText } from '@/services/ai';
 import { track } from '@/services/analytics';
@@ -22,13 +22,11 @@ const MIN_MS = 1400;
  */
 export default function Analyzing() {
   const { t } = useTranslation();
-  const params = useLocalSearchParams<{
-    text: string;
-    source?: 'voice' | 'text';
-    date?: IsoDate;
-  }>();
-  const text = (params.text ?? '').trim();
-  const source = params.source === 'voice' ? 'voice' : 'text';
+  const params = useLocalSearchParams<{ id?: string; text?: string }>();
+  const request = textAnalysisFor(params.id);
+  const text = request?.text.trim() ?? '';
+  const source = request?.source ?? 'text';
+  const date = request?.date ?? null;
   const aiError = useAiError();
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -36,6 +34,11 @@ export default function Analyzing() {
 
   useEffect(() => {
     cancelled.current = false;
+    if (!request) {
+      // Opened from outside the app: let the user see and send the text themselves.
+      router.replace({ pathname: '/text-log', params: { text: params.text ?? '' } });
+      return;
+    }
     if (aiAvailable() !== 'ok') {
       toast.info(t('profile.createAccount'));
       router.replace('/sign-up');
@@ -49,7 +52,7 @@ export default function Analyzing() {
         if (cancelled.current) return;
         queryClient.invalidateQueries({ queryKey: ['quota'] });
         track('scan_completed', { ms: Date.now() - t0, items: result.items.length, cached: false });
-        useScanStore.getState().setTextResult(result, source, params.date ?? null, text);
+        useScanStore.getState().setTextResult(result, source, date, text);
         router.replace('/scan-review');
       })
       .catch((e: unknown) => {
@@ -66,7 +69,7 @@ export default function Analyzing() {
   const edit = () =>
     router.replace({
       pathname: '/text-log',
-      params: { text, ...(params.date ? { date: params.date } : {}) },
+      params: { text, ...(date ? { date } : {}) },
     });
 
   if (error) {

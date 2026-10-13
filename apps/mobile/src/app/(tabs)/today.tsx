@@ -37,6 +37,7 @@ import { useUiStore } from '@/stores/ui';
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { formatDay, todayLocal } from '@/utils/dates';
 import { formatKcal } from '@/utils/format';
+import { openTextAnalysis } from '@/features/scan/textRequest';
 
 export default function Today() {
   const { t } = useTranslation();
@@ -234,12 +235,7 @@ export default function Today() {
                 <Chip
                   key={e}
                   label={`«${e}»`}
-                  onPress={() =>
-                    router.push({
-                      pathname: '/analyzing',
-                      params: { text: e, source: 'text', date },
-                    })
-                  }
+                  onPress={() => openTextAnalysis({ text: e, source: 'text', date }, 'push')}
                 />
               ))}
             </View>

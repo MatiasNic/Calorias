@@ -37,12 +37,20 @@ export async function prepareMealImage(
   return { uri: saved.uri, width: saved.width, height: saved.height, bytes, sha256 };
 }
 
+const localPhotosDir = () => new Directory(Paths.document, 'meal-photos');
+
 /** Keeps an on-device copy for thumbnails (app documents dir, never synced). */
 export function persistLocalPhoto(uri: string, name: string): string {
-  const dir = new Directory(Paths.document, 'meal-photos');
+  const dir = localPhotosDir();
   if (!dir.exists) dir.create({ intermediates: true });
   const dest = new File(dir, `${name}.jpg`);
   if (dest.exists) dest.delete();
   new File(uri).copy(dest);
   return dest.uri;
+}
+
+/** Deletes every on-device meal photo (sign-out, account switch or deletion). */
+export function deleteLocalPhotos() {
+  const dir = localPhotosDir();
+  if (dir.exists) dir.delete();
 }
