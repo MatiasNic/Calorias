@@ -986,7 +986,7 @@ export const es = {
     title: 'Micronutrientes',
     subtitle: 'Promedio de los últimos 7 días',
     unavailable:
-      'Los micronutrientes se calculan para alimentos con datos completos (USDA y base regional).',
+      'Por ahora solo los alimentos de la búsqueda online (USDA) traen vitaminas y minerales. Las fotos, el dictado y la base local cuentan calorías y macros, no micronutrientes.',
     deficit: 'Podría faltarte {{name}}: considerá {{foods}}.',
   },
   training: {

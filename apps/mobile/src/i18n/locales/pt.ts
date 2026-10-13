@@ -981,7 +981,7 @@ export const pt: TranslationShape<Translation> = {
     title: 'Micronutrientes',
     subtitle: 'Média dos últimos 7 dias',
     unavailable:
-      'Os micronutrientes são calculados para alimentos com dados completos (USDA e base regional).',
+      'Por enquanto só os alimentos da busca online (USDA) trazem vitaminas e minerais. Fotos, voz e a base local contam calorias e macros, não micronutrientes.',
     deficit: 'Pode estar faltando {{name}}: considere {{foods}}.',
   },
   training: {
