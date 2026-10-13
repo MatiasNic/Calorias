@@ -63,6 +63,9 @@ jest.mock('@/services/sync/adapters', () => {
   };
 });
 
+jest.mock('@/services/sync/schemas', () => ({
+  isValidPulledRecord: (_c: string, r: { id: string }) => !r.id.startsWith('malformed'),
+}));
 jest.mock('@/services/supabase/client', () => ({ getSupabase: () => ({}) }));
 jest.mock('@/services/analytics', () => ({ captureError: jest.fn() }));
 jest.mock('@react-native-community/netinfo', () => ({ addEventListener: () => () => {} }));
@@ -128,6 +131,16 @@ describe('sync engine', () => {
     await engine().syncNow();
     expect(mockState.pushRequests).toEqual([100, 50]);
     expect(mockState.cleaned).toHaveLength(150);
+  });
+
+  it('skips malformed rows but still moves past them', async () => {
+    mockState.server.set('water', [
+      row('malformed-1', '2026-10-01T00:00:00Z'),
+      row('w2', '2026-10-02T00:00:00Z'),
+    ]);
+    await engine().syncNow();
+    expect(mockState.applied.filter((a) => a.startsWith('water'))).toEqual(['water:w2']);
+    expect(mockState.cursor.get('water')).toBe('2026-10-02T00:00:00Z');
   });
 
   it('pulls with an overlap before the last cursor', async () => {

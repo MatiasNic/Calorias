@@ -9,6 +9,7 @@ import type { CollectionName } from '@/services/db/types';
 import { getSupabase } from '@/services/supabase/client';
 import { useSessionStore } from '@/stores/session';
 import { adapters, PULL_PAGE, SYNC_ORDER } from './adapters';
+import { isValidPulledRecord } from './schemas';
 
 /** Overlap when pulling, to tolerate transactions that committed slightly out of order. */
 const PULL_OVERLAP_MS = 60_000;
@@ -145,19 +146,30 @@ async function pullCollection(
   const db = await getDb();
   let maxTs = last;
   let changed = false;
+  const invalid: string[] = [];
   for (let page = 0; ; page++) {
     const rows = await adapter.pull(sb, userId, since, page);
     // One transaction per page: a single commit instead of one per row.
     await db.withTransactionAsync(async () => {
       for (const row of rows) {
-        if (await repo.applyRemote(row.record, row.deletedAt, row.updatedAt)) changed = true;
         if (!maxTs || row.updatedAt > maxTs) maxTs = row.updatedAt;
+        // A malformed row is skipped (and reported) instead of breaking the screens that read it.
+        if (!row.deletedAt && !isValidPulledRecord(name, row.record)) {
+          invalid.push(String((row.record as { id?: unknown })?.id ?? '?'));
+          continue;
+        }
+        if (await repo.applyRemote(row.record, row.deletedAt, row.updatedAt)) changed = true;
       }
     });
     if (rows.length < PULL_PAGE) break;
   }
   // The cursor only moves once every page is stored, so an interrupted pull is retried whole.
   if (maxTs && maxTs !== last) await setLastPulled(name, maxTs);
+  if (invalid.length)
+    captureError(new Error('sync: invalid rows skipped'), {
+      collection: name,
+      ids: invalid.slice(0, 20),
+    });
   return changed;
 }
 
