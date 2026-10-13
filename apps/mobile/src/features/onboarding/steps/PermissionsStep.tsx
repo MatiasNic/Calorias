@@ -83,6 +83,7 @@ export function PermissionsStep() {
               const res = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
               setMic(res.granted);
             } catch {
+              // Speech module unavailable (e.g. Expo Go): treat as not granted.
               setMic(false);
             }
           }}

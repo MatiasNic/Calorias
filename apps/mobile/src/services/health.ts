@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import type * as HealthConnect from 'react-native-health-connect';
 
 import { features } from '@/config/features';
+import { captureError } from '@/services/analytics';
 
 /**
  * Health Connect (Android) / HealthKit (iOS). Behind the `healthSync` feature flag and premium.
@@ -20,6 +21,7 @@ const hc = (): HC | null => {
   try {
     return require('react-native-health-connect') as HC;
   } catch {
+    // Native module not in this build: health sync is unavailable.
     return null;
   }
 };
@@ -28,6 +30,7 @@ const hk = (): HK | null => {
   try {
     return require('@kingstinct/react-native-healthkit') as HK;
   } catch {
+    // Native module not in this build: health sync is unavailable.
     return null;
   }
 };
@@ -67,7 +70,8 @@ export async function requestHealthPermissions(): Promise<boolean> {
         toShare: ['HKQuantityTypeIdentifierBodyMass'],
       });
     }
-  } catch {
+  } catch (e) {
+    captureError(e, { where: 'requestHealthPermissions' });
     return false;
   }
   return false;
@@ -124,7 +128,8 @@ export async function readTodayActivity(): Promise<TodayActivity | null> {
         ),
       };
     }
-  } catch {
+  } catch (e) {
+    captureError(e, { where: 'readTodayActivity' });
     return null;
   }
   return null;
@@ -155,7 +160,8 @@ export async function readLatestWeightKg(): Promise<{ kg: number; date: Date } |
       const s = samples[0] as { quantity: number; startDate: Date } | undefined;
       return s ? { kg: s.quantity, date: new Date(s.startDate) } : null;
     }
-  } catch {
+  } catch (e) {
+    captureError(e, { where: 'readLatestWeightKg' });
     return null;
   }
   return null;
@@ -185,7 +191,8 @@ export async function writeWeightKg(kg: number): Promise<void> {
         new Date(),
         new Date(),
       );
-  } catch {
-    // best effort
+  } catch (e) {
+    // Best effort for the user (the weight is already saved locally), but worth knowing about.
+    captureError(e, { where: 'writeWeightKg' });
   }
 }

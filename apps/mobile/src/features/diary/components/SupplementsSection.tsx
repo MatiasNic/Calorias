@@ -12,6 +12,7 @@ import {
   type ChecklistRow,
 } from '@/features/supplements/hooks';
 import { doseLabel, supplementName } from '@/features/training/labels';
+import { captureError } from '@/services/analytics';
 import { spacing, useTheme } from '@/theme';
 import { formatTime } from '@/utils/dates';
 import { haptic } from '@/utils/haptics';
@@ -31,7 +32,7 @@ export function SupplementsSection({ date }: { date: IsoDate }) {
     if (row.intake) await undoDose(row.intake);
     else {
       await takeDose(row.supplement, date, row.slot, doseLabel(row.supplement));
-      checkAchievements().catch(() => undefined);
+      checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
     }
   };
 

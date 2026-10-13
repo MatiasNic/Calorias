@@ -20,6 +20,7 @@ import {
   useNotificationSettings,
 } from '@/features/settings/useNotificationSettings';
 import { WEEK_ORDER, weekdayName } from '@/features/training/labels';
+import { captureError } from '@/services/analytics';
 import type { NotificationSettingsRecord } from '@/services/db/types';
 import { notificationPermission, requestNotificationPermission } from '@/services/notifications';
 import { usePrefsStore, type TrainingReminder } from '@/stores/prefs';
@@ -68,7 +69,7 @@ export default function Reminders() {
   if (!s) return null;
   const saveTraining = (patch: Partial<TrainingReminder>) => {
     setPrefs({ trainingReminder: { ...training, ...patch } });
-    rescheduleReminders(s).catch(() => undefined);
+    rescheduleReminders(s).catch((e) => captureError(e, { where: 'rescheduleReminders:training' }));
   };
   const save = (patch: Partial<NotificationSettingsRecord>) =>
     saveNotificationSettings({ ...s, ...patch }).then(() => q.refetch());

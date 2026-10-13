@@ -14,6 +14,7 @@ import {
 import { updateProfile } from '@/features/profile/hooks';
 import { rescheduleReminders } from '@/features/settings/useNotificationSettings';
 import { changeLocale, currentLocale } from '@/i18n';
+import { captureError } from '@/services/analytics';
 import { usePrefsStore, type ThemePreference, type ListenStyle } from '@/stores/prefs';
 import { spacing } from '@/theme';
 
@@ -43,7 +44,9 @@ export default function Preferences() {
           changeLocale(locale);
           updateProfile({ locale });
           // Scheduled reminders carry their text: re-create them in the new language.
-          rescheduleReminders().catch(() => undefined);
+          rescheduleReminders().catch((e) =>
+            captureError(e, { where: 'rescheduleReminders:locale' }),
+          );
         }}
         options={[
           { value: 'es-AR', label: 'Español' },

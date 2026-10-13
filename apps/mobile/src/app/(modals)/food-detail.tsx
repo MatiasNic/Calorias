@@ -15,6 +15,7 @@ import { NutrientTable } from '@/features/foods/NutrientTable';
 import { usePickerStore } from '@/features/foods/pickerStore';
 import { PortionEditor } from '@/features/foods/PortionEditor';
 import { useRecipeDraftStore } from '@/features/foods/recipeDraft';
+import { captureError } from '@/services/analytics';
 import { spacing } from '@/theme';
 import { haptic } from '@/utils/haptics';
 
@@ -71,7 +72,7 @@ export default function FoodDetail() {
     });
     haptic('success');
     toast.success(t('foodDetail.added', { name: food.name }));
-    checkAchievements().catch(() => undefined);
+    checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
     clear();
     router.dismiss(2);
   };

@@ -3,6 +3,8 @@ import * as Crypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 import Storage from 'expo-sqlite/kv-store';
 
+import { captureError } from '@/services/analytics';
+
 /**
  * Supabase sessions exceed SecureStore's ~2 KB value limit, so we store a random AES-256 key in
  * the Keychain/Keystore and the encrypted session in SQLite (pattern recommended by Supabase).
@@ -33,7 +35,9 @@ export const secureSessionStorage = {
     if (!encrypted) return null;
     try {
       return await decrypt(key, encrypted);
-    } catch {
+    } catch (e) {
+      // Unreadable session (e.g. Keychain key lost): behave as signed out, but report it.
+      captureError(e, { where: 'secureSessionStorage.getItem' });
       return null;
     }
   },

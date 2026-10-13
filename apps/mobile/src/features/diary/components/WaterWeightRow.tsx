@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { AppText, Button, Card, Icon, IconButton } from '@/components';
 import { addWater, undoLastWater, useLatestWeight } from '@/features/body/hooks';
 import { checkAchievements } from '@/features/habits/hooks';
+import { captureError } from '@/services/analytics';
 import { usePrefsStore } from '@/stores/prefs';
 import { radii, spacing, useTheme } from '@/theme';
 import { formatVolume, formatWeight } from '@/utils/format';
@@ -60,7 +61,7 @@ export function WaterWeightRow({
             onPress={async () => {
               haptic('light');
               await addWater(date);
-              checkAchievements().catch(() => undefined);
+              checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
             }}
           />
           {waterMl > 0 ? (

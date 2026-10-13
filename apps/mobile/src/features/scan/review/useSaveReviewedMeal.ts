@@ -8,7 +8,7 @@ import { useDraftStore } from '@/features/diary/draftStore';
 import { saveMeal } from '@/features/diary/hooks';
 import { checkAchievements } from '@/features/habits/hooks';
 import { useScanStore } from '@/features/scan/store';
-import { track } from '@/services/analytics';
+import { captureError, track } from '@/services/analytics';
 import { persistLocalPhoto } from '@/services/image';
 import { cancelMealReminderToday } from '@/services/notifications';
 import { timestampFor } from '@/utils/dates';
@@ -46,7 +46,9 @@ export function useSaveReviewedMeal() {
           localPhotoUri: i === 0 ? localUri : null,
           aiScanId: draft.aiScanId,
         });
-        cancelMealReminderToday(group.mealType).catch(() => undefined);
+        cancelMealReminderToday(group.mealType).catch((e) =>
+          captureError(e, { where: 'cancelMealReminderToday' }),
+        );
       }
       haptic('success');
       track('meal_saved', {
@@ -54,7 +56,7 @@ export function useSaveReviewedMeal() {
         items: draft.items.length,
         meals: groups.length,
       });
-      checkAchievements().catch(() => undefined);
+      checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
       toast.success(
         groups.length > 1 ? t('review.savedMany', { count: groups.length }) : t('review.saved'),
       );

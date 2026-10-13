@@ -26,6 +26,7 @@ import { queryClient } from '@/services/queryClient';
 import { usePrefsStore } from '@/stores/prefs';
 import { AppThemeProvider, useTheme } from '@/theme';
 
+// Rejects if the splash was already hidden (fast refresh): nothing to do.
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
 initI18n(usePrefsStore.getState().locale);
 
@@ -112,6 +113,7 @@ export default function RootLayout() {
   const ready = (fontsLoaded || !!fontError) && booted;
 
   useEffect(() => {
+    // Rejects if already hidden: harmless.
     if (ready) SplashScreen.hideAsync().catch(() => undefined);
   }, [ready]);
 

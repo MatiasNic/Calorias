@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 import { toast } from '@/components';
 import { rescheduleReminders } from '@/features/settings/useNotificationSettings';
+import { captureError } from '@/services/analytics';
 import type { SupplementRecord } from '@/services/db/types';
 import { notificationPermission, requestNotificationPermission } from '@/services/notifications';
 import { todayLocal } from '@/utils/dates';
@@ -80,7 +81,9 @@ export function useSupplementForm(initial: SupplementRecord | null) {
   const save = async () => {
     if (!valid) return;
     if (reminders && active && (await notificationPermission()) !== 'granted') {
-      await requestNotificationPermission().catch(() => false);
+      await requestNotificationPermission().catch((e) =>
+        captureError(e, { where: 'requestNotificationPermission:supplement' }),
+      );
     }
     await saveSupplement({
       id: initial?.id,
@@ -106,7 +109,9 @@ export function useSupplementForm(initial: SupplementRecord | null) {
       start_date: initial?.start_date ?? (todayLocal() as IsoDate),
       note: note.trim() || null,
     });
-    rescheduleReminders().catch(() => undefined);
+    rescheduleReminders().catch((e) =>
+      captureError(e, { where: 'rescheduleReminders:supplementSaved' }),
+    );
     toast.success(t('supplements.saved'));
     router.back();
   };
@@ -119,7 +124,9 @@ export function useSupplementForm(initial: SupplementRecord | null) {
         style: 'destructive',
         onPress: async () => {
           if (initial) await deleteSupplement(initial.id);
-          rescheduleReminders().catch(() => undefined);
+          rescheduleReminders().catch((e) =>
+            captureError(e, { where: 'rescheduleReminders:supplementDeleted' }),
+          );
           router.back();
         },
       },

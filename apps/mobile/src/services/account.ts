@@ -2,7 +2,7 @@ import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { z } from 'zod';
 
-import { track } from '@/services/analytics';
+import { captureError, track } from '@/services/analytics';
 import { invokeFunction } from '@/services/api/client';
 import { auth } from '@/services/auth';
 import { getDb } from '@/services/db/database';
@@ -99,7 +99,9 @@ export async function deleteMyAccount() {
   track('account_deleted');
   usePrefsStore.getState().reset();
   // Nothing of the old account may survive on the device (the server data is already gone).
-  await auth.signOut({ force: true }).catch(() => undefined);
+  await auth
+    .signOut({ force: true })
+    .catch((e) => captureError(e, { where: 'deleteMyAccount.signOut' }));
   await wipeDeviceUserData();
   useSessionStore.getState().setSignedOut();
 }

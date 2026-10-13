@@ -151,6 +151,7 @@ export async function takeDose(
 export async function undoDose(intake: SupplementIntakeRecord) {
   const s = await repos.supplements.get(intake.supplement_id);
   if (s && s.stock != null) await repos.supplements.upsert({ ...s, stock: s.stock + 1 });
+  // The diary meal may already have been deleted by hand: undoing the dose must still work.
   if (intake.meal_id) await deleteMeal(intake.meal_id).catch(() => undefined);
   await repos.supplementIntakes.remove(intake.id);
 }

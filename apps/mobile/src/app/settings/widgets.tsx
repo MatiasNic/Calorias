@@ -32,6 +32,7 @@ export default function Widgets() {
       const ok = await requestPinWidget({ widgetName: name });
       if (!ok) toast.info(t('widgets.manual'));
     } catch {
+      // Launcher without pin support (or module missing): fall back to manual instructions.
       toast.info(t('widgets.manual'));
     }
   };

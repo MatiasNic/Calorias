@@ -7,6 +7,7 @@ const syncStorage: StateStorage = {
     try {
       return Storage.getItemSync(key);
     } catch {
+      // ignore: preferences are best-effort (fall back to defaults)
       return null;
     }
   },
@@ -37,6 +38,7 @@ export const kv = {
     try {
       return Storage.getItemSync(key) ?? memoryFallback.get(key) ?? null;
     } catch {
+      // storage unavailable: serve what this session wrote
       return memoryFallback.get(key) ?? null;
     }
   },

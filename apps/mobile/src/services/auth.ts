@@ -5,6 +5,7 @@ import * as WebBrowser from 'expo-web-browser';
 
 import { env } from '@/config/env';
 import { currentLocale } from '@/i18n';
+import { captureError } from '@/services/analytics';
 import { adoptGuestData, pendingChangesCount } from '@/services/db/repository';
 import { localDataOwners, wipeDeviceUserData } from '@/services/deviceData';
 import { getSupabase } from '@/services/supabase/client';
@@ -63,6 +64,7 @@ export function redirectParams(url: string): Record<string, string | undefined> 
     try {
       return decodeURIComponent(v.replace(/\+/g, ' '));
     } catch {
+      // Malformed escape: keep the raw value.
       return v;
     }
   };
@@ -82,7 +84,7 @@ export function redirectParams(url: string): Record<string, string | undefined> 
  * guest's data is attached to the new account; anything left by another account (e.g. after an
  * expired session) is wiped so it is never shown to, or uploaded into, someone else's account.
  */
-async function claimLocalData(userId: string) {
+export async function claimLocalData(userId: string) {
   if (useSessionStore.getState().status === 'guest') await adoptGuestData(userId, GUEST_USER_ID);
   const owners = await localDataOwners();
   if (owners.some((o) => o !== userId)) await wipeDeviceUserData();
@@ -91,6 +93,7 @@ async function claimLocalData(userId: string) {
 async function onAuthenticated(userId: string, email: string | null) {
   await claimLocalData(userId);
   useSessionStore.getState().setAuthenticated(userId, email);
+  // The sync engine reports its own failures and retries later.
   syncNow().catch(() => undefined);
 }
 
@@ -163,6 +166,7 @@ export const auth = {
     if (error || !data.url) throw mapError(error);
     // Supabase answers 400 when the provider isn't enabled in the project: say so instead of
     // opening a browser that only shows a JSON error.
+    // Probe only: if it fails, carry on and let the browser flow surface any error.
     const probe = await fetch(data.url).catch(() => null);
     if (probe?.status === 400) throw new AuthError('provider_unavailable');
     const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo());
@@ -267,11 +271,13 @@ export const auth = {
   async signOut({ force = false }: { force?: boolean } = {}): Promise<{ unsynced: number }> {
     const sb = getSupabase();
     if (sb) {
+      // The sync engine reports its own failures; unsynced changes are counted below.
       await syncNow().catch(() => undefined);
       const unsynced =
         useSessionStore.getState().status === 'authenticated' ? await pendingChangesCount() : 0;
       if (unsynced && !force) return { unsynced };
-      await sb.auth.signOut().catch(() => undefined);
+      // The device is wiped regardless; report a failed server sign-out (session not revoked).
+      await sb.auth.signOut().catch((e) => captureError(e, { where: 'auth.signOut' }));
     }
     await wipeDeviceUserData();
     useSessionStore.getState().setSignedOut();

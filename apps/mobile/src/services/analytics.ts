@@ -61,7 +61,7 @@ export function initAnalytics() {
     });
   }
   if (!analyticsConsent && posthog) {
-    posthog.optOut().catch(() => undefined);
+    posthog.optOut().catch(() => undefined); // analytics itself: nothing to report to
     posthog = null;
   }
 }
@@ -80,7 +80,14 @@ export function identify(userId: string) {
   if (sentryStarted) Sentry.setUser({ id: userId });
 }
 
+/** Errors already reported in this session (a failure that repeats is sent once). */
+const reported = new Set<string>();
+const MAX_REPORTED_KEYS = 200;
+
 export function captureError(e: unknown, context?: Record<string, unknown>) {
+  const key = `${String(context?.where ?? '')}:${e instanceof Error ? e.message : String(e)}`;
+  if (reported.has(key)) return;
+  if (reported.size < MAX_REPORTED_KEYS) reported.add(key);
   if (sentryStarted) Sentry.captureException(e, { extra: context });
   else if (__DEV__) console.warn(e, context);
 }

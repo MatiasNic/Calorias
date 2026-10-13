@@ -6,7 +6,7 @@ import { LEGAL_VERSION } from '@/config/env';
 import { logWeight } from '@/features/body/hooks';
 import { saveGoalFromPlan } from '@/features/goals/hooks';
 import { updateProfile } from '@/features/profile/hooks';
-import { track } from '@/services/analytics';
+import { captureError, track } from '@/services/analytics';
 import { repos } from '@/services/db/repository';
 import { DEFAULT_NOTIFICATION_SETTINGS } from '@/services/notifications';
 import { kv } from '@/stores/kv';
@@ -52,6 +52,8 @@ export async function finishOnboarding(a: OnboardingAnswers, plan: GoalPlan) {
     await repos.notificationSettings.upsert(DEFAULT_NOTIFICATION_SETTINGS(userId));
   }
   // Permission may have just been granted in the permissions step: schedule reminders now.
-  await rescheduleReminders().catch(() => undefined);
+  await rescheduleReminders().catch((e) =>
+    captureError(e, { where: 'rescheduleReminders:onboarding' }),
+  );
   track('onboarding_completed', { goal: plan.effectiveGoal, warnings: plan.warnings.length });
 }

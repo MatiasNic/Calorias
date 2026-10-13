@@ -50,6 +50,7 @@ export function useDictation(getBase: () => string, onText: (text: string) => vo
     try {
       return ExpoSpeechRecognitionModule.isRecognitionAvailable();
     } catch {
+      // Native module missing (e.g. Expo Go): dictation is simply unavailable.
       return false;
     }
   })();

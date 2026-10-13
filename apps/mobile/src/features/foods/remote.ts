@@ -50,6 +50,7 @@ export const DEMO_BARCODES: Record<string, FoodOption> = {
 
 export async function lookupBarcode(barcode: string): Promise<FoodOption | null> {
   if (env.useMocks)
+    // Demo mode only: an unreachable Open Food Facts just means "not found".
     return DEMO_BARCODES[barcode] ?? lookupBarcodeOffDirect(barcode).catch(() => null);
   const res = await invokeFunction(
     'barcode-lookup',

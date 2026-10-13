@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { auth } from '@/services/auth';
-import { initAnalytics } from '@/services/analytics';
+import { captureError, initAnalytics } from '@/services/analytics';
 import { getDb } from '@/services/db/database';
 import { rescheduleReminders } from '@/features/settings/useNotificationSettings';
 import { configureNotificationHandler } from '@/services/notifications';
@@ -47,7 +47,9 @@ export function useBootstrap() {
     const reschedule = () => {
       if (timer) clearTimeout(timer);
       timer = setTimeout(async () => {
-        await rescheduleReminders().catch(() => undefined);
+        await rescheduleReminders().catch((e) =>
+          captureError(e, { where: 'rescheduleReminders:bootstrap' }),
+        );
       }, 2000);
     };
     reschedule();
@@ -62,7 +64,7 @@ export function useBootstrap() {
 
   useEffect(() => {
     if (!userId) return;
-    initPurchases(userId).catch(() => undefined);
+    initPurchases(userId).catch((e) => captureError(e, { where: 'initPurchases' }));
   }, [userId]);
 
   return ready;

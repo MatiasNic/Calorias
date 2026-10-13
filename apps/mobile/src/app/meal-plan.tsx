@@ -29,6 +29,7 @@ function loadPrefs(): MealPlanPreferences {
   try {
     return MealPlanPreferencesSchema.parse(JSON.parse(kv.get(PREFS_KEY) ?? '{}'));
   } catch {
+    // Missing/corrupt saved preferences: start from defaults.
     return MealPlanPreferencesSchema.parse({});
   }
 }
@@ -41,6 +42,7 @@ export default function MealPlanScreen() {
     try {
       return JSON.parse(kv.get(KEY) ?? 'null') as MealPlan | null;
     } catch {
+      // Corrupt cached plan: just show the empty state.
       return null;
     }
   });
@@ -73,6 +75,7 @@ export default function MealPlanScreen() {
   const share = () => {
     if (!plan) return;
     const text = plan.shopping_list.map((i) => `• ${i.item} — ${i.quantity}`).join('\n');
+    // Rejects when the share sheet is dismissed/unavailable: nothing to report.
     Share.share({ message: `${t('mealPlan.shoppingList')}\n${text}` }).catch(() => undefined);
   };
 

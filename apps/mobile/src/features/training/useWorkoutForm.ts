@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from '@/components';
 import { useLatestWeight } from '@/features/body/hooks';
 import { checkAchievements } from '@/features/habits/hooks';
+import { captureError } from '@/services/analytics';
 import type { WorkoutRecord } from '@/services/db/types';
 import { usePrefsStore } from '@/stores/prefs';
 import { timestampFor } from '@/utils/dates';
@@ -146,7 +147,7 @@ export function useWorkoutForm(initial: WorkoutRecord | null, initialDate: IsoDa
       rpe,
       note: note.trim() || null,
     });
-    checkAchievements().catch(() => undefined);
+    checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
     toast.success(t('training.saved'));
     router.back();
   };

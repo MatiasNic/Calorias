@@ -16,6 +16,7 @@ import {
 } from '@/components';
 import { deleteWeight, logWeight, useWeights } from '@/features/body/hooks';
 import { checkAchievements } from '@/features/habits/hooks';
+import { captureError } from '@/services/analytics';
 import { isHealthSupported, writeWeightKg } from '@/services/health';
 import { usePlan } from '@/services/purchases';
 import { usePrefsStore } from '@/stores/prefs';
@@ -41,8 +42,8 @@ export default function WeightModal() {
   const save = async () => {
     if (!valid) return;
     await logWeight(todayLocal(), kg);
-    if (plan === 'premium' && isHealthSupported()) writeWeightKg(kg).catch(() => undefined);
-    checkAchievements().catch(() => undefined);
+    if (plan === 'premium' && isHealthSupported()) writeWeightKg(kg).catch(() => undefined); // reports its own failures
+    checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
     toast.success(t('weight.saved'));
     router.back();
   };

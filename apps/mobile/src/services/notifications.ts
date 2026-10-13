@@ -3,6 +3,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { i18next } from '@/i18n';
+import { captureError } from '@/services/analytics';
 import type { NotificationSettingsRecord, SupplementRecord } from '@/services/db/types';
 import type { TrainingReminder } from '@/stores/prefs';
 import { isoDateToDate, todayLocal } from '@/utils/dates';
@@ -25,7 +26,7 @@ export function configureNotificationHandler() {
     Notifications.setNotificationChannelAsync(CHANNEL_ID, {
       name: i18next.t('notifications.channelName'),
       importance: Notifications.AndroidImportance.DEFAULT,
-    }).catch(() => undefined);
+    }).catch((e) => captureError(e, { where: 'setNotificationChannel' }));
   }
 }
 
@@ -231,5 +232,7 @@ export const DEFAULT_NOTIFICATION_SETTINGS = (id: string): NotificationSettingsR
 /** Removes every scheduled reminder (account deletion, sign out). */
 export async function cancelAllNotifications() {
   if (Platform.OS === 'web') return;
-  await Notifications.cancelAllScheduledNotificationsAsync().catch(() => undefined);
+  await Notifications.cancelAllScheduledNotificationsAsync().catch((e) =>
+    captureError(e, { where: 'cancelAllNotifications' }),
+  );
 }

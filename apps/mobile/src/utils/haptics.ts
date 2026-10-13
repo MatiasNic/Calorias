@@ -21,5 +21,6 @@ export function haptic(kind: Kind = 'light') {
         return Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
   };
+  // Haptics are a nicety: unsupported devices/simulators reject and that's fine.
   run().catch(() => undefined);
 }

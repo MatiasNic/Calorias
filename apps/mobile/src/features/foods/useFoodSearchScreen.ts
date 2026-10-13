@@ -7,6 +7,7 @@ import { toast } from '@/components';
 import { saveMeal } from '@/features/diary/hooks';
 import { useDraftStore } from '@/features/diary/draftStore';
 import { checkAchievements } from '@/features/habits/hooks';
+import { captureError } from '@/services/analytics';
 import type { FavoriteRecord } from '@/services/db/types';
 import { todayLocal } from '@/utils/dates';
 import { useCustomFoods, useFavorites, useFoodSearch, useRecentFoods } from './hooks';
@@ -73,7 +74,7 @@ export function useFoodSearchScreen() {
       return;
     }
     await saveMeal({ date, mealType, source: 'favorite', items: fav.payload.items });
-    checkAchievements().catch(() => undefined);
+    checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
     toast.success(t('foodSearch.loggedFavorite'));
     router.back();
   };

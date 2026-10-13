@@ -28,6 +28,7 @@ import {
   type ChecklistRow,
 } from '@/features/supplements/hooks';
 import { doseLabel, supplementName, weekdayName } from '@/features/training/labels';
+import { captureError } from '@/services/analytics';
 import type { SupplementRecord } from '@/services/db/types';
 import { spacing, useTheme } from '@/theme';
 import { formatTime, todayLocal } from '@/utils/dates';
@@ -51,7 +52,7 @@ export default function Supplements() {
     if (row.intake) await undoDose(row.intake);
     else {
       await takeDose(row.supplement, today, row.slot, doseLabel(row.supplement));
-      checkAchievements().catch(() => undefined);
+      checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
     }
   };
 

@@ -18,7 +18,7 @@ import {
 } from '@/components';
 import { updateProfile } from '@/features/profile/hooks';
 import { deleteMyAccount, exportMyData } from '@/services/account';
-import { initAnalytics } from '@/services/analytics';
+import { captureError, initAnalytics } from '@/services/analytics';
 import { usePlan } from '@/services/purchases';
 import { usePrefsStore } from '@/stores/prefs';
 import { spacing } from '@/theme';
@@ -38,7 +38,8 @@ export default function Privacy() {
     try {
       await exportMyData(format);
       toast.success(t('settings.exported'));
-    } catch {
+    } catch (e) {
+      captureError(e, { where: 'exportMyData', format });
       toast.error(t('common.errorMessage'));
     } finally {
       setBusy(null);
@@ -57,7 +58,8 @@ export default function Privacy() {
             await deleteMyAccount();
             toast.success(t('settings.deleted'));
             router.replace('/welcome');
-          } catch {
+          } catch (e) {
+            captureError(e, { where: 'deleteMyAccount' });
             toast.error(t('common.errorMessage'));
           } finally {
             setBusy(null);
