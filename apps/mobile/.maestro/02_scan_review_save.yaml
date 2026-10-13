@@ -27,7 +27,12 @@ env:
     id: draft-item-0
 - tapOn:
     id: draft-item-0
-- tapOn: 'Grande'
+- scrollUntilVisible:
+    element:
+      id: draft-size-0-large
+    centerElement: true
+- tapOn:
+    id: draft-size-0-large
 - tapOn:
     id: review-save
 - assertVisible:

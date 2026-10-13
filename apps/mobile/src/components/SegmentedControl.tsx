@@ -11,6 +11,8 @@ export interface SegmentedControlProps<T extends string> {
   accessibilityLabel?: string;
   /** "strong": the selected option is ink on paper (review sizes); default: a recessed tab. */
   tone?: 'default' | 'strong';
+  /** Each option gets `${testID}-${value}`. */
+  testID?: string;
 }
 
 export function SegmentedControl<T extends string>({
@@ -19,6 +21,7 @@ export function SegmentedControl<T extends string>({
   onChange,
   accessibilityLabel,
   tone = 'default',
+  testID,
 }: SegmentedControlProps<T>) {
   const { colors } = useTheme();
   return (
@@ -35,6 +38,7 @@ export function SegmentedControl<T extends string>({
             accessibilityRole="tab"
             accessibilityState={{ selected }}
             accessibilityLabel={o.label}
+            testID={testID ? `${testID}-${o.value}` : undefined}
             onPress={() => {
               haptic('selection');
               onChange(o.value);

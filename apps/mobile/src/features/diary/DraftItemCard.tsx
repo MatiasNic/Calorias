@@ -120,6 +120,7 @@ export function DraftItemCard({
           <SegmentedControl
             tone="strong"
             accessibilityLabel={t('review.sizeLabel')}
+            testID={`draft-size-${index}`}
             options={PORTION_SIZES.map((s) => ({ value: s.key, label: t(`review.size.${s.key}`) }))}
             value={size ?? ('' as never)}
             onChange={(k) => {
