@@ -23,14 +23,19 @@ env:
     timeout: 15000
 # The review lists each food as a collapsed line (no confidence badge any more; low-confidence
 # items only get a dot). Open the first one and pick a size: Chica / Mediana / Grande.
+# The save footer floats over the list (position: absolute). With the photo, the demo banner and
+# a hidden-ingredient question above it, the first card can sit *under* that footer: it is still
+# "visible" to Maestro, but a tap on it lands on the footer and the card never opens. The list
+# has bottom padding taller than the footer, so scrolling to the end puts every card above it.
 - assertVisible:
     id: draft-item-0
+- scroll
+- scroll
 - tapOn:
     id: draft-item-0
 - scrollUntilVisible:
     element:
       id: draft-size-0-large
-    centerElement: true
 - tapOn:
     id: draft-size-0-large
 - tapOn:
