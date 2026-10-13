@@ -1,7 +1,5 @@
-import { scaleNutrients, suggestMealType, type MealType } from '@plato/shared';
-import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -10,125 +8,29 @@ import {
   Button,
   Card,
   IconButton,
-  ListRow,
   Screen,
   ScreenHeader,
   Stepper,
   TextField,
-  toast,
 } from '@/components';
 import { MealTypePicker } from '@/features/diary/MealTypePicker';
-import { checkAchievements } from '@/features/habits/hooks';
-import { PortionEditor } from '@/features/foods/PortionEditor';
-import { useRecipeDraftStore } from '@/features/foods/recipeDraft';
-import { logRecipe, recipeTotals, saveRecipe } from '@/features/foods/recipes';
-import { useAiError } from '@/features/scan/useAiError';
-import { analyzeMealText } from '@/services/ai';
-import { repos } from '@/services/db/repository';
+import { RecipeAddActions } from '@/features/recipes/RecipeAddActions';
+import { RecipeIngredientList } from '@/features/recipes/RecipeIngredientList';
+import { useRecipeEditor } from '@/features/recipes/useRecipeEditor';
 import { spacing } from '@/theme';
-import { todayLocal } from '@/utils/dates';
 import { formatKcal } from '@/utils/format';
 
 export default function RecipeEditor() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id?: string }>();
-  const draft = useRecipeDraftStore();
-  const aiError = useAiError();
-  const [importText, setImportText] = useState('');
-  const [importing, setImporting] = useState(false);
-  const [showImport, setShowImport] = useState(false);
-  const [editing, setEditingIdx] = useState<number | null>(null);
-  const [editBase, setEditBase] = useState(100);
-  const setEditing = (idx: number | null) => {
-    if (idx != null) setEditBase(draft.items[idx]?.grams ?? 100);
-    setEditingIdx(idx);
-  };
-  const [logServings, setLogServings] = useState(1);
-  const [mealType, setMealType] = useState<MealType>(suggestMealType(new Date().getHours()));
-
-  // A closed editor must not leak its recipe into the next "new recipe".
-  useEffect(() => () => useRecipeDraftStore.getState().reset(), []);
-
-  useEffect(() => {
-    if (!id) return;
-    repos.recipes.get(id).then((r) => {
-      if (r)
-        useRecipeDraftStore
-          .getState()
-          .set({ id: r.id, name: r.name, servings: r.servings, items: r.items });
-    });
-  }, [id]);
-
-  const { totals } = recipeTotals(draft.items);
-  const perServing = draft.servings > 0 ? totals.kcal / draft.servings : 0;
-
-  const save = async () => {
-    const r = await saveRecipe({
-      id: draft.id,
-      name: draft.name,
-      servings: draft.servings,
-      items: draft.items,
-    });
-    useRecipeDraftStore.getState().set({ id: r.id });
-    checkAchievements().catch(() => undefined);
-    toast.success(t('recipes.saved'));
-  };
-
-  const importFromText = async () => {
-    setImporting(true);
-    try {
-      const res = await analyzeMealText(importText, 'recipe');
-      res.items.forEach((i) =>
-        draft.addItem({
-          display_name: i.display_name,
-          food_id: i.food_id,
-          food_source: i.food_source,
-          grams: i.grams,
-          per100g: i.per100g,
-        }),
-      );
-      setShowImport(false);
-      setImportText('');
-    } catch (e) {
-      toast.error(aiError(e));
-    } finally {
-      setImporting(false);
-    }
-  };
-
-  const log = async () => {
-    const r = await saveRecipe({
-      id: draft.id,
-      name: draft.name,
-      servings: draft.servings,
-      items: draft.items,
-    });
-    await logRecipe(r, logServings, todayLocal(), mealType);
-    toast.success(t('recipes.logged'));
-    router.back();
-  };
-
-  const remove = () =>
-    Alert.alert(t('recipes.deleteTitle'), undefined, [
-      { text: t('common.cancel'), style: 'cancel' },
-      {
-        text: t('common.delete'),
-        style: 'destructive',
-        onPress: async () => {
-          if (draft.id) await repos.recipes.remove(draft.id);
-          draft.reset();
-          router.back();
-        },
-      },
-    ]);
-
-  const valid = draft.name.trim().length > 0 && draft.items.length > 0 && draft.servings > 0;
+  const editor = useRecipeEditor(id);
+  const { draft, valid } = editor;
 
   return (
     <Screen
       edges={['top', 'bottom', 'left', 'right']}
       keyboard
-      footer={<Button label={t('common.save')} onPress={save} disabled={!valid} />}
+      footer={<Button label={t('common.save')} onPress={editor.save} disabled={!valid} />}
     >
       <ScreenHeader
         title={t('recipes.title')}
@@ -139,7 +41,7 @@ export default function RecipeEditor() {
               icon="trash"
               color="danger"
               accessibilityLabel={t('common.delete')}
-              onPress={remove}
+              onPress={editor.remove}
             />
           ) : null
         }
@@ -158,93 +60,14 @@ export default function RecipeEditor() {
         max={50}
       />
       <AppText variant="subheading">{t('recipes.ingredients')}</AppText>
-      {draft.items.length ? (
-        <Card padded={false}>
-          {draft.items.map((i, idx) => (
-            <View key={`${i.display_name}-${idx}`}>
-              <ListRow
-                title={i.display_name}
-                subtitle={`${Math.round(i.grams)} g · ${formatKcal(scaleNutrients(i.per100g, i.grams).kcal)} kcal`}
-                chevron={false}
-                right={
-                  <View style={styles.itemActions}>
-                    <IconButton
-                      testID={`recipe-item-${idx}`}
-                      icon={editing === idx ? 'chevron-up' : 'create-outline'}
-                      color="textMuted"
-                      size={20}
-                      accessibilityLabel={t('portionEditor.editIngredient', {
-                        name: i.display_name,
-                      })}
-                      onPress={() => setEditing(editing === idx ? null : idx)}
-                    />
-                    <IconButton
-                      icon="close-circle-outline"
-                      color="textMuted"
-                      size={20}
-                      accessibilityLabel={t('review.removeItem')}
-                      onPress={() => {
-                        setEditing(null);
-                        draft.removeItem(idx);
-                      }}
-                    />
-                  </View>
-                }
-              />
-              {editing === idx ? (
-                <View style={styles.editor}>
-                  <PortionEditor
-                    label={t('foodDetail.portion')}
-                    grams={i.grams}
-                    baseGrams={editBase}
-                    onChange={(grams) => draft.updateItem(idx, { grams })}
-                  />
-                </View>
-              ) : null}
-            </View>
-          ))}
-        </Card>
-      ) : null}
-      <View style={styles.row}>
-        <Button
-          label={t('recipes.addIngredient')}
-          icon="add"
-          variant="outline"
-          fullWidth={false}
-          onPress={() => router.push({ pathname: '/food-search', params: { target: 'recipe' } })}
-        />
-        <Button
-          label={t('recipes.importText')}
-          icon="sparkles"
-          variant="ghost"
-          fullWidth={false}
-          onPress={() => setShowImport(!showImport)}
-        />
-      </View>
-      {showImport ? (
-        <Card style={styles.card}>
-          <TextField
-            placeholder={t('recipes.importPlaceholder')}
-            value={importText}
-            onChangeText={setImportText}
-            multiline
-            accessibilityLabel={t('recipes.importText')}
-          />
-          <Button
-            label={t('recipes.import')}
-            size="md"
-            onPress={importFromText}
-            loading={importing}
-            disabled={importText.trim().length < 3}
-          />
-        </Card>
-      ) : null}
+      <RecipeIngredientList />
+      <RecipeAddActions />
       <Card style={styles.card}>
         <AppText>
-          {t('recipes.total')}: {formatKcal(totals.kcal)} kcal
+          {t('recipes.total')}: {formatKcal(editor.totals.kcal)} kcal
         </AppText>
         <AppText variant="title" tabular>
-          {formatKcal(perServing)} kcal{' '}
+          {formatKcal(editor.perServing)} kcal{' '}
           <AppText color="textMuted">{t('recipes.perServing')}</AppText>
         </AppText>
       </Card>
@@ -253,19 +76,19 @@ export default function RecipeEditor() {
           <AppText variant="subheading">{t('recipes.logServing')}</AppText>
           <Stepper
             label={t('recipes.servingsToLog')}
-            value={logServings}
-            onChange={setLogServings}
+            value={editor.logServings}
+            onChange={editor.setLogServings}
             step={0.5}
             min={0.5}
             max={10}
             format={(v) => v.toLocaleString()}
           />
-          <MealTypePicker value={mealType} onChange={setMealType} />
+          <MealTypePicker value={editor.mealType} onChange={editor.setMealType} />
           <Button
             label={t('recipes.logServing')}
             icon="checkmark"
             variant="secondary"
-            onPress={log}
+            onPress={editor.log}
           />
         </Card>
       ) : (
@@ -276,8 +99,5 @@ export default function RecipeEditor() {
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   card: { gap: spacing.md },
-  itemActions: { flexDirection: 'row' },
-  editor: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg },
 });

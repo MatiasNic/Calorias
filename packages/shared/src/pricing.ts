@@ -1,0 +1,8 @@
+/**
+ * Percentage saved by paying yearly instead of twelve monthly payments, rounded to an integer.
+ * `null` when there is no monthly price to compare with.
+ */
+export function annualSavingsPercent(annualPrice: number, monthlyPrice: number): number | null {
+  if (!(monthlyPrice > 0)) return null;
+  return Math.round((1 - annualPrice / (monthlyPrice * 12)) * 100);
+}

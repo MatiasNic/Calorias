@@ -9,6 +9,8 @@ export * from './achievements.ts';
 export * from './training.ts';
 export * from './supplements.ts';
 export * from './meals.ts';
+export * from './diary.ts';
+export * from './pricing.ts';
 export * from './nutrition/energy.ts';
 export * from './nutrition/macros.ts';
 export * from './nutrition/goals.ts';
