@@ -50,6 +50,19 @@ export const palette = {
   paper100: '#F2F2EE',
 } as const;
 
+/**
+ * Camera and photo overlays: always drawn over a live (dark) image, whatever the app theme.
+ */
+export const overlay = {
+  background: '#000000',
+  text: '#FFFFFF',
+  textSoft: '#E5E7E3',
+  textMuted: '#C9CDCA',
+  active: '#ECEEE9',
+  control: 'rgba(255,255,255,0.12)',
+  shadow: '#000000',
+} as const;
+
 export const spacing = {
   xxs: 2,
   xs: 4,

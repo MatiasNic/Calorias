@@ -46,12 +46,14 @@ export function MealRow({ meal, card }: { meal: MealRecord; card?: boolean }) {
         icon="copy"
         label={t('diary.duplicate')}
         color={colors.primary}
+        textColor={colors.onPrimary}
         onPress={duplicate}
       />
       <ActionButton
         icon="trash"
         label={t('common.delete')}
         color={colors.danger}
+        textColor={colors.onDanger}
         onPress={confirmDelete}
       />
     </View>
@@ -135,11 +137,13 @@ function ActionButton({
   icon,
   label,
   color,
+  textColor,
   onPress,
 }: {
   icon: 'copy' | 'trash';
   label: string;
   color: string;
+  textColor: string;
   onPress: () => void;
 }) {
   return (
@@ -149,8 +153,8 @@ function ActionButton({
       onPress={onPress}
       style={[styles.action, { backgroundColor: color }]}
     >
-      <Icon name={icon} rawColor="#fff" size={20} />
-      <AppText variant="caption" style={{ color: '#fff' }}>
+      <Icon name={icon} rawColor={textColor} size={20} />
+      <AppText variant="caption" style={{ color: textColor }}>
         {label}
       </AppText>
     </Pressable>

@@ -12,6 +12,7 @@ export function AppLogo({ size = 48 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="4 8 48 48" accessibilityLabel="Bocado">
       <Defs>
+        {/* Mask luminance (white = keep, black = cut the bite), not visible colors. */}
         <Mask id={maskId}>
           <Rect x="0" y="0" width="60" height="60" fill="#fff" />
           <Circle cx="49" cy="14" r="12" fill="#000" />

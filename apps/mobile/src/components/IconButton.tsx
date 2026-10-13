@@ -1,6 +1,6 @@
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
-import { MIN_TOUCH, radii, useTheme, type ThemeColors } from '@/theme';
+import { MIN_TOUCH, overlay, radii, useTheme, type ThemeColors } from '@/theme';
 import { haptic } from '@/utils/haptics';
 import { Icon, type IconName } from './Icon';
 
@@ -57,9 +57,14 @@ export function IconButton({
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={rawWhite ? '#FFFFFF' : colors[color]} />
+        <ActivityIndicator color={rawWhite ? overlay.text : colors[color]} />
       ) : (
-        <Icon name={icon} size={size} color={color} rawColor={rawWhite ? '#FFFFFF' : undefined} />
+        <Icon
+          name={icon}
+          size={size}
+          color={color}
+          rawColor={rawWhite ? overlay.text : undefined}
+        />
       )}
     </Pressable>
   );

@@ -24,7 +24,7 @@ import { VoiceWave } from '@/features/voice/VoiceWave';
 import { currentLocale } from '@/i18n';
 import { usePrefsStore } from '@/stores/prefs';
 import { useUiStore } from '@/stores/ui';
-import { fontFamily, radii, spacing, useTheme } from '@/theme';
+import { fontFamily, overlay, radii, spacing, useTheme } from '@/theme';
 import { haptic } from '@/utils/haptics';
 import { openTextAnalysis } from '@/features/scan/textRequest';
 import { dateParam } from '@/utils/dates';
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: radii.sheet,
     borderTopRightRadius: radii.sheet,
     paddingTop: spacing.sm,
-    shadowColor: '#000',
+    shadowColor: overlay.shadow,
     shadowOffset: { width: 0, height: -10 },
     shadowOpacity: 0.25,
     shadowRadius: 20,
