@@ -28,6 +28,24 @@ const EXPORT_TABLES = [
   'supplement_intakes',
 ] as const;
 
+const PAGE = 1000;
+const LIST_PAGE = 1000;
+
+/** Reads every page of a query (PostgREST caps each response at `max_rows`). */
+async function allRows<T>(
+  page: (
+    from: number,
+    to: number,
+  ) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>,
+): Promise<T[]> {
+  const out: T[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const rows = must(await page(from, from + PAGE - 1)) ?? [];
+    out.push(...rows);
+    if (rows.length < PAGE) return out;
+  }
+}
+
 function must<T>(res: { data: T; error: { message: string } | null }): T {
   if (res.error) throw new Error(res.error.message);
   return res.data;
@@ -121,19 +139,7 @@ export function createDeps(config: ServerConfig = loadConfig((k) => Deno.env.get
         return r ?? { bonus_photo_scans: 0, lifetime_coach_messages: 0 };
       },
       async addBonusScans(userId, amount) {
-        const current = must(
-          await sb
-            .from('user_credits')
-            .select('bonus_photo_scans')
-            .eq('user_id', userId)
-            .maybeSingle(),
-        );
-        must(
-          await sb.from('user_credits').upsert({
-            user_id: userId,
-            bonus_photo_scans: (current?.bonus_photo_scans ?? 0) + amount,
-          }),
-        );
+        must(await sb.rpc('add_bonus_scans', { p_user: userId, p_amount: amount }));
       },
       async findScanByHash(userId, sha, kind, sinceIso) {
         const r = must(
@@ -266,16 +272,27 @@ export function createDeps(config: ServerConfig = loadConfig((k) => Deno.env.get
       async exportUserData(userId) {
         const out: Record<string, unknown> = {};
         out.profile = must(await sb.from('profiles').select('*').eq('id', userId).maybeSingle());
-        out.meals = must(
-          await sb.from('meals').select('*, meal_items(*)').eq('user_id', userId).order('eaten_at'),
+        // Paged: the API returns at most `max_rows` (1000) per request and the export must be whole.
+        out.meals = await allRows((from, to) =>
+          sb
+            .from('meals')
+            .select('*, meal_items(*)')
+            .eq('user_id', userId)
+            .order('eaten_at')
+            .order('id')
+            .range(from, to),
         );
         for (const t of EXPORT_TABLES)
-          out[t] = must(await sb.from(t).select('*').eq('user_id', userId));
-        out.ai_scans = must(
-          await sb
+          out[t] = await allRows((from, to) =>
+            sb.from(t).select('*').eq('user_id', userId).order('id').range(from, to),
+          );
+        out.ai_scans = await allRows((from, to) =>
+          sb
             .from('ai_scans')
             .select('id, kind, model, status, created_at, cost_usd')
-            .eq('user_id', userId),
+            .eq('user_id', userId)
+            .order('id')
+            .range(from, to),
         );
         return out;
       },
@@ -292,22 +309,16 @@ export function createDeps(config: ServerConfig = loadConfig((k) => Deno.env.get
         return true;
       },
       async upsertSubscription(s) {
-        const existing = must(
-          await sb
-            .from('subscriptions')
-            .select('last_event_at')
-            .eq('user_id', s.user_id)
-            .maybeSingle(),
-        );
-        // Ignore out-of-order deliveries older than the state we already have.
-        if (existing?.last_event_at && new Date(existing.last_event_at) > new Date(s.last_event_at))
-          return;
+        // One statement that skips out-of-order (older) events: see apply_subscription_event.
+        must(await sb.rpc('apply_subscription_event', { p: s }));
+      },
+      async forgetBillingEvents(userId) {
+        // Webhook ids stay (idempotency); who and what is removed.
         must(
-          await sb.from('subscriptions').upsert({
-            ...s,
-            entitlement: 'premium',
-            updated_by_webhook_at: new Date().toISOString(),
-          }),
+          await sb
+            .from('revenuecat_events')
+            .update({ app_user_id: null, payload: {} })
+            .eq('app_user_id', userId),
         );
       },
     },
@@ -321,11 +332,20 @@ export function createDeps(config: ServerConfig = loadConfig((k) => Deno.env.get
         };
       },
       async remove(bucket, paths) {
-        if (paths.length) await sb.storage.from(bucket).remove(paths);
+        if (!paths.length) return;
+        const { error } = await sb.storage.from(bucket).remove(paths);
+        if (error) throw new Error(error.message);
       },
       async list(bucket, prefix) {
-        const { data } = await sb.storage.from(bucket).list(prefix, { limit: 1000 });
-        return (data ?? []).map((f) => `${prefix}/${f.name}`);
+        const out: string[] = [];
+        for (let offset = 0; ; offset += LIST_PAGE) {
+          const { data, error } = await sb.storage
+            .from(bucket)
+            .list(prefix, { limit: LIST_PAGE, offset });
+          if (error) throw new Error(error.message);
+          out.push(...(data ?? []).map((f) => `${prefix}/${f.name}`));
+          if (!data || data.length < LIST_PAGE) return out;
+        }
       },
     },
   };

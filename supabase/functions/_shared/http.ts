@@ -49,11 +49,21 @@ export function handle(fn: (req: Request) => Promise<Response>) {
   };
 }
 
+/** Request bodies are small JSON (photos travel through Storage, not the body). */
+export const MAX_BODY_BYTES = 256 * 1024;
+
 export async function parseBody<T>(req: Request, schema: z.ZodType<T>): Promise<T> {
+  if (Number(req.headers.get('Content-Length') ?? 0) > MAX_BODY_BYTES)
+    throw new HttpError(413, 'INVALID_INPUT', { reason: 'body_too_large' });
   let raw: unknown;
   try {
-    raw = await req.json();
-  } catch {
+    const text = await req.text();
+    // Chunked requests carry no Content-Length: check the real size too.
+    if (text.length > MAX_BODY_BYTES)
+      throw new HttpError(413, 'INVALID_INPUT', { reason: 'body_too_large' });
+    raw = JSON.parse(text);
+  } catch (e) {
+    if (e instanceof HttpError) throw e;
     throw new HttpError(400, 'INVALID_INPUT', { reason: 'invalid_json' });
   }
   const parsed = schema.safeParse(raw);

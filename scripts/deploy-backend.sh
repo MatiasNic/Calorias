@@ -55,4 +55,5 @@ echo "  EXPO_PUBLIC_SUPABASE_ANON_KEY=$($SB projects api-keys --project-ref "$SU
 echo "  EXPO_PUBLIC_USE_MOCKS=false"
 echo
 echo "Remember in the dashboard: Auth → URL configuration → add bocado://auth/callback and"
-echo "bocado://auth/reset-password; enable email confirmations; set a spend limit in Anthropic."
+echo "bocado://auth/reset-password (no exp://** in production); enable email confirmations, minimum"
+echo "password length 8 and leaked-password protection; set a spend limit in Anthropic."

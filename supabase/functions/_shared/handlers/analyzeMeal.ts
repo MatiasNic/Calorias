@@ -12,6 +12,7 @@ import type { ServerDeps } from '../deps.ts';
 import { enrichItems } from '../enrich.ts';
 import {
   assertOwnPath,
+  aiDailyCeiling,
   checkBudget,
   consumeQuota,
   DEDUP_WINDOW_DAYS,
@@ -19,6 +20,7 @@ import {
   quotaPayload,
   rateLimit,
   RATE_LIMITS,
+  refundNotFood,
   requireUser,
   toBase64,
 } from '../guards.ts';
@@ -69,6 +71,7 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
   }
 
   await checkBudget(deps, plan);
+  await aiDailyCeiling(deps, user.id, plan);
   const ticket = await consumeQuota(deps, user.id, plan, 'photo_scan', profile.timezone);
 
   const file = await deps.storage.download(MEAL_PHOTOS_BUCKET, body.photo_path);
@@ -158,18 +161,20 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
       image_sha256: body.image_sha256,
       result: { label },
     });
-    if (!label.is_label)
-      await deps.db.refundQuota(user.id, 'photo_scan', ticket.day, ticket.bucket);
+    const refunded = !label.is_label && (await refundNotFood(deps, user.id, ticket));
     await cleanup();
-    const response: LabelResponse = { scan_id: scanId, label, quota: quotaPayload(ticket) };
+    const response: LabelResponse = {
+      scan_id: scanId,
+      label,
+      quota: quotaPayload(refunded ? { ...ticket, used: ticket.used - 1 } : ticket),
+    };
     return json(response);
   }
 
   const analysis = AiAnalysisSchema.parse(result.data);
   const items = analysis.is_food ? await enrichItems(analysis.items, foodLookup(deps)) : [];
-  // Not food: the user is not charged (rate limits still protect against abuse).
-  if (!analysis.is_food)
-    await deps.db.refundQuota(user.id, 'photo_scan', ticket.day, ticket.bucket);
+  // Not food: not charged, up to a few times a day (each call still costs us the AI tokens).
+  const refunded = !analysis.is_food && (await refundNotFood(deps, user.id, ticket));
 
   const payload: Omit<AnalyzeResponse, 'scan_id' | 'cached'> = {
     is_food: analysis.is_food,
@@ -179,9 +184,7 @@ export async function analyzeMeal(req: Request, deps: ServerDeps): Promise<Respo
     quick_answers: analysis.quick_answers,
     notes: analysis.notes,
     model: usage.model,
-    quota: analysis.is_food
-      ? quotaPayload(ticket)
-      : quotaPayload({ ...ticket, used: ticket.used - 1 }),
+    quota: quotaPayload(refunded ? { ...ticket, used: ticket.used - 1 } : ticket),
   };
   const scanId = await deps.db.insertScan({
     user_id: user.id,

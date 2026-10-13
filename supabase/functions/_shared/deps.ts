@@ -93,6 +93,8 @@ export interface ServerDeps {
       payload: unknown,
     ): Promise<boolean>;
     upsertSubscription(s: SubscriptionUpsert): Promise<void>;
+    /** Account deletion: strips the user from stored billing webhooks. */
+    forgetBillingEvents(userId: string): Promise<void>;
   };
   storage: {
     download(

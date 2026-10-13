@@ -114,3 +114,6 @@ export const MICRO_REFERENCE: Record<
   vitamin_b12_ug: { unit: 'µg', female: 2.4, male: 2.4, foods: 'carnes, huevos, lácteos' },
   folate_ug: { unit: 'µg', female: 400, male: 400, foods: 'hojas verdes, legumbres' },
 };
+
+/** AI coach: only the latest messages that fit are sent (bounds the cost of each reply). */
+export const COACH_HISTORY = { maxMessages: 12, maxChars: 12_000 } as const;

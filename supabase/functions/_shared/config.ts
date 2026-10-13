@@ -8,6 +8,8 @@ export interface ServerConfig {
   aiAlertWebhookUrl: string | null;
   usdaApiKey: string | null;
   revenuecatWebhookSecret: string | null;
+  /** Store test purchases (sandbox) grant premium only when enabled (internal testing). */
+  revenuecatAcceptSandbox: boolean;
   supabaseUrl: string;
   serviceRoleKey: string;
 }
@@ -22,6 +24,7 @@ export function loadConfig(get: (key: string) => string | undefined): ServerConf
     aiAlertWebhookUrl: get('AI_ALERT_WEBHOOK_URL') || null,
     usdaApiKey: get('USDA_FDC_API_KEY') || null,
     revenuecatWebhookSecret: get('REVENUECAT_WEBHOOK_SECRET') || null,
+    revenuecatAcceptSandbox: get('REVENUECAT_ACCEPT_SANDBOX') === 'true',
     supabaseUrl: get('SUPABASE_URL') ?? '',
     serviceRoleKey: get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
   };

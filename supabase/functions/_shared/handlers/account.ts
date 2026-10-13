@@ -52,11 +52,13 @@ export async function deleteAccount(req: Request, deps: ServerDeps): Promise<Res
     RATE_LIMITS.account.windowSeconds,
   );
   await deps.db.audit(user.id, 'account_deletion_requested', {});
+  // Photos first, and stop if any can't be removed: the account must not go while files stay.
   for (const bucket of BUCKETS) {
     const paths = await deps.storage.list(bucket, user.id);
     for (let i = 0; i < paths.length; i += 100)
       await deps.storage.remove(bucket, paths.slice(i, i + 100));
   }
+  await deps.db.forgetBillingEvents(user.id);
   await deps.deleteAuthUser(user.id);
   await deps.db.audit(user.id, 'account_deleted', {});
   return json({ deleted: true });

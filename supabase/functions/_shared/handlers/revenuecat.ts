@@ -108,6 +108,9 @@ export async function revenuecatWebhook(req: Request, deps: ServerDeps): Promise
   const isNew = await deps.db.recordWebhookEvent(e.id, userId, e.type, body);
   if (!isNew) return json({ ok: true, duplicate: true });
   if (e.type === 'TEST' || !userId) return json({ ok: true, ignored: !userId });
+  // Test purchases (TestFlight, Play license testers) are free: they must not unlock premium.
+  if (e.environment === 'SANDBOX' && !deps.config.revenuecatAcceptSandbox)
+    return json({ ok: true, ignored: 'sandbox' });
 
   // Consumable scan packs.
   if (e.type === 'NON_RENEWING_PURCHASE' && e.product_id?.startsWith(PRODUCT_IDS.scanPack30)) {

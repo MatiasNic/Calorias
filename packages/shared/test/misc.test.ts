@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   addDays,
+  trimChatHistory,
   AiAnalysisSchema,
   aiAnalysisJsonSchema,
   computeStreak,
@@ -258,5 +259,19 @@ describe('schemas', () => {
       items: [],
     });
     expect(r.success).toBe(false);
+  });
+});
+
+describe('trimChatHistory', () => {
+  const msg = (content: string) => ({ role: 'user' as const, content });
+  it('keeps the newest messages that fit, in order', () => {
+    const r = trimChatHistory([msg('aaaa'), msg('bbb'), msg('cc')], 10, 6);
+    expect(r.map((m) => m.content)).toEqual(['bbb', 'cc']);
+  });
+  it('caps the number of messages', () => {
+    expect(trimChatHistory([msg('a'), msg('b'), msg('c')], 2, 100)).toHaveLength(2);
+  });
+  it('always keeps (and cuts) the last message', () => {
+    expect(trimChatHistory([msg('x'.repeat(50))], 5, 10)[0]!.content).toHaveLength(10);
   });
 });

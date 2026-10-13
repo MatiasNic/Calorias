@@ -4,11 +4,13 @@ import { AIError } from '../ai/types.ts';
 import type { ServerDeps } from '../deps.ts';
 import { enrichItems } from '../enrich.ts';
 import {
+  aiDailyCeiling,
   checkBudget,
   consumeQuota,
   quotaPayload,
   rateLimit,
   RATE_LIMITS,
+  refundNotFood,
   requireUser,
 } from '../guards.ts';
 import { json, parseBody } from '../http.ts';
@@ -22,6 +24,7 @@ export async function analyzeText(req: Request, deps: ServerDeps): Promise<Respo
   await rateLimit(deps, `ai:${user.id}`, RATE_LIMITS.ai.max, RATE_LIMITS.ai.windowSeconds);
   const [profile, plan] = await Promise.all([deps.db.profile(user.id), deps.db.plan(user.id)]);
   await checkBudget(deps, plan);
+  await aiDailyCeiling(deps, user.id, plan);
   const ticket = await consumeQuota(deps, user.id, plan, 'text_query', profile.timezone);
   const model = plan === 'premium' ? deps.config.aiModelPremium : deps.config.aiModelFree;
   const ctx = {
@@ -36,8 +39,8 @@ export async function analyzeText(req: Request, deps: ServerDeps): Promise<Respo
       { text: body.text, ctx, previous: body.previous_items },
       model,
     );
+    const refunded = !data.is_food && (await refundNotFood(deps, user.id, ticket));
     const items = data.is_food ? await enrichItems(data.items, foodLookup(deps)) : [];
-    if (!data.is_food) await deps.db.refundQuota(user.id, 'text_query', ticket.day, ticket.bucket);
     const payload: Omit<AnalyzeResponse, 'scan_id' | 'cached'> = {
       is_food: data.is_food,
       dish_name: data.dish_name,
@@ -46,7 +49,7 @@ export async function analyzeText(req: Request, deps: ServerDeps): Promise<Respo
       quick_answers: data.quick_answers,
       notes: data.notes,
       model: usage.model,
-      quota: quotaPayload(data.is_food ? ticket : { ...ticket, used: ticket.used - 1 }),
+      quota: quotaPayload(refunded ? { ...ticket, used: ticket.used - 1 } : ticket),
     };
     const scanId = await deps.db.insertScan({
       user_id: user.id,
@@ -74,10 +77,17 @@ export async function analyzeText(req: Request, deps: ServerDeps): Promise<Respo
       user_id: user.id,
       kind: 'text',
       model,
-      input_tokens: 0,
-      output_tokens: 0,
-      cost_usd: 0,
-      latency_ms: null,
+      input_tokens: err.usage?.inputTokens ?? 0,
+      output_tokens: err.usage?.outputTokens ?? 0,
+      cost_usd: err.usage
+        ? estimateCostUsd(
+            err.usage.model,
+            err.usage.inputTokens,
+            err.usage.outputTokens,
+            err.usage.cacheReadTokens,
+          )
+        : 0,
+      latency_ms: err.usage?.latencyMs ?? null,
       status: err.kind === 'timeout' ? 'timeout' : 'error',
       error: err.message.slice(0, 500),
       image_sha256: null,

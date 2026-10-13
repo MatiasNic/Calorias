@@ -11,6 +11,8 @@ import {
   mockReadLabel,
   PLANS,
   QuotaStatusSchema,
+  COACH_HISTORY,
+  trimChatHistory,
   type AnalyzeResponse,
   type AiAnalysis,
   type CoachResponse,
@@ -253,7 +255,12 @@ export async function askCoach(
   const photo_path = photo ? await uploadPhoto(photo.img) : undefined;
   return invokeFunction(
     'coach-chat',
-    { messages, locale: currentLocale(), photo_path, photo_kind: photo?.kind },
+    {
+      messages: trimChatHistory(messages, COACH_HISTORY.maxMessages, COACH_HISTORY.maxChars),
+      locale: currentLocale(),
+      photo_path,
+      photo_kind: photo?.kind,
+    },
     CoachResponseSchema,
   );
 }

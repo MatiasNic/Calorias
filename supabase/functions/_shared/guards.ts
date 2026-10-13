@@ -29,6 +29,31 @@ export const RATE_LIMITS = {
   account: { max: 5, windowSeconds: 3600 },
 } as const;
 
+/**
+ * Hard ceiling of AI calls per user and UTC day, counted before any refund: quotas protect the
+ * user's plan, this protects our AI bill (a refunded "not food" call was still paid for).
+ */
+export const AI_DAILY_CEILING: Record<Plan, number> = { free: 40, premium: 300 };
+/** "Not food" answers refunded per user and day; after that they count like any other call. */
+export const NOT_FOOD_REFUNDS_PER_DAY = 3;
+const DAY_SECONDS = 86_400;
+
+export async function aiDailyCeiling(deps: ServerDeps, userId: string, plan: Plan) {
+  await rateLimit(deps, `ai-day:${userId}`, AI_DAILY_CEILING[plan], DAY_SECONDS);
+}
+
+/** Refunds a "not food" call while the user has free refunds left today. Returns if refunded. */
+export async function refundNotFood(
+  deps: ServerDeps,
+  userId: string,
+  ticket: QuotaTicket,
+): Promise<boolean> {
+  if (!(await deps.db.rateLimit(`refund:${userId}`, NOT_FOOD_REFUNDS_PER_DAY, DAY_SECONDS)))
+    return false;
+  await deps.db.refundQuota(userId, ticket.kind, ticket.day, ticket.bucket);
+  return true;
+}
+
 const alertedDays = new Set<string>();
 
 /**

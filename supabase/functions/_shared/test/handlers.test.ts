@@ -8,6 +8,7 @@ import { analyzeText } from '../handlers/analyzeText.ts';
 import { coachChat, mealPlan } from '../handlers/coach.ts';
 import { deleteAccount, exportData, quotaStatus } from '../handlers/account.ts';
 import { revenuecatWebhook, stateFor } from '../handlers/revenuecat.ts';
+import { AI_DAILY_CEILING, NOT_FOOD_REFUNDS_PER_DAY } from '../guards.ts';
 import { handle } from '../http.ts';
 import { MOCK_PLATES } from '../shared/index.ts';
 import { fakeAi, makeDeps, post, REGIONAL, SHA, USER, type AiBehavior } from './fakes.ts';
@@ -123,6 +124,26 @@ describe('analyze-meal', () => {
     expect(json).toMatchObject({ is_food: false, items: [] });
     expect([...state.usage.values()][0]!.photo_scans).toBe(0);
     expect(state.scans[0]?.status).toBe('not_food');
+  });
+
+  it('refunds only a few "not food" answers per day (each one still costs AI tokens)', async () => {
+    const { deps, state } = makeDeps(
+      fakeAi(() => 'not_food'),
+      { plan: 'premium' },
+    );
+    for (let i = 0; i < NOT_FOOD_REFUNDS_PER_DAY + 2; i++)
+      await call(
+        (r) => analyzeMeal(r, deps),
+        post({ ...mealBody, image_sha256: `${i}`.padEnd(64, 'a') }),
+      );
+    expect([...state.usage.values()][0]!.photo_scans).toBe(2);
+  });
+
+  it('stops AI calls past the daily ceiling even if they were refunded', async () => {
+    const { deps, state } = makeDeps(fakeAi(() => 'not_food'));
+    state.rateHits.set(`ai-day:${USER}`, AI_DAILY_CEILING.free);
+    const res = await call((r) => analyzeMeal(r, deps), post(mealBody));
+    expect(res.status).toBe(429);
   });
 
   it('deletes the photo when the user opted out of storing photos', async () => {
@@ -242,7 +263,7 @@ describe('revenuecat webhook', () => {
       period_type: 'TRIAL',
       expiration_at_ms: Date.parse('2026-10-11T00:00:00Z'),
       store: 'PLAY_STORE',
-      environment: 'SANDBOX',
+      environment: 'PRODUCTION',
       entitlement_ids: ['premium'],
       ...over,
     },
@@ -265,7 +286,7 @@ describe('revenuecat webhook', () => {
       status: 'trialing',
       is_trial: true,
       platform: 'android',
-      environment: 'SANDBOX',
+      environment: 'PRODUCTION',
       expires_at: '2026-10-11T00:00:00.000Z',
     });
   });
@@ -285,6 +306,17 @@ describe('revenuecat webhook', () => {
       ),
     );
     expect(state.bonus).toBe(30);
+  });
+  it('ignores store test purchases unless sandbox is enabled', async () => {
+    const { deps, state } = makeDeps(fakeAi(() => 'ok'));
+    const res = await body(
+      await call(
+        (r) => revenuecatWebhook(r, deps),
+        post(event({ id: 'e4', environment: 'SANDBOX' }), null, auth),
+      ),
+    );
+    expect(res.ignored).toBe('sandbox');
+    expect(state.subscriptions).toHaveLength(0);
   });
   it('ignores unknown users', async () => {
     const { deps, state } = makeDeps(fakeAi(() => 'ok'));

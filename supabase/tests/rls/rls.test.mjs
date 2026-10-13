@@ -438,6 +438,81 @@ describe('training & supplements', () => {
   });
 });
 
+describe('hardening', () => {
+  it('rejects unknown timezones and oversized allergy lists', async () => {
+    await assert.rejects(
+      as(A, () => q(`update public.profiles set timezone = 'Mars/Olympus' where id = $1`, [A])),
+    );
+    await as(A, () =>
+      q(`update public.profiles set timezone = 'America/Sao_Paulo' where id = $1`, [A]),
+    );
+    const many = Array.from({ length: 31 }, (_, i) => `a${i}`);
+    await assert.rejects(
+      as(A, () => q('update public.profiles set allergies = $2 where id = $1', [A, many])),
+    );
+  });
+
+  it("items can't be attached to another user's meal", async () => {
+    const mealId = randomUUID();
+    await as(A, () =>
+      q('select public.upsert_meal($1::jsonb)', [JSON.stringify(mealPayload(mealId, 1))]),
+    );
+    await assert.rejects(
+      as(B, () =>
+        q(
+          `insert into public.meal_items (meal_id, user_id, display_name, food_source, grams, per100g)
+           values ($1, $2, 'x', 'ai', 10, '{}')`,
+          [mealId, B],
+        ),
+      ),
+    );
+  });
+
+  it('bonus scans add up atomically and are service-only', async () => {
+    await assert.rejects(as(A, () => q('select public.add_bonus_scans($1, 30)', [A])));
+    const before = await q(
+      'select bonus_photo_scans n from public.user_credits where user_id = $1',
+      [B],
+    );
+    await as('service', () => q('select public.add_bonus_scans($1, 30)', [B]));
+    await as('service', () => q('select public.add_bonus_scans($1, 30)', [B]));
+    const r = await q('select bonus_photo_scans n from public.user_credits where user_id = $1', [
+      B,
+    ]);
+    assert.equal(r.rows[0].n, before.rows[0].n + 60);
+  });
+
+  it('subscription events older than the stored one are ignored', async () => {
+    const ev = (status, at) =>
+      JSON.stringify({
+        user_id: B,
+        status,
+        is_trial: false,
+        will_renew: true,
+        last_event_type: 'X',
+        last_event_at: at,
+      });
+    await as('service', () =>
+      q('select public.apply_subscription_event($1::jsonb)', [
+        ev('active', '2026-10-10T00:00:00Z'),
+      ]),
+    );
+    await as('service', () =>
+      q('select public.apply_subscription_event($1::jsonb)', [
+        ev('expired', '2026-10-01T00:00:00Z'),
+      ]),
+    );
+    const r = await q('select status from public.subscriptions where user_id = $1', [B]);
+    assert.equal(r.rows[0].status, 'active');
+    await assert.rejects(
+      as(A, () =>
+        q('select public.apply_subscription_event($1::jsonb)', [ev('active', '2027-01-01')]),
+      ),
+    );
+    await q('delete from public.subscriptions where user_id = $1', [B]);
+  });
+});
+
 describe('account deletion', () => {
   it('deleting the auth user cascades to all personal data', async () => {
     await q('delete from auth.users where id = $1', [A]);

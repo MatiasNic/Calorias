@@ -115,6 +115,7 @@ export const config: ServerConfig = {
   aiAlertWebhookUrl: null,
   usdaApiKey: null,
   revenuecatWebhookSecret: 'rc-secret',
+  revenuecatAcceptSandbox: false,
   supabaseUrl: 'http://localhost',
   serviceRoleKey: 'x',
 };
@@ -133,6 +134,7 @@ export interface FakeState {
   audit: string[];
   deletedUsers: string[];
   rateAllowed: boolean;
+  rateHits: Map<string, number>;
 }
 
 export function makeDeps(
@@ -154,6 +156,7 @@ export function makeDeps(
     audit: [],
     deletedUsers: [],
     rateAllowed: true,
+    rateHits: new Map(),
     ...overrides,
   };
   const col = {
@@ -221,7 +224,11 @@ export function makeDeps(
         return id;
       },
       aiCostToday: async () => state.costToday,
-      rateLimit: async () => state.rateAllowed,
+      rateLimit: async (bucket, max) => {
+        const hits = (state.rateHits.get(bucket) ?? 0) + 1;
+        state.rateHits.set(bucket, hits);
+        return state.rateAllowed && hits <= max;
+      },
       searchRegional: async (q) =>
         REGIONAL.filter((r) => r.name_es.toLowerCase().includes(q.toLowerCase().split(' ')[0]!)),
       cacheGet: async () => null,
@@ -246,6 +253,7 @@ export function makeDeps(
         return true;
       },
       upsertSubscription: async (s) => void state.subscriptions.push(s),
+      forgetBillingEvents: async () => undefined,
     },
     storage: {
       download: async (_b, path) =>

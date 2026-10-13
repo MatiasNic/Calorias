@@ -25,3 +25,27 @@ export function matchScore(query: string, candidates: readonly string[]): number
   }
   return best;
 }
+
+/**
+ * The newest messages whose total length fits `maxChars` (at most `maxMessages`), oldest first.
+ * The last message is always kept, cut to `maxChars` if it alone is longer.
+ */
+export function trimChatHistory<T extends { content: string }>(
+  messages: readonly T[],
+  maxMessages: number,
+  maxChars: number,
+): T[] {
+  const out: T[] = [];
+  let total = 0;
+  for (let i = messages.length - 1; i >= 0 && out.length < maxMessages; i--) {
+    const m = messages[i]!;
+    if (out.length === 0 && m.content.length > maxChars) {
+      out.push({ ...m, content: m.content.slice(0, maxChars) });
+      break;
+    }
+    if (total + m.content.length > maxChars) break;
+    total += m.content.length;
+    out.push(m);
+  }
+  return out.reverse();
+}

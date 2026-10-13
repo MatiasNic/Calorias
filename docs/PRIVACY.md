@@ -64,7 +64,9 @@ legalmente.
 
 **6. Cuánto tiempo.** Mientras tengas la cuenta. Si la eliminás, borramos tus datos y fotos en
 forma inmediata, salvo registros mínimos que la ley nos obligue a conservar (por ejemplo,
-comprobantes de compra). Los registros técnicos de uso de IA se anonimizan.
+comprobantes de compra). Los registros técnicos de uso de IA se anonimizan, los avisos de pago se
+conservan sin datos personales y un registro de seguridad guarda solo el identificador interno y la
+fecha de la eliminación.
 
 **7. Tus derechos.** Podés acceder, rectificar, exportar y suprimir tus datos desde la app
 (Perfil → Privacidad) o escribiendo a [EMAIL]. La Agencia de Acceso a la Información Pública
