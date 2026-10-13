@@ -4,6 +4,7 @@ import {
   localDate,
   MealPlanRequestSchema,
   trimChatHistory,
+  type CoachDish,
   type CoachResponse,
 } from '../shared/index.ts';
 import { estimateCostUsd } from '../ai/cost.ts';
@@ -20,8 +21,23 @@ import {
   requireUser,
   toBase64,
 } from '../guards.ts';
+import { enrichItems } from '../enrich.ts';
 import { HttpError, json, parseBody } from '../http.ts';
+import { foodLookup } from '../lookup.ts';
 import { aiErrorToHttp, MEAL_PHOTOS_BUCKET } from './analyzeMeal.ts';
+
+/** "HH:MM" in the user's timezone (the coach suggests by time of day). */
+function localTime(now: Date, timeZone: string): string {
+  try {
+    return new Intl.DateTimeFormat('en-GB', {
+      timeZone,
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(now);
+  } catch {
+    return now.toISOString().slice(11, 16) + ' UTC';
+  }
+}
 
 /** POST /coach-chat — premium (free users get one lifetime trial message). */
 export async function coachChat(req: Request, deps: ServerDeps): Promise<Response> {
@@ -44,7 +60,7 @@ export async function coachChat(req: Request, deps: ServerDeps): Promise<Respons
   }
 
   const today = localDate(deps.now(), profile.timezone);
-  const context = await deps.db.coachContext(user.id, today);
+  const context = `${await deps.db.coachContext(user.id, today)}\nLocal time now: ${localTime(deps.now(), profile.timezone)}.`;
   const model = deps.config.aiModelPremium;
   try {
     const { data, usage } = await deps.ai.coach(
@@ -79,7 +95,18 @@ export async function coachChat(req: Request, deps: ServerDeps): Promise<Respons
       image_sha256: null,
       result: null, // conversations are not stored server-side
     });
-    const response: CoachResponse = { reply: data, quota: quotaPayload(ticket) };
+    // Same nutrition pipeline as a scan, so a logged dish carries database values.
+    const lookup = foodLookup(deps);
+    const dishes: CoachDish[] = await Promise.all(
+      data.dishes.map(async (d) => ({
+        name: d.name,
+        meal_type: d.meal_type,
+        minutes: d.minutes,
+        steps: d.steps,
+        items: await enrichItems(d.ingredients, lookup),
+      })),
+    );
+    const response: CoachResponse = { reply: data.reply, dishes, quota: quotaPayload(ticket) };
     return json(response);
   } catch (e) {
     await deps.db.refundQuota(user.id, 'coach_message', ticket.day, ticket.bucket);

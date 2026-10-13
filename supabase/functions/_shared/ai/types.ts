@@ -1,5 +1,6 @@
 import type {
   AiAnalysis,
+  AiCoachReply,
   PreviousItem,
   AiLabel,
   AppLocale,
@@ -55,7 +56,7 @@ export interface AIProvider {
   coach(
     input: { context: string; messages: ChatTurn[]; image?: ImageInput; ctx: UserContext },
     model: string,
-  ): Promise<AIResult<string>>;
+  ): Promise<AIResult<AiCoachReply>>;
   mealPlan(
     input: {
       context: string;

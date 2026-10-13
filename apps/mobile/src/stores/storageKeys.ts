@@ -9,6 +9,8 @@ export const STORAGE_KEYS = {
   mockTrials: 'bocado.mockTrials',
   mealPlan: 'bocado.mealPlan',
   mealPlanPrefs: 'bocado.mealPlanPrefs',
+  coachChat: 'bocado.coachChat',
+  coachPantry: 'bocado.coachPantry',
 } as const;
 
 /** Keys of the account's own data, removed on sign-out and account deletion. */
@@ -17,6 +19,8 @@ export const USER_DATA_KEYS = [
   STORAGE_KEYS.mockTrials,
   STORAGE_KEYS.mealPlan,
   STORAGE_KEYS.mealPlanPrefs,
+  STORAGE_KEYS.coachChat,
+  STORAGE_KEYS.coachPantry,
 ] as const;
 
 /** The app was called "Plato" during development: its keys used this prefix. */

@@ -12,6 +12,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="today" />
       <Tabs.Screen name="diary" />
       <Tabs.Screen name="scan-tab" />
+      <Tabs.Screen name="coach" />
       <Tabs.Screen name="progress" />
       <Tabs.Screen name="profile" />
     </Tabs>

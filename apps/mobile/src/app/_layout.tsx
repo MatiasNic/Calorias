@@ -92,7 +92,6 @@ function RootStack() {
         />
         <Stack.Screen name="(modals)/custom-food" options={modal} />
         <Stack.Screen name="(modals)/recipe-editor" options={modal} />
-        <Stack.Screen name="(modals)/coach" options={modal} />
       </Stack>
       <OfflineBanner />
       <ToastHost />

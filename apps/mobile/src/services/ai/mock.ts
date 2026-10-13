@@ -13,8 +13,8 @@ import { searchRegional } from '@/features/foods/search';
  */
 
 /** Local stand-in for the server enrichment pipeline (regional table, plausibility check). */
-function enrichLocally(analysis: AiAnalysis): EnrichedItem[] {
-  return analysis.items.map((it) => {
+export function enrichLocally(items: AiAnalysis['items']): EnrichedItem[] {
+  return items.map((it) => {
     const aiKcal = it.per_100g_estimate.kcal;
     const queries = [it.name, ...it.search_hints];
     const plausible = (kcal: number) =>
@@ -56,7 +56,7 @@ export function mockResponse(
     cached: false,
     is_food: analysis.is_food,
     dish_name: analysis.dish_name,
-    items: enrichLocally(analysis),
+    items: enrichLocally(analysis.items),
     hidden_ingredients_question: analysis.hidden_ingredients_question,
     quick_answers: analysis.quick_answers,
     notes: analysis.notes,

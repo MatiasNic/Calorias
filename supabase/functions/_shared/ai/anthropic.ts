@@ -2,7 +2,12 @@ import Anthropic from '@anthropic-ai/sdk';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
 import type { z } from 'zod';
 
-import { AiAnalysisSchema, AiLabelSchema, MealPlanSchema } from '../shared/index.ts';
+import {
+  AiAnalysisSchema,
+  AiCoachReplySchema,
+  AiLabelSchema,
+  MealPlanSchema,
+} from '../shared/index.ts';
 import {
   coachSystem,
   fridgePrompt,
@@ -18,6 +23,9 @@ import { AIError, type AIProvider, type AIResult, type AIUsage, type ImageInput 
 const TIMEOUT_MS = 25_000;
 
 type Content = Anthropic.ContentBlockParam[];
+
+const isConversation = (c: Content | Anthropic.MessageParam[]): c is Anthropic.MessageParam[] =>
+  c.length > 0 && 'role' in c[0]!;
 
 /** Models that accept output_config.effort (Haiku 4.5 does not). */
 const supportsEffort = (model: string) => !model.startsWith('claude-haiku');
@@ -57,11 +65,15 @@ export class AnthropicProvider implements AIProvider {
   private async structured<T>(
     model: string,
     system: string,
-    content: Content,
+    content: Content | Anthropic.MessageParam[],
     schema: z.ZodType<T>,
     maxTokens: number,
     allowFallback = true,
   ): Promise<AIResult<T>> {
+    // A single user turn, or a whole conversation (coach).
+    const messages: Anthropic.MessageParam[] = isConversation(content)
+      ? content
+      : [{ role: 'user', content }];
     const started = Date.now();
     let response;
     try {
@@ -69,7 +81,7 @@ export class AnthropicProvider implements AIProvider {
         model,
         max_tokens: maxTokens,
         system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
-        messages: [{ role: 'user', content }],
+        messages,
         output_config: {
           format: zodOutputFormat(schema as z.ZodType<T> & z.ZodObject),
           ...(supportsEffort(model) ? { effort: 'low' as const } : {}),
@@ -163,8 +175,7 @@ export class AnthropicProvider implements AIProvider {
       12000,
     );
 
-  coach: AIProvider['coach'] = async ({ context, messages, image, ctx }, model) => {
-    const started = Date.now();
+  coach: AIProvider['coach'] = ({ context, messages, image, ctx }, model) => {
     const history: Anthropic.MessageParam[] = messages.map((m, i) => {
       const isLast = i === messages.length - 1;
       if (isLast && image && m.role === 'user') {
@@ -175,28 +186,6 @@ export class AnthropicProvider implements AIProvider {
       }
       return { role: m.role, content: m.content };
     });
-    try {
-      const response = await this.client.messages.create({
-        model,
-        max_tokens: 2048,
-        system: [{ type: 'text', text: coachSystem(ctx, context) }],
-        messages: history,
-        ...(supportsEffort(model) ? { output_config: { effort: 'low' as const } } : {}),
-      });
-      const usage = this.usageOf(model, started, response.usage);
-      if (response.stop_reason === 'refusal') throw new AIError('refusal', undefined, usage);
-      const text = response.content
-        .flatMap((b) => (b.type === 'text' ? [b.text] : []))
-        .join('\n')
-        .trim();
-      if (!text) throw new AIError('invalid', 'empty', usage);
-      return { data: text, usage };
-    } catch (e) {
-      if (e instanceof AIError) throw e;
-      if (e instanceof Anthropic.APIConnectionTimeoutError) throw new AIError('timeout');
-      if (e instanceof Anthropic.APIError)
-        throw new AIError('upstream', `${e.status} ${e.message}`);
-      throw new AIError('upstream', e instanceof Error ? e.message : String(e));
-    }
+    return this.structured(model, coachSystem(ctx, context), history, AiCoachReplySchema, 4000);
   };
 }

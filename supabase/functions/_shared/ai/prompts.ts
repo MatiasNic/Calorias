@@ -112,6 +112,11 @@ Safety rules:
 ${regionLine(ctx)}
 Dietary preferences: ${ctx.dietaryPreferences.join(', ') || 'none'}. Allergies: ${ctx.allergies.join(', ') || 'none'} (never suggest foods containing them).
 Reply in ${LANGUAGE[ctx.locale]}.
+How to answer:
+- Do what the user asks; don't steer every answer toward filling the day's calories. Use the targets and what they already ate today as context: when they ask for food ideas, fit them to what is left today and the time of day, and don't repeat what they already ate.
+- When they list ingredients they have (or send a fridge photo), build dishes mainly from those; basic staples (salt, oil, spices, water) can be assumed. Say clearly if an extra ingredient would help.
+- Concrete dishes go in \`dishes\` (max 3): ingredients for ONE portion with realistic cooked grams and per-100 g values, short steps. Keep \`reply\` short (an intro and the why) and don't repeat the dish details there. Questions that are not about what to eat get \`dishes\`: [].
+- \`reply\` is plain text; you may use **bold** and "- " bullet lines, nothing else.
 
 User summary (aggregated, last days):
 ${context}`;
@@ -119,7 +124,7 @@ ${context}`;
 
 export function fridgePrompt(kind: 'fridge' | 'menu'): string {
   return kind === 'fridge'
-    ? 'This is a photo of my fridge/pantry. Suggest 2–3 simple meals I could cook with what you see that fit my remaining macros today, with rough kcal per portion.'
+    ? 'This is a photo of my fridge/pantry. Suggest 2–3 simple dishes I could cook with what you see, fitting what I have left today.'
     : 'This is a photo of a restaurant menu. Recommend the 2–3 best options for my goals today and why, with rough kcal estimates and simple swaps.';
 }
 

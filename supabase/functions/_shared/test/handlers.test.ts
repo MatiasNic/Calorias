@@ -220,6 +220,33 @@ describe('coach & meal plan', () => {
     expect(res.status).toBe(403);
     expect((await body(res)).error.code).toBe('PREMIUM_REQUIRED');
   });
+  it('returns proposed dishes with database nutrition', async () => {
+    const ai = fakeAi(() => 'ok');
+    ai.coach = async (input, model) => {
+      expect(input.context).toMatch(/Local time now: \d\d:\d\d/);
+      return {
+        data: {
+          reply: 'Te propongo esto.',
+          dishes: [
+            {
+              name: 'Milanesa',
+              meal_type: 'dinner',
+              minutes: 20,
+              ingredients: [MOCK_PLATES[0]!.items[0]!],
+              steps: ['Cocinar'],
+            },
+          ],
+        },
+        usage: { model, inputTokens: 1, outputTokens: 1, cacheReadTokens: 0, latencyMs: 1 },
+      };
+    };
+    const { deps } = makeDeps(ai, { plan: 'premium' });
+    const msg = { messages: [{ role: 'user', content: 'Tengo carne, ¿qué cocino?' }] };
+    const json = await body(await call((r) => coachChat(r, deps), post(msg)));
+    expect(json.reply).toBe('Te propongo esto.');
+    expect(json.dishes).toHaveLength(1);
+    expect(json.dishes[0].items[0].food_source).toBe('regional');
+  });
   it('requires premium for the meal plan', async () => {
     const { deps } = makeDeps(fakeAi(() => 'ok'));
     expect((await call((r) => mealPlan(r, deps), post({}))).status).toBe(403);

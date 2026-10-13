@@ -149,8 +149,41 @@ export const CoachRequestSchema = z.object({
   photo_kind: z.enum(['fridge', 'menu']).optional(),
 });
 
+/** A dish the coach proposes, as the model writes it (one portion, ingredients in grams). */
+export const AiCoachDishSchema = z.object({
+  name: z.string().min(1).max(80),
+  meal_type: MealTypeSchema.nullable().describe('Meal it fits best, or null'),
+  minutes: z.number().int().min(0).max(240).describe('Approximate total cooking time'),
+  ingredients: z
+    .array(AiItemSchema)
+    .min(1)
+    .max(12)
+    .describe('Ingredients for ONE portion, cooked weights where it applies; bbox omitted'),
+  steps: z.array(z.string().max(160)).max(8).describe('Short cooking steps'),
+});
+export type AiCoachDish = z.infer<typeof AiCoachDishSchema>;
+
+/** Coach structured output: the chat text plus up to 3 dishes the user can log. */
+export const AiCoachReplySchema = z.object({
+  reply: z.string().min(1).max(2000),
+  dishes: z.array(AiCoachDishSchema).max(3),
+});
+export type AiCoachReply = z.infer<typeof AiCoachReplySchema>;
+
+/** A proposed dish after the ingredients went through the food database (same as a scan). */
+export const CoachDishSchema = z.object({
+  name: z.string(),
+  meal_type: MealTypeSchema.nullable(),
+  minutes: z.number(),
+  steps: z.array(z.string()),
+  items: z.array(EnrichedItemSchema),
+});
+export type CoachDish = z.infer<typeof CoachDishSchema>;
+
 export const CoachResponseSchema = z.object({
   reply: z.string(),
+  /** Older servers don't send dishes. */
+  dishes: z.array(CoachDishSchema).default([]),
   quota: z.object({ used: z.number(), limit: z.number(), remaining: z.number() }),
 });
 export type CoachResponse = z.infer<typeof CoachResponseSchema>;

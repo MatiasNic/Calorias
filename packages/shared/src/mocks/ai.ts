@@ -1,4 +1,4 @@
-import type { AiAnalysis, AiItem, AiLabel, MealPlan } from '../schemas/ai.ts';
+import type { AiAnalysis, AiCoachReply, AiItem, AiLabel, MealPlan } from '../schemas/ai.ts';
 import { normalizeText } from '../text.ts';
 
 /**
@@ -433,8 +433,109 @@ export function mockReadLabel(): AiLabel {
   };
 }
 
-export function mockCoachReply(question: string): string {
-  return `(Demo) Buena pregunta: "${question.slice(0, 80)}". Una idea simple: sumá una porción de proteína magra (pollo, huevos, legumbres o yogur) y verduras para completar tus macros de hoy. Recordá que esto es información general y no reemplaza a un profesional.`;
+const MOCK_COACH_DISHES: AiCoachReply['dishes'] = [
+  {
+    name: 'Salteado de pollo con arroz y zanahoria',
+    meal_type: 'dinner',
+    minutes: 25,
+    ingredients: [
+      item(
+        'Pechuga de pollo a la plancha',
+        'grilled chicken breast',
+        150,
+        '1 pechuga chica',
+        'grilled',
+        0.8,
+        [165, 31, 0, 3.6],
+        ['pechuga de pollo', 'chicken breast'],
+      ),
+      item(
+        'Arroz blanco cocido',
+        'cooked white rice',
+        150,
+        '1 taza',
+        'boiled',
+        0.8,
+        [130, 2.7, 28, 0.3, 0.4],
+        ['arroz blanco cocido', 'cooked rice'],
+      ),
+      item(
+        'Zanahoria salteada',
+        'sauteed carrot',
+        80,
+        '1 unidad',
+        'sauteed',
+        0.75,
+        [41, 0.9, 10, 0.2, 2.8],
+        ['zanahoria', 'carrot'],
+      ),
+      item(
+        'Aceite de oliva',
+        'olive oil',
+        5,
+        '1 cdita',
+        'raw',
+        0.7,
+        [884, 0, 0, 100],
+        ['aceite de oliva', 'olive oil'],
+      ),
+    ],
+    steps: [
+      'Cortá el pollo en tiras y la zanahoria en bastones finos.',
+      'Dorá el pollo con el aceite 6–7 minutos.',
+      'Sumá la zanahoria y salteá 4 minutos.',
+      'Agregá el arroz cocido, mezclá y condimentá a gusto.',
+    ],
+  },
+  {
+    name: 'Tortilla de huevo con verduras',
+    meal_type: null,
+    minutes: 15,
+    ingredients: [
+      item('Huevo', 'egg', 100, '2 unidades', 'fried', 0.85, [155, 13, 1.1, 11], ['huevo', 'egg']),
+      item(
+        'Zanahoria rallada',
+        'grated carrot',
+        40,
+        '1/2 unidad',
+        'raw',
+        0.75,
+        [41, 0.9, 10, 0.2, 2.8],
+        ['zanahoria', 'carrot'],
+      ),
+      item(
+        'Queso cremoso',
+        'soft cheese',
+        30,
+        '1 feta gruesa',
+        'raw',
+        0.7,
+        [300, 20, 2, 24],
+        ['queso cremoso', 'soft cheese'],
+      ),
+    ],
+    steps: [
+      'Batí los huevos con la zanahoria rallada.',
+      'Cociná en sartén a fuego medio 3 minutos.',
+      'Sumá el queso, doblá y dejá 1 minuto más.',
+    ],
+  },
+];
+
+/** Demo coach: proposes dishes when the user asks what to cook, plain advice otherwise. */
+export function mockCoachReply(question: string): AiCoachReply {
+  const q = normalizeText(question);
+  if (/tengo|cocin|receta|plato|cen[ao]|almuerz|ideas?/.test(q)) {
+    return {
+      reply:
+        '(Demo) Con lo que tenés te propongo estas dos opciones. Las calorías son por porción; tocá **Registrar** para sumarla al diario y ajustarla.',
+      dishes: MOCK_COACH_DISHES,
+    };
+  }
+  return {
+    reply: `(Demo) Buena pregunta: "${question.slice(0, 80)}". Una idea simple: sumá una porción de proteína magra (pollo, huevos, legumbres o yogur) y verduras para completar tus macros de hoy. Recordá que esto es información general y no reemplaza a un profesional.`,
+    dishes: [],
+  };
 }
 
 type MockDish = MealPlan['days'][number]['meals'][number];

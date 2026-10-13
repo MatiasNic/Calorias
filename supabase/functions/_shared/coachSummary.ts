@@ -31,3 +31,34 @@ export function trainingSummaryLine(
   const supps = names.length ? `Supplements: ${shown.join(', ')}${more}.` : 'Supplements: none.';
   return `${training} ${supps}`;
 }
+
+export interface TodayMealRow {
+  id: string;
+  meal_type: string;
+}
+
+export interface TodayItemRow {
+  meal_id: string;
+  display_name: string;
+}
+
+const MAX_ITEMS_PER_MEAL = 6;
+
+/** "Eaten today: lunch: arroz, pollo; snack: yogur." (user-typed names, kept short). */
+export function todayMealsLine(
+  meals: readonly TodayMealRow[],
+  items: readonly TodayItemRow[],
+): string {
+  if (!meals.length) return 'Eaten today: nothing logged yet.';
+  const byType = new Map<string, string[]>();
+  for (const m of meals) {
+    const names = items.filter((i) => i.meal_id === m.id).map((i) => cleanName(i.display_name));
+    byType.set(m.meal_type, [...(byType.get(m.meal_type) ?? []), ...names]);
+  }
+  const parts = [...byType].map(([type, names]) => {
+    const shown = names.filter(Boolean).slice(0, MAX_ITEMS_PER_MEAL);
+    const more = names.length > shown.length ? ` (+${names.length - shown.length})` : '';
+    return `${type}: ${shown.join(', ') || '—'}${more}`;
+  });
+  return `Eaten today: ${parts.join('; ')}.`;
+}

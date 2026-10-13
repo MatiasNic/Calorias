@@ -53,7 +53,7 @@ export function fakeAi(
         per_serving: null,
         notes: null,
       }),
-    coach: (_i, model) => run(model, 'Comé más verduras.'),
+    coach: (_i, model) => run(model, { reply: 'Comé más verduras.', dishes: [] }),
     mealPlan: (_i, model) => run(model, { days: [], shopping_list: [], notes: null }),
   };
 }

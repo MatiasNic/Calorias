@@ -20,7 +20,13 @@ export async function askCoach(
   if (mocked()) {
     const quota = consumeMock('coach_message');
     await sleep(MOCK_DELAY_MS);
-    return { reply: mockCoachReply(messages[messages.length - 1]?.content ?? ''), quota };
+    const { reply, dishes } = mockCoachReply(messages[messages.length - 1]?.content ?? '');
+    const { enrichLocally } = await import('./mock');
+    return {
+      reply,
+      dishes: dishes.map(({ ingredients, ...d }) => ({ ...d, items: enrichLocally(ingredients) })),
+      quota,
+    };
   }
   const photo_path = photo ? await uploadPhoto(photo.img) : undefined;
   return invokeFunction(

@@ -5,7 +5,7 @@ import { AnthropicProvider } from './ai/anthropic.ts';
 import { MockProvider } from './ai/mock.ts';
 import { loadConfig, type ServerConfig } from './config.ts';
 import type { ServerDeps } from './deps.ts';
-import { trainingSummaryLine } from './coachSummary.ts';
+import { todayMealsLine, trainingSummaryLine } from './coachSummary.ts';
 import type { RegionalRow } from './enrich.ts';
 
 const EXPORT_TABLES = [
@@ -202,7 +202,7 @@ export function createDeps(config: ServerConfig = loadConfig((k) => Deno.env.get
         const [meals, goal, weight, profile, workouts, supplements] = await Promise.all([
           sb
             .from('meals')
-            .select('local_date, meal_type, kcal, protein_g, carbs_g, fat_g, fiber_g')
+            .select('id, local_date, meal_type, kcal, protein_g, carbs_g, fat_g, fiber_g')
             .eq('user_id', userId)
             .is('deleted_at', null)
             .gte('local_date', from)
@@ -255,19 +255,36 @@ export function createDeps(config: ServerConfig = loadConfig((k) => Deno.env.get
         }
         const t = byDay.get(today) ?? { kcal: 0, p: 0, c: 0, f: 0 };
         const g = goal.data;
+        // What was eaten today, by meal (names only, so the coach doesn't repeat it).
+        const todayMeals = (meals.data ?? []).filter((m) => m.local_date === today);
+        const { data: todayItems } = todayMeals.length
+          ? await sb
+              .from('meal_items')
+              .select('meal_id, display_name')
+              .eq('user_id', userId)
+              .in(
+                'meal_id',
+                todayMeals.map((m) => m.id),
+              )
+              .limit(60)
+          : { data: [] as { meal_id: string; display_name: string }[] };
         const lines = [
           `Goal: ${profile.data?.goal_type ?? 'unknown'}; activity ${profile.data?.activity_level ?? 'unknown'}.`,
           g
             ? `Daily targets: ${g.kcal} kcal, P ${g.protein_g} g, C ${g.carbs_g} g, F ${g.fat_g} g.`
             : 'No targets set.',
           `Today so far: ${Math.round(t.kcal)} kcal, P ${Math.round(t.p)} g, C ${Math.round(t.c)} g, F ${Math.round(t.f)} g.`,
+          g
+            ? `Left today: ${Math.round(g.kcal - t.kcal)} kcal, P ${Math.round(g.protein_g - t.p)} g, C ${Math.round(g.carbs_g - t.c)} g, F ${Math.round(g.fat_g - t.f)} g.`
+            : '',
+          todayMealsLine(todayMeals, todayItems ?? []),
           `Last 7 days logged: ${byDay.size} days; average ${byDay.size ? Math.round([...byDay.values()].reduce((s, d) => s + d.kcal, 0) / byDay.size) : 0} kcal/day.`,
           weight.data
             ? `Latest weight: ${weight.data.weight_kg} kg (${weight.data.local_date}).`
             : 'No weight logged.',
           trainingSummaryLine(workouts.data ?? [], supplements.data ?? []),
         ];
-        return lines.join('\n');
+        return lines.filter(Boolean).join('\n');
       },
       async exportUserData(userId) {
         const out: Record<string, unknown> = {};

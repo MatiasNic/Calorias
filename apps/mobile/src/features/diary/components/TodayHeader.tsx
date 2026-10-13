@@ -37,6 +37,7 @@ export function TodayHeader({
     queryFn: () => repos.meals.dates(),
   });
   const isToday = date === todayLocal();
+  const initial = profile.data?.display_name?.trim().charAt(0).toUpperCase() ?? '';
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? t('today.morning') : hour < 20 ? t('today.afternoon') : t('today.evening');
@@ -77,11 +78,16 @@ export function TodayHeader({
         ) : null}
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={t('coach.title')}
-          onPress={() => router.push('/coach')}
+          accessibilityLabel={t('tabs.profile')}
+          testID="tab-profile"
+          onPress={() => router.navigate('/profile')}
           style={[styles.coach, { backgroundColor: colors.surface }]}
         >
-          <Icon name="auto_awesome" size={22} />
+          {initial ? (
+            <AppText variant="bodyStrong">{initial}</AppText>
+          ) : (
+            <Icon name="person" size={22} />
+          )}
         </Pressable>
       </View>
       {showWeek ? (

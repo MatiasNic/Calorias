@@ -26,6 +26,7 @@ interface ScanState {
     source: 'text' | 'voice',
     date?: IsoDate | null,
     inputText?: string | null,
+    mealType?: MealType | null,
   ) => void;
   clear: () => void;
 }
@@ -41,8 +42,8 @@ export const useScanStore = create<ScanState>((set) => ({
   setHint: (hint) => set({ hint }),
   setPhoto: (photo, mealType = null, date = null) =>
     set({ photo, result: null, source: 'photo', mealType, date, inputText: null }),
-  setTextResult: (result, source, date = null, inputText = null) =>
-    set({ result, source, photo: null, date, inputText }),
+  setTextResult: (result, source, date = null, inputText = null, mealType = null) =>
+    set({ result, source, photo: null, date, inputText, mealType }),
   clear: () =>
     set({
       photo: null,

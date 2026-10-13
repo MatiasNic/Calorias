@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
+import { useKeyboardVisible } from '@/hooks/useKeyboardVisible';
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { haptic } from '@/utils/haptics';
 import { AppText } from './AppText';
@@ -12,18 +13,26 @@ import { Icon, type SymbolName } from './Icon';
 const ICONS: Record<string, SymbolName> = {
   today: 'today',
   diary: 'calendar_month',
+  coach: 'auto_awesome',
   progress: 'trending_up',
-  profile: 'person',
 };
 
+/** Height of the floating bar; tab screens keep this much room at the bottom. */
+export const TAB_BAR_HEIGHT = 72;
+
+/** Tabs that live in the navigator but not in the bar (Perfil opens from the Today header). */
+const HIDDEN = new Set(['profile']);
+
 /**
- * Floating tab bar: Hoy · Diario · [micrófono] · Progreso · Perfil. The central button always
- * opens "Escuchando" (voice logging), the app's main action.
+ * Floating tab bar: Hoy · Diario · [micrófono] · Coach · Progreso. The central button always
+ * opens "Escuchando" (voice logging), the app's main action. Hidden while typing.
  */
 export function TabBar({ state, navigation }: BottomTabBarProps) {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const typing = useKeyboardVisible();
+  if (typing) return null;
 
   return (
     <View
@@ -32,6 +41,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
     >
       <View style={[styles.bar, { backgroundColor: colors.tabBar, borderColor: colors.border }]}>
         {state.routes.map((route, index) => {
+          if (HIDDEN.has(route.name)) return null;
           const focused = state.index === index;
           if (route.name === 'scan-tab') {
             return (
@@ -54,7 +64,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
               </View>
             );
           }
-          const label = t(`tabs.${route.name as 'today' | 'diary' | 'progress' | 'profile'}`);
+          const label = t(`tabs.${route.name as 'today' | 'diary' | 'coach' | 'progress'}`);
           const tint = focused ? 'text' : 'textSubtle';
           return (
             <Pressable
@@ -93,7 +103,7 @@ const styles = StyleSheet.create({
   bar: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 72,
+    height: TAB_BAR_HEIGHT,
     borderRadius: radii.xxxl,
     borderWidth: 1,
   },

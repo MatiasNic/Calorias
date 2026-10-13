@@ -84,7 +84,13 @@ export function useMealAnalysis() {
     if (started.current) return;
     started.current = true;
     if (scan.result) {
-      start(draftFromAnalysis(scan.result, { source: scan.source, date: scan.date }));
+      start(
+        draftFromAnalysis(scan.result, {
+          source: scan.source,
+          date: scan.date,
+          mealType: scan.mealType,
+        }),
+      );
     } else {
       // State updates happen after awaits (async analysis), not synchronously in the effect.
       // eslint-disable-next-line react-hooks/set-state-in-effect
