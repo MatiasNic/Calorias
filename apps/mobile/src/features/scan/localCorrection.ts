@@ -1,4 +1,4 @@
-import { normalizeText, type CookingMethod, type MealItem } from '@plato/shared';
+import { normalizeText, type CookingMethod, type MealItem } from '@bocado/shared';
 
 import { applyCookingMethod, isCookable } from '@/features/diary/cooking';
 import { withGrams } from '@/features/diary/mealMath';

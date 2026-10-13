@@ -1,4 +1,4 @@
-import { IMAGE_UPLOAD } from '@plato/shared';
+import { IMAGE_UPLOAD } from '@bocado/shared';
 import * as Crypto from 'expo-crypto';
 import { Directory, File, Paths } from 'expo-file-system';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';

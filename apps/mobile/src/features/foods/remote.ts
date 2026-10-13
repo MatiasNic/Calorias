@@ -1,4 +1,4 @@
-import { FoodSchema, type Food } from '@plato/shared';
+import { FoodSchema, type Food } from '@bocado/shared';
 import { z } from 'zod';
 
 import { env } from '@/config/env';

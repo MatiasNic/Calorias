@@ -7,7 +7,7 @@ import {
   type DayTotals,
   type IsoDate,
   type Nutrients,
-} from '@plato/shared';
+} from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 
 import { goalForDate } from '@/features/goals/hooks';

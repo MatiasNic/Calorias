@@ -1,4 +1,4 @@
-import { suggestMealType, type MealType } from '@plato/shared';
+import { suggestMealType, type MealType } from '@bocado/shared';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';

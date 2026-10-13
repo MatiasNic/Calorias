@@ -1,4 +1,4 @@
-import { mockAnalyzeText } from '@plato/shared';
+import { mockAnalyzeText } from '@bocado/shared';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

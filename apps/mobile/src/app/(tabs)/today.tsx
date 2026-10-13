@@ -1,4 +1,4 @@
-import { nextMealTypeToLog, sortMealsForDay } from '@plato/shared';
+import { nextMealTypeToLog, sortMealsForDay } from '@bocado/shared';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

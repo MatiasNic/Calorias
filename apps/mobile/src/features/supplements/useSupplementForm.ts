@@ -9,7 +9,7 @@ import {
   type IsoDate,
   type SUPPLEMENT_PRESETS,
   type SupplementUnit,
-} from '@plato/shared';
+} from '@bocado/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert } from 'react-native';

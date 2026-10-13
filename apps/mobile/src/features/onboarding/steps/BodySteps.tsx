@@ -7,7 +7,7 @@ import {
   lbToKg,
   SAFETY,
   type UnitSystem,
-} from '@plato/shared';
+} from '@bocado/shared';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

@@ -34,7 +34,7 @@ jobs:
       - name: Unit tests (shared + edge function logic)
         run: pnpm test
       - name: Component tests (mobile)
-        run: pnpm --filter @plato/mobile exec jest --ci
+        run: pnpm --filter @bocado/mobile exec jest --ci
 
   database:
     name: Migrations & RLS tests

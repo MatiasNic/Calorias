@@ -1,4 +1,4 @@
-import { addDays, ADAPTIVE, computeAdaptiveTarget, splitMacros } from '@plato/shared';
+import { addDays, ADAPTIVE, computeAdaptiveTarget, splitMacros } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';

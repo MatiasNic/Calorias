@@ -1,4 +1,4 @@
-import { dailyExerciseKcal, dailySummary, type IsoDate } from '@plato/shared';
+import { dailyExerciseKcal, dailySummary, type IsoDate } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 
 import { useWaterForDate } from '@/features/body/hooks';

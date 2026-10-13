@@ -1,4 +1,4 @@
-import { ACTIVITIES, type ActivityKind } from '@plato/shared';
+import { ACTIVITIES, type ActivityKind } from '@bocado/shared';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 

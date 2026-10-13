@@ -1,4 +1,4 @@
-import { PORTION_MULTIPLIERS } from '@plato/shared';
+import { PORTION_MULTIPLIERS } from '@bocado/shared';
 import Slider from '@react-native-community/slider';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';

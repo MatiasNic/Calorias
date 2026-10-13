@@ -1,4 +1,4 @@
-import { annualSavingsPercent } from '@plato/shared';
+import { annualSavingsPercent } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

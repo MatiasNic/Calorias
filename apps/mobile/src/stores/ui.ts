@@ -1,4 +1,4 @@
-import type { IsoDate } from '@plato/shared';
+import type { IsoDate } from '@bocado/shared';
 import { AppState } from 'react-native';
 import { create } from 'zustand';
 

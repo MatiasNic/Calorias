@@ -1,4 +1,4 @@
-import { daysOfSupply, isLowStock } from '@plato/shared';
+import { daysOfSupply, isLowStock } from '@bocado/shared';
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

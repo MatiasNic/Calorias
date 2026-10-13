@@ -1,4 +1,4 @@
-import { confidenceLevel } from '@plato/shared';
+import { confidenceLevel } from '@bocado/shared';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 

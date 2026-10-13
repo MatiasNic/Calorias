@@ -1,4 +1,4 @@
-import type { IsoDate, MealItem, MealSource, MealType } from '@plato/shared';
+import type { IsoDate, MealItem, MealSource, MealType } from '@bocado/shared';
 import { create } from 'zustand';
 
 import type { CorrectionChange } from '@/features/scan/correctionDiff';

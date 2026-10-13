@@ -1,4 +1,4 @@
-import type { ActivityLevel, DietaryPreference, GoalType, Sex } from '@plato/shared';
+import type { ActivityLevel, DietaryPreference, GoalType, Sex } from '@bocado/shared';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

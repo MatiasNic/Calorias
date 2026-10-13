@@ -1,4 +1,4 @@
-import type { Plan } from '@plato/shared';
+import type { Plan } from '@bocado/shared';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 

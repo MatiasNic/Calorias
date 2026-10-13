@@ -1,4 +1,4 @@
-import { STRENGTH_EXERCISES } from '@plato/shared';
+import { STRENGTH_EXERCISES } from '@bocado/shared';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 

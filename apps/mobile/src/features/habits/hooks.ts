@@ -7,7 +7,7 @@ import {
   addDays,
   type AchievementId,
   type AchievementStats,
-} from '@plato/shared';
+} from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 
 import { toast } from '@/components';

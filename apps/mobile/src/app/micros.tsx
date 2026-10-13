@@ -1,4 +1,4 @@
-import { addDays, MICRO_REFERENCE, sumMicros } from '@plato/shared';
+import { addDays, MICRO_REFERENCE, sumMicros } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

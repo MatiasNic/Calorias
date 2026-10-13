@@ -1,4 +1,4 @@
-import { WATER_QUICK_ADD_ML, type IsoDate } from '@plato/shared';
+import { WATER_QUICK_ADD_ML, type IsoDate } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 
 import { newId, repos } from '@/services/db/repository';

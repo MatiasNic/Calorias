@@ -1,4 +1,4 @@
-import type { ApiErrorCode } from '@plato/shared';
+import type { ApiErrorCode } from '@bocado/shared';
 
 export class ApiError extends Error {
   constructor(

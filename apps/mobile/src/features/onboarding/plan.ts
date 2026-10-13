@@ -1,4 +1,4 @@
-import { ageFromBirthDate, computeGoalPlan, type GoalPlanResult } from '@plato/shared';
+import { ageFromBirthDate, computeGoalPlan, type GoalPlanResult } from '@bocado/shared';
 
 import { birthDateIso, type OnboardingAnswers } from './store';
 

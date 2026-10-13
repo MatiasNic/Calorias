@@ -1,4 +1,4 @@
-import type { AnalyzeResponse, IsoDate, MealType } from '@plato/shared';
+import type { AnalyzeResponse, IsoDate, MealType } from '@bocado/shared';
 import { create } from 'zustand';
 
 export interface CapturedPhoto {

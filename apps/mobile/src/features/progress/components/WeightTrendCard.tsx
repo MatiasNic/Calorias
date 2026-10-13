@@ -1,4 +1,4 @@
-import { kgToLb, projectGoalDate } from '@plato/shared';
+import { kgToLb, projectGoalDate } from '@bocado/shared';
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

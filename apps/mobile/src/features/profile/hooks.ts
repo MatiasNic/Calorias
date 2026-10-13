@@ -1,4 +1,4 @@
-import { ageFromBirthDate, computeGoalPlan, type GoalPlanResult } from '@plato/shared';
+import { ageFromBirthDate, computeGoalPlan, type GoalPlanResult } from '@bocado/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { currentLocale } from '@/i18n';

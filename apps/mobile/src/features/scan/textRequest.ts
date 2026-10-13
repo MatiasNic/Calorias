@@ -1,4 +1,4 @@
-import type { IsoDate } from '@plato/shared';
+import type { IsoDate } from '@bocado/shared';
 import * as Crypto from 'expo-crypto';
 import { router } from 'expo-router';
 

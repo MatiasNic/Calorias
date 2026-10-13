@@ -1,4 +1,4 @@
-import type { AppLocale, UnitSystem } from '@plato/shared';
+import type { AppLocale, UnitSystem } from '@bocado/shared';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 

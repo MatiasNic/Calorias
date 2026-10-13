@@ -12,7 +12,7 @@ import {
   workoutKcalToSave,
   type IsoDate,
   type WorkoutIntensity,
-} from '@plato/shared';
+} from '@bocado/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert } from 'react-native';

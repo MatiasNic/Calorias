@@ -1,4 +1,4 @@
-import { addDays, personalRecords, trainingStats, type IsoDate } from '@plato/shared';
+import { addDays, personalRecords, trainingStats, type IsoDate } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 
 import { newId, repos } from '@/services/db/repository';

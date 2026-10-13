@@ -4,7 +4,7 @@ import {
   sumNutrients,
   type IsoDate,
   type MealType,
-} from '@plato/shared';
+} from '@bocado/shared';
 
 import { saveMeal } from '@/features/diary/hooks';
 import { makeItem } from '@/features/diary/mealMath';

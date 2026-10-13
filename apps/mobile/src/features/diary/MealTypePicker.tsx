@@ -1,4 +1,4 @@
-import { MEAL_TYPE_ORDER, type MealType } from '@plato/shared';
+import { MEAL_TYPE_ORDER, type MealType } from '@bocado/shared';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 

@@ -1,4 +1,4 @@
-import { MealPlanPreferencesSchema, type MealPlan, type MealPlanPreferences } from '@plato/shared';
+import { MealPlanPreferencesSchema, type MealPlan, type MealPlanPreferences } from '@bocado/shared';
 import { useState } from 'react';
 import { Share, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

@@ -1,4 +1,4 @@
-import type { IsoDate, MealType } from '@plato/shared';
+import type { IsoDate, MealType } from '@bocado/shared';
 import { create } from 'zustand';
 
 import type { FoodOption } from './search';

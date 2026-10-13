@@ -16,7 +16,7 @@ import type {
   SupplementUnit,
   UnitSystem,
   WorkoutIntensity,
-} from '@plato/shared';
+} from '@bocado/shared';
 
 /** Local record shapes (what screens read). Each collection maps 1:1 to a Supabase table. */
 

@@ -1,4 +1,4 @@
-import type { MealType } from '@plato/shared';
+import type { MealType } from '@bocado/shared';
 
 /**
  * Live preview while the user speaks or types: which meals the description mentions

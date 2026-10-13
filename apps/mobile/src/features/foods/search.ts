@@ -1,4 +1,4 @@
-import { addDays, matchScore, normalizeText, type Food, type Nutrients } from '@plato/shared';
+import { addDays, matchScore, normalizeText, type Food, type Nutrients } from '@bocado/shared';
 
 import { currentLocale } from '@/i18n';
 import { repos } from '@/services/db/repository';
@@ -78,7 +78,7 @@ let regionalIndex: { row: RegionalRow; haystack: string[] }[] | null = null;
 
 function regionalTable() {
   if (!regional) {
-    const rows = require('@plato/shared/data/foods-regional.json') as RegionalRow[];
+    const rows = require('@bocado/shared/data/foods-regional.json') as RegionalRow[];
     regional = { rows, byId: new Map(rows.map((r) => [r.id, r])) };
   }
   return regional;

@@ -1,4 +1,4 @@
-import { type MealItem, type Nutrients } from '@plato/shared';
+import { type MealItem, type Nutrients } from '@bocado/shared';
 
 import type { CollectionMap } from '@/services/db/types';
 import { type Adapters, check, json, nullableNum, num, nutrientsFrom, sinceFilter } from './shared';

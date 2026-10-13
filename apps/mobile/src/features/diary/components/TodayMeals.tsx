@@ -1,4 +1,4 @@
-import type { IsoDate, MealType } from '@plato/shared';
+import type { IsoDate, MealType } from '@bocado/shared';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

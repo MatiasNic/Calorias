@@ -1,4 +1,4 @@
-import type { GoalWarning } from '@plato/shared';
+import type { GoalWarning } from '@bocado/shared';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 

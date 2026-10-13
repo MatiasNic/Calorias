@@ -1,4 +1,4 @@
-import type { IsoDate } from '@plato/shared';
+import type { IsoDate } from '@bocado/shared';
 import type { PermissionResponse } from 'expo-camera';
 import { router } from 'expo-router';
 import { Linking, StyleSheet, View } from 'react-native';

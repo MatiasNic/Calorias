@@ -1,4 +1,4 @@
-import { cmToFtIn, kgToLb, mlToFlOz, type UnitSystem } from '@plato/shared';
+import { cmToFtIn, kgToLb, mlToFlOz, type UnitSystem } from '@bocado/shared';
 
 import { currentLocale } from '@/i18n';
 

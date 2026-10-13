@@ -1,4 +1,4 @@
-import type { MealItem, MealType } from '@plato/shared';
+import type { MealItem, MealType } from '@bocado/shared';
 import { StyleSheet, View } from 'react-native';
 
 import { DraftItemCard } from '@/features/diary/DraftItemCard';

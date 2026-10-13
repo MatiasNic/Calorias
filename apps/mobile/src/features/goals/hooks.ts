@@ -1,4 +1,4 @@
-import type { GoalPlan, IsoDate } from '@plato/shared';
+import type { GoalPlan, IsoDate } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 
 import { newId, repos } from '@/services/db/repository';

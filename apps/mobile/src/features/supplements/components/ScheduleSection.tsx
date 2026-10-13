@@ -1,4 +1,4 @@
-import { formatTimeOfDay, parseTimeOfDay } from '@plato/shared';
+import { formatTimeOfDay, parseTimeOfDay } from '@bocado/shared';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 

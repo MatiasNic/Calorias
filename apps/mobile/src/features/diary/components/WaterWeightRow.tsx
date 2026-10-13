@@ -1,4 +1,4 @@
-import { WATER_QUICK_ADD_ML, type IsoDate } from '@plato/shared';
+import { WATER_QUICK_ADD_ML, type IsoDate } from '@bocado/shared';
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

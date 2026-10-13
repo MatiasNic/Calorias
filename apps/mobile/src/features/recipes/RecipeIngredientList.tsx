@@ -1,4 +1,4 @@
-import { scaleNutrients } from '@plato/shared';
+import { scaleNutrients } from '@bocado/shared';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

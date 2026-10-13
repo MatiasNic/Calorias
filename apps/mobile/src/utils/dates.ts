@@ -1,4 +1,4 @@
-import { localDate, type IsoDate } from '@plato/shared';
+import { localDate, type IsoDate } from '@bocado/shared';
 import { getCalendars } from 'expo-localization';
 
 import { currentLocale } from '@/i18n';

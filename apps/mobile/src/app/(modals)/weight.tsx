@@ -1,4 +1,4 @@
-import { kgToLb, lbToKg } from '@plato/shared';
+import { kgToLb, lbToKg } from '@bocado/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';

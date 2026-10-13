@@ -1,5 +1,5 @@
-import type { ActivityLevel, DietaryPreference, GoalType, Sex } from '@plato/shared';
-import { DietaryPreferenceSchema } from '@plato/shared';
+import type { ActivityLevel, DietaryPreference, GoalType, Sex } from '@bocado/shared';
+import { DietaryPreferenceSchema } from '@bocado/shared';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

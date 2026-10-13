@@ -1,4 +1,4 @@
-import type { DailySummary } from '@plato/shared';
+import type { DailySummary } from '@bocado/shared';
 
 export type Insight =
   | { kind: 'start_day' }

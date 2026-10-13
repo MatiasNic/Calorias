@@ -1,4 +1,4 @@
-import type { IsoDate } from '@plato/shared';
+import type { IsoDate } from '@bocado/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';

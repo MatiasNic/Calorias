@@ -1,4 +1,4 @@
-import { ENTITLEMENT_PREMIUM, PRODUCT_IDS, type Plan } from '@plato/shared';
+import { ENTITLEMENT_PREMIUM, PRODUCT_IDS, type Plan } from '@bocado/shared';
 import { Platform } from 'react-native';
 import Purchases, {
   LOG_LEVEL,

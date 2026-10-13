@@ -6,7 +6,7 @@ import {
   kcalFromMacros,
   type ActivityLevel,
   type GoalType,
-} from '@plato/shared';
+} from '@bocado/shared';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';

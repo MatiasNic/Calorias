@@ -1,4 +1,4 @@
-import { PLANS } from '@plato/shared';
+import { PLANS } from '@bocado/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 

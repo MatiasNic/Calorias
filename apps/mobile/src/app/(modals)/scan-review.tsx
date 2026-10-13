@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { Image } from 'expo-image';
-import { groupByMealType, MEAL_TYPE_ORDER, type MealType } from '@plato/shared';
+import { groupByMealType, MEAL_TYPE_ORDER, type MealType } from '@bocado/shared';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

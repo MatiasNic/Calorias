@@ -5,7 +5,7 @@ import {
   suggestMealType,
   type IsoDate,
   type MealItem,
-} from '@plato/shared';
+} from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 
 import { deleteMeal, saveMeal } from '@/features/diary/hooks';

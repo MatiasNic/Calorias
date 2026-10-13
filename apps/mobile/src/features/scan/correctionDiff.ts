@@ -1,4 +1,4 @@
-import { normalizeText, type CookingMethod, type MealItem } from '@plato/shared';
+import { normalizeText, type CookingMethod, type MealItem } from '@bocado/shared';
 
 /** One line of "Entendí: …": what a spoken correction changed, with its calorie delta. */
 export interface CorrectionChange {

@@ -1,5 +1,5 @@
 {
-  "name": "@plato/mobile",
+  "name": "@bocado/mobile",
   "main": "index.ts",
   "version": "0.1.0",
   "dependencies": {
@@ -8,7 +8,7 @@
     "@expo/vector-icons": "^15.1.1",
     "@hookform/resolvers": "^5.9.1",
     "@kingstinct/react-native-healthkit": "^16.0.0",
-    "@plato/shared": "workspace:*",
+    "@bocado/shared": "workspace:*",
     "@react-native-community/netinfo": "12.0.1",
     "@react-native-community/slider": "5.2.0",
     "@sentry/react-native": "~7.11.0",
@@ -105,7 +105,7 @@
       "/ios/"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|@plato/.*|victory-native|@shopify/.*|zustand|i18next|react-i18next))"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|@bocado/.*|victory-native|@shopify/.*|zustand|i18next|react-i18next))"
     ]
   }
 }

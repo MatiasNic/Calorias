@@ -1,4 +1,4 @@
-import type { MealType } from '@plato/shared';
+import type { MealType } from '@bocado/shared';
 
 import type { SymbolName } from '@/components/Icon';
 

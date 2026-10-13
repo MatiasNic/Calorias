@@ -1,4 +1,4 @@
-import type { DailySummary } from '@plato/shared';
+import type { DailySummary } from '@bocado/shared';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';

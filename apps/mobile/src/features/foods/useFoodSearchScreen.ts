@@ -1,4 +1,4 @@
-import { suggestMealType, type IsoDate, type MealType } from '@plato/shared';
+import { suggestMealType, type IsoDate, type MealType } from '@bocado/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

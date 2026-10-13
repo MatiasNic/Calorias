@@ -4,7 +4,7 @@ import {
   type IsoDate,
   type MealItem,
   type MealType,
-} from '@plato/shared';
+} from '@bocado/shared';
 
 import { makeItem } from '@/features/diary/mealMath';
 import type { MealDraft } from '@/features/diary/draftStore';

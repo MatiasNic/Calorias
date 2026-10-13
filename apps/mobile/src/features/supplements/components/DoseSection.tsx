@@ -1,4 +1,4 @@
-import { SUPPLEMENT_UNITS } from '@plato/shared';
+import { SUPPLEMENT_UNITS } from '@bocado/shared';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 

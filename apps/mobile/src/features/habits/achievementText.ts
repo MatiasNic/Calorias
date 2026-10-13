@@ -1,4 +1,4 @@
-import { ACHIEVEMENTS, type Achievement } from '@plato/shared';
+import { ACHIEVEMENTS, type Achievement } from '@bocado/shared';
 
 import { i18next } from '@/i18n';
 

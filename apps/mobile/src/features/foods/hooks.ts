@@ -1,4 +1,4 @@
-import { scaleNutrients, type MealItem } from '@plato/shared';
+import { scaleNutrients, type MealItem } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 

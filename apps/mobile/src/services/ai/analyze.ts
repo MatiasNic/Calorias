@@ -8,7 +8,7 @@ import {
   type LabelResponse,
   type MealType,
   type PreviousItem,
-} from '@plato/shared';
+} from '@bocado/shared';
 
 import { currentLocale } from '@/i18n';
 import { invokeFunction } from '@/services/api/client';

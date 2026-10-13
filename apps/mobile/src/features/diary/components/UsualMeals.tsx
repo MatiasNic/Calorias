@@ -1,4 +1,4 @@
-import { addDays, FREQUENT_MEALS, frequentMeals, type IsoDate } from '@plato/shared';
+import { addDays, FREQUENT_MEALS, frequentMeals, type IsoDate } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';

@@ -1,4 +1,9 @@
-import { WORKOUT_DEFAULTS, WORKOUT_INTENSITIES, WORKOUT_LIMITS, type IsoDate } from '@plato/shared';
+import {
+  WORKOUT_DEFAULTS,
+  WORKOUT_INTENSITIES,
+  WORKOUT_LIMITS,
+  type IsoDate,
+} from '@bocado/shared';
 import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';

@@ -1,9 +1,9 @@
-import type { IsoDate, MealItem, MealSource, MealType } from '@plato/shared';
+import type { IsoDate, MealItem, MealSource, MealType } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 
 import { newId, repos } from '@/services/db/repository';
 import type { MealRecord } from '@/services/db/types';
-import { addDays } from '@plato/shared';
+import { addDays } from '@bocado/shared';
 import { timestampFor } from '@/utils/dates';
 import { mealTotals } from './mealMath';
 

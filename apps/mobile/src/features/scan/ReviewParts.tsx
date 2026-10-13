@@ -1,4 +1,4 @@
-import { normalizeText, type CookingMethod, type MealItem, type MealType } from '@plato/shared';
+import { normalizeText, type CookingMethod, type MealItem, type MealType } from '@bocado/shared';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';

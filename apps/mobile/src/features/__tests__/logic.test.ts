@@ -1,4 +1,4 @@
-import { dailySummary, type AnalyzeResponse } from '@plato/shared';
+import { dailySummary, type AnalyzeResponse } from '@bocado/shared';
 
 import { appendDictation } from '../scan/dictationText';
 import { applyLocalCorrection } from '../scan/localCorrection';

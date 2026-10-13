@@ -1,4 +1,4 @@
-import { timeForMealType, type MealItem, type MealType } from '@plato/shared';
+import { timeForMealType, type MealItem, type MealType } from '@bocado/shared';
 
 import type { MealDraft } from '@/features/diary/draftStore';
 

@@ -1,4 +1,4 @@
-import type { Nutrients } from '@plato/shared';
+import type { Nutrients } from '@bocado/shared';
 
 import type { CollectionMap, CollectionName } from '@/services/db/types';
 import type { TypedSupabaseClient } from '@/services/supabase/client';

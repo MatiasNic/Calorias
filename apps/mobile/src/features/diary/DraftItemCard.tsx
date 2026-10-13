@@ -1,4 +1,4 @@
-import { confidenceLevel, PORTION_SIZES, type MealItem } from '@plato/shared';
+import { confidenceLevel, PORTION_SIZES, type MealItem } from '@bocado/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';

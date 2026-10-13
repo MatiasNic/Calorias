@@ -3,7 +3,7 @@ import {
   type AiAnalysis,
   type AnalyzeResponse,
   type EnrichedItem,
-} from '@plato/shared';
+} from '@bocado/shared';
 
 import { searchRegional } from '@/features/foods/search';
 

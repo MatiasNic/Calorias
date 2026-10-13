@@ -1,4 +1,4 @@
-import { periodSummary, type DayTotals, type PeriodSummary } from '@plato/shared';
+import { periodSummary, type DayTotals, type PeriodSummary } from '@bocado/shared';
 
 export type WeeklySuggestion = 'log_more' | 'protein' | 'over' | 'under' | 'consistency';
 

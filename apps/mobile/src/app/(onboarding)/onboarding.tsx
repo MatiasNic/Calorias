@@ -1,4 +1,4 @@
-import { ageFromBirthDate, SAFETY } from '@plato/shared';
+import { ageFromBirthDate, SAFETY } from '@bocado/shared';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { BackHandler, Platform, StyleSheet, View } from 'react-native';

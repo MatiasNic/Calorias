@@ -1,4 +1,4 @@
-import { PLANS, QuotaStatusSchema, type QuotaKind, type QuotaStatus } from '@plato/shared';
+import { PLANS, QuotaStatusSchema, type QuotaKind, type QuotaStatus } from '@bocado/shared';
 
 import { invokeFunction } from '@/services/api/client';
 import { ApiError } from '@/services/api/errors';

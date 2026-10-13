@@ -71,7 +71,7 @@ Los mails de confirmación de la cuenta local se ven en el servidor de mails de 
 ```bash
 pnpm lint && pnpm typecheck                  # ESLint + tsc de todo el monorepo
 pnpm test                                    # Vitest: shared + Edge Functions (IA mockeada)
-pnpm --filter @plato/mobile test             # Jest + React Native Testing Library
+pnpm --filter @bocado/mobile test             # Jest + React Native Testing Library
 pnpm test:db                                 # migraciones + tests de RLS (DATABASE_URL a un Postgres 16)
 pnpm sync:shared                             # copia packages/shared → Edge Functions (CI lo verifica)
 pnpm gen:types                               # regenera tipos de la base (con supabase start corriendo)

@@ -1,4 +1,4 @@
-import { addDays, MEAL_TYPE_ORDER, PLANS } from '@plato/shared';
+import { addDays, MEAL_TYPE_ORDER, PLANS } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';

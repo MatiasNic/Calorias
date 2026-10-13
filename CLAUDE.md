@@ -11,7 +11,7 @@ Monorepo pnpm: `apps/mobile` (Expo SDK 57, Expo Router), `packages/shared` (tipo
 pnpm install                       # siempre desde la raíz (node-linker=hoisted)
 pnpm lint && pnpm typecheck        # antes de dar algo por terminado
 pnpm test                          # Vitest: packages/shared + lógica de Edge Functions
-pnpm --filter @plato/mobile test   # Jest + RNTL (componentes)
+pnpm --filter @bocado/mobile test   # Jest + RNTL (componentes)
 pnpm test:db                       # migraciones + tests de RLS (necesita Postgres, ver README)
 pnpm sync:shared                   # copia packages/shared/src → supabase/functions/_shared/shared
 cd apps/mobile && npx expo install <pkg>   # SIEMPRE expo install para deps de la app

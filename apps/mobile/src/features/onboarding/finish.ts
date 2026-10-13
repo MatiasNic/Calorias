@@ -1,6 +1,6 @@
 import { rescheduleReminders } from '@/features/settings/useNotificationSettings';
 import { goalDirection } from './steps/ChoiceSteps';
-import type { GoalPlan } from '@plato/shared';
+import type { GoalPlan } from '@bocado/shared';
 
 import { LEGAL_VERSION } from '@/config/env';
 import { logWeight } from '@/features/body/hooks';

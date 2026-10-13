@@ -3,7 +3,7 @@ import {
   mockMealPlan,
   type MealPlan,
   type MealPlanPreferences,
-} from '@plato/shared';
+} from '@bocado/shared';
 import { z } from 'zod';
 
 import { currentLocale } from '@/i18n';

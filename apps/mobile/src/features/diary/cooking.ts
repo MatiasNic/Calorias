@@ -1,4 +1,4 @@
-import type { CookingMethod, MealItem } from '@plato/shared';
+import type { CookingMethod, MealItem } from '@bocado/shared';
 
 import { withGrams } from './mealMath';
 

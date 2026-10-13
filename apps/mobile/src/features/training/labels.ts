@@ -1,4 +1,4 @@
-import { activityDef, kgToLb, type UnitSystem } from '@plato/shared';
+import { activityDef, kgToLb, type UnitSystem } from '@bocado/shared';
 
 import type { IconName } from '@/components';
 import { currentLocale, i18next } from '@/i18n';

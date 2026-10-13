@@ -1,4 +1,4 @@
-import type { AppLocale, UnitSystem } from '@plato/shared';
+import type { AppLocale, UnitSystem } from '@bocado/shared';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

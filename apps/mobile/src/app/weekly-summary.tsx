@@ -1,4 +1,4 @@
-import { addDays, computeStreak, fillDays, PLANS, startOfWeek } from '@plato/shared';
+import { addDays, computeStreak, fillDays, PLANS, startOfWeek } from '@bocado/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';

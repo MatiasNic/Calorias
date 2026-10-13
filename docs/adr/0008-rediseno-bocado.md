@@ -13,7 +13,7 @@ valores, no de estructura.
 - **Marca:** Bocado. Isotipo = un plato con un mordisco (`AppLogo`, dibujado con
   `react-native-svg` a partir de `design/marca/logo-isotipo.svg`). Nombre, slug y esquema de
   deep links `bocado://`; identificador `com.bocadoapp.bocado` (la app todavía no estaba
-  publicada, así que se pudo cambiar). Los nombres internos del código (`@plato/shared`, claves de
+  publicada, así que se pudo cambiar). Los nombres internos del código (`@bocado/shared`, claves de
   almacenamiento) se mantienen porque no los ve nadie y renombrarlos no aporta.
 - **Tokens:** `src/theme/tokens.ts` y `themes.ts` toman los valores de `design/tokens/tokens.json`.
   Fuente **Manrope** (400–800). Nuevo estilo tipográfico `numberHero` (64/64).

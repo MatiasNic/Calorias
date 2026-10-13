@@ -1,4 +1,4 @@
-import { addDays, isInRange, startOfWeek, type IsoDate } from '@plato/shared';
+import { addDays, isInRange, startOfWeek, type IsoDate } from '@bocado/shared';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 

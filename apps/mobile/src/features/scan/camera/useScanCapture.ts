@@ -1,4 +1,4 @@
-import { suggestMealType, type IsoDate } from '@plato/shared';
+import { suggestMealType, type IsoDate } from '@bocado/shared';
 import { type BarcodeScanningResult, type CameraView } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';

@@ -8,7 +8,7 @@ import {
   type MealItem,
   type Micronutrients,
   type Nutrients,
-} from '@plato/shared';
+} from '@bocado/shared';
 
 import { newId } from '@/services/db/repository';
 

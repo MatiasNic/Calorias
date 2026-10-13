@@ -1,4 +1,4 @@
-import type { Nutrients } from '@plato/shared';
+import type { Nutrients } from '@bocado/shared';
 import { create } from 'zustand';
 
 export interface CustomFoodPrefill {

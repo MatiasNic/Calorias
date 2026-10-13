@@ -1,4 +1,4 @@
-import { kgToLb } from '@plato/shared';
+import { kgToLb } from '@bocado/shared';
 import { StyleSheet, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
