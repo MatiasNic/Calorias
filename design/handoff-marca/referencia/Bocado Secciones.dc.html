@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="position:absolute;inset:0;font-family:'Manrope',system-ui,sans-serif;color:var(--ink);background:var(--bg)">
+
+<sc-if value="{{ isDiario }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;padding:6px 20px 120px;box-sizing:border-box;display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:30px;font-weight:800;letter-spacing:-0.03em">Diario</span>
+    <button onClick="{{ toggleMonth }}" style="height:40px;padding:0 10px 0 14px;border-radius:999px;border:none;background:var(--s1);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">Octubre 2026<span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">{{ monthChev }}</span></button>
+  </div>
+  <div style="background:var(--s1);border-radius:24px;padding:12px">
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);row-gap:4px">
+      <sc-for list="{{ dows }}" as="dw" hint-placeholder-count="7"><span style="text-align:center;font-size:12px;font-weight:700;color:var(--ink3);padding:4px 0">{{ dw }}</span></sc-for>
+      <sc-for list="{{ calDays }}" as="cd" hint-placeholder-count="7">
+        <button onClick="{{ cd.pick }}" aria-label="{{ cd.aria }}" style="height:48px;border:none;background:none;cursor:pointer;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0">
+          <span style="width:38px;height:38px;border-radius:13px;display:grid;place-items:center;font-size:15px;font-weight:700;background:{{ cd.bg }};color:{{ cd.color }};font-variant-numeric:tabular-nums">{{ cd.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:18px;font-weight:800">{{ dayTitle }}</span>
+    <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:52px;font-weight:800;letter-spacing:-0.045em;line-height:1;font-variant-numeric:tabular-nums">{{ dayKcal }}</span><span style="font-size:17px;font-weight:700;color:var(--ink2)">/ 2.150 kcal</span></div>
+    <div style="height:8px;border-radius:9px;background:var(--s2);overflow:hidden"><div style="height:100%;width:{{ dayPct }};background:var(--sage);border-radius:9px"></div></div>
+    <span style="font-size:13px;color:var(--ink2);font-weight:600">{{ dayNote }}</span>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);background:var(--s1);border-radius:20px;padding:14px 8px;text-align:center">
+      <span style="display:flex;flex-direction:column;gap:2px"><b style="font-size:20px;color:var(--p)">52 g</b><span style="font-size:13px;color:var(--ink2);font-weight:600">proteínas</span></span>
+      <span style="display:flex;flex-direction:column;gap:2px"><b style="font-size:20px;color:var(--c)">139 g</b><span style="font-size:13px;color:var(--ink2);font-weight:600">carbos</span></span>
+      <span style="display:flex;flex-direction:column;gap:2px"><b style="font-size:20px;color:var(--f)">71 g</b><span style="font-size:13px;color:var(--ink2);font-weight:600">grasas</span></span>
+    </div>
+  </div>
+  <sc-for list="{{ sections }}" as="sc" hint-placeholder-count="5">
+    <div style="background:var(--s1);border-radius:22px;padding:6px 6px 6px 16px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:6px;min-height:52px">
+        <span style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:16px;font-weight:800">{{ sc.name }}</span><span style="font-size:13px;color:var(--ink2);font-weight:600">{{ sc.sub }}</span></span>
+        <sc-if value="{{ sc.repeat }}" hint-placeholder-val="{{ false }}"><button aria-label="Repetir lo de siempre" style="width:44px;height:44px;border-radius:50%;border:none;background:none;color:var(--ink2);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">repeat</span></button></sc-if>
+        <button onClick="{{ sc.add }}" aria-label="Agregar a {{ sc.name }}" style="width:44px;height:44px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">add</span></button>
+      </div>
+      <sc-for list="{{ sc.items }}" as="si" hint-placeholder-count="0">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px 10px 0;border-top:1px solid var(--line)">
+          <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:15px;font-weight:700">{{ si.name }}</span><span style="font-size:12px;color:var(--ink2);font-weight:600">{{ si.meta }}</span></span>
+          <span style="font-size:15px;font-weight:800;font-variant-numeric:tabular-nums">{{ si.kcal }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-for>
+  <div style="display:flex;gap:10px">
+    <button onClick="{{ toRecetas }}" style="flex:1;height:52px;border-radius:18px;border:1.5px solid var(--line);background:none;color:var(--ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">menu_book</span>Recetas</button>
+    <button style="flex:1;height:52px;border-radius:18px;border:1.5px solid var(--line);background:none;color:var(--ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">edit_square</span>Crear alimento</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isProgreso }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;padding:6px 20px 120px;box-sizing:border-box;display:flex;flex-direction:column;gap:16px">
+  <span style="font-size:30px;font-weight:800;letter-spacing:-0.03em">Progreso</span>
+  <div style="display:flex;gap:2px;background:var(--s1);border-radius:14px;padding:4px">
+    <sc-for list="{{ ranges }}" as="rg" hint-placeholder-count="3">
+      <button onClick="{{ rg.pick }}" style="flex:1;height:40px;border-radius:10px;border:none;background:{{ rg.bg }};color:{{ rg.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px">{{ rg.label }}<sc-if value="{{ rg.lock }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Material Symbols Rounded';font-size:16px;line-height:1;font-weight:400">lock</span></sc-if></button>
+    </sc-for>
+  </div>
+  <div style="background:var(--s1);border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:16px;font-weight:800">Peso</span><button onClick="{{ toPeso }}" style="height:36px;padding:0 12px;border-radius:999px;border:none;background:var(--s2);color:var(--ink);font:inherit;font-size:13px;font-weight:700;cursor:pointer">Registrar</button></div>
+    <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:34px;font-weight:800;letter-spacing:-0.03em">82,0 kg</span><span style="font-size:14px;color:var(--ink2);font-weight:600">−0,6 kg esta semana</span></div>
+    <svg viewBox="0 0 300 100" style="width:100%;height:100px" aria-label="Tendencia de peso">
+      <line x1="0" y1="20" x2="300" y2="20" stroke="var(--line)"></line><line x1="0" y1="55" x2="300" y2="55" stroke="var(--line)"></line><line x1="0" y1="90" x2="300" y2="90" stroke="var(--line)"></line>
+      <polyline points="{{ wPts }}" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+    </svg>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);font-weight:600"><span>5 oct</span><span>Objetivo 76 kg</span><span>11 oct</span></div>
+  </div>
+  <div style="background:var(--s1);border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:14px">
+    <span style="font-size:16px;font-weight:800">Calorías</span>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+      <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:var(--ink2);font-weight:600">Promedio diario</span><b style="font-size:18px">1.945</b></span>
+      <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:var(--ink2);font-weight:600">Días en rango</span><b style="font-size:18px">4 de 7</b></span>
+      <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:var(--ink2);font-weight:600">Días registrados</span><b style="font-size:18px">7/7</b></span>
+    </div>
+    <div style="position:relative;height:140px;display:grid;grid-template-columns:repeat(7,1fr);align-items:end;gap:10px;padding-top:8px">
+      <span style="position:absolute;left:0;right:0;bottom:{{ targetBottom }};border-top:1.5px dashed var(--ink3)"></span>
+      <sc-for list="{{ calBars }}" as="cb" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+          <div style="width:100%;height:{{ cb.h }};background:var(--sage);border-radius:8px;opacity:{{ cb.o }}"></div>
+          <span style="font-size:12px;color:var(--ink3);font-weight:700">{{ cb.d }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="background:var(--s1);border-radius:24px;padding:6px 18px">
+    <sc-for list="{{ progLinks }}" as="pl" hint-placeholder-count="4">
+      <button onClick="{{ pl.onClick }}" style="width:100%;min-height:56px;border:none;background:none;color:var(--ink);font:inherit;cursor:pointer;display:flex;align-items:center;gap:14px;padding:0;border-top:{{ pl.bt }}">
+        <span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">{{ pl.icon }}</span>
+        <span style="flex:1;text-align:left;font-size:15px;font-weight:700">{{ pl.label }}</span>
+        <span style="font-size:13px;color:var(--ink2);font-weight:600">{{ pl.right }}</span>
+        <span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400;color:var(--ink3)">chevron_right</span>
+      </button>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPerfil }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;overflow-y:auto;padding:6px 20px 120px;box-sizing:border-box;display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:14px">
+    <span style="width:56px;height:56px;border-radius:18px;background:var(--s1);display:grid;place-items:center;font-size:22px;font-weight:800">M</span>
+    <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:20px;font-weight:800">Modo demo</span><span style="font-size:13px;color:var(--ink2);font-weight:600">Plan gratis · 1 día de racha</span></span>
+  </div>
+  <div style="background:var(--s1);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:800"><span>Análisis con IA hoy</span><span style="font-variant-numeric:tabular-nums">2 / 5</span></div>
+    <div style="height:6px;border-radius:9px;background:var(--s2);overflow:hidden"><div style="height:100%;width:40%;background:var(--ink);border-radius:9px"></div></div>
+    <button onClick="{{ toPremium }}" style="height:52px;border-radius:18px;border:none;background:var(--ink);color:var(--inv);font:inherit;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">auto_awesome</span>Pasate a Premium</button>
+  </div>
+  <sc-for list="{{ profGroups }}" as="pg" hint-placeholder-count="3">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--ink3);padding:0 4px">{{ pg.label }}</span>
+      <div style="background:var(--s1);border-radius:22px;padding:4px 16px">
+        <sc-for list="{{ pg.rows }}" as="pr" hint-placeholder-count="4">
+          <button onClick="{{ pr.onClick }}" style="width:100%;min-height:54px;border:none;background:none;color:var(--ink);font:inherit;cursor:pointer;display:flex;align-items:center;gap:14px;padding:0;border-top:{{ pr.bt }}">
+            <span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">{{ pr.icon }}</span>
+            <span style="flex:1;text-align:left;font-size:15px;font-weight:700">{{ pr.label }}</span>
+            <span style="font-size:13px;color:var(--ink2);font-weight:600">{{ pr.right }}</span>
+            <span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400;color:var(--ink3)">{{ pr.end }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+  <button onClick="{{ toBienvenida }}" style="height:48px;border:none;background:none;color:var(--ink2);font:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">logout</span>Cerrar sesión</button>
+  <span style="font-size:12px;color:var(--ink3);text-align:center">Versión 0.3.0</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasHeader }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column">
+  <div style="height:60px;display:flex;align-items:center;gap:4px;padding:0 8px;flex-shrink:0">
+    <button onClick="{{ back }}" aria-label="{{ backAria }}" style="width:48px;height:48px;border-radius:50%;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">{{ backIcon }}</span></button>
+    <span style="font-size:19px;font-weight:800;flex:1">{{ headTitle }}</span>
+  </div>
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:4px 20px 24px;display:flex;flex-direction:column;gap:16px">
+
+    <sc-if value="{{ isPeso }}" hint-placeholder-val="{{ false }}">
+      <div style="background:var(--s1);border-radius:28px;padding:28px 16px 22px;display:flex;flex-direction:column;align-items:center;gap:18px">
+        <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:76px;font-weight:800;letter-spacing:-0.045em;line-height:1;font-variant-numeric:tabular-nums">{{ pesoTxt }}</span><span style="font-size:22px;font-weight:700;color:var(--ink2)">kg</span></div>
+        <div style="display:flex;gap:14px">
+          <button onClick="{{ pesoDec }}" aria-label="Menos 0,1 kg" style="width:60px;height:60px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:26px;line-height:1;font-weight:400">remove</span></button>
+          <button onClick="{{ pesoInc }}" aria-label="Más 0,1 kg" style="width:60px;height:60px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:26px;line-height:1;font-weight:400">add</span></button>
+        </div>
+      </div>
+      <span style="font-size:14px;color:var(--ink2);text-align:center;line-height:1.45">Para comparar mejor, pesate a la misma hora, idealmente en ayunas.</span>
+      <span style="font-size:15px;font-weight:800;margin-top:6px">Últimos registros</span>
+      <div style="background:var(--s1);border-radius:22px;padding:4px 6px 4px 16px">
+        <sc-for list="{{ weighIns }}" as="wi" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:10px;min-height:56px;border-top:{{ wi.bt }}">
+            <span style="flex:1;display:flex;flex-direction:column"><span style="font-size:15px;font-weight:800">{{ wi.kg }} kg</span><span style="font-size:13px;color:var(--ink2);font-weight:600">{{ wi.date }}</span></span>
+            <button aria-label="Borrar registro" style="width:44px;height:44px;border-radius:50%;border:none;background:none;color:var(--ink3);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">delete</span></button>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isEntreno }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ toEscuchar }}" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1.5px solid var(--line);border-radius:22px;padding:8px 8px 8px 16px;font:inherit;color:var(--ink);cursor:pointer;text-align:left">
+        <span style="flex:1;font-size:14px;color:var(--ink2);font-weight:600;line-height:1.4">Decilo: «45 minutos de pesas, intensidad media»</span>
+        <span style="width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--inv);display:grid;place-items:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">mic</span></span>
+      </button>
+      <span style="font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--ink3)">ACTIVIDAD</span>
+      <button onClick="{{ toggleAct }}" style="display:flex;align-items:center;gap:14px;background:var(--s1);border-radius:22px;padding:12px 16px 12px 12px;border:none;font:inherit;color:var(--ink);cursor:pointer;text-align:left">
+        <span style="width:48px;height:48px;border-radius:14px;background:var(--s2);display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">{{ actIcon }}</span></span>
+        <span style="flex:1;font-size:17px;font-weight:800">{{ act }}</span>
+        <span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400;color:var(--ink2)">{{ actChev }}</span>
+      </button>
+      <sc-if value="{{ actOpen }}" hint-placeholder-val="{{ false }}">
+        <sc-for list="{{ actCats }}" as="ac" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--ink3)">{{ ac.label }}</span>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ ac.items }}" as="ai" hint-placeholder-count="5">
+                <button onClick="{{ ai.pick }}" style="height:40px;padding:0 14px 0 10px;border-radius:999px;border:none;background:{{ ai.bg }};color:{{ ai.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px"><span style="font-family:'Material Symbols Rounded';font-size:18px;line-height:1;font-weight:400">{{ ai.icon }}</span>{{ ai.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:14px;font-weight:700;color:var(--ink2)">Duración</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--s1);border-radius:999px;height:56px;padding:0 6px">
+          <button onClick="{{ durDec }}" aria-label="Menos 5 minutos" style="width:44px;height:44px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">remove</span></button>
+          <span style="font-size:18px;font-weight:800;font-variant-numeric:tabular-nums">{{ dur }} min</span>
+          <button onClick="{{ durInc }}" aria-label="Más 5 minutos" style="width:44px;height:44px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">add</span></button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:14px;font-weight:700;color:var(--ink2)">Intensidad</span>
+        <div style="display:flex;gap:2px;background:var(--s1);border-radius:14px;padding:4px">
+          <sc-for list="{{ intens }}" as="in" hint-placeholder-count="3">
+            <button onClick="{{ in.pick }}" style="flex:1;height:44px;border-radius:10px;border:none;background:{{ in.bg }};color:{{ in.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer">{{ in.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:14px;font-weight:700;color:var(--ink2)">Esfuerzo percibido</span>
+        <div style="display:grid;grid-template-columns:repeat(10,1fr);gap:4px">
+          <sc-for list="{{ rpe }}" as="rp" hint-placeholder-count="10">
+            <button onClick="{{ rp.pick }}" style="height:44px;border-radius:12px;border:none;background:{{ rp.bg }};color:{{ rp.color }};font:inherit;font-size:14px;font-weight:800;cursor:pointer;padding:0">{{ rp.n }}</button>
+          </sc-for>
+        </div>
+        <span style="font-size:12px;color:var(--ink3);font-weight:600">1 = muy fácil · 10 = máximo esfuerzo</span>
+      </div>
+      <div style="background:var(--s1);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:28px;font-weight:800;letter-spacing:-0.02em;font-variant-numeric:tabular-nums">{{ burned }}</span><span style="font-size:15px;font-weight:700;color:var(--ink2)">kcal estimadas</span></div>
+        <span style="font-size:12px;color:var(--ink2);line-height:1.45">Estimado con tu peso (82 kg), la duración y la intensidad. Contamos solo el gasto extra del ejercicio.</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSupl }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:32px 12px 8px">
+        <span style="width:64px;height:64px;border-radius:20px;background:var(--s1);display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:30px;line-height:1;font-weight:400">medication</span></span>
+        <span style="font-size:18px;font-weight:800">No cargaste suplementos</span>
+        <span style="font-size:15px;color:var(--ink2);line-height:1.45">Anotá lo que tomás, con horarios, recordatorios y stock.</span>
+      </div>
+      <span style="font-size:13px;color:var(--ink3);text-align:center;line-height:1.5">Bocado no recomienda suplementos ni dosis: solo te ayuda a registrar lo que ya tomás. Consultá con un profesional de la salud, sobre todo si tomás medicación, estás embarazada o tenés alguna condición médica.</span>
+    </sc-if>
+
+    <sc-if value="{{ isNuevoSupl }}" hint-placeholder-val="{{ false }}">
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:700;color:var(--ink2)">Nombre
+        <input value="{{ supName }}" onChange="{{ onSupName }}" placeholder="Ej.: Creatina" style="height:52px;border-radius:18px;border:1.5px solid var(--line);background:var(--s1);color:var(--ink);font:inherit;font-size:16px;font-weight:600;padding:0 16px;outline:none">
+      </label>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ supSugg }}" as="ss" hint-placeholder-count="8">
+          <button onClick="{{ ss.pick }}" style="height:40px;padding:0 14px;border-radius:999px;border:none;background:{{ ss.bg }};color:{{ ss.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer">{{ ss.label }}</button>
+        </sc-for>
+      </div>
+      <span style="font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--ink3);margin-top:4px">DOSIS</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input value="{{ dose }}" onChange="{{ onDose }}" inputMode="decimal" aria-label="Cantidad" style="width:80px;height:52px;border-radius:18px;border:1.5px solid var(--line);background:var(--s1);color:var(--ink);font:inherit;font-size:18px;font-weight:800;text-align:center;outline:none">
+        <div style="flex:1;display:flex;gap:6px;overflow-x:auto">
+          <sc-for list="{{ supUnits }}" as="su" hint-placeholder-count="6">
+            <button onClick="{{ su.pick }}" style="height:40px;padding:0 14px;border-radius:999px;border:none;background:{{ su.bg }};color:{{ su.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap">{{ su.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <span style="font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--ink3);margin-top:4px">CUÁNDO LO TOMÁS</span>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">
+        <sc-for list="{{ supDays }}" as="sd" hint-placeholder-count="7">
+          <button onClick="{{ sd.pick }}" aria-pressed="{{ sd.on }}" style="height:44px;border-radius:14px;border:none;background:{{ sd.bg }};color:{{ sd.color }};font:inherit;font-size:14px;font-weight:800;cursor:pointer;padding:0">{{ sd.label }}</button>
+        </sc-for>
+      </div>
+      <div style="background:var(--s1);border-radius:22px;padding:6px 16px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:12px;min-height:56px">
+          <span style="flex:1;font-size:15px;font-weight:700">Horario</span>
+          <span style="height:40px;padding:0 14px;border-radius:12px;background:var(--s2);display:flex;align-items:center;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums">09:00</span>
+        </div>
+        <sc-for list="{{ supToggles }}" as="tg" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:12px;min-height:60px;border-top:1px solid var(--line)">
+            <span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:700">{{ tg.label }}</span><span style="font-size:12px;color:var(--ink2);font-weight:600">{{ tg.sub }}</span></span>
+            <button onClick="{{ tg.toggle }}" role="switch" aria-checked="{{ tg.on }}" aria-label="{{ tg.label }}" style="width:52px;height:32px;border-radius:999px;border:none;background:{{ tg.track }};position:relative;cursor:pointer;flex-shrink:0;padding:0"><span style="position:absolute;top:4px;left:{{ tg.x }};width:24px;height:24px;border-radius:50%;background:{{ tg.knob }};transition:left .18s"></span></button>
+          </div>
+        </sc-for>
+      </div>
+      <span style="font-size:12px;color:var(--ink3);line-height:1.5">Bocado no recomienda suplementos ni dosis: solo te ayuda a registrar lo que ya tomás.</span>
+    </sc-if>
+
+    <sc-if value="{{ isCoach }}" hint-placeholder-val="{{ false }}">
+      <span style="font-size:16px;color:var(--ink2);line-height:1.45">Respuestas según tus objetivos y lo que comiste hoy.</span>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--sageBg);border-radius:18px;padding:14px;font-size:14px;font-weight:600;line-height:1.45"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">info</span><span>El coach brinda información general y no reemplaza a un profesional. No da diagnósticos médicos.</span></div>
+      <sc-if value="{{ noChat }}" hint-placeholder-val="{{ true }}">
+        <span style="font-size:13px;color:var(--ink3);font-weight:600">Plan gratis: tenés 1 mensaje de prueba.</span>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+          <sc-for list="{{ coachSugg }}" as="cs" hint-placeholder-count="3">
+            <button onClick="{{ cs.ask }}" style="min-height:44px;border-radius:999px;border:none;background:var(--s1);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer;padding:10px 16px;text-align:left">{{ cs.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-for list="{{ chat }}" as="ch" hint-placeholder-count="0">
+        <div style="align-self:{{ ch.align }};max-width:84%;background:{{ ch.bg }};color:{{ ch.color }};border-radius:{{ ch.radius }};padding:12px 14px;font-size:15px;font-weight:600;line-height:1.45;animation:none">{{ ch.text }}</div>
+      </sc-for>
+      <sc-if value="{{ typing }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--ink3);font-weight:600">El coach está escribiendo…</span></sc-if>
+    </sc-if>
+
+    <sc-if value="{{ isRecord }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ notifOff }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;gap:10px;align-items:flex-start;background:var(--warnBg);color:var(--warnT);border-radius:18px;padding:14px;font-size:14px;font-weight:600;line-height:1.4"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">error</span><span>Activá las notificaciones para recibir recordatorios.</span></div>
+        <button onClick="{{ enableNotif }}" style="height:52px;border-radius:18px;border:none;background:var(--ink);color:var(--inv);font:inherit;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">notifications</span>Activar notificaciones</button>
+      </sc-if>
+      <sc-for list="{{ remGroups }}" as="rg" hint-placeholder-count="2">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--ink3);padding:0 4px">{{ rg.label }}</span>
+          <div style="background:var(--s1);border-radius:22px;padding:4px 16px">
+            <sc-for list="{{ rg.rows }}" as="rr" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:12px;min-height:58px;border-top:{{ rr.bt }}">
+                <span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:700">{{ rr.label }}</span><sc-if value="{{ rr.hasSub }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:var(--ink2);font-weight:600">{{ rr.sub }}</span></sc-if></span>
+                <sc-if value="{{ rr.hasTime }}" hint-placeholder-val="{{ false }}"><span style="height:36px;padding:0 12px;border-radius:12px;background:var(--s2);display:flex;align-items:center;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums">{{ rr.time }}</span></sc-if>
+                <button onClick="{{ rr.toggle }}" role="switch" aria-checked="{{ rr.on }}" aria-label="{{ rr.label }}" style="width:52px;height:32px;border-radius:999px;border:none;background:{{ rr.track }};position:relative;cursor:pointer;flex-shrink:0;padding:0"><span style="position:absolute;top:4px;left:{{ rr.x }};width:24px;height:24px;border-radius:50%;background:{{ rr.knob }};transition:left .18s"></span></button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </sc-if>
+
+    <sc-if value="{{ isObjetivos }}" hint-placeholder-val="{{ false }}">
+      <div style="background:var(--s1);border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:44px;font-weight:800;letter-spacing:-0.04em;line-height:1;font-variant-numeric:tabular-nums">{{ objKcal }}</span><span style="font-size:16px;font-weight:700;color:var(--ink2)">kcal por día</span></div>
+        <span style="font-size:14px;color:var(--ink2);font-weight:600">Gasto diario estimado: 2.695 kcal</span>
+      </div>
+      <span style="font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--ink3)">OBJETIVO</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ objChips }}" as="oc" hint-placeholder-count="5"><button onClick="{{ oc.pick }}" style="height:44px;padding:0 16px;border-radius:999px;border:none;background:{{ oc.bg }};color:{{ oc.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer">{{ oc.label }}</button></sc-for>
+      </div>
+      <span style="font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--ink3)">ACTIVIDAD</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ actChips }}" as="ah" hint-placeholder-count="5"><button onClick="{{ ah.pick }}" style="height:44px;padding:0 16px;border-radius:999px;border:none;background:{{ ah.bg }};color:{{ ah.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer">{{ ah.label }}</button></sc-for>
+      </div>
+      <span style="font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--ink3)">MACROS</span>
+      <div style="background:var(--s1);border-radius:22px;padding:4px 16px">
+        <sc-for list="{{ macroRows }}" as="mr" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:12px;min-height:60px;border-top:{{ mr.bt }}">
+            <span style="width:10px;height:10px;border-radius:50%;background:{{ mr.color }}"></span>
+            <span style="flex:1;font-size:15px;font-weight:700">{{ mr.label }}</span>
+            <button onClick="{{ mr.dec }}" aria-label="Menos" style="width:40px;height:40px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">remove</span></button>
+            <span style="min-width:56px;text-align:center;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums">{{ mr.val }} g</span>
+            <button onClick="{{ mr.inc }}" aria-label="Más" style="width:40px;height:40px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">add</span></button>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
+      <div style="background:var(--s1);border-radius:28px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center">
+        <span style="width:60px;height:60px;border-radius:20px;background:var(--s2);display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:28px;line-height:1;font-weight:400">lock</span></span>
+        <span style="font-size:18px;font-weight:800">Plan de comidas semanal</span>
+        <span style="font-size:15px;color:var(--ink2);line-height:1.45">Generá un plan según tus objetivos, preferencias y comidas regionales, con lista de compras.</span>
+        <button onClick="{{ toPremium }}" style="height:48px;padding:0 22px;border-radius:16px;border:none;background:var(--ink);color:var(--inv);font:inherit;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px">Ver planes</button>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--sageBg);border-radius:18px;padding:14px;font-size:14px;font-weight:600;line-height:1.45"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">info</span><span>Bocado no reemplaza el consejo médico o nutricional profesional. Ante cualquier duda, consultá con un profesional de la salud.</span></div>
+    </sc-if>
+
+    <sc-if value="{{ isRecetas }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:32px 12px 8px">
+        <span style="width:64px;height:64px;border-radius:20px;background:var(--s1);display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:30px;line-height:1;font-weight:400">menu_book</span></span>
+        <span style="font-size:18px;font-weight:800">Todavía no tenés recetas</span>
+        <span style="font-size:15px;color:var(--ink2);line-height:1.45">Creá una receta con sus ingredientes y registrá porciones en un toque. También podés dictarla.</span>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ hasFooter }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:12px 20px 20px">
+      <button onClick="{{ footerAction }}" style="width:100%;height:56px;border-radius:20px;border:none;background:var(--ink);color:var(--inv);font:inherit;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">{{ footerLabel }}</button>
+    </div>
+  </sc-if>
+  <sc-if value="{{ isCoach }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:10px 16px 18px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--line)">
+      <button aria-label="Adjuntar foto" style="width:44px;height:44px;border-radius:50%;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">photo_camera</span></button>
+      <input value="{{ msg }}" onChange="{{ onMsg }}" onKeyDown="{{ onMsgKey }}" placeholder="Preguntá algo…" aria-label="Mensaje" style="flex:1;min-width:0;height:48px;border-radius:24px;border:none;background:var(--s1);color:var(--ink);font:inherit;font-size:15px;font-weight:600;padding:0 16px;outline:none">
+      <button onClick="{{ send }}" aria-label="{{ sendAria }}" style="width:48px;height:48px;border-radius:50%;border:none;background:var(--ink);color:var(--inv);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">{{ sendIcon }}</span></button>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;screen&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;diario&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dark&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;go&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(s:string)=&gt;void&quot;},&quot;setTheme&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(t:string)=&gt;void&quot;}}">
+const DAYK={5:1980,6:2210,7:1850,8:2050,9:2400,10:1720,11:1404};
+const DOWS=['L','M','M','J','V','S','D'];
+const DNAME=['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];
+const ACTS=[['CARDIO',[['directions_walk','Caminata',3.5],['directions_run','Correr',9],['directions_bike','Bicicleta',7],['pool','Natación',7],['rowing','Remo',7],['hiking','Trekking',6]]],['FUERZA',[['fitness_center','Pesas / gimnasio',4],['sports_gymnastics','Funcional',5],['bolt','HIIT',8],['accessibility_new','Calistenia',4]]],['DEPORTES',[['sports_soccer','Fútbol',7],['sports_tennis','Pádel',6],['sports_basketball','Básquet',6.5],['sports_volleyball','Vóley',4],['sports_hockey','Hockey',8],['sports_mma','Boxeo',9],['music_note','Baile',5]]],['CUERPO Y MENTE',[['self_improvement','Yoga',2.5],['accessibility','Pilates',3],['sports_gymnastics','Elongación',2.3]]]];
+const ALLACTS=ACTS.flatMap(c=>c[1]);
+const COACH={'¿Qué ceno para completar mis macros?':'Te quedan 746 kcal y 112 g de proteína. Una opción: 200 g de pechuga a la plancha con calabaza al horno y ensalada (≈ 520 kcal, 58 g de proteína).','Tengo huevos, papas y espinaca. ¿Qué preparo?':'Una tortilla de papa y espinaca al horno: 2 papas medianas, 3 huevos y un puñado de espinaca. Rinde 2 porciones de ≈ 320 kcal y 16 g de proteína cada una.','Ideas de merienda con más proteína':'Yogur natural con avena (≈ 15 g), tostadas con queso untable y huevo (≈ 18 g) o un licuado de leche con banana (≈ 12 g).'};
+const fmt=n=>Math.round(n).toLocaleString('es-AR');
+const tog=on=>({on,track:on?'var(--ink)':'var(--s2)',knob:on?'var(--bg)':'var(--ink3)',x:on?'24px':'4px'});
+const sel=on=>({bg:on?'var(--ink)':'var(--s1)',color:on?'var(--inv)':'var(--ink)'});
+const HEAD={peso:['Registrar peso','close','hoy'],entrenamiento:['Nuevo entrenamiento','close','hoy'],suplementos:['Suplementos','arrow_back','perfil'],'nuevo-suplemento':['Nuevo suplemento','close','suplementos'],coach:['Coach nutricional','close','hoy'],recordatorios:['Recordatorios','arrow_back','perfil'],objetivos:['Objetivos','arrow_back','perfil'],'plan-comidas':['Plan de comidas','arrow_back','perfil'],recetas:['Mis recetas','arrow_back','perfil']};
+class Component extends DCLogic {
+  state={monthOpen:false,day:11,range:'7 días',peso:82.0,actOpen:false,act:'Pesas / gimnasio',dur:45,inten:'Moderada',rpe:6,supName:'',dose:'1',unit:'cápsula',days:[0,1,2,3,4,5,6],remind:true,kcalSup:false,chat:[],msg:'',typing:false,notif:false,rem:{des:true,alm:true,mer:false,cen:true,smart:true,act:false,agua:false,pesaje:true,resumen:true},obj:'Bajar de peso',actLvl:'Moderado',prot:164,carb:223,fat:67};
+  go(s){this.props.go&&this.props.go(s);}
+  componentWillUnmount(){clearTimeout(this.to)}
+  ask(q){
+    if(!q.trim())return;
+    this.setState(x=>({chat:[...x.chat,{me:true,text:q}],msg:'',typing:true}));
+    clearTimeout(this.to);
+    this.to=setTimeout(()=>this.setState(x=>({typing:false,chat:[...x.chat,{me:false,text:COACH[q]||'Buena pregunta. Con lo que comiste hoy, te conviene sumar proteína en la cena: pollo, huevo, legumbres o un lácteo.'}]})),900);
+  }
+  renderVals(){
+    const s=this.props.screen, st=this.state, H=HEAD[s];
+    // diario
+    let cells=[];
+    if(st.monthOpen){ cells=[28,29,30].map(n=>({n,out:true})).concat(Array.from({length:31},(_,i)=>({n:i+1}))).concat([{n:1,out:true}]); }
+    else cells=[5,6,7,8,9,10,11].map(n=>({n}));
+    const calDays=cells.map(c=>{const on=!c.out&&c.n===st.day, logged=!c.out&&DAYK[c.n], future=!c.out&&c.n>11;return {label:c.n,aria:`${c.n} de octubre`,bg:on?'var(--ink)':logged?'var(--s2)':'transparent',color:on?'var(--inv)':(c.out||future)?'var(--ink3)':'var(--ink)',pick:()=>!c.out&&!future&&this.setState({day:c.n})};});
+    const dk=DAYK[st.day]||0;
+    const dowIdx=((st.day-5)%7+7)%7;
+    const sections=[
+      {name:'Desayuno',sub:'411 kcal',items:[['Café con leche','1 taza · 250 g',83],['Medialunas de manteca','2 unidades · 80 g',328]]},
+      {name:'Almuerzo',sub:'580 kcal',items:[['Tarta de jamón y queso','1 porción · 180 g',420],['Ensalada mixta','1 plato · 200 g',160]]},
+      {name:'Merienda',sub:'Sin registros',repeat:true,items:[]},
+      {name:'Cena',sub:'413 kcal',items:[['Milanesa de carne','½ porción · 75 g · frita',203],['Puré de papa','1 porción · 200 g',210]]},
+      {name:'Actividad',sub:'Sin registros',items:[],to:'entrenamiento'},
+      {name:'Suplementos',sub:'Registrá tus tomas junto a tus comidas',items:[],to:'nuevo-suplemento'}
+    ].map(x=>({...x,repeat:!!x.repeat,items:x.items.map(([name,meta,kcal])=>({name,meta,kcal})),add:()=>this.go(x.to||'escuchando')}));
+    // progreso
+    const ws=[82.6,82.4,82.5,82.2,82.1,82.3,82.0];
+    const wPts=ws.map((w,i)=>`${8+i*47},${Math.round(20+(82.8-w)/1*70)}`).join(' ');
+    const calBars=[1980,2210,1850,2050,2400,1720,1404].map((k,i)=>({d:DOWS[i],h:(k/2600*100)+'%',o:i===6?1:.7}));
+    // entrenamiento
+    const a=ALLACTS.find(x=>x[1]===st.act)||ALLACTS[0];
+    const mult={Suave:.8,Moderada:1,Intensa:1.35}[st.inten];
+    const burned=Math.round(a[2]*82*st.dur/60*mult*.75);
+    // coach
+    const chat=st.chat.map(c=>({text:c.text,align:c.me?'flex-end':'flex-start',bg:c.me?'var(--ink)':'var(--s1)',color:c.me?'var(--inv)':'var(--ink)',radius:c.me?'20px 20px 6px 20px':'20px 20px 20px 6px'}));
+    // recordatorios
+    const R=(k,label,sub,time)=>({label,sub,hasSub:!!sub,time,hasTime:!!time&&st.rem[k],...tog(st.rem[k]),toggle:()=>this.setState(x=>({rem:{...x.rem,[k]:!x.rem[k]}}))});
+    const withBt=rows=>rows.map((r,i)=>({...r,bt:i?'1px solid var(--line)':'none'}));
+    const remGroups=[{label:'COMIDAS',rows:withBt([R('des','Desayuno','', '08:30'),R('alm','Almuerzo','','13:00'),R('mer','Merienda','','17:30'),R('cen','Cena','','21:00'),R('smart','Recordatorio inteligente','Si ya registraste esa comida, no te avisamos.')])},{label:'OTROS',rows:withBt([R('act','Actividad','Te avisamos los días que elijas.'),R('agua','Agua','Cada 2 h entre 09:00 y 21:00'),R('pesaje','Pesaje semanal','Lunes 08:00'),R('resumen','Resumen semanal','Domingo 20:00')])}];
+    const objKcal=st.prot*4+st.carb*4+st.fat*9;
+    const mrow=(k,label,color,stp)=>({label,color,val:st[k],dec:()=>this.setState(x=>({[k]:Math.max(0,x[k]-stp)})),inc:()=>this.setState(x=>({[k]:x[k]+stp}))});
+    const footer={peso:['Guardar',()=>this.go('hoy')],entrenamiento:[`Guardar · ${burned} kcal`,()=>this.go('hoy')],suplementos:['Agregar suplemento',()=>this.go('nuevo-suplemento')],'nuevo-suplemento':['Guardar',()=>this.go('suplementos')],recetas:['Nueva receta',()=>{}]}[s];
+    const profRows=(rows)=>rows.map(([icon,label,to,right,lock],i)=>({icon,label,right:right||'',end:lock?'lock':'chevron_right',bt:i?'1px solid var(--line)':'none',onClick:()=>to&&this.go(to)}));
+    const th=this.props.theme||'dark';
+    return {
+      isDiario:s==='diario',isProgreso:s==='progreso',isPerfil:s==='perfil',hasHeader:!!H,
+      headTitle:H?H[0]:'',backIcon:H?H[1]:'',backAria:H&&H[1]==='close'?'Cerrar':'Volver',back:()=>H&&this.go(H[2]),
+      isPeso:s==='peso',isEntreno:s==='entrenamiento',isSupl:s==='suplementos',isNuevoSupl:s==='nuevo-suplemento',isCoach:s==='coach',isRecord:s==='recordatorios',isObjetivos:s==='objetivos',isPlan:s==='plan-comidas',isRecetas:s==='recetas',
+      hasFooter:!!footer,footerLabel:footer?footer[0]:'',footerAction:footer?footer[1]:null,
+      toRecetas:()=>this.go('recetas'),toPeso:()=>this.go('peso'),toPremium:()=>this.go('premium'),toBienvenida:()=>this.go('bienvenida'),toEscuchar:()=>this.go('escuchando'),
+      toggleMonth:()=>this.setState(x=>({monthOpen:!x.monthOpen})),monthChev:st.monthOpen?'expand_less':'expand_more',dows:DOWS,calDays,
+      dayTitle:`${DNAME[dowIdx]}, ${st.day} de octubre`,dayKcal:fmt(dk),dayPct:Math.min(100,dk/2150*100)+'%',
+      dayNote:dk<=2150?`Te quedaron ${fmt(2150-dk)} kcal`:`${fmt(dk-2150)} kcal por encima del objetivo`,sections,
+      ranges:['7 días','30 días','90 días'].map((label,i)=>{const on=st.range===label;return {label,lock:i>0,bg:on?'var(--bg)':'transparent',color:on?'var(--ink)':'var(--ink2)',pick:()=>i>0?this.go('premium'):this.setState({range:label})};}),
+      wPts,calBars,targetBottom:`calc(${2150/2600*100}% * (140 - 26) / 140 + 26px)`,
+      progLinks:[['calendar_month','Resumen semanal',''],['emoji_events','Logros',''],['monitoring','Objetivo adaptativo','Premium'],['nutrition','Micronutrientes','Premium']].map(([icon,label,right],i)=>({icon,label,right,bt:i?'1px solid var(--line)':'none',onClick:()=>right&&this.go('premium')})),
+      profGroups:[{label:'OBJETIVOS Y DATOS',rows:profRows([['flag','Objetivos','objetivos'],['monitor_weight','Peso','peso','82 kg'],['emoji_events','Logros'],['menu_book','Mis recetas','recetas'],['fitness_center','Entrenamiento','entrenamiento'],['medication','Suplementos','suplementos']])},{label:'PREMIUM',rows:profRows([['forum','Coach IA','coach','',true],['event_note','Plan de comidas','plan-comidas','',true],['monitoring','Objetivo adaptativo','premium','',true],['nutrition','Micronutrientes','premium','',true]])},{label:'AJUSTES',rows:[...profRows([['notifications','Recordatorios','recordatorios'],['translate','Idioma',null,'Español (AR)']]),{icon:th==='dark'?'dark_mode':'light_mode',label:'Apariencia',right:th==='dark'?'Oscuro':'Claro',end:'sync_alt',bt:'1px solid var(--line)',onClick:()=>this.props.setTheme&&this.props.setTheme(th==='dark'?'light':'dark')},...profRows([['shield','Privacidad y datos'],['help','Ayuda y soporte']]).map(r=>({...r,bt:'1px solid var(--line)'}))]}],
+      pesoTxt:st.peso.toFixed(1).replace('.',','),pesoDec:()=>this.setState(x=>({peso:Math.round((x.peso-.1)*10)/10})),pesoInc:()=>this.setState(x=>({peso:Math.round((x.peso+.1)*10)/10})),
+      weighIns:[['82,0','domingo, 11 de octubre'],['82,3','sábado, 10 de octubre'],['82,6','lunes, 5 de octubre']].map(([kg,date],i)=>({kg,date,bt:i?'1px solid var(--line)':'none'})),
+      act:st.act,actIcon:a[0],actOpen:st.actOpen,actChev:st.actOpen?'expand_less':'expand_more',toggleAct:()=>this.setState(x=>({actOpen:!x.actOpen})),
+      actCats:ACTS.map(([label,items])=>({label,items:items.map(([icon,l])=>({icon,label:l,...sel(st.act===l),pick:()=>this.setState({act:l,actOpen:false})}))})),
+      dur:st.dur,durDec:()=>this.setState(x=>({dur:Math.max(5,x.dur-5)})),durInc:()=>this.setState(x=>({dur:x.dur+5})),
+      intens:['Suave','Moderada','Intensa'].map(label=>{const on=st.inten===label;return {label,bg:on?'var(--bg)':'transparent',color:on?'var(--ink)':'var(--ink2)',pick:()=>this.setState({inten:label})};}),
+      rpe:Array.from({length:10},(_,i)=>({n:i+1,...sel(st.rpe===i+1),pick:()=>this.setState({rpe:i+1})})),burned:fmt(burned),
+      supName:st.supName,onSupName:e=>this.setState({supName:e.target.value}),
+      supSugg:['Proteína whey','Creatina','Vitamina D','Omega 3','Magnesio','Multivitamínico','Hierro','Colágeno'].map(label=>({label,...sel(st.supName===label),pick:()=>this.setState({supName:label})})),
+      dose:st.dose,onDose:e=>this.setState({dose:e.target.value}),
+      supUnits:['cápsula','comprimido','g','mg','medida','gota','ml'].map(label=>({label,...sel(st.unit===label),pick:()=>this.setState({unit:label})})),
+      supDays:DOWS.map((label,i)=>{const on=st.days.includes(i);return {label,on,...sel(on),pick:()=>this.setState(x=>({days:on?x.days.filter(d=>d!==i):[...x.days,i]}))};}),
+      supToggles:[['remind','Recordarme a ese horario','Te avisamos aunque la app esté cerrada'],['kcalSup','Aporta calorías','Para proteína en polvo, ganadores o colágeno']].map(([k,label,sub])=>({label,sub,...tog(st[k]),toggle:()=>this.setState(x=>({[k]:!x[k]}))})),
+      noChat:st.chat.length===0,chat,typing:st.typing,
+      coachSugg:Object.keys(COACH).map(label=>({label,ask:()=>this.ask(label)})),
+      msg:st.msg,onMsg:e=>this.setState({msg:e.target.value}),onMsgKey:e=>{if(e.key==='Enter')this.ask(st.msg);},
+      send:()=>st.msg.trim()?this.ask(st.msg):this.go('escuchando'),sendIcon:st.msg.trim()?'arrow_upward':'mic',sendAria:st.msg.trim()?'Enviar':'Dictar',
+      notifOff:!st.notif,enableNotif:()=>this.setState({notif:true}),remGroups,
+      objKcal:fmt(objKcal),
+      objChips:['Bajar de peso','Mantener mi peso','Subir de peso','Ganar músculo','Comer más sano'].map(label=>({label,...sel(st.obj===label),pick:()=>this.setState({obj:label})})),
+      actChips:['Sedentario','Poco activo','Moderado','Activo','Muy activo'].map(label=>({label,...sel(st.actLvl===label),pick:()=>this.setState({actLvl:label})})),
+      macroRows:[mrow('prot','Proteínas','var(--p)',5),mrow('carb','Carbos','var(--c)',5),mrow('fat','Grasas','var(--f)',2)].map((r,i)=>({...r,bt:i?'1px solid var(--line)':'none'}))
+    };
+  }
+}
+</script>
+</body>
+</html>

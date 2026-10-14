@@ -1450,8 +1450,8 @@ export const es = {
       body: 'Micrófono, cámara y teclado en un solo lugar.',
     },
     voice: {
-      title: 'Hablar (1×1)',
-      body: 'Un toque y ya estás contando lo que comiste.',
+      title: '¿Qué comiste? (2×2 o 1×1)',
+      body: 'Un click y lo anoto: tocás y ya estás contando lo que comiste.',
     },
     water: {
       title: 'Agua (1×1 o 2×1)',
@@ -1470,6 +1470,7 @@ export const es = {
     },
     logged: 'Registrado',
     undo: 'Deshacer',
+    whatAte: '¿Qué comiste?',
   },
   plate: {
     title: 'Tu plato',
@@ -1488,6 +1489,11 @@ export const es = {
   dictate: {
     start: 'Dictar con la voz',
     stop: 'Dejar de dictar',
+  },
+  shortcuts: {
+    waterDone: 'Listo, +250 ml',
+    usualDone: 'Listo: anoté tu {{meal}} de siempre',
+    usualEmpty: 'Todavía no tenés una comida de siempre. Contame qué comiste.',
   },
 };
 

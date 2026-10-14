@@ -15,30 +15,29 @@ import { duplicateMeal } from '../hooks';
 import { MEAL_ICONS } from '../mealIcons';
 
 /** Meals of the last weeks, for "Lo de siempre". */
-export function useUsualMeals() {
-  return useQuery({
-    queryKey: ['db', 'meals', 'usual'],
-    queryFn: async () => {
-      const today = todayLocal();
-      const records = await repos.meals.list({
-        from: addDays(today, -FREQUENT_MEALS.windowDays),
-        to: today,
-      });
-      const usual = frequentMeals(
-        records.map((r) => ({
-          id: r.id,
-          mealType: r.meal_type,
-          eatenAt: r.eaten_at,
-          items: r.items,
-        })),
-        new Date(),
-      );
-      return usual.map((u) => ({ ...u, record: records.find((r) => r.id === u.latest.id)! }));
-    },
+/** The meals the user logs most, newest copy of each (also used by the launcher shortcut). */
+export async function loadUsualMeals() {
+  const today = todayLocal();
+  const records = await repos.meals.list({
+    from: addDays(today, -FREQUENT_MEALS.windowDays),
+    to: today,
   });
+  const usual = frequentMeals(
+    records.map((r) => ({
+      id: r.id,
+      mealType: r.meal_type,
+      eatenAt: r.eaten_at,
+      items: r.items,
+    })),
+    new Date(),
+  );
+  return usual.map((u) => ({ ...u, record: records.find((r) => r.id === u.latest.id)! }));
 }
 
-/** "Lo de siempre": the meals the user repeats, logged again with one tap. */
+export function useUsualMeals() {
+  return useQuery({ queryKey: ['db', 'meals', 'usual'], queryFn: loadUsualMeals });
+}
+
 export function UsualMeals({ date }: { date: IsoDate }) {
   const { t } = useTranslation();
   const { colors } = useTheme();

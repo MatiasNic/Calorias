@@ -1423,8 +1423,8 @@ export const en: TranslationShape<Translation> = {
       body: 'Mic, camera and keyboard in one place.',
     },
     voice: {
-      title: 'Talk (1×1)',
-      body: "One tap and you're telling what you ate.",
+      title: 'What did you eat? (2×2 or 1×1)',
+      body: 'One tap and I log it: tap and start telling what you ate.',
     },
     water: {
       title: 'Water (1×1 or 2×1)',
@@ -1443,6 +1443,7 @@ export const en: TranslationShape<Translation> = {
     },
     logged: 'Logged',
     undo: 'Undo',
+    whatAte: 'What did you eat?',
   },
   plate: {
     title: 'Your plate',
@@ -1461,5 +1462,10 @@ export const en: TranslationShape<Translation> = {
   dictate: {
     start: 'Dictate',
     stop: 'Stop dictating',
+  },
+  shortcuts: {
+    waterDone: 'Done, +250 ml',
+    usualDone: 'Done: logged your usual {{meal}}',
+    usualEmpty: "You don't have a usual meal yet. Tell me what you ate.",
   },
 };

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>@keyframes bw{0%,100%{transform:scaleY(.18)}50%{transform:scaleY(1)}}@keyframes ring{0%{transform:scale(1);opacity:.4}100%{transform:scale(1.55);opacity:0}}@keyframes blink{50%{opacity:0}}@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@keyframes spin{to{transform:rotate(360deg)}}@keyframes sheetUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}</style>
+</helmet>
+<div style="position:absolute;inset:0;font-family:'Manrope',system-ui,sans-serif;color:var(--ink);background:var(--bg)">
+
+<sc-if value="{{ isHoy }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;overflow-y:auto;padding:6px 20px 120px;box-sizing:border-box;display:flex;flex-direction:column;gap:22px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:13px;color:var(--ink2);font-weight:600">Buenas noches</span>
+      <button style="border:none;background:none;padding:0;font:inherit;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:2px;font-size:22px;font-weight:800;letter-spacing:-0.02em">Hoy, domingo 11<span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400;color:var(--ink2)">expand_more</span></button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <sc-if value="{{ hasMeals }}" hint-placeholder-val="{{ true }}">
+        <div aria-label="Racha de 1 día" style="height:44px;padding:0 14px;border-radius:16px;background:var(--s1);display:flex;align-items:center;gap:4px;font-size:15px;font-weight:800"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400;color:var(--c)">local_fire_department</span>1</div>
+      </sc-if>
+      <button onClick="{{ goCoach }}" aria-label="Coach" style="width:44px;height:44px;border-radius:16px;border:none;background:var(--s1);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">auto_awesome</span></button>
+    </div>
+  </div>
+
+  <div style="background:var(--s1);border:1px solid var(--line);border-radius:30px;padding:8px 8px 8px 20px;display:flex;align-items:center;gap:8px">
+    <button onClick="{{ goDictado }}" style="flex:1;min-width:0;border:none;background:none;padding:10px 0;font:inherit;color:var(--ink);cursor:text;text-align:left;display:flex;flex-direction:column;gap:3px">
+      <span style="font-size:19px;font-weight:800;letter-spacing:-0.01em">¿Qué comiste?</span>
+      <span style="font-size:13px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Contalo como si mandaras un audio</span>
+    </button>
+    <button onClick="{{ goCamara }}" aria-label="Sacar foto" style="width:48px;height:48px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">photo_camera</span></button>
+    <button onClick="{{ goEscuchar }}" aria-label="Dictar comida" style="width:64px;height:64px;border-radius:50%;border:none;background:var(--ink);color:var(--inv);cursor:pointer;display:grid;place-items:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:30px;line-height:1;font-weight:400">mic</span></button>
+  </div>
+
+  <sc-if value="{{ hasMeals }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between">
+        <span style="font-size:16px;font-weight:800">Lo de siempre</span>
+        <span style="font-size:13px;color:var(--ink3);font-weight:600">Un toque y listo</span>
+      </div>
+      <div style="display:flex;gap:10px;overflow-x:auto;margin:0 -20px;padding:0 20px">
+        <sc-for list="{{ usual }}" as="u" hint-placeholder-count="3">
+          <div style="flex:0 0 168px;background:var(--s1);border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:8px;border:1.5px solid {{ u.border }};box-sizing:border-box">
+            <div style="display:flex;align-items:center;gap:6px;color:var(--ink2);font-size:12px;font-weight:700"><span style="font-family:'Material Symbols Rounded';font-size:16px;line-height:1;font-weight:400">{{ u.icon }}</span>{{ u.meal }}</div>
+            <span style="font-size:15px;font-weight:700;line-height:1.3;min-height:39px">{{ u.name }}</span>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:13px;color:var(--ink2);font-weight:600;font-variant-numeric:tabular-nums">{{ u.kcal }} kcal</span>
+              <button onClick="{{ u.add }}" aria-label="{{ u.aria }}" style="width:40px;height:40px;border-radius:50%;border:none;background:{{ u.btnBg }};color:{{ u.btnInk }};cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">{{ u.icon2 }}</span></button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:14px;color:var(--ink2);font-weight:700">{{ remLabel }}</span>
+    <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:76px;font-weight:800;letter-spacing:-0.05em;line-height:.88;font-variant-numeric:tabular-nums">{{ remaining }}</span><span style="font-size:20px;font-weight:700;color:var(--ink2)">kcal</span></div>
+    <div style="height:10px;border-radius:99px;background:var(--s2);overflow:hidden;margin-top:6px"><div style="height:100%;width:{{ kcalPct }};background:var(--sage);border-radius:99px;transition:width .4s"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);font-weight:600;font-variant-numeric:tabular-nums"><span>{{ consumed }} consumidas</span><span>Objetivo 2.150</span></div>
+  </div>
+
+  <div style="background:var(--s1);border-radius:24px;padding:16px 18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+    <sc-for list="{{ macros }}" as="m" hint-placeholder-count="3">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink2)"><span style="width:8px;height:8px;border-radius:50%;background:{{ m.color }}"></span>{{ m.label }}</div>
+        <div style="font-variant-numeric:tabular-nums"><span style="font-size:19px;font-weight:800">{{ m.val }}</span><span style="font-size:13px;color:var(--ink3);font-weight:600">/{{ m.target }} g</span></div>
+        <div style="height:5px;border-radius:9px;background:var(--s2);overflow:hidden"><div style="height:100%;width:{{ m.pct }};background:{{ m.color }};border-radius:9px"></div></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ hasMeals }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:20px;font-weight:800;letter-spacing:-0.01em">Comidas</span><span style="font-size:13px;color:var(--ink2);font-weight:600;font-variant-numeric:tabular-nums">{{ consumed }} kcal</span></div>
+      <sc-for list="{{ meals }}" as="ml" hint-placeholder-count="3">
+        <div style="background:var(--s1);border-radius:20px;padding:12px 16px 12px 12px;display:flex;align-items:center;gap:12px;animation:{{ ml.anim }}">
+          <div style="width:44px;height:44px;border-radius:14px;background:var(--s2);display:grid;place-items:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">{{ ml.icon }}</span></div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:16px;font-weight:700">{{ ml.meal }} <span style="font-size:13px;font-weight:600;color:var(--ink3)">· {{ ml.time }}</span></span>
+            <span style="font-size:13px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ml.items }}</span>
+          </div>
+          <span style="font-size:16px;font-weight:800;font-variant-numeric:tabular-nums">{{ ml.kcal }}</span>
+        </div>
+      </sc-for>
+      <sc-if value="{{ showAddMerienda }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ goEscuchar }}" style="height:56px;border-radius:20px;border:1.5px dashed var(--line);background:none;color:var(--ink2);font:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;padding:0 16px"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">add</span><span style="flex:1;text-align:left">Agregar merienda</span><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">mic</span></button>
+      </sc-if>
+    </div>
+    <div style="background:var(--s1);border-radius:24px;padding:16px;display:flex;gap:14px;align-items:flex-start">
+      <div style="width:44px;height:44px;border-radius:14px;background:var(--s2);display:grid;place-items:center;flex-shrink:0;color:var(--p)"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">egg_alt</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:800">Te faltan {{ protLeft }} g de proteína</span><span style="font-size:14px;color:var(--ink2);line-height:1.45">Ideas rápidas: un yogur natural, 2 huevos, una lata de atún o una porción de pollo.</span></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1.5px dashed var(--line);border-radius:28px;padding:26px 22px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+      <button onClick="{{ goEscuchar }}" aria-label="Dictar comida" style="width:64px;height:64px;border-radius:22px;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:30px;line-height:1;font-weight:400">mic</span></button>
+      <span style="font-size:20px;font-weight:800;letter-spacing:-0.01em">Registrá tu primera comida</span>
+      <span style="font-size:15px;color:var(--ink2);line-height:1.45;text-wrap:pretty">Tocá el micrófono y contá lo que comiste. Podés nombrar varias comidas de una.</span>
+      <div style="display:flex;flex-direction:column;gap:8px;width:100%;margin-top:4px">
+        <button onClick="{{ goEscuchar }}" style="min-height:44px;border-radius:999px;border:none;background:var(--s2);color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:10px 16px">«Un café con leche y dos medialunas»</button>
+        <button onClick="{{ goEscuchar }}" style="min-height:44px;border-radius:999px;border:none;background:var(--s2);color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:10px 16px">«Un plato hondo de fideos con tuco»</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:var(--s1);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--ink2)"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400;color:var(--f)">water_drop</span>Agua</div>
+      <div style="font-variant-numeric:tabular-nums"><span style="font-size:24px;font-weight:800">{{ water }}</span><span style="font-size:13px;color:var(--ink3);font-weight:600"> / 2.850 ml</span></div>
+      <div style="height:5px;border-radius:9px;background:var(--s2);overflow:hidden"><div style="height:100%;width:{{ waterPct }};background:var(--f);border-radius:9px;transition:width .3s"></div></div>
+      <button onClick="{{ addWater }}" style="align-self:flex-start;height:40px;padding:0 14px;border-radius:999px;border:none;background:var(--s2);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;margin-top:2px"><span style="font-family:'Material Symbols Rounded';font-size:18px;line-height:1;font-weight:400">add</span>250 ml</button>
+    </div>
+    <button onClick="{{ goPeso }}" style="background:var(--s1);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:8px;border:none;font:inherit;color:var(--ink);cursor:pointer;text-align:left">
+      <div style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--ink2)"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">monitor_weight</span>Peso</div>
+      <div><span style="font-size:24px;font-weight:800">82</span><span style="font-size:13px;color:var(--ink3);font-weight:600"> kg</span></div>
+      <span style="font-size:14px;font-weight:700;margin-top:auto">Registrar peso</span>
+    </button>
+    <button onClick="{{ goEntreno }}" style="background:var(--s1);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:8px;border:none;font:inherit;color:var(--ink);cursor:pointer;text-align:left">
+      <div style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--ink2)"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">fitness_center</span>Actividad</div>
+      <span style="font-size:15px;font-weight:700">Sin actividad</span>
+      <span style="font-size:14px;font-weight:700;color:var(--ink2)">Registrar</span>
+    </button>
+    <button onClick="{{ goSupl }}" style="background:var(--s1);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:8px;border:none;font:inherit;color:var(--ink);cursor:pointer;text-align:left">
+      <div style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--ink2)"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">medication</span>Suplementos</div>
+      <span style="font-size:15px;font-weight:700">Sin cargar</span>
+      <span style="font-size:14px;font-weight:700;color:var(--ink2)">Agregá los tuyos</span>
+    </button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isListen }}" hint-placeholder-val="{{ false }}">
+  <sc-if value="{{ isSheet }}" hint-placeholder-val="{{ true }}">
+    <div onClick="{{ goHoy }}" style="position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:8"></div>
+  </sc-if>
+  <div style="position:absolute;left:0;right:0;bottom:0;top:{{ lsTop }};z-index:9;background:{{ lsBg }};border-radius:{{ lsRadius }};display:flex;flex-direction:column;padding:{{ lsPad }};box-sizing:border-box;animation:{{ lsAnim }};box-shadow:{{ lsShadow }}">
+    <sc-if value="{{ isSheet }}" hint-placeholder-val="{{ true }}">
+      <div style="width:40px;height:5px;border-radius:9px;background:var(--line);align-self:center;margin-bottom:6px"></div>
+    </sc-if>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 8px;height:52px">
+      <button onClick="{{ goHoy }}" aria-label="Cancelar" style="width:48px;height:48px;border-radius:50%;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">close</span></button>
+      <div style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700"><span style="width:8px;height:8px;border-radius:50%;background:var(--p);animation:blink 1.2s infinite"></span>Escuchando <span style="color:var(--ink3);font-variant-numeric:tabular-nums">{{ timer }}</span></div>
+      <span style="height:32px;padding:0 10px;border-radius:999px;background:var(--s2);font-size:12px;font-weight:700;display:flex;align-items:center;color:var(--ink2)">ES · AR</span>
+    </div>
+    <div style="flex:1;min-height:0;overflow-y:auto;padding:14px 24px 0;display:flex;flex-direction:column;gap:18px">
+      <p style="margin:0;font-size:{{ lsFont }};line-height:1.28;font-weight:700;letter-spacing:-0.02em;text-wrap:pretty">{{ liveText }}<span style="display:inline-block;width:3px;height:.95em;background:var(--ink);margin-left:3px;vertical-align:-0.1em;animation:blink 1s steps(1) infinite"></span></p>
+      <sc-if value="{{ noText }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:15px;color:var(--ink3);line-height:1.45">Probá: «desayuné café con leche y dos medialunas, y a la noche media milanesa con puré»</span>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ detected }}" as="d" hint-placeholder-count="0">
+          <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:16px;padding:10px 12px;animation:rise .35s ease-out">
+            <span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400;color:var(--ink2)">{{ d.icon }}</span>
+            <span style="font-size:14px;font-weight:800">{{ d.meal }}</span>
+            <span style="font-size:14px;color:var(--ink2);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.foods }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="padding:10px 24px 0;font-size:13px;color:var(--ink3);line-height:1.4;text-align:center">Usá medidas caseras: «plato hondo», «un puñado», «media»</div>
+    <div style="height:64px;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 24px">
+      <sc-for list="{{ bars }}" as="b" hint-placeholder-count="28">
+        <span style="width:4px;height:{{ b.h }};border-radius:4px;background:var(--ink);opacity:{{ b.o }};animation:bw {{ b.dur }}s ease-in-out {{ b.delay }}s infinite"></span>
+      </sc-for>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:6px 32px 22px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <button onClick="{{ goDictado }}" aria-label="Escribir" style="width:56px;height:56px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">keyboard</span></button>
+        <span style="font-size:12px;font-weight:700;color:var(--ink2)">Escribir</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <div style="position:relative;width:84px;height:84px">
+          <span style="position:absolute;inset:0;border-radius:50%;border:2px solid var(--ink);animation:ring 1.8s ease-out infinite"></span>
+          <button onClick="{{ goAnalizar }}" aria-label="Listo, analizar" style="position:absolute;inset:0;border-radius:50%;border:none;background:var(--ink);color:var(--inv);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:34px;line-height:1;font-weight:400">check</span></button>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:var(--ink2)">Listo</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <button onClick="{{ restart }}" aria-label="Empezar de nuevo" style="width:56px;height:56px;border-radius:50%;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">restart_alt</span></button>
+        <span style="font-size:12px;font-weight:700;color:var(--ink2)">De nuevo</span>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isDictado }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column">
+  <div style="height:60px;display:flex;align-items:center;gap:4px;padding:0 8px;flex-shrink:0">
+    <button onClick="{{ goHoy }}" aria-label="Cerrar" style="width:48px;height:48px;border-radius:50%;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">close</span></button>
+    <span style="font-size:19px;font-weight:800">Contá qué comiste</span>
+  </div>
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:4px 20px 20px;display:flex;flex-direction:column;gap:16px">
+    <textarea value="{{ text }}" onChange="{{ onText }}" aria-label="Lo que comiste" placeholder="Ej.: un plato hondo de fideos con tuco" style="min-height:168px;resize:none;border-radius:24px;border:1.5px solid var(--line);background:var(--s1);color:var(--ink);padding:18px;font:inherit;font-size:20px;font-weight:600;line-height:1.4;outline:none;box-sizing:border-box"></textarea>
+    <sc-if value="{{ hasDetMeals }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="font-size:14px;color:var(--ink2);font-weight:600">Vamos a separar</span>
+        <sc-for list="{{ detMeals }}" as="dm" hint-placeholder-count="2">
+          <span style="height:32px;padding:0 12px;border-radius:999px;background:var(--s2);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span style="font-family:'Material Symbols Rounded';font-size:16px;line-height:1;font-weight:400">{{ dm.icon }}</span>{{ dm.name }}</span>
+        </sc-for>
+      </div>
+    </sc-if>
+    <span style="font-size:15px;font-weight:800;margin-top:6px">Ejemplos</span>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+      <sc-for list="{{ examples }}" as="ex" hint-placeholder-count="3">
+        <button onClick="{{ ex.pick }}" style="min-height:44px;border-radius:999px;border:none;background:var(--s1);color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:10px 16px;text-align:left">{{ ex.label }}</button>
+      </sc-for>
+    </div>
+    <span style="font-size:13px;color:var(--ink3);font-weight:600">Te quedan 5 análisis hoy</span>
+  </div>
+  <div style="padding:12px 20px 20px;display:flex;gap:10px">
+    <button onClick="{{ goEscuchar }}" aria-label="Dictar" style="width:56px;height:56px;border-radius:20px;border:none;background:var(--s2);color:var(--ink);cursor:pointer;display:grid;place-items:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:26px;line-height:1;font-weight:400">mic</span></button>
+    <button onClick="{{ goAnalizar }}" style="flex:1;height:56px;border-radius:20px;border:none;background:var(--ink);color:var(--inv);font:inherit;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">auto_awesome</span>Analizar</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAnalizando }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:20px 24px;box-sizing:border-box;gap:28px">
+  <div style="height:40px"></div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:28px;font-weight:800;letter-spacing:-0.02em">Analizando…</span>
+    <span style="font-size:16px;color:var(--ink2);line-height:1.45">«{{ text }}»</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <sc-for list="{{ steps }}" as="st" hint-placeholder-count="4">
+      <div style="display:flex;align-items:center;gap:14px;height:28px">
+        <sc-if value="{{ st.done }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400;color:var(--ink)">check_circle</span></sc-if>
+        <sc-if value="{{ st.cur }}" hint-placeholder-val="{{ false }}"><span style="width:18px;height:18px;margin:1px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--ink);animation:spin .8s linear infinite"></span></sc-if>
+        <sc-if value="{{ st.todo }}" hint-placeholder-val="{{ true }}"><span style="width:20px;height:20px;margin:0 2px;border-radius:50%;border:2px solid var(--line);box-sizing:border-box"></span></sc-if>
+        <span style="font-size:16px;font-weight:700;color:{{ st.color }}">{{ st.label }}</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;opacity:.6">
+    <div style="height:60px;border-radius:18px;background:var(--s1)"></div>
+    <div style="height:60px;border-radius:18px;background:var(--s1)"></div>
+    <div style="height:60px;border-radius:18px;background:var(--s1);opacity:.6"></div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column">
+  <div style="height:60px;display:flex;align-items:center;gap:4px;padding:0 8px;flex-shrink:0">
+    <button onClick="{{ goHoy }}" aria-label="Cerrar" style="width:48px;height:48px;border-radius:50%;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">close</span></button>
+    <div style="display:flex;flex-direction:column"><span style="font-size:19px;font-weight:800">Revisá tu comida</span><span style="font-size:12px;color:var(--ink2);font-weight:600">Domingo 11 · {{ mealCount }}</span></div>
+  </div>
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:4px 16px 200px;display:flex;flex-direction:column;gap:14px">
+    <sc-if value="{{ showQ }}" hint-placeholder-val="{{ true }}">
+      <div style="background:var(--s1);border:1.5px solid var(--ink);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:800">¿La milanesa fue frita o al horno?</span><span style="font-size:13px;color:var(--ink2);font-weight:600">Cambia unas 35 kcal</span></div>
+        <div style="display:flex;gap:8px">
+          <button onClick="{{ ansFrita }}" style="flex:1;height:48px;border-radius:999px;border:none;background:var(--s2);color:var(--ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer">Frita</button>
+          <button onClick="{{ ansHorno }}" style="flex:1;height:48px;border-radius:999px;border:none;background:var(--s2);color:var(--ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer">Al horno</button>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ corrected }}" hint-placeholder-val="{{ false }}">
+      <div style="background:var(--s1);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:10px;animation:rise .35s ease-out">
+        <div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">record_voice_over</span><span style="font-size:14px;font-weight:700;flex:1">Entendí: «{{ fixMsg }}»</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink2);font-weight:600">
+          <div style="display:flex;justify-content:space-between"><span>Milanesa de carne → al horno</span><span style="font-variant-numeric:tabular-nums">−34 kcal</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Puré de papa → quitado</span><span style="font-variant-numeric:tabular-nums">−210 kcal</span></div>
+        </div>
+        <button onClick="{{ undo }}" style="align-self:flex-start;height:40px;padding:0 14px;border-radius:999px;border:none;background:var(--s2);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px"><span style="font-family:'Material Symbols Rounded';font-size:18px;line-height:1;font-weight:400">undo</span>Deshacer</button>
+      </div>
+    </sc-if>
+    <div style="background:var(--s1);border-radius:24px;padding:16px 18px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:14px;color:var(--ink2);font-weight:700">Total</span><span style="font-variant-numeric:tabular-nums"><span style="font-size:34px;font-weight:800;letter-spacing:-0.03em">{{ total }}</span><span style="font-size:15px;font-weight:700;color:var(--ink2)"> kcal</span></span></div>
+      <div style="display:flex;height:6px;border-radius:9px;overflow:hidden;gap:3px">
+        <div style="width:{{ pW }};background:var(--p);border-radius:9px"></div><div style="width:{{ cW }};background:var(--c);border-radius:9px"></div><div style="width:{{ fW }};background:var(--f);border-radius:9px"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);font-size:13px;font-weight:600;color:var(--ink2)">
+        <span>Proteínas <b style="color:var(--ink);font-variant-numeric:tabular-nums">{{ tp }} g</b></span><span>Carbos <b style="color:var(--ink);font-variant-numeric:tabular-nums">{{ tc }} g</b></span><span>Grasas <b style="color:var(--ink);font-variant-numeric:tabular-nums">{{ tf }} g</b></span>
+      </div>
+    </div>
+    <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 4px 0">
+          <button style="border:none;background:none;padding:0;font:inherit;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:6px;font-size:17px;font-weight:800">{{ g.name }}<span style="font-size:13px;color:var(--ink3);font-weight:600">{{ g.time }}</span><span style="font-family:'Material Symbols Rounded';font-size:18px;line-height:1;font-weight:400;color:var(--ink3)">edit</span></button>
+          <span style="font-size:14px;color:var(--ink2);font-weight:700;font-variant-numeric:tabular-nums">{{ g.kcal }} kcal</span>
+        </div>
+        <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
+          <div style="background:var(--s1);border-radius:20px;border:1.5px solid {{ it.border }};overflow:hidden">
+            <div style="display:flex;align-items:center;padding-right:4px">
+              <button onClick="{{ it.toggle }}" aria-expanded="{{ it.open }}" style="flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:12px 6px 12px 16px;border:none;background:none;font:inherit;color:var(--ink);cursor:pointer;text-align:left">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:700">{{ it.name }}</span><span style="font-size:13px;color:var(--ink2);font-weight:500">{{ it.meta }}</span></div>
+                <span style="font-variant-numeric:tabular-nums;white-space:nowrap"><span style="font-size:16px;font-weight:800">{{ it.kcal }}</span><span style="font-size:12px;font-weight:600;color:var(--ink3)"> kcal</span></span>
+                <span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400;color:var(--ink3)">{{ it.chev }}</span>
+              </button>
+              <button onClick="{{ it.del }}" aria-label="Quitar alimento" style="width:44px;height:44px;border-radius:50%;border:none;background:none;color:var(--ink3);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">delete</span></button>
+            </div>
+            <sc-if value="{{ it.open }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:14px 16px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;gap:4px;background:var(--s2);border-radius:14px;padding:4px">
+                  <sc-for list="{{ it.sizes }}" as="sz" hint-placeholder-count="3">
+                    <button onClick="{{ sz.pick }}" style="flex:1;height:38px;border-radius:10px;border:none;background:{{ sz.bg }};color:{{ sz.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer">{{ sz.label }}</button>
+                  </sc-for>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                  <div style="display:flex;align-items:center;background:var(--s2);border-radius:999px;height:44px">
+                    <button onClick="{{ it.dec }}" aria-label="Menos" style="width:44px;height:44px;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">remove</span></button>
+                    <span style="min-width:56px;text-align:center;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums">{{ it.g }} g</span>
+                    <button onClick="{{ it.inc }}" aria-label="Más" style="width:44px;height:44px;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">add</span></button>
+                  </div>
+                  <span style="font-size:13px;color:var(--ink2);font-weight:700;font-variant-numeric:tabular-nums">P {{ it.p }} · C {{ it.c }} · G {{ it.f }}</span>
+                </div>
+                <sc-if value="{{ it.cookable }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <sc-for list="{{ it.cooks }}" as="ck" hint-placeholder-count="5">
+                      <button onClick="{{ ck.pick }}" style="height:40px;padding:0 14px;border-radius:999px;border:none;background:{{ ck.bg }};color:{{ ck.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer">{{ ck.label }}</button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <button onClick="{{ goBuscar }}" style="align-self:flex-start;height:40px;padding:0;border:none;background:none;color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">swap_horiz</span>Cambiar alimento</button>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+    <button onClick="{{ goBuscar }}" style="height:48px;border:none;background:none;color:var(--ink2);font:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">add</span>Agregar alimento</button>
+    <div style="background:var(--s1);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:14px;font-weight:700;color:var(--ink2)">¿Le agregaste algo que no se ve?</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ extras }}" as="x" hint-placeholder-count="4">
+          <button onClick="{{ x.toggle }}" style="height:40px;padding:0 14px 0 10px;border-radius:999px;border:none;background:{{ x.bg }};color:{{ x.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px"><span style="font-family:'Material Symbols Rounded';font-size:18px;line-height:1;font-weight:400">{{ x.icon }}</span>{{ x.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <span style="font-size:13px;color:var(--ink3);line-height:1.45;padding:0 4px">Valores estimados. La precisión mejora cuando corregís porciones.</span>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:28px 16px 18px;background:var(--scrim);display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;align-items:center;gap:6px;background:var(--s1);border:1.5px solid var(--line);border-radius:26px;padding:5px 5px 5px 16px">
+      <input value="{{ fix }}" onChange="{{ onFix }}" onKeyDown="{{ onFixKey }}" aria-label="Corregir" placeholder="¿Algo no está bien? Decilo" style="flex:1;min-width:0;height:44px;border:none;background:none;outline:none;font:inherit;font-size:15px;font-weight:600;color:var(--ink)">
+      <button onClick="{{ correct }}" aria-label="Corregir con la voz" style="width:44px;height:44px;border-radius:50%;border:none;background:{{ fixBtnBg }};color:{{ fixBtnInk }};cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">{{ fixIcon }}</span></button>
+    </div>
+    <button onClick="{{ save }}" style="height:56px;border-radius:20px;border:none;background:var(--ink);color:var(--inv);font:inherit;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">check</span>{{ saveLabel }}</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCamara }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#000;color:#fff;display:flex;flex-direction:column">
+  <div style="height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 8px">
+    <button onClick="{{ goHoy }}" aria-label="Cerrar" style="width:48px;height:48px;border-radius:50%;border:none;background:none;color:#fff;cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">close</span></button>
+    <span style="height:32px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,.12);font-size:13px;font-weight:700;display:flex;align-items:center">Te quedan 3 escaneos hoy</span>
+    <button aria-label="Flash" style="width:48px;height:48px;border-radius:50%;border:none;background:none;color:#fff;cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">flash_off</span></button>
+  </div>
+  <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:repeating-linear-gradient(135deg,#121413 0 14px,#0B0C0C 14px 28px)">
+    <div style="position:relative;width:300px;height:300px;display:grid;place-items:center">
+      <span style="position:absolute;left:0;top:0;width:40px;height:40px;border-left:3px solid #fff;border-top:3px solid #fff;border-top-left-radius:22px"></span>
+      <span style="position:absolute;right:0;top:0;width:40px;height:40px;border-right:3px solid #fff;border-top:3px solid #fff;border-top-right-radius:22px"></span>
+      <span style="position:absolute;left:0;bottom:0;width:40px;height:40px;border-left:3px solid #fff;border-bottom:3px solid #fff;border-bottom-left-radius:22px"></span>
+      <span style="position:absolute;right:0;bottom:0;width:40px;height:40px;border-right:3px solid #fff;border-bottom:3px solid #fff;border-bottom-right-radius:22px"></span>
+      <span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:rgba(255,255,255,.45)">vista de cámara · plato</span>
+    </div>
+    <span style="font-size:15px;font-weight:700;text-align:center">Encuadrá todo el plato, desde arriba o en 45°</span>
+  </div>
+  <div style="background:#151716;border-radius:28px 28px 0 0;padding:16px 16px 20px;display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;align-items:center;gap:8px;background:#232726;border-radius:22px;padding:4px 4px 4px 14px">
+      <span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400;color:#A9AFAB">chat_bubble</span>
+      <input value="{{ hint }}" onChange="{{ onHint }}" aria-label="Pista para la foto" placeholder="Contale algo (opcional)" style="flex:1;min-width:0;height:44px;border:none;background:none;outline:none;font:inherit;font-size:15px;font-weight:600;color:#fff">
+      <button aria-label="Dictar pista" style="width:44px;height:44px;border-radius:50%;border:none;background:#2E3331;color:#fff;cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">mic</span></button>
+    </div>
+    <div style="display:flex;gap:6px;overflow-x:auto">
+      <sc-for list="{{ hintChips }}" as="hc" hint-placeholder-count="4">
+        <button onClick="{{ hc.add }}" style="height:36px;padding:0 12px;border-radius:999px;border:none;background:#232726;color:#E5E7E3;font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">+ {{ hc.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;justify-content:center"><div style="display:flex;gap:2px;background:#232726;border-radius:999px;padding:4px">
+      <sc-for list="{{ modes }}" as="md" hint-placeholder-count="4">
+        <button onClick="{{ md.pick }}" style="height:36px;padding:0 14px;border-radius:999px;border:none;background:{{ md.bg }};color:{{ md.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer">{{ md.label }}</button>
+      </sc-for>
+    </div></div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center">
+      <button aria-label="Galería" style="justify-self:start;width:52px;height:52px;border-radius:16px;border:none;background:#232726;color:#fff;cursor:pointer;display:grid;place-items:center;margin-left:16px"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">photo_library</span></button>
+      <button onClick="{{ goAnalizar }}" aria-label="Sacar foto" style="width:80px;height:80px;border-radius:50%;border:4px solid #fff;background:#151716;padding:5px;cursor:pointer;box-sizing:border-box"><span style="display:block;width:100%;height:100%;border-radius:50%;background:#ECEEE9"></span></button>
+      <span></span>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isBuscar }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column">
+  <div style="height:60px;display:flex;align-items:center;gap:4px;padding:0 8px;flex-shrink:0">
+    <button onClick="{{ goBack }}" aria-label="Cerrar" style="width:48px;height:48px;border-radius:50%;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">close</span></button>
+    <span style="font-size:19px;font-weight:800;flex:1">Agregar a Cena</span>
+    <button aria-label="Escanear código" style="width:48px;height:48px;border-radius:50%;border:none;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">barcode_scanner</span></button>
+  </div>
+  <div style="padding:0 16px;display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;align-items:center;gap:8px;height:52px;border-radius:18px;background:var(--s1);border:1.5px solid var(--line);padding:0 6px 0 14px">
+      <span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400;color:var(--ink2)">search</span>
+      <input value="{{ q }}" onChange="{{ onQ }}" aria-label="Buscar alimento" placeholder="Buscá entre 1.500 alimentos" style="flex:1;min-width:0;height:48px;border:none;background:none;outline:none;font:inherit;font-size:16px;font-weight:600;color:var(--ink)">
+      <button onClick="{{ clearQ }}" aria-label="Borrar" style="width:40px;height:40px;border-radius:50%;border:none;background:none;color:var(--ink3);cursor:pointer;display:grid;place-items:center"><span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">cancel</span></button>
+    </div>
+    <div style="display:flex;gap:2px;background:var(--s1);border-radius:14px;padding:4px">
+      <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
+        <button onClick="{{ tb.pick }}" style="flex:1;height:38px;border-radius:10px;border:none;background:{{ tb.bg }};color:{{ tb.color }};font:inherit;font-size:14px;font-weight:700;cursor:pointer">{{ tb.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="flex:1;min-height:0;overflow-y:auto;padding:8px 0 90px">
+    <sc-for list="{{ results }}" as="r" hint-placeholder-count="8">
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 12px 10px 16px;border-bottom:1px solid var(--line)">
+        <span style="width:40px;height:40px;border-radius:12px;background:var(--s2);display:grid;place-items:center;font-size:11px;font-weight:800;color:var(--ink2);flex-shrink:0;letter-spacing:.02em">{{ r.code }}</span>
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:700">{{ r.name }}</span><span style="font-size:13px;color:var(--ink2);font-weight:500">{{ r.cat }} · por 100 g</span></div>
+        <span style="font-size:16px;font-weight:800;font-variant-numeric:tabular-nums">{{ r.kcal }}</span>
+        <button onClick="{{ r.add }}" aria-label="{{ r.aria }}" style="width:44px;height:44px;border-radius:50%;border:none;background:{{ r.bg }};color:{{ r.color }};cursor:pointer;display:grid;place-items:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">{{ r.icon }}</span></button>
+      </div>
+    </sc-for>
+    <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center"><span style="font-size:17px;font-weight:800">{{ emptyTitle }}</span><span style="font-size:14px;color:var(--ink2);line-height:1.45">Contalo con la voz y lo estimamos igual.</span></div>
+    </sc-if>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:24px 16px 18px;background:var(--scrim)">
+    <button onClick="{{ goEscuchar }}" style="width:100%;height:52px;border-radius:20px;border:none;background:var(--s2);color:var(--ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:22px;line-height:1;font-weight:400">mic</span>¿No está? Decilo con la voz</button>
+  </div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;screen&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;hoy&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;escucha&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;hoja&quot;,&quot;options&quot;:[&quot;hoja&quot;,&quot;completa&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;auto&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;go&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(s:string)=&gt;void&quot;}}">
+const WORDS='Desayuné café con leche y dos medialunas, y a la noche cené media milanesa con puré'.split(' ');
+const DET=[{n:1,meal:'Desayuno',icon:'coffee',foods:[[4,'café con leche'],[7,'2 medialunas']]},{n:12,meal:'Cena',icon:'dark_mode',foods:[[14,'½ milanesa'],[16,'puré']]}];
+const BASE={
+ cafe:{meal:'des',name:'Café con leche',unit:'1 taza',g:250,kcal:83,p:6,c:9,f:3},
+ medi:{meal:'des',name:'Medialunas de manteca',unit:'2 unidades',g:80,kcal:328,p:6,c:36,f:18},
+ mila:{meal:'cen',name:'Milanesa de carne',unit:'½ porción',g:75,cookable:true},
+ pure:{meal:'cen',name:'Puré de papa',unit:'1 porción',g:200,kcal:210,p:5,c:31,f:7},
+ aceite:{meal:'cen',name:'Aceite',unit:'1 cda',g:14,kcal:119,p:0,c:0,f:14},
+ manteca:{meal:'cen',name:'Manteca',unit:'1 cdita',g:5,kcal:36,p:0,c:0,f:4},
+ mayo:{meal:'cen',name:'Mayonesa',unit:'1 cda',g:15,kcal:94,p:0,c:0,f:10},
+ chimi:{meal:'cen',name:'Chimichurri',unit:'1 cda',g:15,kcal:70,p:0,c:1,f:8}
+};
+const COOK={'Frita':[203,11,8,13],'Al horno':[169,11,8,9],'A la plancha':[158,12,5,8],'Hervida':[150,11,6,7],'Cruda':[143,11,5,6]};
+const EXTRA_IDS=[['aceite','Aceite (1 cda)'],['manteca','Manteca (1 cdita)'],['mayo','Mayonesa (1 cda)'],['chimi','Chimichurri']];
+const FOODS=[['Milanesa de carne frita','AR','Plato casero',270],['Milanesa de carne al horno','AR','Plato casero',220],['Milanesa de pollo frita','AR','Plato casero',260],['Milanesa de pollo al horno','AR','Plato casero',205],['Milanesa de soja','AR','Súper',230],['Milanesa a la napolitana','AR','Plato casero',250],['Milanesa a caballo','AR','Plato casero',255],['Milanesa a la fugazzeta','AR','Plato casero',265],['Milanesa de berenjena frita','AR','Plato casero',200],['Milanesa de cerdo frita','AR','Plato casero',270],['Arepa','VE','Plato casero',210],['Arepa con queso','CO','Plato casero',235],['Arepa reina pepiada','VE','Plato casero',215],['Arepa de huevo (frita)','CO','Plato casero',260],['Arepa con carne mechada','VE','Plato casero',190],['Empanada de carne','AR','Plato casero',295],['Locro','AR','Plato casero',115],['Pastel de choclo','CL','Plato casero',160],['Ceviche de pescado','PE','Plato casero',95],['Tamal','MX','Plato casero',190],['Pão de queijo','BR','Panadería',330],['Alfajor de maicena','AR','Súper',420],['Medialuna de manteca','AR','Panadería',410],['Dulce de leche','AR','Súper',315]];
+const RECENT=['Medialuna de manteca','Milanesa de carne frita','Empanada de carne','Dulce de leche'];
+const FAV=['Milanesa de carne al horno','Pão de queijo','Locro'];
+const USUAL=[{id:'u1',meal:'Merienda',icon:'local_cafe',name:'Mate con 2 tostadas y queso',kcal:240,time:'18:00'},{id:'u2',meal:'Merienda',icon:'icecream',name:'Yogur con granola y banana',kcal:260,time:'18:00'},{id:'u3',meal:'Desayuno',icon:'coffee',name:'Café con leche y 2 medialunas',kcal:411,time:'08:30'}];
+const MEALS=[{meal:'Desayuno',time:'08:30',icon:'coffee',items:'Café con leche, 2 medialunas',kcal:411},{meal:'Almuerzo',time:'13:15',icon:'lunch_dining',items:'Tarta de jamón y queso, ensalada',kcal:580},{meal:'Cena',time:'21:00',icon:'dark_mode',items:'Milanesa de carne, puré de papa',kcal:413}];
+const BARS=Array.from({length:30},(_,i)=>({h:(18+Math.round(38*Math.abs(Math.sin(i*1.7))))+'px',dur:(0.7+((i*37)%50)/100).toFixed(2),delay:(-((i*13)%10)/10).toFixed(1),o:(0.45+((i*7)%6)/10).toFixed(2)}));
+const fmt=n=>Math.round(n).toLocaleString('es-AR');
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const go=(c,s)=>()=>c.props.go&&c.props.go(s);
+
+class Component extends DCLogic {
+  state = this.initFor(this.props.screen);
+  initFor(s){
+    const st=this.props.auto===false;
+    return {cook:s==='revision-corregida'?'Al horno':null,open:s==='revision-detalle'?'mila':null,corrected:s==='revision-corregida',removed:s==='revision-corregida'?['pure']:[],grams:{},extras:[],fix:'',fixMsg:'era al horno y sin puré',n:st?13:0,step:st?2:0,text:WORDS.join(' '),q:s==='buscar'?'milanesa':'',tab:'Buscar',added:{},usual:{},water:750,hint:'es de pollo, sin aceite',mode:'Foto'};
+  }
+  componentDidMount(){this.kick()}
+  componentDidUpdate(pp){ if(pp.screen!==this.props.screen){ this.setState(this.initFor(this.props.screen),()=>this.kick()); } }
+  componentWillUnmount(){clearInterval(this.t);clearTimeout(this.to)}
+  kick(){
+    clearInterval(this.t);clearTimeout(this.to);
+    if(this.props.auto===false) return;
+    const s=this.props.screen;
+    if(s==='escuchando'){ this.setState({n:0}); this.t=setInterval(()=>this.setState(st=>{ if(st.n>=WORDS.length){clearInterval(this.t);return null;} return {n:st.n+1}; }),240); }
+    if(s==='analizando'){ this.setState({step:0}); this.t=setInterval(()=>this.setState(st=>({step:Math.min(st.step+1,4)})),520); this.to=setTimeout(()=>this.props.go&&this.props.go('revision'),2500); }
+  }
+  item(id){
+    const b=BASE[id], st=this.state; const g=st.grams[id]??b.g; const r=g/b.g;
+    let k=b.kcal,p=b.p,c=b.c,f=b.f;
+    if(b.cookable){ [k,p,c,f]=COOK[st.cook||'Frita']; }
+    return {id,meal:b.meal,name:b.name,g,meta:`${b.unit} · ${g} g${b.cookable?' · '+(st.cook||'Frita').toLowerCase():''}`,kcal:Math.round(k*r),p:Math.round(p*r),c:Math.round(c*r),f:Math.round(f*r),cookable:!!b.cookable,base:b};
+  }
+  renderVals(){
+    const s=this.props.screen, st=this.state, sheet=(this.props.escucha??'hoja')!=='completa';
+    const isListen=s==='escuchando';
+    const isHoy=s==='hoy'||s==='hoy-vacio'||(isListen&&sheet);
+    const hasMeals=s!=='hoy-vacio';
+    // HOY
+    const addedU=USUAL.filter(u=>st.usual[u.id]);
+    const meals=hasMeals?MEALS.map(m=>({...m,anim:'none'})).concat(addedU.map(u=>({meal:u.meal,time:'ahora',icon:u.icon,items:u.name,kcal:u.kcal,anim:'rise .35s ease-out'}))):[];
+    const consumedN=meals.reduce((a,m)=>a+m.kcal,0);
+    const extraK=addedU.reduce((a,u)=>a+u.kcal,0);
+    const remN=2150-consumedN;
+    const mBase=hasMeals?[52,139,71]:[0,0,0];
+    const mAdd=[Math.round(extraK*.04),Math.round(extraK*.12),Math.round(extraK*.035)];
+    const macros=[['Proteínas','var(--p)',164],['Carbos','var(--c)',223],['Grasas','var(--f)',67]].map(([label,color,target],i)=>{const val=mBase[i]+mAdd[i];return {label,color,target,val,pct:Math.min(100,val/target*100)+'%'};});
+    // LISTEN
+    const n=st.n;
+    const detected=DET.filter(d=>n>=d.n).map(d=>({meal:d.meal,icon:d.icon,foods:d.foods.filter(([k])=>n>=k).map(([,l])=>l).join(', ')||'…'}));
+    // DICTADO
+    const t=norm(st.text);
+    const detMeals=[['desayun','Desayuno','coffee'],['almorz','Almuerzo','lunch_dining'],['merend','Merienda','local_cafe'],['cen','Cena','dark_mode']].filter(([k])=>t.includes(k)).map(([,name,icon])=>({name,icon}));
+    // REVIEW
+    const ids=['cafe','medi','mila','pure'].filter(i=>!st.removed.includes(i)).concat(st.extras);
+    const items=ids.map(i=>this.item(i));
+    const tot=items.reduce((a,i)=>({k:a.k+i.kcal,p:a.p+i.p,c:a.c+i.c,f:a.f+i.f}),{k:0,p:0,c:0,f:0});
+    const mk=tot.p*4+tot.c*4+tot.f*9||1;
+    const groups=[['des','Desayuno','08:30'],['cen','Cena','21:00']].map(([key,name,time])=>{
+      const its=items.filter(i=>i.meal===key);
+      return {name,time,kcal:fmt(its.reduce((a,i)=>a+i.kcal,0)),items:its.map(i=>{
+        const open=st.open===i.id, b=i.base, stepG=Math.max(5,Math.round(b.g*.1/5)*5);
+        const setG=v=>this.setState(x=>({grams:{...x.grams,[i.id]:Math.max(stepG,v)}}));
+        return {...i,kcal:fmt(i.kcal),open,chev:open?'expand_less':'expand_more',border:open?'var(--ink)':'var(--line)',
+          toggle:()=>this.setState({open:open?null:i.id}),
+          del:()=>this.setState(x=>i.base.meal&&x.extras.includes(i.id)?{extras:x.extras.filter(e=>e!==i.id)}:{removed:[...x.removed,i.id]}),
+          dec:()=>setG(i.g-stepG),inc:()=>setG(i.g+stepG),
+          sizes:[['Chica',.67],['Mediana',1],['Grande',1.47]].map(([label,fc])=>{const v=Math.round(b.g*fc/5)*5||1;const on=i.g===v;return {label,pick:()=>setG(v),bg:on?'var(--ink)':'transparent',color:on?'var(--inv)':'var(--ink2)'};}),
+          cooks:Object.keys(COOK).map(label=>{const on=(st.cook||'Frita')===label;return {label,pick:()=>this.setState({cook:label}),bg:on?'var(--ink)':'var(--s2)',color:on?'var(--inv)':'var(--ink)'};})
+        };
+      })};
+    }).filter(g=>g.items.length);
+    const extras=EXTRA_IDS.map(([id,label])=>{const on=st.extras.includes(id);return {label,icon:on?'check':'add',bg:on?'var(--ink)':'var(--s2)',color:on?'var(--inv)':'var(--ink)',toggle:()=>this.setState(x=>({extras:on?x.extras.filter(e=>e!==id):[...x.extras,id]}))};});
+    const doCorrect=()=>this.setState(x=>({corrected:true,cook:'Al horno',removed:[...new Set([...x.removed,'pure'])],fixMsg:x.fix.trim()||'era al horno y sin puré',fix:'',open:null}));
+    // SEARCH
+    const nq=norm(st.q.trim());
+    let list=st.tab==='Buscar'?FOODS.filter(f=>!nq||norm(f[0]).includes(nq)):st.tab==='Recientes'?FOODS.filter(f=>RECENT.includes(f[0])):st.tab==='Favoritos'?FOODS.filter(f=>FAV.includes(f[0])):[];
+    const results=list.map(([name,code,cat,kcal])=>{const on=!!st.added[name];return {name,code,cat,kcal,icon:on?'check':'add',bg:on?'var(--ink)':'var(--s2)',color:on?'var(--inv)':'var(--ink)',aria:on?'Agregado':'Agregar '+name,add:()=>this.setState(x=>({added:{...x.added,[name]:!on}}))};});
+    return {
+      isHoy,hasMeals,isEmpty:!hasMeals,isListen,isSheet:sheet,isDictado:s==='dictado',isAnalizando:s==='analizando',isReview:s.startsWith('revision'),isCamara:s==='camara',isBuscar:s==='buscar',
+      goHoy:go(this,hasMeals||isListen?'hoy':'hoy-vacio'),goCoach:go(this,'coach'),goDictado:go(this,'dictado'),goCamara:go(this,'camara'),goEscuchar:go(this,'escuchando'),goAnalizar:go(this,'analizando'),goPeso:go(this,'peso'),goEntreno:go(this,'entrenamiento'),goSupl:go(this,'suplementos'),goBuscar:go(this,'buscar'),goBack:go(this,'revision'),
+      usual:USUAL.map(u=>{const on=!!st.usual[u.id];return {...u,border:on?'var(--ink)':'transparent',btnBg:on?'var(--ink)':'var(--s2)',btnInk:on?'var(--inv)':'var(--ink)',icon2:on?'check':'add',aria:on?'Quitar '+u.name:'Registrar '+u.name,add:()=>this.setState(x=>({usual:{...x.usual,[u.id]:!on}}))};}),
+      remLabel:remN>=0?'Te quedan':'Por encima del objetivo',remaining:fmt(Math.abs(remN)),consumed:fmt(consumedN),kcalPct:Math.min(100,consumedN/2150*100)+'%',macros,meals,
+      showAddMerienda:!addedU.some(u=>u.meal==='Merienda'),protLeft:Math.max(0,164-macros[0].val),
+      water:fmt(st.water),waterPct:Math.min(100,st.water/2850*100)+'%',addWater:()=>this.setState(x=>({water:x.water+250})),
+      lsTop:sheet?'auto':'0',lsBg:sheet?'var(--s1)':'var(--bg)',lsRadius:sheet?'32px 32px 0 0':'0',lsPad:sheet?'10px 0 0':'4px 0 0',lsAnim:sheet?'sheetUp .3s ease-out':'none',lsShadow:sheet?'0 -10px 40px rgba(0,0,0,.25)':'none',lsFont:sheet?'24px':'30px',
+      liveText:WORDS.slice(0,n).join(' '),noText:n===0,detected,timer:'0:'+String(Math.floor(n*0.24)).padStart(2,'0'),bars:BARS,
+      restart:()=>{this.kick();},
+      text:st.text,onText:e=>this.setState({text:e.target.value}),detMeals,hasDetMeals:detMeals.length>0,
+      examples:['Un café con leche y dos medialunas','Milanesa con puré y una manzana','Un plato hondo de fideos con tuco'].map(label=>({label,pick:()=>this.setState({text:label})})),
+      steps:['Separando comidas','Reconociendo alimentos','Estimando porciones','Calculando calorías y macros'].map((label,i)=>({label,done:i<st.step,cur:i===st.step,todo:i>st.step,color:i<=st.step?'var(--ink)':'var(--ink3)'})),
+      showQ:!st.cook&&!st.corrected&&!st.removed.includes('mila'),corrected:st.corrected,fixMsg:st.fixMsg,
+      ansFrita:()=>this.setState({cook:'Frita'}),ansHorno:()=>this.setState({cook:'Al horno'}),
+      undo:()=>this.setState({corrected:false,cook:null,removed:[]}),
+      total:fmt(tot.k),tp:tot.p,tc:tot.c,tf:tot.f,pW:(tot.p*4/mk*100)+'%',cW:(tot.c*4/mk*100)+'%',fW:(tot.f*9/mk*100)+'%',
+      groups,extras,mealCount:groups.length===1?'1 comida':groups.length+' comidas',
+      fix:st.fix,onFix:e=>this.setState({fix:e.target.value}),onFixKey:e=>{if(e.key==='Enter')doCorrect();},correct:doCorrect,
+      fixIcon:st.fix.trim()?'arrow_upward':'mic',fixBtnBg:st.fix.trim()?'var(--ink)':'var(--s2)',fixBtnInk:st.fix.trim()?'var(--inv)':'var(--ink)',
+      saveLabel:`Guardar ${groups.length===1?'1 comida':groups.length+' comidas'} · ${fmt(tot.k)} kcal`,save:go(this,'hoy'),
+      hint:st.hint,onHint:e=>this.setState({hint:e.target.value}),
+      hintChips:['Sin aceite','Casero','Porción chica','Compartido'].map(label=>({label,add:()=>this.setState(x=>({hint:x.hint?x.hint+', '+label.toLowerCase():label.toLowerCase()}))})),
+      modes:['Foto','Código','Etiqueta','Voz'].map(label=>{const on=st.mode===label;return {label,bg:on?'#ECEEE9':'transparent',color:on?'#111312':'#C9CDCA',pick:()=>label==='Voz'?this.props.go&&this.props.go('escuchando'):this.setState({mode:label})};}),
+      q:st.q,onQ:e=>this.setState({q:e.target.value,tab:'Buscar'}),clearQ:()=>this.setState({q:''}),
+      tabs:['Buscar','Recientes','Favoritos','Míos'].map(label=>{const on=st.tab===label;return {label,bg:on?'var(--bg)':'transparent',color:on?'var(--ink)':'var(--ink2)',pick:()=>this.setState({tab:label})};}),
+      results,noResults:results.length===0,emptyTitle:st.tab==='Míos'?'Todavía no creaste alimentos':'No encontramos «'+st.q+'»'
+    };
+  }
+}
+</script>
+</body>
+</html>

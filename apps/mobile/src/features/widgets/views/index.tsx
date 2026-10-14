@@ -44,7 +44,7 @@ export function renderWidget(
       case WIDGET_NAMES.today:
         return <Today p={p} s={s} width={width} height={height} />;
       default:
-        return <Voice p={p} s={s} />;
+        return <Voice p={p} s={s} width={width} height={height} />;
     }
   };
   return { light: draw(LIGHT), dark: draw(DARK) };

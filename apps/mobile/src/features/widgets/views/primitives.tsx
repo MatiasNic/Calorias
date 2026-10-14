@@ -5,12 +5,14 @@
 import {
   FlexWidget,
   IconWidget,
+  SvgWidget,
   TextWidget,
   type ColorProp,
   type HexColor,
 } from 'react-native-android-widget';
 
 import glyphMap from '@/components/materialSymbols.json';
+import { BOCADO_SYMBOL_PATH } from '@/components/AppLogo';
 import type { Palette } from './palette';
 
 export const ICON_FONT = 'MaterialSymbolsRounded';
@@ -159,3 +161,22 @@ export const Text = ({
     style={{ fontSize: size, fontFamily: bold ? BLACK : BOLD, color }}
   />
 );
+
+const symbolSvg = (color: string) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="${BOCADO_SYMBOL_PATH}" fill="${color}"/></svg>`;
+
+/** The Bocado symbol (brand path), 16 dp by default. */
+export function Symbol({ color, size = 16 }: { color: HexColor; size?: number }) {
+  return <SvgWidget svg={symbolSvg(color)} style={{ width: size, height: size }} />;
+}
+
+/** "◐ Bocado · <text>": the brand line widgets open with (handoff "marca", 4.1). */
+export function Brand({ p, text }: { p: Palette; text?: string }) {
+  return (
+    <FlexWidget style={{ flexDirection: 'row', alignItems: 'center', flexGap: 6 }}>
+      <Symbol color={p.sage} />
+      <TextWidget text="Bocado" style={{ fontSize: 13, fontFamily: BLACK, color: p.ink }} />
+      {text ? <Text text={`· ${text}`} size={13} color={p.ink2} /> : null}
+    </FlexWidget>
+  );
+}

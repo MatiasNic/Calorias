@@ -1442,8 +1442,8 @@ export const pt: TranslationShape<Translation> = {
       body: 'Microfone, câmera e teclado em um só lugar.',
     },
     voice: {
-      title: 'Falar (1×1)',
-      body: 'Um toque e você já está contando o que comeu.',
+      title: 'O que você comeu? (2×2 ou 1×1)',
+      body: 'Um toque e eu anoto: toque e conte o que comeu.',
     },
     water: {
       title: 'Água (1×1 ou 2×1)',
@@ -1462,6 +1462,7 @@ export const pt: TranslationShape<Translation> = {
     },
     logged: 'Registrado',
     undo: 'Desfazer',
+    whatAte: 'O que você comeu?',
   },
   plate: {
     title: 'Seu prato',
@@ -1480,5 +1481,10 @@ export const pt: TranslationShape<Translation> = {
   dictate: {
     start: 'Ditar com a voz',
     stop: 'Parar de ditar',
+  },
+  shortcuts: {
+    waterDone: 'Pronto, +250 ml',
+    usualDone: 'Pronto: anotei seu {{meal}} de sempre',
+    usualEmpty: 'Você ainda não tem uma refeição de sempre. Me conte o que comeu.',
   },
 };

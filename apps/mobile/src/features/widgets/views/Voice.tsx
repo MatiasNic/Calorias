@@ -2,21 +2,70 @@
 // ↑ Widgets are plain functions rendered outside React: the React Compiler must not touch them
 // (its memo cache is a hook, which makes every widget fail to draw — they stay blank).
 
-import { FlexWidget } from 'react-native-android-widget';
+import { FlexWidget, IconWidget, TextWidget } from 'react-native-android-widget';
 
 import type { WidgetSnapshot } from '../snapshot';
 import type { Palette } from './palette';
-import { card, open, Round, Text } from './primitives';
+import { BLACK, glyph, ICON_FONT, open } from './primitives';
 
-/** 1×1 · Hablar: opens "Escuchando" with one tap. */
-export function Voice({ p, s }: { p: Palette; s: WidgetSnapshot }) {
+/** Ink and paper are fixed for this piece (brand handoff 4.2), whatever the phone theme. */
+const INK = '#161918';
+const PAPER = '#F4F3EE';
+
+/**
+ * «¿Qué comiste?»: the whole widget opens "Escuchando". 2×2 shows the brand piece (ink card,
+ * sage mic, the question); squeezed to 1×1 it keeps just the mic.
+ */
+export function Voice({
+  p,
+  s,
+  width,
+  height,
+}: {
+  p: Palette;
+  s: WidgetSnapshot;
+  width: number;
+  height: number;
+}) {
+  const big = width >= 100 && height >= 100;
+  const circle = big ? 72 : 46;
   return (
     <FlexWidget
       {...open('listen')}
-      style={card(p, { justifyContent: 'center', alignItems: 'center', flexGap: 4 })}
+      style={{
+        height: 'match_parent',
+        width: 'match_parent',
+        backgroundColor: INK,
+        borderRadius: 28,
+        padding: big ? 16 : 8,
+        justifyContent: big ? 'space-between' : 'center',
+        alignItems: big ? 'flex-start' : 'center',
+      }}
     >
-      <Round p={p} icon="mic" size={46} primary action={open('listen')} />
-      <Text text={s.labels.talk} size={11} color={p.ink2} />
+      <FlexWidget
+        style={{
+          width: circle,
+          height: circle,
+          borderRadius: circle / 2,
+          backgroundColor: p.sage,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <IconWidget
+          font={ICON_FONT}
+          icon={glyph('mic')}
+          size={Math.round(circle / 2)}
+          style={{ color: INK }}
+        />
+      </FlexWidget>
+      {big ? (
+        <TextWidget
+          text={s.labels.whatAte}
+          maxLines={2}
+          style={{ fontSize: 19, fontFamily: BLACK, color: PAPER }}
+        />
+      ) : null}
     </FlexWidget>
   );
 }

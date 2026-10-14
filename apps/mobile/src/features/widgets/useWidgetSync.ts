@@ -70,6 +70,7 @@ export function useWidgetSync(day: {
         consumed: t('widgets.consumed'),
         goal: t('widgets.goal'),
         talk: t('widgets.talk'),
+        whatAte: t('widgets.whatAte'),
         photo: t('widgets.photo'),
         write: t('widgets.write'),
         water: t('widgets.water.label'),

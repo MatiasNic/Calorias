@@ -30,7 +30,7 @@ export function PaywallContent({
   return (
     <View style={styles.wrap}>
       <View style={styles.header}>
-        <AppLogo size={32} />
+        <AppLogo size={40} />
         <IconButton
           icon="close"
           accessibilityLabel={t('common.close')}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,0&amp;display=block" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:underline}a:hover{opacity:.75}
+input,textarea,button{font-family:inherit}
+*::-webkit-scrollbar{display:none}
+[data-bt=dark]{--bg:#111312;--s1:#1B1E1D;--s2:#272B29;--line:#2B302D;--ink:#ECEEE9;--ink2:#A9AFAB;--ink3:#7C837F;--inv:#111312;--sage:#AFCBB3;--sageT:#AFCBB3;--sageBg:#1E2A22;--p:#E6927F;--c:#E5C070;--f:#95AACD;--warnBg:#2F271A;--warnT:#E9C47A;--tab:rgba(29,32,31,.94);--scrim:linear-gradient(rgba(17,19,18,0),#111312 28%)}
+[data-bt=light]{--bg:#F4F3EE;--s1:#FFFFFF;--s2:#EAE9E3;--line:#E1DFD7;--ink:#161918;--ink2:#565D59;--ink3:#7E8580;--inv:#FFFFFF;--sage:#9CC0A3;--sageT:#3B6A47;--sageBg:#E2EDE3;--p:#C5604D;--c:#B3831C;--f:#5A76A6;--warnBg:#F4E8CF;--warnT:#6B4C0F;--tab:rgba(255,255,255,.96);--scrim:linear-gradient(rgba(244,243,238,0),#F4F3EE 28%)}
+</style>
+</helmet>
+<div style="min-height:{{ rootMinH }};display:flex;flex-wrap:wrap;gap:40px;justify-content:center;align-items:flex-start;padding:{{ rootPad }};box-sizing:border-box;background:{{ rootBg }};font-family:'Manrope',system-ui,sans-serif">
+  <sc-if value="{{ chrome }}" hint-placeholder-val="{{ true }}">
+    <div style="width:250px;display:flex;flex-direction:column;gap:20px;color:#1D1F1E;padding-top:8px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:20px;font-weight:800;letter-spacing:-0.02em">Bocado · prototipo</span>
+        <span style="font-size:13px;color:#5B605D;line-height:1.4">Rediseño voz primero. Tocá cualquier pantalla o navegá dentro del teléfono.</span>
+      </div>
+      <div style="display:flex;gap:4px;background:#D9D8D1;border-radius:12px;padding:4px">
+        <button onClick="{{ setDark }}" style="flex:1;height:36px;border:none;border-radius:9px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;background:{{ darkBg }};color:#1D1F1E">Oscuro</button>
+        <button onClick="{{ setLight }}" style="flex:1;height:36px;border:none;border-radius:9px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;background:{{ lightBg }};color:#1D1F1E">Claro</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#7A7F7C;padding:0 10px">Estado «escuchando»</span>
+        <div style="display:flex;gap:4px;background:#D9D8D1;border-radius:12px;padding:4px">
+          <button onClick="{{ setHoja }}" style="flex:1;height:36px;border:none;border-radius:9px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;background:{{ hojaBg }};color:#1D1F1E">Hoja inferior</button>
+          <button onClick="{{ setCompleta }}" style="flex:1;height:36px;border:none;border-radius:9px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;background:{{ completaBg }};color:#1D1F1E">Pantalla completa</button>
+        </div>
+      </div>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#7A7F7C;padding:0 10px 6px">{{ g.label }}</span>
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="6">
+            <button onClick="{{ it.onClick }}" style="text-align:left;border:none;cursor:pointer;font:inherit;font-size:14px;font-weight:600;padding:7px 10px;border-radius:8px;background:{{ it.bg }};color:{{ it.color }}">{{ it.name }}</button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+  <div data-bt="{{ theme }}" style="width:390px;height:844px;border-radius:{{ phoneRadius }};overflow:hidden;position:relative;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;box-shadow:{{ phoneShadow }};flex-shrink:0;transition:background .2s">
+    <div style="height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 34px;font-size:15px;font-weight:700;background:{{ statusBg }};color:{{ statusInk }}">
+      <span style="font-variant-numeric:tabular-nums">9:41</span>
+      <div style="display:flex;gap:4px;align-items:center">
+        <span style="font-family:'Material Symbols Rounded';font-size:18px;line-height:1;font-weight:400">signal_cellular_alt</span>
+        <span style="font-family:'Material Symbols Rounded';font-size:18px;line-height:1;font-weight:400">wifi</span>
+        <span style="font-family:'Material Symbols Rounded';font-size:20px;line-height:1;font-weight:400">battery_full</span>
+      </div>
+    </div>
+    <div style="flex:1;min-height:0;position:relative">
+      <sc-if value="{{ isReg }}" hint-placeholder-val="{{ true }}">
+        <dc-import name="Bocado Registro" screen="{{ screen }}" go="{{ go }}" auto="{{ auto }}" escucha="{{ escucha }}" hint-size="100%,100%" style="position:absolute;inset:0"></dc-import>
+      </sc-if>
+      <sc-if value="{{ isOnb }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="Bocado Onboarding" screen="{{ screen }}" go="{{ go }}" hint-size="100%,100%" style="position:absolute;inset:0"></dc-import>
+      </sc-if>
+      <sc-if value="{{ isSec }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="Bocado Secciones" screen="{{ screen }}" go="{{ go }}" theme="{{ theme }}" set-theme="{{ setThemeTo }}" auto="{{ auto }}" hint-size="100%,100%" style="position:absolute;inset:0"></dc-import>
+      </sc-if>
+      <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;left:12px;right:12px;bottom:12px;height:72px;border-radius:28px;background:var(--tab);border:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;z-index:5;backdrop-filter:blur(14px)">
+          <button onClick="{{ goHoy }}" aria-label="Hoy" style="height:64px;border:none;background:none;cursor:pointer;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ tHoy }}">
+            <span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">today</span><span style="font-size:11px;font-weight:700">Hoy</span>
+          </button>
+          <button onClick="{{ goDia }}" aria-label="Diario" style="height:64px;border:none;background:none;cursor:pointer;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ tDia }}">
+            <span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">calendar_month</span><span style="font-size:11px;font-weight:700">Diario</span>
+          </button>
+          <div style="display:grid;place-items:center">
+            <button onClick="{{ goMic }}" aria-label="Registrar con la voz" style="width:60px;height:60px;border-radius:22px;border:none;background:var(--ink);color:var(--inv);cursor:pointer;display:grid;place-items:center">
+              <span style="font-family:'Material Symbols Rounded';font-size:28px;line-height:1;font-weight:400">mic</span>
+            </button>
+          </div>
+          <button onClick="{{ goPro }}" aria-label="Progreso" style="height:64px;border:none;background:none;cursor:pointer;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ tPro }}">
+            <span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">trending_up</span><span style="font-size:11px;font-weight:700">Progreso</span>
+          </button>
+          <button onClick="{{ goPer }}" aria-label="Perfil" style="height:64px;border:none;background:none;cursor:pointer;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ tPer }}">
+            <span style="font-family:'Material Symbols Rounded';font-size:24px;line-height:1;font-weight:400">person</span><span style="font-size:11px;font-weight:700">Perfil</span>
+          </button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;screen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;hoy&quot;,&quot;options&quot;:[&quot;hoy-vacio&quot;,&quot;hoy&quot;,&quot;escuchando&quot;,&quot;dictado&quot;,&quot;analizando&quot;,&quot;revision&quot;,&quot;revision-detalle&quot;,&quot;revision-corregida&quot;,&quot;camara&quot;,&quot;buscar&quot;,&quot;bienvenida&quot;,&quot;ob-objetivo&quot;,&quot;ob-sexo&quot;,&quot;ob-nacimiento&quot;,&quot;ob-altura&quot;,&quot;ob-peso&quot;,&quot;ob-pesoobj&quot;,&quot;ob-actividad&quot;,&quot;ob-ritmo&quot;,&quot;ob-preferencias&quot;,&quot;ob-plan&quot;,&quot;ob-permisos&quot;,&quot;premium&quot;,&quot;diario&quot;,&quot;progreso&quot;,&quot;perfil&quot;,&quot;peso&quot;,&quot;entrenamiento&quot;,&quot;suplementos&quot;,&quot;nuevo-suplemento&quot;,&quot;coach&quot;,&quot;recordatorios&quot;,&quot;objetivos&quot;,&quot;plan-comidas&quot;,&quot;recetas&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dark&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;tsType&quot;:&quot;'dark'|'light'&quot;},&quot;escucha&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;hoja&quot;,&quot;options&quot;:[&quot;hoja&quot;,&quot;completa&quot;],&quot;tsType&quot;:&quot;'hoja'|'completa'&quot;},&quot;chrome&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const ONB=['bienvenida','ob-objetivo','ob-sexo','ob-nacimiento','ob-altura','ob-peso','ob-pesoobj','ob-actividad','ob-ritmo','ob-preferencias','ob-plan','ob-permisos','premium'];
+const REG=['hoy-vacio','hoy','escuchando','dictado','analizando','revision','revision-detalle','revision-corregida','camara','buscar'];
+const SEC=['diario','progreso','perfil','peso','entrenamiento','suplementos','nuevo-suplemento','coach','recordatorios','objetivos','plan-comidas','recetas'];
+const GROUPS=[
+ {label:'Registro · voz primero',items:[['hoy-vacio','Hoy · primer día'],['hoy','Hoy · con comidas'],['escuchando','Escuchando'],['dictado','Dictado / texto'],['analizando','Analizando'],['revision','Revisión'],['revision-detalle','Revisión · alimento abierto'],['revision-corregida','Revisión · corregida por voz'],['camara','Cámara con pista'],['buscar','Buscador']]},
+ {label:'Onboarding',items:[['bienvenida','Bienvenida'],['ob-objetivo','1 · Objetivo'],['ob-sexo','2 · Sexo'],['ob-nacimiento','3 · Nacimiento'],['ob-altura','4 · Altura'],['ob-peso','5 · Peso'],['ob-pesoobj','6 · Peso objetivo'],['ob-actividad','7 · Actividad'],['ob-ritmo','8 · Ritmo'],['ob-preferencias','9 · Preferencias'],['ob-plan','10 · Plan'],['ob-permisos','11 · Permisos'],['premium','12 · Premium']]},
+ {label:'Secciones',items:[['diario','Diario'],['progreso','Progreso'],['perfil','Perfil'],['peso','Registrar peso'],['entrenamiento','Entrenamiento'],['suplementos','Suplementos'],['nuevo-suplemento','Nuevo suplemento'],['coach','Coach'],['recordatorios','Recordatorios'],['objetivos','Objetivos'],['plan-comidas','Plan de comidas'],['recetas','Recetas']]}
+];
+class Component extends DCLogic {
+  state = { screen: this.props.screen ?? 'hoy', theme: this.props.theme ?? 'dark', escucha: this.props.escucha ?? 'hoja' };
+  componentDidUpdate(pp){
+    if (pp.escucha!==this.props.escucha && this.props.escucha) this.setState({escucha:this.props.escucha});
+    if (pp.screen!==this.props.screen && this.props.screen) this.setState({screen:this.props.screen});
+    if (pp.theme!==this.props.theme && this.props.theme) this.setState({theme:this.props.theme});
+  }
+  go = (s) => this.setState({screen:s});
+  setThemeTo = (t) => this.setState({theme:t});
+  renderVals(){
+    const s=this.state.screen, chrome=this.props.chrome!==false, th=this.state.theme;
+    const tabs=['hoy','hoy-vacio','diario','progreso','perfil'];
+    const on=k=>(k==='hoy'?(s==='hoy'||s==='hoy-vacio'):s===k)?'var(--ink)':'var(--ink3)';
+    const cam=s==='camara';
+    return {
+      theme:th, chrome, screen:s, go:this.go, auto:chrome, setThemeTo:this.setThemeTo,
+      isOnb:ONB.includes(s), isReg:REG.includes(s), isSec:SEC.includes(s), showTabs:tabs.includes(s),
+      rootPad:chrome?'32px 24px':'0', rootBg:chrome?'#E7E6E0':'transparent', rootMinH:chrome?'100vh':'0',
+      phoneRadius:chrome?'48px':'36px', phoneShadow:chrome?'0 0 0 10px #1A1C1B, 0 30px 80px rgba(0,0,0,.28)':'0 0 0 1px rgba(0,0,0,.08)',
+      statusBg:cam?'#000':'var(--bg)', statusInk:cam?'#fff':'var(--ink)',
+      tHoy:on('hoy'), tDia:on('diario'), tPro:on('progreso'), tPer:on('perfil'),
+      goHoy:()=>this.go(s==='hoy-vacio'?'hoy-vacio':'hoy'), goDia:()=>this.go('diario'), goPro:()=>this.go('progreso'), goPer:()=>this.go('perfil'), goMic:()=>this.go('escuchando'),
+      escucha:this.state.escucha, setHoja:()=>this.setState({escucha:'hoja'}), setCompleta:()=>this.setState({escucha:'completa'}),
+      hojaBg:this.state.escucha==='hoja'?'#fff':'transparent', completaBg:this.state.escucha==='completa'?'#fff':'transparent',
+      setDark:()=>this.setThemeTo('dark'), setLight:()=>this.setThemeTo('light'),
+      darkBg:th==='dark'?'#fff':'transparent', lightBg:th==='light'?'#fff':'transparent',
+      groups:GROUPS.map(g=>({label:g.label,items:g.items.map(([id,name])=>({name,onClick:()=>this.go(id),bg:id===s?'#1D1F1E':'transparent',color:id===s?'#F2F1EC':'#3A3D3B'}))}))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -46,7 +46,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     // Local/demo builds; EAS manages it remotely (appVersionSource: remote).
     versionCode: 22,
     adaptiveIcon: {
-      backgroundColor: '#F2F2EE',
+      backgroundColor: '#9CC0A3',
       foregroundImage: './assets/images/android-icon-foreground.png',
       backgroundImage: './assets/images/android-icon-background.png',
       monochromeImage: './assets/images/android-icon-monochrome.png',
@@ -74,6 +74,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   web: { output: 'single', favicon: './assets/images/favicon.png' },
   plugins: [
     'expo-router',
+    './plugins/withAndroidShortcuts',
     [
       'react-native-android-widget',
       {
@@ -87,13 +88,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         widgets: [
           {
             name: 'BocadoVoice',
-            label: 'Bocado · Hablar',
-            description: 'Contá lo que comiste con un toque',
+            label: 'Bocado · ¿Qué comiste?',
+            description: 'Un click y lo anoto: contá lo que comiste',
             minWidth: '40dp',
             minHeight: '40dp',
-            targetCellWidth: 1,
-            targetCellHeight: 1,
-            resizeMode: 'none',
+            targetCellWidth: 2,
+            targetCellHeight: 2,
+            resizeMode: 'horizontal|vertical',
             previewImage: './assets/widgets/voice.png',
           },
           {
@@ -151,10 +152,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#F2F2EE',
+        backgroundColor: '#F4F3EE',
         image: './assets/images/splash-icon.png',
         imageWidth: 120,
-        dark: { backgroundColor: '#121413', image: './assets/images/splash-icon-dark.png' },
+        dark: { backgroundColor: '#111312', image: './assets/images/splash-icon-dark.png' },
       },
     ],
     'expo-sqlite',
@@ -173,7 +174,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-image-picker',
       { photosPermission: 'Bocado accede a tus fotos solo cuando elegís una imagen de tu comida.' },
     ],
-    ['expo-notifications', { color: '#0E8F67' }],
+    ['expo-notifications', { icon: './assets/images/notification-icon.png', color: '#9CC0A3' }],
     [
       'expo-build-properties',
       {

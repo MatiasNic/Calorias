@@ -7,7 +7,19 @@ import { FlexWidget, IconWidget, TextWidget, type HexColor } from 'react-native-
 import { ACTIONS } from '../actions';
 import type { WidgetSnapshot } from '../snapshot';
 import type { Palette } from './palette';
-import { Bar, BLACK, BOLD, card, fmt, glyph, ICON_FONT, open, Round, Text } from './primitives';
+import {
+  Bar,
+  BLACK,
+  BOLD,
+  Brand,
+  card,
+  fmt,
+  glyph,
+  ICON_FONT,
+  open,
+  Round,
+  Text,
+} from './primitives';
 
 function Macro({
   p,
@@ -59,7 +71,7 @@ export function Today({
           }}
         >
           <FlexWidget style={{ flex: 1 }}>
-            <Text text={left >= 0 ? l.left : l.over} size={12} color={p.ink2} />
+            <Brand p={p} text={left >= 0 ? l.left : l.over} />
             <FlexWidget style={{ flexDirection: 'row', alignItems: 'flex-end', flexGap: 4 }}>
               <TextWidget
                 text={fmt(Math.abs(left))}

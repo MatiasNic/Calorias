@@ -4,18 +4,14 @@ Reemplaza la estética de "Plato". Misma arquitectura, mismos nombres de tokens:
 
 ## Contenido
 
-| Ruta                                                                        | Qué es                                                                                                                                   |
-| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `tokens/tokens.json`                                                        | Paleta, colores semánticos claro/oscuro, tipografía, radios, espaciado, duraciones. **Mismas claves** que el tema original               |
-| `tokens/tokens.css`                                                         | Lo mismo como variables CSS (referencia)                                                                                                 |
-| `marca/icon.png`                                                            | Ícono de app 1024×1024, sin transparencia                                                                                                |
-| `marca/android-icon-foreground.png` / `-background.png` / `-monochrome.png` | Ícono adaptativo Android 432×432                                                                                                         |
-| `marca/splash-icon.png` / `splash-icon-dark.png`                            | Splash claro / oscuro                                                                                                                    |
-| `marca/favicon.png`                                                         | Favicon web                                                                                                                              |
-| `marca/feature-graphic-1024x500.png`                                        | Gráfico destacado Play Store                                                                                                             |
-| `marca/*.svg`                                                               | Isotipo, isotipo claro, logo horizontal, ícono (vectoriales, para `AppLogo`)                                                             |
-| `diseno/Bocado Kit.dc.html`                                                 | Hoja de marca + pantallas clave (01, 06, 15, 23, 26, 30, 34, 36, 51)                                                                     |
-| `diseno/Bocado Pantallas 1–4 *.dc.html`                                     | Resto de las 61 pantallas, claro y oscuro: 1 entrada/onboarding, 2 registro/diario, 3 progreso/premium, 4 recetas/coach/ajustes/catálogo |
+| Ruta                                    | Qué es                                                                                                                                    |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `tokens/tokens.json`                    | Paleta, colores semánticos claro/oscuro, tipografía, radios, espaciado, duraciones. **Mismas claves** que el tema original                |
+| `tokens/tokens.css`                     | Lo mismo como variables CSS (referencia)                                                                                                  |
+| `marca/`                                | **Marca v2 (logo «mordida»)**: símbolo, logo horizontal, íconos iOS/Android, splash, notificación y avatar. Ver `handoff-marca/README.md` |
+| `handoff-marca/`                        | Handoff de la marca nueva: reglas del logo, colores, tono, widgets y atajos, más las referencias HTML                                     |
+| `diseno/Bocado Kit.dc.html`             | Hoja de marca + pantallas clave (01, 06, 15, 23, 26, 30, 34, 36, 51)                                                                      |
+| `diseno/Bocado Pantallas 1–4 *.dc.html` | Resto de las 61 pantallas, claro y oscuro: 1 entrada/onboarding, 2 registro/diario, 3 progreso/premium, 4 recetas/coach/ajustes/catálogo  |
 
 ## Tareas para aplicar
 

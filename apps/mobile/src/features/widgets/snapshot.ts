@@ -42,6 +42,7 @@ export interface WidgetLabels {
   consumed: string;
   goal: string;
   talk: string;
+  whatAte: string;
   photo: string;
   write: string;
   water: string;
@@ -57,6 +58,7 @@ export const DEFAULT_LABELS: WidgetLabels = {
   consumed: 'consumidas',
   goal: 'Objetivo',
   talk: 'Hablar',
+  whatAte: '¿Qué comiste?',
   photo: 'Foto',
   write: 'Escribir',
   water: 'Agua',
