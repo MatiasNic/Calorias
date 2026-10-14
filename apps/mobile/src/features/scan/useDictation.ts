@@ -10,6 +10,11 @@ const SILENCE_MS = 6000;
 
 /** The field currently dictating: recognition events are global, only its owner uses them. */
 let activeOwner: object | null = null;
+/**
+ * False between our start() and the recognizer's 'start' event: the 'end' of a session we just
+ * aborted (another field, or the voice screen left running) arrives late and must not stop ours.
+ */
+let sessionLive = false;
 
 /**
  * On-device speech-to-text (expo-speech-recognition). Each new recording is appended to the
@@ -27,9 +32,13 @@ export function useDictation(getBase: () => string, onText: (text: string) => vo
   const mine = () => activeOwner === me;
 
   useSpeechRecognitionEvent('start', () => {
-    if (mine()) setListening(true);
+    if (!mine()) return;
+    sessionLive = true;
+    setListening(true);
   });
   useSpeechRecognitionEvent('end', () => {
+    if (!sessionLive) return; // late end of an aborted session
+    sessionLive = false;
     // Every field stops showing "listening"; only the owner releases the recognizer.
     setListening(false);
     volume.set(0);
@@ -51,7 +60,8 @@ export function useDictation(getBase: () => string, onText: (text: string) => vo
     }
   });
   useSpeechRecognitionEvent('error', (e) => {
-    if (!mine()) return;
+    // "aborted" is us stopping a previous session to start this one.
+    if (!mine() || e.error === 'aborted') return;
     // "no-speech" just means silence: keep what was heard, without an error message.
     if (e.error !== 'no-speech') setError(e.error);
     setListening(false);
@@ -75,7 +85,9 @@ export function useDictation(getBase: () => string, onText: (text: string) => vo
     }
     base.current = getBase();
     committed.current = '';
-    if (activeOwner && activeOwner !== me) ExpoSpeechRecognitionModule.abort();
+    // Whatever was still listening (another field, or the voice screen) stops first.
+    if (activeOwner || sessionLive) ExpoSpeechRecognitionModule.abort();
+    sessionLive = false;
     activeOwner = me;
     ExpoSpeechRecognitionModule.start({
       lang: currentLocale(),

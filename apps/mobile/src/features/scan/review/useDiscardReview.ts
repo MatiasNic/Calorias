@@ -1,5 +1,5 @@
-import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 import { Alert, BackHandler, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -30,14 +30,19 @@ export function useDiscardReview(phase: ReviewPhase) {
     ]);
   };
 
-  useEffect(() => {
-    if (Platform.OS === 'web') return;
-    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
-      discard();
-      return true;
-    });
-    return () => sub.remove();
-  });
+  // Only while the review is the visible screen: with the food search (or a food) opened on
+  // top, Android back must close that screen, not discard the whole meal underneath.
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS === 'web') return;
+      const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+        discard();
+        return true;
+      });
+      return () => sub.remove();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phase]),
+  );
 
   return discard;
 }
