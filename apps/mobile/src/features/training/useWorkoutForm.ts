@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from '@/components';
 import { useLatestWeight } from '@/features/body/hooks';
 import { checkAchievements } from '@/features/habits/hooks';
+import { useConfirmLeave } from '@/hooks/useConfirmLeave';
 import { captureError } from '@/services/analytics';
 import type { WorkoutRecord } from '@/services/db/types';
 import { usePrefsStore } from '@/stores/prefs';
@@ -89,6 +90,23 @@ export function useWorkoutForm(initial: WorkoutRecord | null, initialDate: IsoDa
   const kcal = workoutKcalToSave(manual, estimate);
   const showExercises = def.kind === 'strength' || exercises.length > 0 || picking;
 
+  // Back asks before dropping a workout the user has typed in (not when nothing changed).
+  const values = JSON.stringify([
+    activity,
+    title,
+    minutes,
+    intensity,
+    manualKcal,
+    distance,
+    date,
+    time,
+    rpe,
+    note,
+    exercises,
+  ]);
+  const [initialValues] = useState(values);
+  const allowLeave = useConfirmLeave(values !== initialValues);
+
   const parsedExercises = compactStrengthExercises(
     exercises.map((e) => ({
       key: e.key,
@@ -149,6 +167,7 @@ export function useWorkoutForm(initial: WorkoutRecord | null, initialDate: IsoDa
     });
     checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
     toast.success(t('training.saved'));
+    allowLeave();
     router.back();
   };
 
@@ -160,6 +179,7 @@ export function useWorkoutForm(initial: WorkoutRecord | null, initialDate: IsoDa
         style: 'destructive',
         onPress: async () => {
           if (initial) await deleteWorkout(initial.id);
+          allowLeave();
           router.back();
         },
       },

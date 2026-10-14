@@ -18,6 +18,7 @@ import {
 } from '@/components';
 import { useCustomFoodPrefill } from '@/features/foods/customFoodPrefill';
 import { usePickerStore } from '@/features/foods/pickerStore';
+import { useConfirmLeave } from '@/hooks/useConfirmLeave';
 import { newId, repos } from '@/services/db/repository';
 import { spacing } from '@/theme';
 import { todayLocal } from '@/utils/dates';
@@ -90,6 +91,8 @@ export default function CustomFood() {
   }, [prefill, reset, params.name, params.barcode]);
 
   const basis = useWatch({ control, name: 'basis' });
+  // Back asks only once something was typed (a label read stays in its prefill store).
+  const allowLeave = useConfirmLeave(formState.isDirty);
 
   const onSave = handleSubmit(async (v) => {
     const serving = parseDecimal(v.servingGrams);
@@ -120,6 +123,7 @@ export default function CustomFood() {
     useCustomFoodPrefill.getState().set(null);
     toast.success(t('customFood.saved'));
     const created = await repos.foodsCustom.get(id);
+    allowLeave();
     if (created) {
       const picker = usePickerStore.getState();
       if (!picker.target) picker.open({ kind: 'diary', date: todayLocal(), mealType: 'snack' });

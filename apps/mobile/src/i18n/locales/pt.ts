@@ -37,6 +37,9 @@ export const pt: TranslationShape<Translation> = {
     no: 'Não',
     learnMore: 'Saiba mais',
     clear: 'Limpar',
+    discard: 'Descartar',
+    discardChangesTitle: 'Descartar as alterações?',
+    discardChangesBody: 'O que você mudou ainda não foi salvo.',
   },
   tabs: {
     today: 'Hoje',

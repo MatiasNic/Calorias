@@ -1,8 +1,9 @@
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Banner, Button, Screen } from '@/components';
+import { AppText, Banner, Button, IconButton, Screen } from '@/components';
 import { env } from '@/config/env';
 import { PlanCard } from '@/features/profile/PlanCard';
 import { ProfileHeader } from '@/features/profile/ProfileHeader';
@@ -11,6 +12,7 @@ import { useSignOut } from '@/features/profile/useSignOut';
 import { usePlanStore } from '@/services/purchases';
 import { useSyncStatus } from '@/services/sync/engine';
 import { useSessionStore } from '@/stores/session';
+import { spacing } from '@/theme';
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -22,7 +24,17 @@ export default function Profile() {
 
   return (
     <Screen>
-      <ProfileHeader premium={premium} />
+      {/* Perfil is a hidden tab opened from the Today header: give it a way back there. */}
+      <View style={styles.top}>
+        <IconButton
+          icon="arrow-back"
+          accessibilityLabel={t('common.back')}
+          onPress={() => router.navigate('/today')}
+        />
+        <View style={styles.flex}>
+          <ProfileHeader premium={premium} />
+        </View>
+      </View>
 
       {isGuest && !env.useMocks ? (
         <Banner tone="info" message={t('profile.createAccount')} />
@@ -58,3 +70,8 @@ export default function Profile() {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  top: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginLeft: -spacing.md },
+  flex: { flex: 1 },
+});

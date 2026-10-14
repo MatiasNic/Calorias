@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 import { toast } from '@/components';
 import { rescheduleReminders } from '@/features/settings/useNotificationSettings';
+import { useConfirmLeave } from '@/hooks/useConfirmLeave';
 import { captureError } from '@/services/analytics';
 import type { SupplementRecord } from '@/services/db/types';
 import { notificationPermission, requestNotificationPermission } from '@/services/notifications';
@@ -52,6 +53,29 @@ export function useSupplementForm(initial: SupplementRecord | null) {
   const [note, setNote] = useState(initial?.note ?? '');
 
   const dose = parseDecimal(amount);
+
+  // Back asks before dropping what the user has typed in (not when nothing changed).
+  const values = JSON.stringify([
+    name,
+    preset,
+    amount,
+    unit,
+    days,
+    times,
+    reminders,
+    stock,
+    threshold,
+    hasNutrition,
+    kcal,
+    protein,
+    carbs,
+    fat,
+    countInMacros,
+    active,
+    note,
+  ]);
+  const [initialValues] = useState(values);
+  const allowLeave = useConfirmLeave(values !== initialValues);
   const valid = name.trim().length > 0 && dose != null && dose > 0 && times.length > 0;
 
   /** Typing a name detaches it from the preset. */
@@ -113,6 +137,7 @@ export function useSupplementForm(initial: SupplementRecord | null) {
       captureError(e, { where: 'rescheduleReminders:supplementSaved' }),
     );
     toast.success(t('supplements.saved'));
+    allowLeave();
     router.back();
   };
 
@@ -127,6 +152,7 @@ export function useSupplementForm(initial: SupplementRecord | null) {
           rescheduleReminders().catch((e) =>
             captureError(e, { where: 'rescheduleReminders:supplementDeleted' }),
           );
+          allowLeave();
           router.back();
         },
       },

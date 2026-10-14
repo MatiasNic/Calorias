@@ -6,7 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { z } from 'zod';
 
-import { AppText, Button, Screen, TextField, toast } from '@/components';
+import { AppText, Button, IconButton, Screen, TextField, toast } from '@/components';
 import { NewPasswordSchema } from '@/features/auth/schemas';
 import { useAuthErrorMessage, type AuthMessageKey } from '@/features/auth/useAuthErrorMessage';
 import { auth } from '@/services/auth';
@@ -39,6 +39,12 @@ export default function ResetPassword() {
   });
   return (
     <Screen keyboard edges={['top', 'bottom', 'left', 'right']}>
+      {/* Opened from an email link (often a cold start): leave to the app when nothing is behind. */}
+      <IconButton
+        icon="close"
+        accessibilityLabel={t('common.close')}
+        onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+      />
       <AppText variant="title">{t('auth.newPasswordTitle')}</AppText>
       <Controller
         control={control}

@@ -8,9 +8,15 @@ import { toast } from '@/components';
 import { useRecipeDraftStore } from '@/features/foods/recipeDraft';
 import { logRecipe, recipeTotals, saveRecipe } from '@/features/foods/recipes';
 import { checkAchievements } from '@/features/habits/hooks';
+import { useConfirmLeave } from '@/hooks/useConfirmLeave';
 import { repos } from '@/services/db/repository';
 import { todayLocal } from '@/utils/dates';
 import { captureError } from '@/services/analytics';
+import type { RecipeItem } from '@/services/db/types';
+
+/** What the editor saves, to tell whether leaving would lose something. */
+const recipeValues = (r: { name: string; servings: number; items: RecipeItem[] }) =>
+  JSON.stringify([r.name, r.servings, r.items]);
 
 /**
  * Recipe editor state: loads the recipe `id` into the draft (and clears it on close), computes
@@ -21,6 +27,11 @@ export function useRecipeEditor(id: string | undefined) {
   const draft = useRecipeDraftStore();
   const [logServings, setLogServings] = useState(1);
   const [mealType, setMealType] = useState<MealType>(suggestMealType(new Date().getHours()));
+  // Last loaded or saved version: back asks only when the draft differs from it.
+  const [savedValues, setSavedValues] = useState(() =>
+    recipeValues(useRecipeDraftStore.getState()),
+  );
+  const allowLeave = useConfirmLeave(recipeValues(draft) !== savedValues);
 
   // A closed editor must not leak its recipe into the next "new recipe".
   useEffect(() => () => useRecipeDraftStore.getState().reset(), []);
@@ -28,10 +39,11 @@ export function useRecipeEditor(id: string | undefined) {
   useEffect(() => {
     if (!id) return;
     repos.recipes.get(id).then((r) => {
-      if (r)
-        useRecipeDraftStore
-          .getState()
-          .set({ id: r.id, name: r.name, servings: r.servings, items: r.items });
+      if (!r) return;
+      useRecipeDraftStore
+        .getState()
+        .set({ id: r.id, name: r.name, servings: r.servings, items: r.items });
+      setSavedValues(recipeValues(r));
     });
   }, [id]);
 
@@ -46,6 +58,7 @@ export function useRecipeEditor(id: string | undefined) {
       items: draft.items,
     });
     useRecipeDraftStore.getState().set({ id: r.id });
+    setSavedValues(recipeValues(useRecipeDraftStore.getState()));
     checkAchievements().catch((e) => captureError(e, { where: 'checkAchievements' }));
     toast.success(t('recipes.saved'));
   };
@@ -59,6 +72,7 @@ export function useRecipeEditor(id: string | undefined) {
     });
     await logRecipe(r, logServings, todayLocal(), mealType);
     toast.success(t('recipes.logged'));
+    allowLeave();
     router.back();
   };
 
@@ -71,6 +85,7 @@ export function useRecipeEditor(id: string | undefined) {
         onPress: async () => {
           if (draft.id) await repos.recipes.remove(draft.id);
           draft.reset();
+          allowLeave();
           router.back();
         },
       },

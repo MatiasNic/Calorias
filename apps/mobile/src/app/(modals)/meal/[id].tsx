@@ -1,21 +1,26 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, Button, IconButton, Screen, Skeleton, TextField, toast } from '@/components';
 import { DraftItemCard } from '@/features/diary/DraftItemCard';
 import { DraftTotals } from '@/features/diary/DraftTotals';
-import { useDraftStore } from '@/features/diary/draftStore';
+import { useDraftStore, type MealDraft } from '@/features/diary/draftStore';
 import { deleteMeal, saveMeal, useMeal } from '@/features/diary/hooks';
 import { MealTypePicker } from '@/features/diary/MealTypePicker';
 import { TimeStepper } from '@/features/diary/TimeStepper';
 import { saveMealAsFavorite } from '@/features/foods/hooks';
 import { usePlateStore } from '@/features/foods/plateStore';
 import { checkAchievements } from '@/features/habits/hooks';
+import { useConfirmLeave } from '@/hooks/useConfirmLeave';
 import { captureError } from '@/services/analytics';
 import { spacing } from '@/theme';
 import { formatDay, timestampFor } from '@/utils/dates';
+
+/** What the user can change in the editor, to tell whether leaving would lose something. */
+const editable = (d: Pick<MealDraft, 'date' | 'time' | 'mealType' | 'items' | 'notes'>) =>
+  JSON.stringify([d.date, d.time, d.mealType, d.items, d.notes ?? null]);
 
 export default function MealEditor() {
   const { t } = useTranslation();
@@ -24,6 +29,31 @@ export default function MealEditor() {
   const isNew = id === 'new';
   const meal = useMeal(isNew ? '' : id);
   const { draft, start, patch, clear } = useDraftStore();
+  // The plate as handed over by the search, or the saved meal.
+  const [newBaseline] = useState(() => {
+    const d = useDraftStore.getState().draft;
+    return isNew && d ? editable(d) : null;
+  });
+  const saved = meal.data;
+  const baseline = isNew
+    ? newBaseline
+    : saved
+      ? editable({
+          date: saved.local_date,
+          time: {
+            h: new Date(saved.eaten_at).getHours(),
+            m: new Date(saved.eaten_at).getMinutes(),
+          },
+          mealType: saved.meal_type,
+          items: saved.items,
+          notes: saved.note,
+        })
+      : null;
+  const dirty = !!draft && baseline != null && editable(draft) !== baseline;
+  const allowLeave = useConfirmLeave(dirty);
+
+  // Whichever way the editor closes, its draft must not linger for the next one.
+  useEffect(() => () => useDraftStore.getState().clear(), []);
 
   useEffect(() => {
     if (isNew || !meal.data) return;
@@ -73,6 +103,7 @@ export default function MealEditor() {
     }
     toast.success(t('diary.saved'));
     clear();
+    allowLeave();
     if (isNew) {
       // Saved plate: close the editor and the food search behind it.
       usePlateStore.getState().clear();
@@ -90,6 +121,7 @@ export default function MealEditor() {
         onPress: async () => {
           await deleteMeal(draft.mealId!);
           clear();
+          allowLeave();
           router.back();
         },
       },
@@ -105,10 +137,7 @@ export default function MealEditor() {
         <IconButton
           icon="close"
           accessibilityLabel={t('common.close')}
-          onPress={() => {
-            clear();
-            router.back();
-          }}
+          onPress={() => router.back()}
         />
         <AppText variant="heading" style={styles.flex}>
           {isNew ? t('plate.reviewTitle') : t('diary.editMeal')}

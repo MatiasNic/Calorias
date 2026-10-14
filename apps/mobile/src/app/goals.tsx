@@ -29,6 +29,7 @@ import { useLatestWeight } from '@/features/body/hooks';
 import { GoalWarnings } from '@/features/goals/GoalWarnings';
 import { saveCustomGoal, saveGoalFromPlan, useGoalForDate } from '@/features/goals/hooks';
 import { planFromProfile, updateProfile, useProfile } from '@/features/profile/hooks';
+import { useConfirmLeave } from '@/hooks/useConfirmLeave';
 import { spacing } from '@/theme';
 import { todayLocal } from '@/utils/dates';
 import { formatKcal, parseDecimal } from '@/utils/format';
@@ -56,6 +57,8 @@ export default function Goals() {
       water: String(goal.water_ml ?? 2000),
     });
   }, [goal, reset]);
+  // Goal and activity save on tap; only typed, unsaved macros ask before leaving.
+  useConfirmLeave(formState.isDirty);
 
   const recalc = async () => {
     if (!plan?.ok) return;
@@ -85,6 +88,7 @@ export default function Goals() {
       mode: 'fixed',
       tdee_estimate: goal.tdee_estimate,
     });
+    reset(v);
     toast.success(t('goals.saved'));
   });
 

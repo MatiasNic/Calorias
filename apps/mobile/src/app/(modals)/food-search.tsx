@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
@@ -9,6 +9,7 @@ import { FavoritesList, FoodOptionsList } from '@/features/foods/FoodSearchLists
 import { PlateBar } from '@/features/foods/PlateBar';
 import { usePlateStore } from '@/features/foods/plateStore';
 import { useFoodSearchScreen } from '@/features/foods/useFoodSearchScreen';
+import { useConfirmLeave } from '@/hooks/useConfirmLeave';
 import { radii, spacing, useTheme } from '@/theme';
 
 export default function FoodSearch() {
@@ -32,21 +33,15 @@ export default function FoodSearch() {
   } = useFoodSearchScreen();
   const plateCount = usePlateStore((s) => s.items.length);
 
-  // Leaving with foods on the plate asks first (they would be lost).
-  const close = () => {
-    if (!plateCount) return router.back();
-    Alert.alert(t('plate.discardTitle'), t('plate.discardBody', { count: plateCount }), [
-      { text: t('common.cancel'), style: 'cancel' },
-      {
-        text: t('plate.discard'),
-        style: 'destructive',
-        onPress: () => {
-          usePlateStore.getState().clear();
-          router.back();
-        },
-      },
-    ]);
-  };
+  // Leaving with foods on the plate (close, Android back, swipe) asks first: they would be lost.
+  // The editor on top clears the plate right before closing both screens once it is saved.
+  useConfirmLeave(plateCount > 0, {
+    title: t('plate.discardTitle'),
+    message: t('plate.discardBody', { count: plateCount }),
+    confirm: t('plate.discard'),
+    onDiscard: () => usePlateStore.getState().clear(),
+    stillDirty: () => usePlateStore.getState().items.length > 0,
+  });
 
   return (
     <SafeAreaView
@@ -54,7 +49,11 @@ export default function FoodSearch() {
       edges={['top', 'bottom']}
     >
       <View style={styles.header}>
-        <IconButton icon="close" accessibilityLabel={t('common.close')} onPress={close} />
+        <IconButton
+          icon="close"
+          accessibilityLabel={t('common.close')}
+          onPress={() => router.back()}
+        />
         <AppText variant="heading" style={styles.flex} accessibilityRole="header">
           {params.target
             ? t('foodSearch.addFood')

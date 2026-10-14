@@ -35,6 +35,9 @@ export const es = {
     no: 'No',
     learnMore: 'Más información',
     clear: 'Borrar',
+    discard: 'Descartar',
+    discardChangesTitle: '¿Descartar los cambios?',
+    discardChangesBody: 'Lo que cambiaste todavía no está guardado.',
   },
   tabs: {
     today: 'Hoy',

@@ -22,9 +22,17 @@ export default function Shortcut() {
   const { action } = useLocalSearchParams<{ action: string }>();
 
   useEffect(() => {
+    // From a cold start the shortcut is the only screen: land on Today (popping back to it when
+    // the app was already open) and open the screen on top of it, so closing it or Android back
+    // returns to the app instead of closing it.
+    const home = () => router.dismissTo('/today');
+    const open = (href: '/listen' | '/scan') => {
+      home();
+      router.push(href);
+    };
     const run = async () => {
-      if (action === 'listen' || action === 'escuchar') return router.replace('/listen');
-      if (action === 'camera' || action === 'camara') return router.replace('/scan');
+      if (action === 'listen' || action === 'escuchar') return open('/listen');
+      if (action === 'camera' || action === 'camara') return open('/scan');
       const today = todayLocal();
       if (action === 'water') {
         await addWater(today, 250);
@@ -35,18 +43,18 @@ export default function Shortcut() {
         const entry = usual.find((u) => u.mealType === slot) ?? usual[0];
         if (!entry) {
           toast.info(t('shortcuts.usualEmpty'));
-          return router.replace('/listen');
+          return open('/listen');
         }
         await duplicateMeal(entry.record, today, entry.mealType);
         toast.success(
           t('shortcuts.usualDone', { meal: t(`mealTypes.${entry.mealType}`).toLowerCase() }),
         );
       }
-      router.replace('/today');
+      home();
     };
     run().catch((e) => {
       captureError(e, { where: 'shortcut', action });
-      router.replace('/today');
+      home();
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

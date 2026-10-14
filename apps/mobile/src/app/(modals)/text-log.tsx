@@ -12,6 +12,7 @@ import { useQuotaStatus } from '@/features/scan/useQuota';
 import { usePlan } from '@/services/purchases';
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { openTextAnalysis } from '@/features/scan/textRequest';
+import { useConfirmLeave } from '@/hooks/useConfirmLeave';
 import { dateParam } from '@/utils/dates';
 
 /** "Contá qué comiste": type (or paste) the description; the mic goes back to listening. */
@@ -27,9 +28,13 @@ export default function TextLog() {
   const examples = [t('textLog.example1'), t('textLog.example2'), t('textLog.example3')];
   const validDate = dateParam(params.date);
   const date = validDate ? { date: validDate } : {};
+  // Closing with a description written (or dictated) and not analyzed asks first.
+  const allowLeave = useConfirmLeave(text.trim().length > 0);
 
-  const analyze = () =>
+  const analyze = () => {
+    allowLeave();
     openTextAnalysis({ text: text.trim(), source: 'text', date: validDate ?? null });
+  };
 
   return (
     <Screen
@@ -41,7 +46,11 @@ export default function TextLog() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={t('textLog.listen')}
-              onPress={() => router.replace({ pathname: '/listen', params: { text, ...date } })}
+              onPress={() => {
+                // The text travels to the voice screen, nothing is lost.
+                allowLeave();
+                router.replace({ pathname: '/listen', params: { text, ...date } });
+              }}
               style={[styles.mic, { backgroundColor: colors.surfaceAlt }]}
               testID="text-log-mic"
             >
