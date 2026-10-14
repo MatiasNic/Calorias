@@ -950,6 +950,9 @@ export const en: TranslationShape<Translation> = {
     newChat: 'New conversation',
     newChatTitle: 'Start over?',
     newChatBody: 'This conversation will be removed from your phone.',
+    backToMenu: 'Back to the coach menu',
+    conversation: 'Conversation',
+    resume: 'Continue the conversation',
   },
   mealPlan: {
     prefsTitle: 'Tell us what you like',

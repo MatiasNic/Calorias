@@ -970,6 +970,9 @@ export const es = {
     newChat: 'Nueva conversación',
     newChatTitle: '¿Empezar de nuevo?',
     newChatBody: 'Se borra esta conversación del teléfono.',
+    backToMenu: 'Volver al menú del coach',
+    conversation: 'Conversación',
+    resume: 'Seguir la conversación',
   },
   mealPlan: {
     prefsTitle: 'Contanos qué te gusta',

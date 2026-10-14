@@ -965,6 +965,9 @@ export const pt: TranslationShape<Translation> = {
     newChat: 'Nova conversa',
     newChatTitle: 'Começar de novo?',
     newChatBody: 'Esta conversa será apagada do celular.',
+    backToMenu: 'Voltar ao menu do coach',
+    conversation: 'Conversa',
+    resume: 'Continuar a conversa',
   },
   mealPlan: {
     prefsTitle: 'Conte o que você gosta',

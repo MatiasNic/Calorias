@@ -1,12 +1,14 @@
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
 import * as ImagePicker from 'expo-image-picker';
-import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { router, useFocusEffect, useNavigation } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleSheet,
   TextInput,
   View,
@@ -14,7 +16,7 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Banner, DictateButton, IconButton } from '@/components';
+import { AppText, Banner, DictateButton, Icon, IconButton } from '@/components';
 import { TAB_BAR_HEIGHT } from '@/components/TabBar';
 import { CoachHome } from '@/features/coach/CoachHome';
 import { CoachText } from '@/features/coach/CoachText';
@@ -55,6 +57,30 @@ export default function Coach() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const list = useRef<FlashListRef<CoachMsg>>(null);
+  // The coach opens on its menu; a conversation is a step inside it that "back" leaves.
+  const [chatOpen, setChatOpen] = useState(false);
+  const navigation = useNavigation();
+
+  // Tapping the Coach tab always lands on the menu (the conversation stays saved).
+  useEffect(
+    () =>
+      navigation.addListener('tabPress' as never, () => {
+        setChatOpen(false);
+      }),
+    [navigation],
+  );
+
+  // Android back inside a conversation goes back to the menu, not out of the app.
+  useFocusEffect(
+    useCallback(() => {
+      if (!chatOpen) return;
+      const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+        setChatOpen(false);
+        return true;
+      });
+      return () => sub.remove();
+    }, [chatOpen]),
+  );
 
   const setMessages = (update: (m: CoachMsg[]) => CoachMsg[]) =>
     setMessagesState((m) => {
@@ -77,6 +103,7 @@ export default function Coach() {
     };
     const next = [...messages, mine];
     setMessages(() => next);
+    setChatOpen(true);
     setInput('');
     setBusy(true);
     setError(null);
@@ -127,6 +154,7 @@ export default function Coach() {
         onPress: () => {
           setMessages(() => []);
           setError(null);
+          setChatOpen(false);
         },
       },
     ]);
@@ -146,9 +174,17 @@ export default function Coach() {
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: colors.background }]} edges={['top']}>
       <View style={styles.header}>
+        {chatOpen ? (
+          <IconButton
+            icon="arrow-back"
+            accessibilityLabel={t('coach.backToMenu')}
+            onPress={() => setChatOpen(false)}
+            testID="coach-back"
+          />
+        ) : null}
         <View style={styles.flex}>
           <AppText variant="title" accessibilityRole="header">
-            {t('coach.tabTitle')}
+            {chatOpen ? t('coach.conversation') : t('coach.tabTitle')}
           </AppText>
           {info ? (
             <AppText variant="caption" color="textMuted">
@@ -156,7 +192,7 @@ export default function Coach() {
             </AppText>
           ) : null}
         </View>
-        {messages.length ? (
+        {chatOpen && messages.length ? (
           <IconButton
             icon="edit_square"
             accessibilityLabel={t('coach.newChat')}
@@ -171,13 +207,36 @@ export default function Coach() {
       >
         <FlashList
           ref={list}
-          data={messages}
+          data={chatOpen ? messages : []}
           keyExtractor={(m) => m.id}
           contentContainerStyle={styles.list}
           keyboardShouldPersistTaps="handled"
           ListHeaderComponent={
-            messages.length ? null : (
+            chatOpen ? null : (
               <View style={styles.home}>
+                {messages.length ? (
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => {
+                      setChatOpen(true);
+                      setTimeout(() => list.current?.scrollToEnd({ animated: false }), 100);
+                    }}
+                    testID="coach-resume"
+                    style={[
+                      styles.resume,
+                      { backgroundColor: colors.surface, borderColor: colors.border },
+                    ]}
+                  >
+                    <Icon name="forum" size={22} color="success" />
+                    <View style={styles.flex}>
+                      <AppText variant="bodyStrong">{t('coach.resume')}</AppText>
+                      <AppText variant="caption" color="textMuted" numberOfLines={2}>
+                        {messages[messages.length - 1]!.content}
+                      </AppText>
+                    </View>
+                    <Icon name="chevron-forward" size={18} color="textSubtle" />
+                  </Pressable>
+                ) : null}
                 <CoachHome onAsk={(text) => send(text)} onPhoto={takePhoto} busy={busy} />
                 <AppText variant="caption" color="textSubtle">
                   {t('coach.disclaimer')}
@@ -275,6 +334,15 @@ const styles = StyleSheet.create({
   },
   list: { padding: spacing.lg },
   home: { gap: spacing.md, marginBottom: spacing.lg },
+  resume: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    padding: spacing.md,
+    minHeight: 56,
+  },
   bubble: {
     maxWidth: '88%',
     padding: spacing.md,
