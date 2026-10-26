@@ -14,7 +14,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: IS_DEV ? `${APP_NAME} (dev)` : APP_NAME,
   slug: 'bocado',
-  version: '0.5.9',
+  version: '0.5.10',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   scheme: 'bocado',
@@ -44,7 +44,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: IS_DEV ? `${BUNDLE_ID}.dev` : BUNDLE_ID,
     // Local/demo builds; EAS manages it remotely (appVersionSource: remote).
-    versionCode: 25,
+    versionCode: 26,
     adaptiveIcon: {
       backgroundColor: '#9CC0A3',
       foregroundImage: './assets/images/android-icon-foreground.png',
