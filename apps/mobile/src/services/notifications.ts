@@ -1,4 +1,4 @@
-import { addDays, type MealType } from '@bocado/shared';
+import { addDays, waterReminderHours, type MealType } from '@bocado/shared';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
@@ -10,6 +10,8 @@ import { isoDateToDate, todayLocal } from '@/utils/dates';
 
 /** Days ahead we pre-schedule one-off meal reminders (so a logged meal can cancel today's). */
 const SCHEDULE_DAYS = 7;
+/** Days ahead of one-off water reminders (they are rebuilt every time the app opens). */
+const WATER_DAYS = 3;
 const CHANNEL_ID = 'reminders';
 
 export function configureNotificationHandler() {
@@ -47,12 +49,25 @@ const parseTime = (t: string) => {
 };
 
 const mealId = (type: MealType, date: string) => `meal-${type}-${date}`;
+const waterId = (date: string, hour: number) => `water-${date}-${hour}`;
+
+/** The rebuild in flight: runs are chained so two never interleave cancel/schedule. */
+let rebuilding: Promise<void> = Promise.resolve();
 
 /**
  * Rebuilds the reminder schedule. "Smart" meal reminders are one-off notifications for the next
  * days; logging that meal cancels today's reminder (see cancelMealReminderToday).
+ *
+ * Calls are serialized: concurrent rebuilds (app start, a logged meal, saving settings) used to
+ * interleave and stack several copies of the same reminder.
  */
-export async function rescheduleAll(
+export function rescheduleAll(...args: Parameters<typeof rebuildSchedule>): Promise<void> {
+  const run = rebuilding.then(() => rebuildSchedule(...args));
+  rebuilding = run.catch(() => undefined);
+  return run;
+}
+
+async function rebuildSchedule(
   settings: NotificationSettingsRecord,
   loggedToday: ReadonlySet<MealType>,
   supplements: readonly SupplementRecord[] = [],
@@ -97,19 +112,30 @@ export async function rescheduleAll(
     }
   }
 
+  // Water: one-off reminders with a stable id per slot. Repeating daily alarms could be delivered
+  // all together on Android (e.g. after Doze or a reboot) — seven identical notifications at once.
   if (settings.water_reminder.enabled) {
-    const from = parseTime(settings.water_reminder.from).hour;
-    const to = parseTime(settings.water_reminder.to).hour;
-    for (let h = from; h <= to; h += Math.max(1, settings.water_reminder.everyHours)) {
-      await Notifications.scheduleNotificationAsync({
-        content: { title: t('notifications.water.title'), body: t('notifications.water.body') },
-        trigger: {
-          type: Notifications.SchedulableTriggerInputTypes.DAILY,
-          hour: h,
-          minute: 0,
-          channelId: CHANNEL_ID,
-        },
-      });
+    const hours = waterReminderHours(
+      parseTime(settings.water_reminder.from).hour,
+      parseTime(settings.water_reminder.to).hour,
+      settings.water_reminder.everyHours,
+    );
+    for (let i = 0; i < WATER_DAYS; i++) {
+      const date = addDays(today, i);
+      for (const hour of hours) {
+        const when = isoDateToDate(date);
+        when.setHours(hour, 0, 0, 0);
+        if (when.getTime() <= now) continue;
+        await Notifications.scheduleNotificationAsync({
+          identifier: waterId(date, hour),
+          content: { title: t('notifications.water.title'), body: t('notifications.water.body') },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.DATE,
+            date: when,
+            channelId: CHANNEL_ID,
+          },
+        });
+      }
     }
   }
 

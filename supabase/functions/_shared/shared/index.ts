@@ -25,4 +25,5 @@ export * from './schemas/profile.ts';
 export * from './schemas/meal.ts';
 export * from './schemas/ai.ts';
 export * from './text.ts';
+export * from './reminders.ts';
 export * from './mocks/ai.ts';
