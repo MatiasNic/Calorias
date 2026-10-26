@@ -306,6 +306,7 @@ export const en: TranslationShape<Translation> = {
       micBody: 'To dictate your meals. It only listens while dictation is open.',
       granted: 'Allowed',
     },
+    backToWelcome: 'Back to the start (sign in with another account)',
   },
   goals: {
     warnings: {
@@ -1473,5 +1474,11 @@ export const en: TranslationShape<Translation> = {
     waterDone: 'Done, +250 ml',
     usualDone: 'Done: logged your usual {{meal}}',
     usualEmpty: "You don't have a usual meal yet. Tell me what you ate.",
+  },
+  startup: {
+    offlineTitle: "We couldn't load your data",
+    offlineBody:
+      "Your account is fine, but the server can't be reached. Check your connection and try again in a while.",
+    otherAccount: 'Sign in with another account',
   },
 };

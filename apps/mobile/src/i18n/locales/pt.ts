@@ -316,6 +316,7 @@ export const pt: TranslationShape<Translation> = {
       micBody: 'Para ditar suas refeições. Só escuta enquanto o ditado estiver aberto.',
       granted: 'Permitido',
     },
+    backToWelcome: 'Voltar ao início (entrar com outra conta)',
   },
   goals: {
     warnings: {
@@ -1492,5 +1493,11 @@ export const pt: TranslationShape<Translation> = {
     waterDone: 'Pronto, +250 ml',
     usualDone: 'Pronto: anotei seu {{meal}} de sempre',
     usualEmpty: 'Você ainda não tem uma refeição de sempre. Me conte o que comeu.',
+  },
+  startup: {
+    offlineTitle: 'Não conseguimos trazer seus dados',
+    offlineBody:
+      'Sua conta está bem, mas não há conexão com o servidor. Verifique sua internet e tente de novo daqui a pouco.',
+    otherAccount: 'Entrar com outra conta',
   },
 };

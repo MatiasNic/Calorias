@@ -312,6 +312,7 @@ export const es = {
       micBody: 'Para dictar tus comidas. Solo escucha mientras mantenés abierto el dictado.',
       granted: 'Permitido',
     },
+    backToWelcome: 'Volver al inicio (ingresar con otra cuenta)',
   },
   goals: {
     warnings: {
@@ -1500,6 +1501,12 @@ export const es = {
     waterDone: 'Listo, +250 ml',
     usualDone: 'Listo: anoté tu {{meal}} de siempre',
     usualEmpty: 'Todavía no tenés una comida de siempre. Contame qué comiste.',
+  },
+  startup: {
+    offlineTitle: 'No pudimos traer tus datos',
+    offlineBody:
+      'Tu cuenta está bien, pero no hay conexión con el servidor. Revisá tu internet y probá de nuevo en un rato.',
+    otherAccount: 'Ingresar con otra cuenta',
   },
 };
 

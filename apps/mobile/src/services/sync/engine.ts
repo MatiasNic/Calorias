@@ -72,6 +72,18 @@ async function setLastPulled(c: CollectionName, ts: string) {
   );
 }
 
+/**
+ * Before deciding that a signed-in account still needs onboarding, its profile must have come
+ * down from the server at least once: with the server unreachable (offline, or the project
+ * paused) an empty local profile says nothing about the account. True once the profile has
+ * been pulled, false if it couldn't be.
+ */
+export async function ensureFirstPull(): Promise<boolean> {
+  if (await getLastPulled('profile')) return true;
+  await syncNow().catch(() => undefined); // doSync reports its own failures
+  return (await getLastPulled('profile')) != null;
+}
+
 let running: Promise<void> | null = null;
 let rerun = false;
 let lastReported = '';

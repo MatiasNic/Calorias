@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { AppText, Button, IconButton, ProgressBar, Screen, toast } from '@/components';
 import { finishOnboarding } from '@/features/onboarding/finish';
 import { captureError } from '@/services/analytics';
+import { auth } from '@/services/auth';
 import { planFromAnswers } from '@/features/onboarding/plan';
 import {
   BirthStep,
@@ -87,11 +88,21 @@ export default function Onboarding() {
   const index = Math.min(stepIndex, steps.length - 1);
   const step = steps[index]!;
 
+  // On the first question, back leaves to the welcome screen (sign in with an existing account,
+  // or start over): signing out there loses nothing, the profile isn't created yet.
+  const leave = useCallback(() => {
+    reset();
+    void auth.signOut({ force: true }).then(() => router.replace('/welcome'));
+  }, [reset]);
+
   const back = useCallback(() => {
-    if (index === 0) return false; // let Android back leave the onboarding
+    if (index === 0) {
+      leave();
+      return true;
+    }
     goTo(index - 1);
     return true;
-  }, [index, goTo]);
+  }, [index, goTo, leave]);
 
   useFocusEffect(
     useCallback(() => {
@@ -154,9 +165,9 @@ export default function Onboarding() {
       <View style={styles.top}>
         <IconButton
           icon="arrow-back"
-          accessibilityLabel={t('common.back')}
+          accessibilityLabel={index === 0 ? t('onboarding.backToWelcome') : t('common.back')}
           onPress={back}
-          disabled={index === 0}
+          testID="onboarding-back"
         />
         <View style={styles.flex}>
           <ProgressBar
