@@ -30,7 +30,7 @@ export function ListenControls({
           style={[styles.small, { backgroundColor: colors.surfaceAlt }]}
           testID="listen-write"
         >
-          <Icon name="keyboard" size={26} />
+          <Icon name="edit" size={26} />
         </Pressable>
         <AppText variant="caption" color="textMuted" style={styles.controlLabel}>
           {t('listen.write')}

@@ -72,6 +72,13 @@ export function TodayMeals({
             onPress={repeat}
           />
           <IconButton
+            icon="edit"
+            size={22}
+            color="textMuted"
+            accessibilityLabel={t('logBar.type')}
+            onPress={() => router.push({ pathname: '/text-log', params: { date } })}
+          />
+          <IconButton
             icon="mic"
             size={22}
             color="textMuted"

@@ -68,10 +68,11 @@ export function Usual({
           style={{ width: width - 28, flexDirection: 'row', alignItems: 'center', flexGap: 10 }}
         >
           <Round p={p} icon="mic" size={40} primary action={open('listen')} />
+          <Round p={p} icon="edit" size={40} action={open('text-log')} />
           <TextWidget
             text={s.labels.usualEmpty}
             maxLines={3}
-            style={{ fontSize: 12, fontFamily: BOLD, color: p.ink2, width: width - 90 }}
+            style={{ fontSize: 12, fontFamily: BOLD, color: p.ink2, width: width - 140 }}
           />
         </FlexWidget>
       )}

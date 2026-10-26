@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- config plugins run in Node as CommonJS */
 // Static launcher shortcuts (long-press the app icon), brand handoff "marca" 4.5:
-// dictate, photo, +250 ml water, repeat the usual meal. Each one opens bocado://shortcut/<id>,
+// dictate, type, photo, +250 ml water, repeat the usual meal (launchers show the first 4–5). Each one opens bocado://shortcut/<id>,
 // handled by src/app/shortcut/[action].tsx.
 const fs = require('fs');
 const path = require('path');
@@ -14,6 +14,7 @@ const {
 // Short labels show in the launcher's popup (≈10 characters fit), long ones where there is room.
 const SHORTCUTS = [
   { id: 'listen', short: 'Dictar', long: 'Dictar comida' },
+  { id: 'write', short: 'Escribir', long: 'Escribir lo que comí' },
   { id: 'camera', short: 'Sacar foto', long: 'Sacar foto' },
   { id: 'water', short: '+250 ml agua', long: 'Sumar 250 ml de agua' },
   { id: 'usual', short: 'Lo de siempre', long: 'Repetir lo de siempre' },

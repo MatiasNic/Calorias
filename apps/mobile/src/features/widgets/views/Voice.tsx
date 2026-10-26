@@ -11,10 +11,13 @@ import { BLACK, glyph, ICON_FONT, open } from './primitives';
 /** Ink and paper are fixed for this piece (brand handoff 4.2), whatever the phone theme. */
 const INK = '#161918';
 const PAPER = '#F4F3EE';
+/** Raised ink for the secondary button on the ink card (light theme's `primaryPressed`). */
+const INK_RAISED = '#2C302E';
 
 /**
- * «¿Qué comiste?»: the whole widget opens "Escuchando". 2×2 shows the brand piece (ink card,
- * sage mic, the question); squeezed to 1×1 it keeps just the mic.
+ * «¿Qué comiste?»: the widget opens "Escuchando"; at 2×2 a pencil opens the keyboard instead.
+ * 2×2 shows the brand piece (ink card, sage mic, the question); squeezed to 1×1 it keeps just
+ * the mic.
  */
 export function Voice({
   p,
@@ -44,20 +47,46 @@ export function Voice({
     >
       <FlexWidget
         style={{
-          width: circle,
-          height: circle,
-          borderRadius: circle / 2,
-          backgroundColor: p.sage,
-          justifyContent: 'center',
-          alignItems: 'center',
+          width: 'match_parent',
+          flexDirection: 'row',
+          justifyContent: big ? 'space-between' : 'center',
+          alignItems: 'flex-start',
         }}
       >
-        <IconWidget
-          font={ICON_FONT}
-          icon={glyph('mic')}
-          size={Math.round(circle / 2)}
-          style={{ color: INK }}
-        />
+        <FlexWidget
+          {...open('listen')}
+          style={{
+            width: circle,
+            height: circle,
+            borderRadius: circle / 2,
+            backgroundColor: p.sage,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <IconWidget
+            font={ICON_FONT}
+            icon={glyph('mic')}
+            size={Math.round(circle / 2)}
+            style={{ color: INK }}
+          />
+        </FlexWidget>
+        {big ? (
+          // Type it instead: the pencil opens "Contá qué comiste" with the keyboard.
+          <FlexWidget
+            {...open('text-log')}
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 22,
+              backgroundColor: INK_RAISED,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <IconWidget font={ICON_FONT} icon={glyph('edit')} size={22} style={{ color: PAPER }} />
+          </FlexWidget>
+        ) : null}
       </FlexWidget>
       {big ? (
         <TextWidget

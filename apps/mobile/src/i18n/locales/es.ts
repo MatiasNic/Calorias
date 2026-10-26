@@ -48,6 +48,7 @@ export const es = {
     progress: 'Progreso',
     profile: 'Perfil',
     coach: 'Coach',
+    voiceHint: 'Mantené apretado para escribir en lugar de hablar',
   },
   macros: {
     protein: 'Proteínas',
@@ -1458,7 +1459,7 @@ export const es = {
     },
     voice: {
       title: '¿Qué comiste? (2×2 o 1×1)',
-      body: 'Un click y lo anoto: tocás y ya estás contando lo que comiste.',
+      body: 'Un click y lo anoto: el micrófono para contarlo, el lápiz para escribirlo (en 2×2).',
     },
     water: {
       title: 'Agua (1×1 o 2×1)',

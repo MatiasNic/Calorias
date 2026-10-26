@@ -49,6 +49,7 @@ export const en: TranslationShape<Translation> = {
     progress: 'Progress',
     profile: 'Profile',
     coach: 'Coach',
+    voiceHint: 'Long-press to type instead of talking',
   },
   macros: {
     protein: 'Protein',
@@ -1431,7 +1432,7 @@ export const en: TranslationShape<Translation> = {
     },
     voice: {
       title: 'What did you eat? (2×2 or 1×1)',
-      body: 'One tap and I log it: tap and start telling what you ate.',
+      body: 'One tap and I log it: the mic to say it, the pencil to type it (at 2×2).',
     },
     water: {
       title: 'Water (1×1 or 2×1)',

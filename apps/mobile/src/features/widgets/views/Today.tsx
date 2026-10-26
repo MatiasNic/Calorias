@@ -112,7 +112,7 @@ export function Today({
       >
         <Round p={p} icon="mic" size={44} primary action={open('listen')} />
         <Round p={p} icon="photo_camera" size={44} action={open('scan')} />
-        <Round p={p} icon="keyboard" size={44} action={open('text-log')} />
+        <Round p={p} icon="edit" size={44} action={open('text-log')} />
         <FlexWidget
           clickAction={ACTIONS.water}
           clickActionData={{ ml: 250 }}

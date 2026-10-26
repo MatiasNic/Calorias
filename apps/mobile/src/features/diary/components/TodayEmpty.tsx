@@ -7,21 +7,32 @@ import { AppText, Chip, Icon } from '@/components';
 import { openTextAnalysis } from '@/features/scan/textRequest';
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 
-/** Empty day: a big mic button and example phrases that analyze straight away. */
+/** Empty day: talk or type buttons and example phrases that analyze straight away. */
 export function TodayEmpty({ date }: { date: IsoDate }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const examples = [t('today.example1'), t('today.example2')];
   return (
     <View style={[styles.empty, { borderColor: colors.border }]}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={t('logBar.voice')}
-        onPress={() => router.push({ pathname: '/listen', params: { date } })}
-        style={[styles.emptyMic, { backgroundColor: colors.surfaceAlt }]}
-      >
-        <Icon name="mic" size={30} />
-      </Pressable>
+      <View style={styles.actions}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('logBar.voice')}
+          onPress={() => router.push({ pathname: '/listen', params: { date } })}
+          style={[styles.emptyMic, { backgroundColor: colors.surfaceAlt }]}
+        >
+          <Icon name="mic" size={30} />
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('logBar.type')}
+          onPress={() => router.push({ pathname: '/text-log', params: { date } })}
+          style={[styles.emptyMic, { backgroundColor: colors.surfaceAlt }]}
+          testID="today-empty-write"
+        >
+          <Icon name="edit" size={28} />
+        </Pressable>
+      </View>
       <AppText style={styles.emptyTitle} align="center">
         {t('today.emptyTitle')}
       </AppText>
@@ -58,6 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: spacing.xs,
   },
+  actions: { flexDirection: 'row', gap: spacing.md },
   emptyTitle: { fontFamily: fontFamily.extrabold, fontSize: 20, lineHeight: 26 },
   examples: { gap: spacing.sm, alignItems: 'center', marginTop: spacing.sm },
 });

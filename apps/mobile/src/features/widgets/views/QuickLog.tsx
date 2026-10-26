@@ -20,7 +20,7 @@ export function QuickLog({ p }: { p: Palette }) {
     >
       <Round p={p} icon="mic" size={48} primary action={open('listen')} />
       <Round p={p} icon="photo_camera" size={44} action={open('scan')} />
-      <Round p={p} icon="keyboard" size={44} action={open('text-log')} />
+      <Round p={p} icon="edit" size={44} action={open('text-log')} />
     </FlexWidget>
   );
 }

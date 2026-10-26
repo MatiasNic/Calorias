@@ -26,13 +26,14 @@ export default function Shortcut() {
     // the app was already open) and open the screen on top of it, so closing it or Android back
     // returns to the app instead of closing it.
     const home = () => router.dismissTo('/today');
-    const open = (href: '/listen' | '/scan') => {
+    const open = (href: '/listen' | '/scan' | '/text-log') => {
       home();
       router.push(href);
     };
     const run = async () => {
       if (action === 'listen' || action === 'escuchar') return open('/listen');
       if (action === 'camera' || action === 'camara') return open('/scan');
+      if (action === 'write' || action === 'escribir') return open('/text-log');
       const today = todayLocal();
       if (action === 'water') {
         await addWater(today, 250);

@@ -50,9 +50,15 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
                   testID="tab-voice"
                   accessibilityRole="button"
                   accessibilityLabel={t('tabs.voiceA11y')}
+                  accessibilityHint={t('tabs.voiceHint')}
                   onPress={() => {
                     haptic('medium');
                     router.push('/listen');
+                  }}
+                  // Long-press: type it instead of saying it.
+                  onLongPress={() => {
+                    haptic('medium');
+                    router.push('/text-log');
                   }}
                   style={({ pressed }) => [
                     styles.mic,

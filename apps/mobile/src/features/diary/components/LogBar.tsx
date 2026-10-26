@@ -34,6 +34,15 @@ export function LogBar({ date }: { date: IsoDate }) {
       </Pressable>
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel={t('logBar.type')}
+        onPress={() => router.push({ pathname: '/text-log', params: { date } })}
+        style={[styles.camera, { backgroundColor: colors.surfaceAlt }]}
+        testID="log-bar-write"
+      >
+        <Icon name="edit" size={22} />
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
         accessibilityLabel={t('logBar.photo')}
         onPress={() => router.push('/scan')}
         style={[styles.camera, { backgroundColor: colors.surfaceAlt }]}
