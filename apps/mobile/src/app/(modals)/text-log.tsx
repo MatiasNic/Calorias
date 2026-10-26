@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Button, Chip, Icon, Screen, ScreenHeader } from '@/components';
+import { AppText, Button, Icon, Screen, ScreenHeader } from '@/components';
 import { features } from '@/config/features';
+import { FavoriteMeals } from '@/features/diary/components/FavoriteMeals';
+import { UsualMeals } from '@/features/diary/components/UsualMeals';
 import { MEAL_ICONS } from '@/features/diary/mealIcons';
 import { detectMeals } from '@/features/scan/detectMeals';
 import { useQuotaStatus } from '@/features/scan/useQuota';
@@ -13,7 +15,7 @@ import { usePlan } from '@/services/purchases';
 import { fontFamily, radii, spacing, useTheme } from '@/theme';
 import { openTextAnalysis } from '@/features/scan/textRequest';
 import { useConfirmLeave } from '@/hooks/useConfirmLeave';
-import { dateParam } from '@/utils/dates';
+import { dateParam, todayLocal } from '@/utils/dates';
 
 /** "Contá qué comiste": type (or paste) the description; the mic goes back to listening. */
 export default function TextLog() {
@@ -25,7 +27,6 @@ export default function TextLog() {
   const plan = usePlan();
   const meals = detectMeals(text);
   const left = quota.data?.text_query.remaining;
-  const examples = [t('textLog.example1'), t('textLog.example2'), t('textLog.example3')];
   const validDate = dateParam(params.date);
   const date = validDate ? { date: validDate } : {};
   // Closing with a description written (or dictated) and not analyzed asks first.
@@ -98,14 +99,9 @@ export default function TextLog() {
           ))}
         </View>
       ) : null}
-      <AppText variant="subheading" style={styles.examplesTitle}>
-        {t('textLog.examples')}
-      </AppText>
-      <View style={styles.examples}>
-        {examples.map((e) => (
-          <Chip key={e} label={e} onPress={() => setText(e)} />
-        ))}
-      </View>
+      {/* Quicker than typing: the usual meals log in one tap, favorites open ready to save. */}
+      <UsualMeals date={validDate ?? todayLocal()} />
+      <FavoriteMeals date={validDate ?? todayLocal()} />
       {plan === 'free' && left != null ? (
         <AppText variant="caption" color="textSubtle">
           {t('textLog.quotaLeft', { count: left })}
@@ -136,8 +132,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     borderRadius: radii.pill,
   },
-  examplesTitle: { fontSize: 15 },
-  examples: { alignItems: 'flex-start', gap: spacing.sm },
   footer: { flexDirection: 'row', gap: spacing.sm, alignItems: 'center' },
   mic: {
     width: 56,

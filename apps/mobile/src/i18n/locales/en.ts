@@ -441,6 +441,7 @@ export const en: TranslationShape<Translation> = {
     legendOver: 'Over',
     mealCount_one: '{{count}} meal · {{kcal}} kcal',
     mealCount_other: '{{count}} meals · {{kcal}} kcal',
+    mealDay: 'Day: {{day}}',
   },
   foodSearch: {
     titleFor: 'Add to {{meal}}',
@@ -1481,5 +1482,10 @@ export const en: TranslationShape<Translation> = {
     offlineBody:
       "Your account is fine, but the server can't be reached. Check your connection and try again in a while.",
     otherAccount: 'Sign in with another account',
+  },
+  time: {
+    pickHint: 'Tap to pick the time directly',
+    hour: 'Hour',
+    minutes: 'Minutes',
   },
 };

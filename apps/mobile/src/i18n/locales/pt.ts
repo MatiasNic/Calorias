@@ -455,6 +455,7 @@ export const pt: TranslationShape<Translation> = {
     legendOver: 'Acima',
     mealCount_one: '{{count}} refeição · {{kcal}} kcal',
     mealCount_other: '{{count}} refeições · {{kcal}} kcal',
+    mealDay: 'Dia: {{day}}',
   },
   foodSearch: {
     titleFor: 'Adicionar a {{meal}}',
@@ -1500,5 +1501,10 @@ export const pt: TranslationShape<Translation> = {
     offlineBody:
       'Sua conta está bem, mas não há conexão com o servidor. Verifique sua internet e tente de novo daqui a pouco.',
     otherAccount: 'Entrar com outra conta',
+  },
+  time: {
+    pickHint: 'Toque para escolher o horário direto',
+    hour: 'Hora',
+    minutes: 'Minutos',
   },
 };

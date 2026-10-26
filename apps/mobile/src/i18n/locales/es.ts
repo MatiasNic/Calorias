@@ -459,6 +459,7 @@ export const es = {
     legendOver: 'Encima',
     mealCount_one: '{{count}} comida · {{kcal}} kcal',
     mealCount_other: '{{count}} comidas · {{kcal}} kcal',
+    mealDay: 'Día: {{day}}',
   },
   foodSearch: {
     titleFor: 'Agregar a {{meal}}',
@@ -1508,6 +1509,11 @@ export const es = {
     offlineBody:
       'Tu cuenta está bien, pero no hay conexión con el servidor. Revisá tu internet y probá de nuevo en un rato.',
     otherAccount: 'Ingresar con otra cuenta',
+  },
+  time: {
+    pickHint: 'Tocá para elegir la hora directo',
+    hour: 'Hora',
+    minutes: 'Minutos',
   },
 };
 

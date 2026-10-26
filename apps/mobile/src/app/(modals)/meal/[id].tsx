@@ -10,6 +10,7 @@ import { useDraftStore, type MealDraft } from '@/features/diary/draftStore';
 import { deleteMeal, saveMeal, useMeal } from '@/features/diary/hooks';
 import { MealTypePicker } from '@/features/diary/MealTypePicker';
 import { TimeStepper } from '@/features/diary/TimeStepper';
+import { WeekStrip } from '@/features/diary/components/WeekStrip';
 import { saveMealAsFavorite } from '@/features/foods/hooks';
 import { usePlateStore } from '@/features/foods/plateStore';
 import { checkAchievements } from '@/features/habits/hooks';
@@ -165,7 +166,11 @@ export default function MealEditor() {
           />
         )}
       </View>
-      <AppText color="textMuted">{formatDay(draft.date)}</AppText>
+      {/* Logged on the wrong day: swipe or use the arrows to move it (up to today). */}
+      <AppText variant="label" color="textMuted">
+        {t('diary.mealDay', { day: formatDay(draft.date) })}
+      </AppText>
+      <WeekStrip value={draft.date} onChange={(date) => patch({ date })} />
       <MealTypePicker value={draft.mealType} onChange={(m) => patch({ mealType: m })} />
       <TimeStepper value={draft.time} onChange={(time) => patch({ time })} />
       {draft.items.map((item, i) => (

@@ -8,6 +8,9 @@ export interface IconButtonProps {
   icon: IconName;
   accessibilityLabel: string;
   onPress?: () => void;
+  /** Press-and-hold (e.g. to repeat a stepper); `onPressOut` fires when the finger lifts. */
+  onLongPress?: () => void;
+  onPressOut?: () => void;
   color?: keyof ThemeColors;
   background?: keyof ThemeColors | 'transparent';
   size?: number;
@@ -25,6 +28,8 @@ export function IconButton({
   icon,
   accessibilityLabel,
   onPress,
+  onLongPress,
+  onPressOut,
   color = 'text',
   background = 'transparent',
   size = 22,
@@ -47,6 +52,9 @@ export function IconButton({
         haptic('light');
         onPress?.();
       }}
+      onLongPress={onLongPress}
+      delayLongPress={onLongPress ? 350 : undefined}
+      onPressOut={onPressOut}
       style={({ pressed }) => [
         styles.base,
         square ? styles.square : null,
