@@ -19,8 +19,10 @@ export const env = {
   posthogHost: process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
   useMocks: mocksRequested || !backendConfigured,
   backendConfigured,
-  termsUrl: process.env.EXPO_PUBLIC_TERMS_URL ?? 'https://bocado.app/terminos',
-  privacyUrl: process.env.EXPO_PUBLIC_PRIVACY_URL ?? 'https://bocado.app/privacidad',
+  // Defaults: the legal site published from web/legal (workflow "Publish legal site").
+  termsUrl: process.env.EXPO_PUBLIC_TERMS_URL ?? 'https://matiasnic.github.io/Calorias/terminos/',
+  privacyUrl:
+    process.env.EXPO_PUBLIC_PRIVACY_URL ?? 'https://matiasnic.github.io/Calorias/privacidad/',
   supportEmail: process.env.EXPO_PUBLIC_SUPPORT_EMAIL ?? 'soporte@bocado.app',
 } as const;
 

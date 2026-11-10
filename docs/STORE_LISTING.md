@@ -28,7 +28,7 @@ La inteligencia artificial reconoce cada alimento del plato, estima la porción 
 calorías, proteínas, carbohidratos, grasas y fibra. Vos revisás y ajustás antes de guardar.
 
 🧉 HECHO PARA COMIDA DE ACÁ
-Más de 200 comidas típicas cargadas: empanadas, milanesas, asado, ñoquis, locro, medialunas,
+Más de 3.000 alimentos y comidas típicas cargadas: empanadas, milanesas, asado, ñoquis, locro, medialunas,
 alfajores, mate… con porciones reales, no tazas y onzas.
 
 ⚡ REGISTRÁ COMO QUIERAS

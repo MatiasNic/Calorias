@@ -9,6 +9,8 @@ name: Deploy backend + real APK
 #   optional: USDA_FDC_API_KEY, REVENUECAT_WEBHOOK_SECRET, AI_ALERT_WEBHOOK_URL
 #   APK signing (recommended; without them the APK is signed with the public debug key):
 #   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
+#   The Play Store bundle (input build_aab) is only built with that key: it is the upload key
+#   Play registers on the first upload (see docs/PLAY_STORE.md).
 #   Readable crash reports (optional): SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT
 on:
   workflow_dispatch:
@@ -23,6 +25,10 @@ on:
         default: true
       minify:
         description: 'Shrink the APK with R8 (test variant, published as …-min.apk)'
+        type: boolean
+        default: false
+      build_aab:
+        description: 'Also build the Play Store bundle (.aab). Needs the release keystore secrets'
         type: boolean
         default: false
 
@@ -62,9 +68,9 @@ jobs:
           AI_ALERT_WEBHOOK_URL: ${{ secrets.AI_ALERT_WEBHOOK_URL }}
         run: ./scripts/deploy-backend.sh
   apk:
-    name: Build real-mode APK and publish release
+    name: Build real-mode APK / Play bundle and publish release
     needs: deploy
-    if: ${{ inputs.build_apk }}
+    if: ${{ inputs.build_apk || inputs.build_aab }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -72,6 +78,8 @@ jobs:
     env:
       EXPO_PUBLIC_USE_MOCKS: 'false'
       ANDROID_MINIFY: ${{ inputs.minify }}
+      BUILD_APK: ${{ inputs.build_apk }}
+      BUILD_AAB: ${{ inputs.build_aab }}
       EXPO_NO_TELEMETRY: '1'
       # Source maps go to Sentry only when its token is configured (see docs/PENDIENTES.md).
       SENTRY_DISABLE_AUTO_UPLOAD: ${{ secrets.SENTRY_AUTH_TOKEN == '' && 'true' || 'false' }}
@@ -112,10 +120,11 @@ jobs:
           sed -i '/^org.gradle.jvmargs=/d' android/gradle.properties
           printf '\norg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError\n' >> android/gradle.properties
       - uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4
-      - name: Gradle assembleRelease
+      - name: Gradle release build
         working-directory: apps/mobile/android
-        timeout-minutes: 45
-        # 64-bit only: covers practically every phone from recent years and halves native build time.
+        timeout-minutes: 55
+        # Test APK: 64-bit only (practically every recent phone; halves native build time).
+        # Play bundle: 32-bit ARM too, so the store also offers the app to older low-end phones.
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
@@ -138,21 +147,40 @@ jobs:
             )
             echo "SIGNED_WITH=release" >> "$GITHUB_ENV"
           else
+            if [ "$BUILD_AAB" = true ]; then
+              echo "::error::The Play bundle needs the release keystore secrets (docs/PLAY_STORE.md)"
+              exit 1
+            fi
             echo "::warning::ANDROID_KEYSTORE_BASE64 not set: the APK is signed with the public debug key"
             echo "SIGNED_WITH=debug" >> "$GITHUB_ENV"
           fi
-          ./gradlew assembleRelease --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a "${signing[@]}"
+          tasks=()
+          abis=arm64-v8a
+          if [ "$BUILD_APK" = true ]; then tasks+=(assembleRelease); fi
+          if [ "$BUILD_AAB" = true ]; then
+            tasks+=(bundleRelease)
+            abis=arm64-v8a,armeabi-v7a
+          fi
+          ./gradlew "${tasks[@]}" --no-daemon --console=plain "-PreactNativeArchitectures=$abis" "${signing[@]}"
           rm -f "$RUNNER_TEMP/release.keystore"
-      - name: Check the APK talks to the real backend
+      - name: Check the build talks to the real backend
         env:
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
         run: |
           set -euo pipefail
-          apk=apps/mobile/android/app/build/outputs/apk/release/app-release.apk
-          unzip -p "$apk" assets/index.android.bundle > /tmp/bundle
-          if ! grep -aq "${SUPABASE_PROJECT_REF}.supabase.co" /tmp/bundle; then
-            echo "::error::The JS bundle has no Supabase URL: the APK would run in demo mode"
-            exit 1
+          out=apps/mobile/android/app/build/outputs
+          check() {
+            unzip -p "$1" "$2" > /tmp/bundle
+            if ! grep -aq "${SUPABASE_PROJECT_REF}.supabase.co" /tmp/bundle; then
+              echo "::error::The JS bundle in $1 has no Supabase URL: it would run in demo mode"
+              exit 1
+            fi
+          }
+          if [ "$BUILD_APK" = true ]; then
+            check "$out/apk/release/app-release.apk" assets/index.android.bundle
+          fi
+          if [ "$BUILD_AAB" = true ]; then
+            check "$out/bundle/release/app-release.aab" base/assets/index.android.bundle
           fi
       - name: Publish GitHub Release
         env:
@@ -163,21 +191,38 @@ jobs:
           tag="v${version}-real"
           suffix=""
           if [ "$ANDROID_MINIFY" = true ]; then suffix="-min"; fi
-          apk="bocado-real-${version}${suffix}.apk"
-          cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk "$apk"
-          sha=$(sha256sum "$apk" | cut -d' ' -f1)
-          notes="APK de prueba con **IA real** y cuenta en la nube (no es la demo). Android 8+ (64 bits). $( [ "$SIGNED_WITH" = release ] && echo 'Firmado con la clave de release.' || echo 'Firmado con la clave de debug: solo para pruebas.' ) SHA-256: \`${sha}\`. Guía: docs/SEMANA_DE_PRUEBA.md"
+          out=apps/mobile/android/app/build/outputs
+          files=()
+          notes="Build con **IA real** y cuenta en la nube (no es la demo)."
+          if [ "$BUILD_APK" = true ]; then
+            apk="bocado-real-${version}${suffix}.apk"
+            cp "$out/apk/release/app-release.apk" "$apk"
+            files+=("$apk")
+            sha=$(sha256sum "$apk" | cut -d' ' -f1)
+            notes="APK de prueba con **IA real** y cuenta en la nube (no es la demo). Android 8+ (64 bits). $( [ "$SIGNED_WITH" = release ] && echo 'Firmado con la clave de release.' || echo 'Firmado con la clave de debug: solo para pruebas.' ) SHA-256: \`${sha}\`. Guía: docs/SEMANA_DE_PRUEBA.md"
+          fi
+          if [ "$BUILD_AAB" = true ]; then
+            # The file to upload in Play Console (it cannot be installed on a phone directly).
+            aab="bocado-play-${version}${suffix}.aab"
+            cp "$out/bundle/release/app-release.aab" "$aab"
+            files+=("$aab")
+            notes="$notes El archivo \`.aab\` es el que se sube a Play Console (docs/PLAY_STORE.md)."
+          fi
           if gh release view "$tag" >/dev/null 2>&1; then
-            gh release upload "$tag" "$apk" --clobber
+            gh release upload "$tag" "${files[@]}" --clobber
             # The R8 test variant joins the release without replacing the notes of the main APK.
-            if [ "$ANDROID_MINIFY" != true ]; then gh release edit "$tag" --notes "$notes"; fi
+            if [ "$ANDROID_MINIFY" != true ] && [ "$BUILD_APK" = true ]; then
+              gh release edit "$tag" --notes "$notes"
+            fi
           else
             create() {
-              gh release create "$tag" "$apk" "$@" --prerelease --latest=false \
+              gh release create "$tag" "${files[@]}" "$@" --prerelease --latest=false \
                 --title "Bocado ${version} (prueba real)" --notes "$notes"
             }
             # The workflow token may not create a tag on a commit that changes workflow files
             # (HTTP 403): the release then gets its tag on the default branch instead.
             create --target "$GITHUB_SHA" || create
           fi
-          echo "APK: https://github.com/${GITHUB_REPOSITORY}/releases/download/${tag}/${apk}" >> "$GITHUB_STEP_SUMMARY"
+          for f in "${files[@]}"; do
+            echo "https://github.com/${GITHUB_REPOSITORY}/releases/download/${tag}/${f}" >> "$GITHUB_STEP_SUMMARY"
+          done
