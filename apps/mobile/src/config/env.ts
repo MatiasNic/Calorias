@@ -23,7 +23,7 @@ export const env = {
   termsUrl: process.env.EXPO_PUBLIC_TERMS_URL ?? 'https://matiasnic.github.io/Calorias/terminos/',
   privacyUrl:
     process.env.EXPO_PUBLIC_PRIVACY_URL ?? 'https://matiasnic.github.io/Calorias/privacidad/',
-  supportEmail: process.env.EXPO_PUBLIC_SUPPORT_EMAIL ?? 'soporte@bocado.app',
+  supportEmail: process.env.EXPO_PUBLIC_SUPPORT_EMAIL ?? 'matiasmalmierca@hotmail.com',
 } as const;
 
 /** Current version of Terms/Privacy the user must accept. Bump when legal docs change. */
