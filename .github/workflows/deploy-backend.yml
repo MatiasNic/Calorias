@@ -12,6 +12,8 @@ name: Deploy backend + real APK
 #   The Play Store bundle (input build_aab) is only built with that key: it is the upload key
 #   Play registers on the first upload (see docs/PLAY_STORE.md).
 #   Readable crash reports (optional): SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT
+# Repository variables (public values baked into the app): REVENUECAT_ANDROID_KEY (RevenueCat
+#   public Android key, enables real purchases), SENTRY_DSN, SUPPORT_EMAIL
 on:
   workflow_dispatch:
     inputs:
@@ -81,6 +83,11 @@ jobs:
       BUILD_APK: ${{ inputs.build_apk }}
       BUILD_AAB: ${{ inputs.build_aab }}
       EXPO_NO_TELEMETRY: '1'
+      # Public app config, from repository *variables* (Settings → Secrets and variables →
+      # Actions → Variables): none of these is secret. Empty = feature off / app default.
+      EXPO_PUBLIC_REVENUECAT_ANDROID_KEY: ${{ vars.REVENUECAT_ANDROID_KEY }}
+      EXPO_PUBLIC_SENTRY_DSN: ${{ vars.SENTRY_DSN }}
+      EXPO_PUBLIC_SUPPORT_EMAIL: ${{ vars.SUPPORT_EMAIL }}
       # Source maps go to Sentry only when its token is configured (see docs/PENDIENTES.md).
       SENTRY_DISABLE_AUTO_UPLOAD: ${{ secrets.SENTRY_AUTH_TOKEN == '' && 'true' || 'false' }}
       SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
