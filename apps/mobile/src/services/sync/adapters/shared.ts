@@ -79,7 +79,10 @@ export function nutrientsFrom(row: Record<string, unknown>): Nutrients {
 /** Rows per pull request (the API returns at most 1000; the engine asks for pages until short). */
 export const PULL_PAGE = 500;
 
-/** Rows changed after `since`, in a stable order, one page at a time. */
+/**
+ * Rows changed after `since`, in a stable order, one page at a time. `key` is the table's primary
+ * key, the tiebreak between rows with the same `updated_at` (one-row-per-user tables use user_id).
+ */
 export const sinceFilter = <
   Q extends {
     gt: (c: string, v: string) => Q;
@@ -90,10 +93,11 @@ export const sinceFilter = <
   q: Q,
   since: string | null,
   page: number,
+  key: 'id' | 'user_id' = 'id',
 ) =>
   (since ? q.gt('updated_at', since) : q)
     .order('updated_at')
-    .order('id')
+    .order(key)
     .range(page * PULL_PAGE, (page + 1) * PULL_PAGE - 1);
 
 type TableName = keyof Database['public']['Tables'];

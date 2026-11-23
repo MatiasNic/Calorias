@@ -70,6 +70,7 @@ export const accountAdapters: Adapters<
           sb.from('notification_settings').select('*').eq('user_id', userId),
           since,
           page,
+          'user_id',
         ),
       );
       return rows.map((row) => ({
@@ -96,7 +97,12 @@ export const accountAdapters: Adapters<
     }),
     async pull(sb, userId, since, page) {
       const rows = check(
-        await sinceFilter(sb.from('streaks').select('*').eq('user_id', userId), since, page),
+        await sinceFilter(
+          sb.from('streaks').select('*').eq('user_id', userId),
+          since,
+          page,
+          'user_id',
+        ),
       );
       return rows.map((row) => ({
         record: {

@@ -1,4 +1,5 @@
 import { isValidPulledRecord } from '@/services/sync/schemas';
+import { accountAdapters } from '@/services/sync/adapters/account';
 import { groupByKeys } from '@/services/sync/adapters/shared';
 
 describe('groupByKeys', () => {
@@ -43,4 +44,28 @@ describe('pulled record validation', () => {
       }),
     ).toBe(false);
   });
+});
+
+describe('pull order', () => {
+  // A query stub that records the columns the pull sorts by.
+  const recordOrder = () => {
+    const order: string[] = [];
+    const q = {
+      select: () => q,
+      eq: () => q,
+      gt: () => q,
+      order: (c: string) => (order.push(c), q),
+      range: () => Promise.resolve({ data: [], error: null }),
+    };
+    return { order, sb: { from: () => q } as never };
+  };
+
+  it.each(['streaks', 'notification_settings'] as const)(
+    '%s sorts by its primary key (user_id), not a missing id column',
+    async (collection) => {
+      const { order, sb } = recordOrder();
+      await accountAdapters[collection].pull(sb, 'u1', null, 0);
+      expect(order).toEqual(['updated_at', 'user_id']);
+    },
+  );
 });
